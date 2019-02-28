@@ -1,11 +1,15 @@
 package teamproject.AlertsReminders;
 
 public class Timer {
-//test 2 from test 2 branch
+//test 11
+
+    //// test again because i think it overrides lines
+
+    //test 3
 	private String whenEvent;
 
 	/**
-	 * 
+	 *
 	 * @param event
 	 */
 	public void setWhenEvent(String event) {
@@ -13,7 +17,7 @@ public class Timer {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param whenEvent
 	 */
 	public static Timer Timer(String whenEvent) {
