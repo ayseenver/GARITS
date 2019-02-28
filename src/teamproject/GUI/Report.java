@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package teamproject.GUI;
+
+import javax.swing.JFrame;
+
 /**
  *
  * @author ahmetsesli
@@ -15,6 +18,11 @@ public class Report extends javax.swing.JPanel {
      */
     public Report() {
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -180,7 +188,7 @@ public class Report extends javax.swing.JPanel {
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
         // TODO add your handling code here:
-       
+
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
@@ -192,7 +200,9 @@ public class Report extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void textFieldUserDetails1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetails1ActionPerformed

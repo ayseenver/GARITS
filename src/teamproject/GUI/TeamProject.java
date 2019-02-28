@@ -12,17 +12,12 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class TeamProject {
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         LogIn logIn = new LogIn();
-        
-        JFrame frame = new JFrame();
-        frame.add(logIn);
-        frame.pack();
-        
-        frame.setVisible(true);
-        
-    }    
+
+    }
 }

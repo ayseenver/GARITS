@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package teamproject;
+package teamproject.GUI;
+
+import javax.swing.JFrame;
 
 /**
  *
@@ -16,6 +18,11 @@ public class UserAccounts extends javax.swing.JPanel {
      */
     public UserAccounts() {
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -222,7 +229,9 @@ public class UserAccounts extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
 

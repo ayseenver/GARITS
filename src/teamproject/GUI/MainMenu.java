@@ -17,12 +17,13 @@ public class MainMenu extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public MainMenu() {
+
         initComponents();
-        JFrame f = new JFrame();
-        f.add(this);
-        f.pack();
-        f.setVisible(true);
-        System.out.println("done");
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -156,35 +157,52 @@ public class MainMenu extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
-        // TODO add your handling code here:
+      JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        CreateJobCustomer createJobCustomer= new CreateJobCustomer();
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void buttonRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemindersActionPerformed
-        // TODO add your handling code here:
+          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        ReminderGUI reminder= new ReminderGUI();
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
-        // TODO add your handling code here:
+          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        StockControl stockControl= new StockControl();
+                
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
-        // TODO add your handling code here:
+      JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        Invoice invoice= new Invoice();
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
-        // TODO add your handling code here:
+         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MyJob myJob = new MyJob();
     }//GEN-LAST:event_buttonMyJobsActionPerformed
 
     private void buttonAllocateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateJobActionPerformed
-        // TODO add your handling code here:
+         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        AllocateJob allocateJob= new AllocateJob();
     }//GEN-LAST:event_buttonAllocateJobActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
-        // TODO add your handling code here:
+          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        Customer customer= new Customer();
     }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
-        // TODO add your handling code here:
+          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        JobList jobList= new JobList();
     }//GEN-LAST:event_buttonJobListActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

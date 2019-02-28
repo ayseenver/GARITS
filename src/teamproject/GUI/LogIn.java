@@ -6,7 +6,6 @@
 package teamproject.GUI;
 
 //import teamproject.GUI.MainMenu;
-
 import java.awt.GraphicsConfiguration;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +22,13 @@ public class LogIn extends javax.swing.JPanel {
      */
     public LogIn() {
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -123,7 +128,7 @@ public class LogIn extends javax.swing.JPanel {
                 .addContainerGap(99, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void textFieldUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldUserNameActionPerformed

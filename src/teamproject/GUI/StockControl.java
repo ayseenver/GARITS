@@ -5,6 +5,8 @@
  */
 package teamproject.GUI;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author ahmetsesli
@@ -16,6 +18,11 @@ public class StockControl extends javax.swing.JPanel {
      */
     public StockControl() {
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -248,7 +255,9 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void selectFromLowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFromLowStockActionPerformed
