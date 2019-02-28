@@ -2,7 +2,6 @@ package teamproject.Jobs;
 
 import teamproject.User_Accounts.Mechanic;
 import java.util.*;
-import Customer_Account.*;
 import Spare_Parts.SparePart;
 import teamproject.Customer_Account.Vehicle;
 
