@@ -2,6 +2,8 @@ package teamproject.AlertsReminders;
 
 public class Timer {
 //test 11
+    
+    //// test again because i think it overrides lines
 	private String whenEvent;
 
 	/**
