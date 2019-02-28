@@ -8,6 +8,9 @@ package teamproject.GUI;
 //import teamproject.GUI.MainMenu;
 
 import java.awt.GraphicsConfiguration;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JFrame;
 
 /**
  *
@@ -130,12 +133,13 @@ public class LogIn extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldPasswordActionPerformed
 
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
-        //MainMenu mainMenuFranchisee=new MainMenu();
-       // mainMenuFranchisee.setVisible(true);
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonSigninActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
 

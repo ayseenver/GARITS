@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package teamproject;
+package teamproject.GUI;
+
+import javax.swing.JFrame;
 
 /**
  *
@@ -16,6 +18,10 @@ public class MainMenu extends javax.swing.JPanel {
      */
     public MainMenu() {
         initComponents();
+        JFrame f = new JFrame();
+        f.add(this);
+        f.setVisible(true);
+        System.out.println("done");
     }
 
     /**
@@ -185,7 +191,7 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonCustomers1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomers1ActionPerformed
