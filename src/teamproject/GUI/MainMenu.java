@@ -20,6 +20,7 @@ public class MainMenu extends javax.swing.JPanel {
         initComponents();
         JFrame f = new JFrame();
         f.add(this);
+        f.pack();
         f.setVisible(true);
         System.out.println("done");
     }

@@ -20,6 +20,7 @@ public class TeamProject {
         
         JFrame frame = new JFrame();
         frame.add(logIn);
+        frame.pack();
         
         frame.setVisible(true);
         
