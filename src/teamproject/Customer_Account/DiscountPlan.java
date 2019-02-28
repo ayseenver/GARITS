@@ -1,4 +1,4 @@
-package Customer_Account;
+package teamproject.Customer_Account;
 
 public abstract class DiscountPlan {
 
