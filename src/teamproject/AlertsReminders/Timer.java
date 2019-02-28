@@ -1,7 +1,7 @@
 package teamproject.AlertsReminders;
 
 public class Timer {
-//test 11
+//test 2 from test 2 branch
 	private String whenEvent;
 
 	/**
