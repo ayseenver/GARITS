@@ -1,4 +1,4 @@
-package AlertsReminders;
+package teamproject.AlertsReminders;
 
 public class Timer {
 
