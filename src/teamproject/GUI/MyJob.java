@@ -129,7 +129,9 @@ public class MyJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldSearchJobsActionPerformed
 
     private void buttonViewJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewJobActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        Job job = new Job();
     }//GEN-LAST:event_buttonViewJobActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

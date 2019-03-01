@@ -115,6 +115,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDone.setText("Done");
+        buttonDone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDoneActionPerformed(evt);
+            }
+        });
         jPanel1.add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 660, -1, -1));
         jPanel1.add(textFieldPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 320, 260, -1));
 
@@ -214,6 +219,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
+        buttonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBackActionPerformed(evt);
+            }
+        });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
         listVehicles.setModel(new javax.swing.AbstractListModel<String>() {
@@ -405,6 +415,18 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void checkBoxConfigurePayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxConfigurePayLaterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBoxConfigurePayLaterActionPerformed
+
+    private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
+    }//GEN-LAST:event_buttonDoneActionPerformed
+
+    private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        CustomerList customerList = new CustomerList();
+    }//GEN-LAST:event_buttonBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

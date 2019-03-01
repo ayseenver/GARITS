@@ -41,7 +41,7 @@ public class StockControl extends javax.swing.JPanel {
         textFieldSearchAllStock = new javax.swing.JTextField();
         buttonOrder = new javax.swing.JButton();
         lblPartsOrder = new javax.swing.JLabel();
-        buttonPartSale = new javax.swing.JButton();
+        buttonStockLevelReport = new javax.swing.JButton();
         buttonRemove = new javax.swing.JButton();
         buttonSelectToOrderAllStock = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -57,7 +57,7 @@ public class StockControl extends javax.swing.JPanel {
         jScrollPane6 = new javax.swing.JScrollPane();
         listPartsOrder = new javax.swing.JList<>();
         buttonSearchAllStock = new javax.swing.JButton();
-        buttonPartSale1 = new javax.swing.JButton();
+        buttonPartSale = new javax.swing.JButton();
         textFieldConfigureThreshold = new javax.swing.JTextField();
         buttonConfigureThreshold = new javax.swing.JButton();
 
@@ -102,14 +102,14 @@ public class StockControl extends javax.swing.JPanel {
         lblPartsOrder.setText("Parts Order:");
         add(lblPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 520, -1, -1));
 
-        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonPartSale.setText("Stock Level Report");
-        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
+        buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        buttonStockLevelReport.setText("Stock Level Report");
+        buttonStockLevelReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPartSaleActionPerformed(evt);
+                buttonStockLevelReportActionPerformed(evt);
             }
         });
-        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 140, -1, -1));
+        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 140, -1, -1));
 
         buttonRemove.setText("Remove");
         buttonRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -200,14 +200,14 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, -1, -1));
 
-        buttonPartSale1.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonPartSale1.setText("Part Sale");
-        buttonPartSale1.addActionListener(new java.awt.event.ActionListener() {
+        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        buttonPartSale.setText("Part Sale");
+        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPartSale1ActionPerformed(evt);
+                buttonPartSaleActionPerformed(evt);
             }
         });
-        add(buttonPartSale1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 140, -1, -1));
+        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 140, -1, -1));
 
         textFieldConfigureThreshold.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldConfigureThreshold.addActionListener(new java.awt.event.ActionListener() {
@@ -231,12 +231,16 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldSearchAllStockActionPerformed
 
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        PartOrder partOrder = new PartOrder();
     }//GEN-LAST:event_buttonOrderActionPerformed
 
-    private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPartSaleActionPerformed
+    private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        Report stockReport = new Report();
+    }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
         // TODO add your handling code here:
@@ -268,9 +272,11 @@ public class StockControl extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
 
-    private void buttonPartSale1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSale1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPartSale1ActionPerformed
+    private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        PartSale partSale = new PartSale();
+    }//GEN-LAST:event_buttonPartSaleActionPerformed
 
     private void textFieldConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldConfigureThresholdActionPerformed
         // TODO add your handling code here:
@@ -288,10 +294,10 @@ public class StockControl extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonOrder;
     private javax.swing.JButton buttonPartSale;
-    private javax.swing.JButton buttonPartSale1;
     private javax.swing.JButton buttonRemove;
     private javax.swing.JButton buttonSearchAllStock;
     private javax.swing.JButton buttonSelectToOrderAllStock;
+    private javax.swing.JButton buttonStockLevelReport;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;

@@ -11,12 +11,12 @@ import javax.swing.JFrame;
  *
  * @author ahmetsesli
  */
-public class PartsOrder extends javax.swing.JPanel {
+public class PartOrder extends javax.swing.JPanel {
 
     /**
      * Creates new form NewJPanel
      */
-    public PartsOrder() {
+    public PartOrder() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -41,7 +41,7 @@ public class PartsOrder extends javax.swing.JPanel {
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
-        buttonBack = new javax.swing.JButton();
+        buttonDone = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -72,27 +72,29 @@ public class PartsOrder extends javax.swing.JPanel {
         buttonExit.setText("Exit");
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
-        buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonBack.setText("Back");
-        buttonBack.addActionListener(new java.awt.event.ActionListener() {
+        buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonDone.setText("Done");
+        buttonDone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBackActionPerformed(evt);
+                buttonDoneActionPerformed(evt);
             }
         });
-        add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
+        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 640, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonPrintActionPerformed
 
-    private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonBackActionPerformed
+    private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
+    }//GEN-LAST:event_buttonDoneActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPrint;
     private javax.swing.JScrollPane jScrollPane1;

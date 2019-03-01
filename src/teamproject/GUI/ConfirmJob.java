@@ -63,7 +63,7 @@ public class ConfirmJob extends javax.swing.JPanel {
                 buttonEditJobActionPerformed(evt);
             }
         });
-        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 130, -1));
+        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 150, -1));
 
         labelConfirmDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelConfirmDetails.setText("Are the details correct?");
@@ -76,7 +76,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 540, 610, 110));
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonCreateJob.setText("Create Job");
+        buttonCreateJob.setText("Confirm Job");
         buttonCreateJob.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCreateJobActionPerformed(evt);
@@ -152,7 +152,9 @@ public class ConfirmJob extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditJobActionPerformed
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

@@ -11,12 +11,12 @@ import javax.swing.JFrame;
  *
  * @author ahmetsesli
  */
-public class Customer extends javax.swing.JPanel {
+public class CustomerList extends javax.swing.JPanel {
 
     /**
      * Creates new form NewJPanel
      */
-    public Customer() {
+    public CustomerList() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -36,7 +36,6 @@ public class Customer extends javax.swing.JPanel {
 
         labelCustomers = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        buttonDone = new javax.swing.JButton();
         labelCustomerDetail = new javax.swing.JLabel();
         buttonSearchCustomer = new javax.swing.JButton();
         textFieldSearchCustomer = new javax.swing.JTextField();
@@ -65,15 +64,6 @@ public class Customer extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
-
-        buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonDone.setText("Done");
-        buttonDone.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDoneActionPerformed(evt);
-            }
-        });
-        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 660, -1, -1));
 
         labelCustomerDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelCustomerDetail.setText("Detail:");
@@ -175,10 +165,6 @@ public class Customer extends javax.swing.JPanel {
         add(labelSelectCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
-
-    }//GEN-LAST:event_buttonDoneActionPerformed
-
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
@@ -188,7 +174,10 @@ public class Customer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        UpdateCustomer updateCustomer = new UpdateCustomer();
+
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -206,14 +195,15 @@ public class Customer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditCustomerActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        UpdateCustomer updateCustomer = new UpdateCustomer();
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonConfirmPayment;
-    private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonEditCustomer;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
