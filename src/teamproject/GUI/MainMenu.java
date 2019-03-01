@@ -169,7 +169,7 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
-        sJFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         new StockControl();
                 

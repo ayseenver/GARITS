@@ -7,6 +7,11 @@ package teamproject.GUI;
 
 //import teamproject.GUI.MainMenu;
 import java.awt.GraphicsConfiguration;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JFrame;
@@ -17,6 +22,9 @@ import javax.swing.JFrame;
  */
 public class LogIn extends javax.swing.JPanel {
 
+    ResultSet rs;
+    Statement statement;
+    
     /**
      * Creates new form NewJPanel
      */
@@ -27,6 +35,21 @@ public class LogIn extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        Connection connection = null;
+        try
+        {
+          // create a database connection
+          connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/Ayse/Documents/NetBeansProjects/GARITS/GARITSDB.db");
+          this.statement = connection.createStatement();
+          this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -138,9 +161,34 @@ public class LogIn extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldPasswordActionPerformed
 
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new MainMenu();
+        String username = this.textFieldUserName.getText();
+        String password = this.textFieldPassword.getText();
+        try{
+            this.rs = statement.executeQuery("select * from User");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String user = rs.getString("username");
+            String pass = rs.getString("password");
+            
+            if (username.equals(user) && password.equals(pass)){
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                new MainMenu();
+            }
+          }        
+        }
+        catch(SQLException e){
+        }
     }//GEN-LAST:event_buttonSigninActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
