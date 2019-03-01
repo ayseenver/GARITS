@@ -5,6 +5,8 @@
  */
 package teamproject.GUI;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author ahmetsesli
@@ -16,6 +18,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
      */
     public UpdateCustomer() {
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -360,7 +367,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     private void textFieldSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchDiscountDetailsActionPerformed
         // TODO add your handling code here:
-       
+
     }//GEN-LAST:event_textFieldSearchDiscountDetailsActionPerformed
 
     private void textFieldLastServiceDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldLastServiceDayActionPerformed

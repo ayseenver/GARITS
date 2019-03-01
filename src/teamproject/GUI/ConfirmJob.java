@@ -5,6 +5,8 @@
  */
 package teamproject.GUI;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author ahmetsesli
@@ -15,7 +17,13 @@ public class ConfirmJob extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public ConfirmJob() {
+
         initComponents();
+        JFrame frame = new JFrame();
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
