@@ -196,7 +196,8 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
           JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        Customer customer= new Customer();
+        Report report= new Report();
+        
     }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
@@ -214,7 +215,9 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonCustomers1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomers1ActionPerformed
-        // TODO add your handling code here:
+  JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+       CustomerList customerList= new CustomerList();
     }//GEN-LAST:event_buttonCustomers1ActionPerformed
 
 

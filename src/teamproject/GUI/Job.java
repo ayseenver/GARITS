@@ -313,7 +313,9 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
     private void buttonCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompletedActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonCompletedActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
@@ -321,7 +323,9 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
 
     private void buttonInfromCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfromCustomerActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonInfromCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -343,7 +347,9 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdatePartsUsedActionPerformed
 
     private void buttonRequestPartsListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRequestPartsListActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonRequestPartsListActionPerformed
 
 
