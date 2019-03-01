@@ -159,51 +159,51 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        CreateJobCustomer createJobCustomer= new CreateJobCustomer();
+        new CreateJobCustomer();
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void buttonRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemindersActionPerformed
           JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        ReminderGUI reminder= new ReminderGUI();
+        new ReminderGUI();
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
-          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        sJFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        StockControl stockControl= new StockControl();
+        new StockControl();
                 
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
-      JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        Invoice invoice= new Invoice();
+        new Invoice();
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         MyJob myJob = new MyJob();
     }//GEN-LAST:event_buttonMyJobsActionPerformed
 
     private void buttonAllocateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateJobActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        AllocateJob allocateJob= new AllocateJob();
+        new AllocateJob();
     }//GEN-LAST:event_buttonAllocateJobActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
-          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        Report report= new Report();
+        new Report();
         
     }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
-          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        JobList jobList= new JobList();
+        new JobList();
     }//GEN-LAST:event_buttonJobListActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -215,9 +215,9 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonCustomers1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomers1ActionPerformed
-  JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-       CustomerList customerList= new CustomerList();
+        new CustomerList();
     }//GEN-LAST:event_buttonCustomers1ActionPerformed
 
 
