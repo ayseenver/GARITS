@@ -26,7 +26,7 @@ public class TeamProject {
         try
         {
           // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/Ayse/Documents/NetBeansProjects/GARITS/GARITSDB.db");
+          connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
           Statement statement = connection.createStatement();
           statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
