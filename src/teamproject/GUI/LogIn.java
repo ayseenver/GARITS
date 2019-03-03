@@ -6,14 +6,11 @@
 package teamproject.GUI;
 
 //import teamproject.GUI.MainMenu;
-import java.awt.GraphicsConfiguration;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JFrame;
 
 /**
@@ -183,7 +180,7 @@ public class LogIn extends javax.swing.JPanel {
             if (username.equals(user) && password.equals(pass)){
                 JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                 f.dispose();
-                new MainMenu();
+                new MainMenu(username);
             }
           }        
         }

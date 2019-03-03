@@ -5,6 +5,11 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JFrame;
 
 /**
@@ -16,14 +21,67 @@ public class MainMenu extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public MainMenu() {
+    
+    private ResultSet rs;
+    private Statement statement;
+    private String roleName;
+    
+    public MainMenu(String username) {
 
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
+        Connection connection = null;
+        try
+        {
+          // create a database connection
+          connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+          this.statement = connection.createStatement();
+          this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            this.rs = statement.executeQuery("select * from User");
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String user = rs.getString("username");
+            
+            if (username.equals(user)){
+               this.rs = statement.executeQuery("select roleName from User where username='user1'");
+               roleName = rs.getString("roleName");
+               System.out.println(roleName);
+            }
+          }        
+        }
+        catch(SQLException e){
+        }
+        
+        if (roleName.equals("receptionist")){
+            this.receptionist_menu();
+        }
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    public void receptionist_menu(){
+        this.buttonAllocateJob.setVisible(false);
+        this.buttonMyJobs.setVisible(false);
     }
 
     /**
