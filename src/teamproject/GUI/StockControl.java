@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class StockControl extends javax.swing.JPanel {
-
+    private String username;
+    
     /**
      * Creates new form NewJPanel
      */
-    public StockControl() {
+    public StockControl(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -233,13 +238,13 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        PartOrder partOrder = new PartOrder();
+        new PartOrder(username);
     }//GEN-LAST:event_buttonOrderActionPerformed
 
     private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        Report stockReport = new Report();
+        new Report(username);
     }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
@@ -261,7 +266,7 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void selectFromLowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFromLowStockActionPerformed
@@ -275,7 +280,7 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        PartSale partSale = new PartSale();
+        new PartSale(username);
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
     private void textFieldConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldConfigureThresholdActionPerformed

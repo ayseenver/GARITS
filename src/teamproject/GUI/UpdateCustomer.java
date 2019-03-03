@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class UpdateCustomer extends javax.swing.JPanel {
+    private String username;
 
     /**
      * Creates new form NewJPanel
      */
-    public UpdateCustomer() {
+    public UpdateCustomer(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUsername.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -419,13 +424,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CustomerList();
+        new CustomerList(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
 

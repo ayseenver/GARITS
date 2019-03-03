@@ -25,9 +25,10 @@ public class MainMenu extends javax.swing.JPanel {
     private ResultSet rs;
     private Statement statement;
     private String roleName;
+    private String username;
     
     public MainMenu(String username) {
-
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -65,16 +66,18 @@ public class MainMenu extends javax.swing.JPanel {
             if (username.equals(user)){
                this.rs = statement.executeQuery("select roleName from User where username='user1'");
                roleName = rs.getString("roleName");
-               System.out.println(roleName);
             }
           }        
         }
         catch(SQLException e){
         }
         
+        /*
         if (roleName.equals("receptionist")){
             this.receptionist_menu();
         }
+        */
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -217,51 +220,51 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CreateJobCustomer();
+        new CreateJobCustomer(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void buttonRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemindersActionPerformed
           JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new ReminderGUI();
+        new ReminderGUI(username);
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new StockControl();
+        new StockControl(username);
                 
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Invoice();
+        new Invoice(username);
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MyJob myJob = new MyJob();
+        new MyJob(username);
     }//GEN-LAST:event_buttonMyJobsActionPerformed
 
     private void buttonAllocateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new AllocateJob();
+        new AllocateJob(username);
     }//GEN-LAST:event_buttonAllocateJobActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Report();
+        new Report(username);
         
     }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new JobList();
+        new JobList(username);
     }//GEN-LAST:event_buttonJobListActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -275,7 +278,7 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonCustomers1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomers1ActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CustomerList();
+        new CustomerList(username);
     }//GEN-LAST:event_buttonCustomers1ActionPerformed
 
 
