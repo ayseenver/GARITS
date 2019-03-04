@@ -7,6 +7,7 @@ package teamproject.GUI;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,8 +21,11 @@ import javax.swing.JFrame;
 public class CreateJobCustomer extends javax.swing.JPanel {
     private final String username;
     private Statement statement;
-    private ResultSet rs;
+    private ResultSet rsC;
+    private ResultSet rsV;
     String[] nameArray;
+    String[] detailArray;
+    private Connection connection;
     
     /**
      * Creates new form NewJPanel
@@ -38,7 +42,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         EstablishConnection();
         
         try{
-            this.rs = statement.executeQuery("select * from Customer");
+            this.rsC = statement.executeQuery("select * from Customer");
         }
         catch(SQLException e)
         {
@@ -51,10 +55,10 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         ArrayList<String> names = new ArrayList<>();
         
         try{
-        while(rs.next())
+        while(rsC.next())
           {
             // read the result set
-            String name = rs.getString("name");
+            String name = rsC.getString("name");
             names.add(name);
           } 
         }
@@ -64,7 +68,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         nameArray = CreateNameArray(names);
                 
         listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            //String[] strings = {"Item 6", "Item 2", "Item 3", "Item 4", "Item 5"};
             public int getSize() { return nameArray.length; }
             public String getElementAt(int i) { return nameArray[i]; }
         });
@@ -79,8 +82,14 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         return nameArray;
     }
     
+    private String[] CreateDetailArray(ArrayList<String> details){
+        String[] detailArray = new String[details.size()];
+        detailArray = details.toArray(detailArray);
+        return detailArray;
+    }
+    
     private void EstablishConnection(){
-        Connection connection = null;
+        connection = null;
         try
         {
             // create a database connection
@@ -268,7 +277,46 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
-        // TODO add your handling code here:
+        try{
+            String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) +"'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rsV = ps.executeQuery();
+            //this.rsV = statement.executeQuery("select * from Vehicle where Customername =");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listVehicle.removeAll();
+        ArrayList<String> details = new ArrayList<>();
+        
+        try{
+        while(rsV.next())
+          {
+            // read the result set
+            String detail = rsV.getString("make") + ", " + rsV.getString("model") + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
+            details.add(detail);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        detailArray = CreateDetailArray(details);
+        
+        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return detailArray.length; }
+            public String getElementAt(int i) { return detailArray[i]; }
+        });
+        
     }//GEN-LAST:event_buttonFindVehicleActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
