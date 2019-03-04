@@ -5,6 +5,12 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 
 /**
@@ -13,6 +19,9 @@ import javax.swing.JFrame;
  */
 public class CreateJobCustomer extends javax.swing.JPanel {
     private final String username;
+    private Statement statement;
+    private ResultSet rs;
+    String[] nameArray;
     
     /**
      * Creates new form NewJPanel
@@ -26,9 +35,65 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        EstablishConnection();
+        
+        try{
+            this.rs = statement.executeQuery("select * from Customer");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listCustomers.removeAll();
+        ArrayList<String> names = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String name = rs.getString("name");
+            names.add(name);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        nameArray = CreateNameArray(names);
+                
+        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
+            //String[] strings = {"Item 6", "Item 2", "Item 3", "Item 4", "Item 5"};
+            public int getSize() { return nameArray.length; }
+            public String getElementAt(int i) { return nameArray[i]; }
+        });
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private String[] CreateNameArray(ArrayList<String> names){
+        String[] nameArray = new String[names.size()];
+        nameArray = names.toArray(nameArray);
+        return nameArray;
+    }
+    
+    private void EstablishConnection(){
+        Connection connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+            this.statement = connection.createStatement();
+            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
