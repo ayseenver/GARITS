@@ -12,7 +12,7 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class CreateJobCustomer extends javax.swing.JPanel {
-    private String username;
+    private final String username;
     
     /**
      * Creates new form NewJPanel
