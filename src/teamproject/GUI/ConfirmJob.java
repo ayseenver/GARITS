@@ -5,6 +5,12 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
@@ -20,27 +26,37 @@ public class ConfirmJob extends javax.swing.JPanel {
     Customer c;
     String[] requiredTaskArray;
     ArrayList<String> requiredTasks = new ArrayList<>();
+    int bayID;
+    String jobType;
+    Connection connection;
+    Statement statement;
+    ResultSet rs;
 
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob(String username, Vehicle v, Customer c, ArrayList<String> tasks) {
+    public ConfirmJob(String username, Vehicle v, Customer c, ArrayList<String> tasks, String bayID, String jobType) {
         this.username = username;
         this.v = v;
         this.c = c;
         this.requiredTasks = tasks;
+        this.bayID = Integer.parseInt(bayID);
+        this.jobType = jobType;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        EstablishConnection();
         
         ShowVehicleDetails();
         ShowTaskDetails();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        System.out.println(v.getRegistrationNumber());
     }
     
     private String[] CreateArray(ArrayList<String> tasks){
@@ -60,6 +76,47 @@ public class ConfirmJob extends javax.swing.JPanel {
             public int getSize() { return requiredTaskArray.length; }
             public String getElementAt(int i) { return requiredTaskArray[i]; }
         });
+    }
+    
+    private void EstablishConnection(){
+        connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+            this.statement = connection.createStatement();
+            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    private void WriteToDatabase(){
+        String regNo = "'" + v.getRegistrationNumber() + "'";
+        String jt = "'" + jobType + "'";
+        try{
+            String sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
+                    + " values ((select registrationNumber from Vehicle where registrationNumber = " + regNo + "), "
+                    + "(select bayID from Bay where bayID = " + bayID + "), "
+                    + "date('now'), "
+                    + jt + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println(ps.executeUpdate());
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }
     
     /**
@@ -185,6 +242,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        WriteToDatabase();
         new MainMenu(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 

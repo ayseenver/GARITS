@@ -1,12 +1,6 @@
 package teamproject.Jobs;
 
-import teamproject.User_Accounts.Mechanic;
-import Spare_Parts.SparePart;
-import java.util.Date;
 import teamproject.Customer_Account.Vehicle;
-import teamproject.Jobs.SparePartUsed;
-import teamproject.Jobs.Task;
-
 public class Job {
 
     private int jobID;
