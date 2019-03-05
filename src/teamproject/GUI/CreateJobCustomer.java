@@ -164,11 +164,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         add(labelPickCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, -1, -1));
 
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane9.setViewportView(listCustomers);
 
         add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 1140, 150));
@@ -178,11 +173,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         add(labelSelectCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
 
         listVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane8.setViewportView(listVehicle);
 
         add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, 1140, 130));
