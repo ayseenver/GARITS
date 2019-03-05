@@ -66,6 +66,8 @@ public class StockControl extends javax.swing.JPanel {
         textFieldConfigureThreshold = new javax.swing.JTextField();
         buttonConfigureThreshold = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblStockControl.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

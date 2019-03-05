@@ -57,6 +57,8 @@ public class AllocateJob extends javax.swing.JPanel {
         jScrollPane7 = new javax.swing.JScrollPane();
         listNotAllocatedJobs1 = new javax.swing.JList<>();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJobAllocation.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

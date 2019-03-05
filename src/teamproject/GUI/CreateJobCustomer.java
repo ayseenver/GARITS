@@ -63,6 +63,9 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         buttonAddNewVehicle = new javax.swing.JButton();
         buttonNewCustomer = new javax.swing.JButton();
 
+        setMinimumSize(new java.awt.Dimension(1280, 720));
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelCreateJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

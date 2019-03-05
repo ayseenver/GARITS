@@ -80,6 +80,8 @@ public class Job extends javax.swing.JPanel {
         buttonRequestPartsList = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

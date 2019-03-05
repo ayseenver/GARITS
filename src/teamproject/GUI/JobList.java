@@ -55,6 +55,8 @@ public class JobList extends javax.swing.JPanel {
         comboBoxBayType = new javax.swing.JComboBox<>();
         jButton16 = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearch.setText("Search");

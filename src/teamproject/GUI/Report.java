@@ -62,6 +62,8 @@ public class Report extends javax.swing.JPanel {
         labelSelectType = new javax.swing.JLabel();
         comboBoxReportType = new javax.swing.JComboBox<>();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelReports.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

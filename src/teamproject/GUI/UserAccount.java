@@ -11,13 +11,13 @@ import javax.swing.JFrame;
  *
  * @author ahmetsesli
  */
-public class UserAccounts extends javax.swing.JPanel {
+public class UserAccount extends javax.swing.JPanel {
     private String username;
 
     /**
      * Creates new form NewJPanel
      */
-    public UserAccounts(String username) {
+    public UserAccount(String username) {
         this.username = username;
         initComponents();
         JFrame frame = new JFrame();
@@ -64,6 +64,7 @@ public class UserAccounts extends javax.swing.JPanel {
         labelLastName1 = new javax.swing.JLabel();
         textFieldLastName1 = new javax.swing.JTextField();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
         setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
