@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Vehicle;
 
 /**
  *
@@ -13,12 +14,14 @@ import javax.swing.JFrame;
  */
 public class ConfirmJob extends javax.swing.JPanel {
     private String username;
+    Vehicle v;
 
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob(String username) {
+    public ConfirmJob(String username, Vehicle v) {
         this.username = username;
+        this.v = v;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -26,10 +29,16 @@ public class ConfirmJob extends javax.swing.JPanel {
         
         this.textFieldUserDetails.setText(username);
         
+        ShowVehicleDetails();
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void ShowVehicleDetails(){
+        textAreaCustomerDetails.setText(v.toString());
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -355,7 +355,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         
         f.dispose();
-        new ConfirmJob(username);
+        new ConfirmJob(username, v);
     }//GEN-LAST:event_createJobButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

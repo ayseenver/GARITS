@@ -67,7 +67,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         catch(SQLException e){
         }
         
-        nameArray = CreateNameArray(names);
+        nameArray = CreateArray(names);
                 
         listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return nameArray.length; }
@@ -78,16 +78,10 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    private String[] CreateNameArray(ArrayList<String> names){
-        String[] nameArray = new String[names.size()];
-        nameArray = names.toArray(nameArray);
-        return nameArray;
-    }
-    
-    private String[] CreateDetailArray(ArrayList<String> details){
-        String[] detailArray = new String[details.size()];
-        detailArray = details.toArray(detailArray);
-        return detailArray;
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
     }
     
     private void EstablishConnection(){
@@ -264,7 +258,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         String temp = (listVehicle.getSelectedValue());
         String[] details = temp.split(", ");
         
-        new CreateJobTask(username, v);
         for (String s : details){
             System.out.println(s);
         }
@@ -332,6 +325,8 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }
+        
+        textFieldVehicleSelected.setText(v.getRegistrationNumber());
     }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -372,7 +367,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         catch(SQLException e){
         }
         
-        detailArray = CreateDetailArray(details);
+        detailArray = CreateArray(details);
         
         listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return detailArray.length; }
