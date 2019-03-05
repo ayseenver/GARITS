@@ -48,6 +48,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         }
         
         listAvailableTasks.removeAll();
+        listTasksCarriedOut.removeAll();
         
         ArrayList<String> tasks = new ArrayList<>();
         
@@ -107,7 +108,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void initComponents() {
 
         labelSelectTasks = new javax.swing.JLabel();
-        jButton16 = new javax.swing.JButton();
+        createJobButton = new javax.swing.JButton();
         labelCreateJob = new javax.swing.JLabel();
         comboBoxBayType = new javax.swing.JComboBox<>();
         jScrollPane11 = new javax.swing.JScrollPane();
@@ -124,14 +125,14 @@ public class CreateJobTask extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         listTasksCarriedOut = new javax.swing.JList<>();
-        buttonMoveTaskToCarriedOut = new javax.swing.JButton();
-        buttonMoveTaskToAvailable = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         listAvailableTasks = new javax.swing.JList<>();
         labelAvailableTasks = new javax.swing.JLabel();
         textFieldSearchJobs = new javax.swing.JTextField();
         buttonSearchTasks = new javax.swing.JButton();
         labelTasksRequired = new javax.swing.JLabel();
+        removeTask = new javax.swing.JButton();
+        addTask1 = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -139,14 +140,14 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelSelectTasks.setText("Select Tasks");
         add(labelSelectTasks, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, -1, -1));
 
-        jButton16.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jButton16.setText("Create Job");
-        jButton16.addActionListener(new java.awt.event.ActionListener() {
+        createJobButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        createJobButton.setText("Create Job");
+        createJobButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton16ActionPerformed(evt);
+                createJobButtonActionPerformed(evt);
             }
         });
-        add(jButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 620, -1, -1));
+        add(createJobButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 620, -1, -1));
 
         labelCreateJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCreateJob.setText("Create Job");
@@ -220,30 +221,9 @@ public class CreateJobTask extends javax.swing.JPanel {
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane5.setViewportView(listTasksCarriedOut);
 
         jPanel6.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 220));
-
-        buttonMoveTaskToCarriedOut.setText(">");
-        buttonMoveTaskToCarriedOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToCarriedOutActionPerformed(evt);
-            }
-        });
-        jPanel6.add(buttonMoveTaskToCarriedOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 172, 30, -1));
-
-        buttonMoveTaskToAvailable.setText("<");
-        buttonMoveTaskToAvailable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToAvailableActionPerformed(evt);
-            }
-        });
-        jPanel6.add(buttonMoveTaskToAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 132, 30, -1));
 
         listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
@@ -272,14 +252,32 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelTasksRequired.setText("Tasks Required:");
         jPanel6.add(labelTasksRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
 
+        removeTask.setText("<");
+        removeTask.setActionCommand("addTask");
+        removeTask.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeTaskActionPerformed(evt);
+            }
+        });
+        jPanel6.add(removeTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
+
+        addTask1.setText(">");
+        addTask1.setActionCommand("addTask");
+        addTask1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addTask1ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(addTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, -1, -1));
+
         add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, 550, 320));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+    private void createJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         new ConfirmJob(username);
-    }//GEN-LAST:event_jButton16ActionPerformed
+    }//GEN-LAST:event_createJobButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
         // TODO add your handling code here:
@@ -297,29 +295,28 @@ public class CreateJobTask extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBoxYardActionPerformed
 
-    private void buttonMoveTaskToCarriedOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToCarriedOutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToCarriedOutActionPerformed
-
-    private void buttonMoveTaskToAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToAvailableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToAvailableActionPerformed
-
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
+    private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeTaskActionPerformed
+
+    private void addTask1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTask1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addTask1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addTask1;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonMoveTaskToAvailable;
-    private javax.swing.JButton buttonMoveTaskToCarriedOut;
     private javax.swing.JButton buttonSearchTasks;
     private javax.swing.JCheckBox checkBoxYard;
     private javax.swing.JComboBox<String> comboBoxBayType;
     private javax.swing.JComboBox<String> comboBoxJobType;
-    private javax.swing.JButton jButton16;
+    private javax.swing.JButton createJobButton;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
@@ -335,6 +332,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     private javax.swing.JList<String> listAvailableBay;
     private javax.swing.JList<String> listAvailableTasks;
     private javax.swing.JList<String> listTasksCarriedOut;
+    private javax.swing.JButton removeTask;
     private javax.swing.JTextField textFieldSearchJobs;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
