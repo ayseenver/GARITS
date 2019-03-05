@@ -12,16 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class ConfirmJob extends javax.swing.JPanel {
+    private String username;
 
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob() {
-
+    public ConfirmJob(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -54,6 +58,8 @@ public class ConfirmJob extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         labelCustomerDetails1 = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonEditJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -154,7 +160,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenu = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

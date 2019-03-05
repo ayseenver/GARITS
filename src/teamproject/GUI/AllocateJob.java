@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class AllocateJob extends javax.swing.JPanel {
-
+    private String username;
+    
     /**
      * Creates new form NewJPanel
      */
-    public AllocateJob() {
+    public AllocateJob(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -52,6 +57,8 @@ public class AllocateJob extends javax.swing.JPanel {
         jScrollPane7 = new javax.swing.JScrollPane();
         listNotAllocatedJobs1 = new javax.swing.JList<>();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJobAllocation.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -176,7 +183,7 @@ public class AllocateJob extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonAddToListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToListActionPerformed

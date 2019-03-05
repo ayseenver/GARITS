@@ -11,12 +11,14 @@ import javax.swing.JFrame;
  *
  * @author ahmetsesli
  */
-public class UserAccounts extends javax.swing.JPanel {
+public class UserAccount extends javax.swing.JPanel {
+    private String username;
 
     /**
      * Creates new form NewJPanel
      */
-    public UserAccounts() {
+    public UserAccount(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -62,6 +64,7 @@ public class UserAccounts extends javax.swing.JPanel {
         labelLastName1 = new javax.swing.JLabel();
         textFieldLastName1 = new javax.swing.JTextField();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
         setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -199,7 +202,7 @@ public class UserAccounts extends javax.swing.JPanel {
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenu = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewUserActionPerformed
@@ -233,7 +236,7 @@ public class UserAccounts extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
 

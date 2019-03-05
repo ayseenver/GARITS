@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class CustomerList extends javax.swing.JPanel {
-
+    private String username;
+    
     /**
      * Creates new form NewJPanel
      */
-    public CustomerList() {
+    public CustomerList(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -56,6 +61,8 @@ public class CustomerList extends javax.swing.JPanel {
         comboBoxPaymentMethod = new javax.swing.JComboBox<>();
         labelSelectCustomer = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelCustomers.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -176,7 +183,7 @@ public class CustomerList extends javax.swing.JPanel {
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        UpdateCustomer updateCustomer = new UpdateCustomer();
+        new UpdateCustomer(username);
 
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
@@ -191,13 +198,13 @@ public class CustomerList extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditCustomerActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        UpdateCustomer updateCustomer = new UpdateCustomer();
+        new UpdateCustomer(username);
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
 

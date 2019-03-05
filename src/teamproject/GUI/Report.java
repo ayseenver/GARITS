@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class Report extends javax.swing.JPanel {
-
+    private String username;
+    
     /**
      * Creates new form NewJPanel
      */
-    public Report() {
+    public Report(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails1.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -57,6 +62,8 @@ public class Report extends javax.swing.JPanel {
         labelSelectType = new javax.swing.JLabel();
         comboBoxReportType = new javax.swing.JComboBox<>();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelReports.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -202,7 +209,7 @@ public class Report extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void textFieldUserDetails1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetails1ActionPerformed

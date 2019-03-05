@@ -6,14 +6,11 @@
 package teamproject.GUI;
 
 //import teamproject.GUI.MainMenu;
-import java.awt.GraphicsConfiguration;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JFrame;
 
 /**
@@ -68,6 +65,8 @@ public class LogIn extends javax.swing.JPanel {
         textFieldPassword = new javax.swing.JTextField();
         buttonSignin = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
+
+        setLocation(new java.awt.Point(50, 0));
 
         labelUsername.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelUsername.setText("Username:");
@@ -183,7 +182,7 @@ public class LogIn extends javax.swing.JPanel {
             if (username.equals(user) && password.equals(pass)){
                 JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                 f.dispose();
-                new MainMenu();
+                new MainMenu(username);
             }
           }        
         }

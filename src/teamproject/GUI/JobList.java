@@ -12,15 +12,20 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class JobList extends javax.swing.JPanel {
-
+    private String username;
+    
     /**
      * Creates new form NewJPanel
      */
-    public JobList() {
+    public JobList(String username) {
+        this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        
+        this.textFieldUserDetails.setText(username);
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -50,6 +55,8 @@ public class JobList extends javax.swing.JPanel {
         comboBoxBayType = new javax.swing.JComboBox<>();
         jButton16 = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearch.setText("Search");
@@ -166,7 +173,7 @@ public class JobList extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        MainMenu mainMenuFranchisee = new MainMenu();
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
