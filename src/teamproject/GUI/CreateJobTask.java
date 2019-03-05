@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Vehicle;
 
 /**
  *
@@ -31,14 +32,17 @@ public class CreateJobTask extends javax.swing.JPanel {
     private Connection connection;
     String bayType;
     String jobType;
+    Job job;
+    Vehicle v;
     
     /**
      * Creates new form NewJPanel
      */
-    public CreateJobTask(String username) {
+    public CreateJobTask(String username, Vehicle v) {
         this.username = username;
         this.bayType = "MoT inspection";
         this.jobType = "Service";
+        this.v = v;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -93,7 +97,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         ArrayList<String> bays = new ArrayList<>();
         //get all bays
         try{
-            String sql = ("select * from Bay where type = '" + bayType) +"'";
+            String sql = ("select * from Bay where type = '" + bayType) +"'" + ("and booked = 0");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -116,7 +120,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String bay = rs.getString("bayID") +", " + rs.getString("type");
+            String bay = rs.getString("bayID") +": " + rs.getString("type");
             bays.add(bay);
           } 
         }
@@ -349,6 +353,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void createJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        
         f.dispose();
         new ConfirmJob(username);
     }//GEN-LAST:event_createJobButtonActionPerformed

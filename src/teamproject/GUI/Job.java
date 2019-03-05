@@ -30,6 +30,10 @@ public class Job extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    Job() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -400,4 +404,8 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldTime;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
+
+    void setType(String jobType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

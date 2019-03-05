@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Vehicle;
 
 /**
  *
@@ -26,6 +27,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     String[] nameArray;
     String[] detailArray;
     private Connection connection;
+    Vehicle v = new Vehicle();
     
     /**
      * Creates new form NewJPanel
@@ -255,11 +257,81 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CreateJobTask(username);
+        new CreateJobTask(username, v);        
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
-        // TODO add your handling code here:
+        String temp = (listVehicle.getSelectedValue());
+        String[] details = temp.split(", ");
+        
+        new CreateJobTask(username, v);
+        for (String s : details){
+            System.out.println(s);
+        }
+        
+        try{
+            String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) +"'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsV = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            v.setMake(rsV.getString("make"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            v.setModel(rsV.getString("model"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            v.setRegistrationNumber(rsV.getString("registrationNumber"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            v.setEngineSerial(rsV.getString("engineSerial"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            v.setChassisNumber(rsV.getString("chassisNumber"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+                
+        try{
+            v.setColour(rsV.getString("colour"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed

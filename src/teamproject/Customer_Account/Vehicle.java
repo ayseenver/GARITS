@@ -12,6 +12,22 @@ public class Vehicle {
 	private String colour;
 	private Date nextMoTDate;
 	private Date nextServiceDate;
+        
+        /**
+	 * 
+	 * @param registrationNumber
+	 * @param make
+	 * @param model
+	 * @param engineSerial
+	 * @param chassisNumber
+	 * @param colour
+	 * @param nextMoTDate
+	 * @param nextServiceDate
+	 */
+	public Vehicle Vehicle() {
+		// TODO - implement Vehicle.Vehicle
+		throw new UnsupportedOperationException();
+	}
 
 	public String getRegistrationNumber() {
 		return this.registrationNumber;
@@ -107,22 +123,6 @@ public class Vehicle {
 	 */
 	public void setNextServiceDate(Date nextServiceDate) {
 		this.nextServiceDate = nextServiceDate;
-	}
-
-	/**
-	 * 
-	 * @param registrationNumber
-	 * @param make
-	 * @param model
-	 * @param engineSerial
-	 * @param chassisNumber
-	 * @param colour
-	 * @param nextMoTDate
-	 * @param nextServiceDate
-	 */
-	public Vehicle Vehicle(String registrationNumber, String make, String model, String engineSerial, String chassisNumber, String colour, Date nextMoTDate, Date nextServiceDate) {
-		// TODO - implement Vehicle.Vehicle
-		throw new UnsupportedOperationException();
 	}
 
 }
