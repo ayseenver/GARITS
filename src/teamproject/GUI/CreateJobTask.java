@@ -74,22 +74,10 @@ public class CreateJobTask extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    private String[] CreateTaskArray(ArrayList<String> tasks){
-        String[] taskArray = new String[tasks.size()];
-        taskArray = tasks.toArray(taskArray);
-        return taskArray;
-    }
-    
-    private String[] CreateRequiredTaskArray(ArrayList<String> tasks){
-        String[] requiredTaskArray = new String[tasks.size()];
-        requiredTaskArray = tasks.toArray(requiredTaskArray);
-        return requiredTaskArray;
-    }
-    
-    private String[] CreateBayArray(ArrayList<String> bays){
-        String[] bayArray = new String[bays.size()];
-        bayArray = bays.toArray(bayArray);
-        return bayArray;
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
     }
     
     private void UpdateBayList(){
@@ -127,7 +115,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         catch(SQLException e){
         }
         
-        bayArray = CreateBayArray(bays);
+        bayArray = CreateArray(bays);
                 
         listAvailableBays.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return bayArray.length; }
@@ -150,14 +138,13 @@ public class CreateJobTask extends javax.swing.JPanel {
         catch(SQLException e){
         }
         
-        taskArray = CreateTaskArray(tasks);
+        taskArray = CreateArray(tasks);
                 
         listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return taskArray.length; }
             public String getElementAt(int i) { return taskArray[i]; }
         });
     }
-    
     
     private void EstablishConnection(){
         connection = null;
@@ -355,7 +342,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         
         f.dispose();
-        new ConfirmJob(username, v);
+        new ConfirmJob(username, v, requiredTasks);
     }//GEN-LAST:event_createJobButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -385,7 +372,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         
         requiredTasks.remove(selected);
         
-        requiredTaskArray = CreateRequiredTaskArray(requiredTasks);
+        requiredTaskArray = CreateArray(requiredTasks);
                 
         listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return requiredTaskArray.length; }
@@ -401,7 +388,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         
         requiredTasks.add(selected);
         
-        requiredTaskArray = CreateRequiredTaskArray(requiredTasks);
+        requiredTaskArray = CreateArray(requiredTasks);
                 
         listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return requiredTaskArray.length; }

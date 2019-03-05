@@ -5,6 +5,7 @@
  */
 package teamproject.GUI;
 
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Vehicle;
 
@@ -15,13 +16,16 @@ import teamproject.Customer_Account.Vehicle;
 public class ConfirmJob extends javax.swing.JPanel {
     private String username;
     Vehicle v;
+    String[] requiredTaskArray;
+    ArrayList<String> requiredTasks = new ArrayList<>();
 
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob(String username, Vehicle v) {
+    public ConfirmJob(String username, Vehicle v, ArrayList<String> tasks) {
         this.username = username;
         this.v = v;
+        this.requiredTasks = tasks;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -30,13 +34,29 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.textFieldUserDetails.setText(username);
         
         ShowVehicleDetails();
+        ShowTaskDetails();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
 
     private void ShowVehicleDetails(){
         textAreaCustomerDetails.setText(v.toString());
+    }
+    
+    private void ShowTaskDetails(){
+        requiredTaskArray = CreateArray(requiredTasks);
+                
+        listTasksRequired.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return requiredTaskArray.length; }
+            public String getElementAt(int i) { return requiredTaskArray[i]; }
+        });
     }
     
     /**
@@ -98,11 +118,6 @@ public class ConfirmJob extends javax.swing.JPanel {
         add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 650, -1, -1));
 
         listTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listTasksRequired.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane11.setViewportView(listTasksRequired);
 
         add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 540, 220));
@@ -175,7 +190,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

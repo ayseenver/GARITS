@@ -1,7 +1,5 @@
 package teamproject.Customer_Account;
 
-import java.util.Date;
-
 public class Vehicle {
 
 	private String registrationNumber;
@@ -10,8 +8,6 @@ public class Vehicle {
 	private String engineSerial;
 	private String chassisNumber;
 	private String colour;
-	private Date nextMoTDate;
-	private Date nextServiceDate;
         
         /**
 	 * 
@@ -21,8 +17,6 @@ public class Vehicle {
 	 * @param engineSerial
 	 * @param chassisNumber
 	 * @param colour
-	 * @param nextMoTDate
-	 * @param nextServiceDate
 	 */
 	public Vehicle Vehicle() {
 		// TODO - implement Vehicle.Vehicle
@@ -99,30 +93,6 @@ public class Vehicle {
 	 */
 	public void setColour(String colour) {
 		this.colour = colour;
-	}
-
-	public Date getNextMoTDate() {
-		return this.nextMoTDate;
-	}
-
-	/**
-	 * 
-	 * @param nextMoTDate
-	 */
-	public void setNextMoTDate(Date nextMoTDate) {
-		this.nextMoTDate = nextMoTDate;
-	}
-
-	public Date getNextServiceDate() {
-		return this.nextServiceDate;
-	}
-
-	/**
-	 * 
-	 * @param nextServiceDate
-	 */
-	public void setNextServiceDate(Date nextServiceDate) {
-		this.nextServiceDate = nextServiceDate;
 	}
 
     @Override
