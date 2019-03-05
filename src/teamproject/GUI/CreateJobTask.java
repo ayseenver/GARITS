@@ -24,7 +24,10 @@ public class CreateJobTask extends javax.swing.JPanel {
     private ResultSet rs;    
     private Statement statement;
     String[] taskArray;
+    String[] requiredTaskArray;
     String[] bayArray;
+    ArrayList<String> requiredTasks = new ArrayList<>();
+    ArrayList<String> tasks = new ArrayList<>();
     private Connection connection;
     String bayType;
     String jobType;
@@ -58,26 +61,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         listRequiredTasks.removeAll();
         listAvailableBays.removeAll();
         
-        ArrayList<String> tasks = new ArrayList<>();
-        
-        //add all tasks to task list
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String task = rs.getString("description");
-            tasks.add(task);
-          } 
-        }
-        catch(SQLException e){
-        }
-        
-        taskArray = CreateTaskArray(tasks);
-                
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return taskArray.length; }
-            public String getElementAt(int i) { return taskArray[i]; }
-        });
+        UpdateTaskList();
         
         UpdateBayList();
         
@@ -92,6 +76,12 @@ public class CreateJobTask extends javax.swing.JPanel {
         return taskArray;
     }
     
+    private String[] CreateRequiredTaskArray(ArrayList<String> tasks){
+        String[] requiredTaskArray = new String[tasks.size()];
+        requiredTaskArray = tasks.toArray(requiredTaskArray);
+        return requiredTaskArray;
+    }
+    
     private String[] CreateBayArray(ArrayList<String> bays){
         String[] bayArray = new String[bays.size()];
         bayArray = bays.toArray(bayArray);
@@ -99,7 +89,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     }
     
     private void UpdateBayList(){
-        listAvailableBays.removeAll();
+        listAvailableTasks.removeAll();
         ArrayList<String> bays = new ArrayList<>();
         //get all bays
         try{
@@ -140,6 +130,30 @@ public class CreateJobTask extends javax.swing.JPanel {
             public String getElementAt(int i) { return bayArray[i]; }
         });
     }
+    
+    private void UpdateTaskList(){
+        listAvailableBays.removeAll();
+        
+        //add all tasks to task list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String task = rs.getString("description");
+            tasks.add(task);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        taskArray = CreateTaskArray(tasks);
+                
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return taskArray.length; }
+            public String getElementAt(int i) { return taskArray[i]; }
+        });
+    }
+    
     
     private void EstablishConnection(){
         connection = null;
@@ -362,11 +376,35 @@ public class CreateJobTask extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
-        // TODO add your handling code here:
+        String selected = listRequiredTasks.getSelectedValue();
+        
+        requiredTasks.remove(selected);
+        
+        requiredTaskArray = CreateRequiredTaskArray(requiredTasks);
+                
+        listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return requiredTaskArray.length; }
+            public String getElementAt(int i) { return requiredTaskArray[i]; }
+        });
+        
+        tasks.add(selected);
+        UpdateTaskList();
     }//GEN-LAST:event_removeTaskActionPerformed
 
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
-        System.out.println(listAvailableTasks.getSelectedValue());
+        String selected = listAvailableTasks.getSelectedValue();
+        
+        requiredTasks.add(selected);
+        
+        requiredTaskArray = CreateRequiredTaskArray(requiredTasks);
+                
+        listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return requiredTaskArray.length; }
+            public String getElementAt(int i) { return requiredTaskArray[i]; }
+        });
+        
+        tasks.remove(selected);
+        UpdateTaskList();
     }//GEN-LAST:event_addTaskActionPerformed
 
     private void bayTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bayTypeComboActionPerformed
