@@ -7,6 +7,7 @@ package teamproject.GUI;
 
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 
 /**
@@ -16,15 +17,17 @@ import teamproject.Customer_Account.Vehicle;
 public class ConfirmJob extends javax.swing.JPanel {
     private String username;
     Vehicle v;
+    Customer c;
     String[] requiredTaskArray;
     ArrayList<String> requiredTasks = new ArrayList<>();
 
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob(String username, Vehicle v, ArrayList<String> tasks) {
+    public ConfirmJob(String username, Vehicle v, Customer c, ArrayList<String> tasks) {
         this.username = username;
         this.v = v;
+        this.c = c;
         this.requiredTasks = tasks;
         initComponents();
         JFrame frame = new JFrame();
@@ -47,7 +50,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     }
 
     private void ShowVehicleDetails(){
-        textAreaCustomerDetails.setText(v.toString());
+        textAreaCustomerDetails.setText(v.toString() + "\n\n" + c.toString());
     }
     
     private void ShowTaskDetails(){

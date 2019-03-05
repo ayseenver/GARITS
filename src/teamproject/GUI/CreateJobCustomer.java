@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 
 /**
@@ -28,6 +29,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     String[] detailArray;
     private Connection connection;
     Vehicle v = new Vehicle();
+    Customer c = new Customer();
     
     /**
      * Creates new form NewJPanel
@@ -251,7 +253,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CreateJobTask(username, v);        
+        new CreateJobTask(username, v, c);        
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
@@ -334,6 +336,8 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
+        String temp = (listCustomers.getSelectedValue());
+        System.out.println(temp);
         try{
             String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) +"'";
             PreparedStatement ps = null;
@@ -373,6 +377,70 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             public int getSize() { return detailArray.length; }
             public String getElementAt(int i) { return detailArray[i]; }
         });
+        
+        try{
+            String sql = ("select * from Customer where name = '" + temp + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsC = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setName(rsC.getString("name"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setAddress(rsC.getString("address"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setPostCode(rsC.getString("postCode"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setFax(rsC.getString("fax"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
         
     }//GEN-LAST:event_buttonFindVehicleActionPerformed
 

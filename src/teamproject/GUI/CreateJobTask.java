@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 
 /**
@@ -34,15 +35,17 @@ public class CreateJobTask extends javax.swing.JPanel {
     String jobType;
     Job job;
     Vehicle v;
+    Customer c;
     
     /**
      * Creates new form NewJPanel
      */
-    public CreateJobTask(String username, Vehicle v) {
+    public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
         this.bayType = "MoT inspection";
         this.jobType = "Service";
         this.v = v;
+        this.c = c;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -342,7 +345,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         
         f.dispose();
-        new ConfirmJob(username, v, requiredTasks);
+        new ConfirmJob(username, v, c, requiredTasks);
     }//GEN-LAST:event_createJobButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed

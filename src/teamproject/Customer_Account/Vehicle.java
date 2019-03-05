@@ -97,8 +97,12 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "Vehicle:\n" + "registrationNumber=" + registrationNumber + ",\n make=" + make + ",\n model=" 
-                + model + ",\n engineSerial=" + engineSerial + ",\n chassisNumber=" + chassisNumber + ",\n colour=" + colour;
+        return "Vehicle:\n" + "registrationNumber=" + registrationNumber 
+                + ",\n make=" + make 
+                + ",\n model=" + model 
+                + ",\n engineSerial=" + engineSerial 
+                + ",\n chassisNumber=" + chassisNumber 
+                + ",\n colour=" + colour;
     }
    
 }

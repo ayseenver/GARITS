@@ -1,6 +1,5 @@
 package teamproject.Customer_Account;
 
-import java.util.Date;
 
 public class Customer {
 
@@ -10,7 +9,9 @@ public class Customer {
 	private String postCode;
 	private String telephoneNumber;
 	private String fax;
-	private Date dateCreated;
+        
+	public Customer() {
+	}
 
 	public String getName() {
 		return this.name;
@@ -84,63 +85,13 @@ public class Customer {
 		this.fax = fax;
 	}
 
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	/**
-	 * 
-	 * @param dateCreated
-	 */
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	/**
-	 * 
-	 * @param vehicle
-	 */
-	public Vehicle addVehicle(Vehicle vehicle) {
-		// TODO - implement Customer.addVehicle
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param registrationNumber
-	 */
-	public void removeVehicle(String registrationNumber) {
-		// TODO - implement Customer.removeVehicle
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param vehicle
-	 */
-	public void updateVehicle(Vehicle vehicle) {
-		// TODO - implement Customer.updateVehicle
-		throw new UnsupportedOperationException();
-	}
-
-	public Vehicle[] getVehicle() {
-		// TODO - implement Customer.getVehicle
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param name
-	 * @param emailAddress
-	 * @param address
-	 * @param postCode
-	 * @param telephoneNumber
-	 * @param fax
-	 * @param dateCreated
-	 */
-	public static Customer Customer(String name, String emailAddress, String address, String postCode, String telephoneNumber, String fax, Date dateCreated) {
-		// TODO - implement Customer.Customer
-		throw new UnsupportedOperationException();
-	}
-
+    @Override
+    public String toString() {
+        return "Customer:\n" + "name=" + name 
+                + ",\n emailAddress=" + emailAddress 
+                + ",\n address=" + address 
+                + ",\n postCode=" + postCode 
+                + ",\n telephoneNumber=" + telephoneNumber 
+                + ",\n fax=" + fax;
+    }  
 }
