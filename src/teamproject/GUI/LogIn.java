@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -21,6 +22,8 @@ public class LogIn extends javax.swing.JPanel {
 
     ResultSet rs;
     Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
     
     /**
      * Creates new form NewJPanel
@@ -33,20 +36,8 @@ public class LogIn extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        Connection connection = null;
-        try
-        {
-          // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-          this.statement = connection.createStatement();
-          this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
+        connection = db.connect();
+        statement = db.getStatement();
     }
 
     /**
@@ -182,6 +173,7 @@ public class LogIn extends javax.swing.JPanel {
             if (username.equals(user) && password.equals(pass)){
                 JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                 f.dispose();
+                db.closeConnection(connection);
                 new MainMenu(username);
             }
           }        

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -23,7 +24,9 @@ public class MainMenu extends javax.swing.JPanel {
      */
     
     private ResultSet rs;
-    private Statement statement;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
     private String roleName;
     private String username;
     
@@ -35,19 +38,8 @@ public class MainMenu extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
-        
-        Connection connection = null;
-        try
-        {
-          // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-          this.statement = connection.createStatement();
-          this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
+        connection = db.connect();
+        statement = db.getStatement();
         
         try{
             this.rs = statement.executeQuery("select * from User");
@@ -86,7 +78,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonAllocateJob.setVisible(false);
         this.buttonMyJobs.setVisible(false);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -240,20 +232,23 @@ public class MainMenu extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
-      JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new CreateJobCustomer(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void buttonRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemindersActionPerformed
-          JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new ReminderGUI(username);
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new StockControl(username);
                 
     }//GEN-LAST:event_buttonStockControlActionPerformed
@@ -261,24 +256,28 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new Invoice(username);
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MyJob(username);
     }//GEN-LAST:event_buttonMyJobsActionPerformed
 
     private void buttonAllocateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new AllocateJob(username);
     }//GEN-LAST:event_buttonAllocateJobActionPerformed
 
     private void buttonReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReportActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new Report(username);
         
     }//GEN-LAST:event_buttonReportActionPerformed
@@ -286,6 +285,7 @@ public class MainMenu extends javax.swing.JPanel {
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new JobList(username);
     }//GEN-LAST:event_buttonJobListActionPerformed
 
@@ -294,25 +294,29 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonUserAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserAccountActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new UserAccount(username);
        
     }//GEN-LAST:event_buttonUserAccountActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-         new CustomerList(username);
+        db.closeConnection(connection);
+        new CustomerList(username);
     }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDatabaseActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new Database(username);
     }//GEN-LAST:event_buttonDatabaseActionPerformed
 

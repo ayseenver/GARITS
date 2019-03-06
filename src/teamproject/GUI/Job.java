@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -21,7 +22,6 @@ import javax.swing.JFrame;
 public class Job extends javax.swing.JPanel {
     private final String username;   
     ResultSet rs;
-    Statement statement;
     ArrayList<String> tasks = new ArrayList<>();
     ArrayList<String> actualTasks = new ArrayList<>();
     ArrayList<String> parts = new ArrayList<>();
@@ -30,9 +30,12 @@ public class Job extends javax.swing.JPanel {
     String[] actualTaskArray;
     String[] partArray;
     String[] usedPartArray;
-    Connection connection;
     int jobID;
     String vehicleReg;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    
     
     /**
      * Creates new form NewJPanel
@@ -47,7 +50,8 @@ public class Job extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
-        EstablishConnection();
+        connection = db.connect();
+        statement = db.getStatement();
         
         GetTasks();
         ListAllTasks();
@@ -210,23 +214,6 @@ public class Job extends javax.swing.JPanel {
         return newArray;
     }
     
-    private void EstablishConnection(){
-        connection = null;
-        try
-        {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-            this.statement = connection.createStatement();
-            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -273,8 +260,8 @@ public class Job extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         lblAvailableParts1 = new javax.swing.JLabel();
-        buttonRequestPartsList = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        sendYardButton = new javax.swing.JButton();
+        yardCheckBox = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -450,16 +437,16 @@ public class Job extends javax.swing.JPanel {
         lblAvailableParts1.setText("Available Parts:");
         add(lblAvailableParts1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
 
-        buttonRequestPartsList.setText("Send Vehicle to Yard");
-        buttonRequestPartsList.addActionListener(new java.awt.event.ActionListener() {
+        sendYardButton.setText("Send Vehicle to Yard");
+        sendYardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonRequestPartsListActionPerformed(evt);
+                sendYardButtonActionPerformed(evt);
             }
         });
-        add(buttonRequestPartsList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
+        add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
 
-        jCheckBox1.setText("Confirm Send Vehicle to Yard");
-        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
+        yardCheckBox.setText("Confirm Send Vehicle to Yard");
+        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
@@ -473,6 +460,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompletedActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonCompletedActionPerformed
 
@@ -485,12 +473,14 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
@@ -498,11 +488,31 @@ public class Job extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonUpdatePartsUsedActionPerformed
 
-    private void buttonRequestPartsListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRequestPartsListActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new MainMenu(username);
-    }//GEN-LAST:event_buttonRequestPartsListActionPerformed
+    private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
+        if (yardCheckBox.isSelected()){
+        try{
+            String sql = ("update job set BaybayID = null where jobID = " + jobID);
+            
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+            
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username); 
+        }
+    }//GEN-LAST:event_sendYardButtonActionPerformed
 
     private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
         String selected = listAvailableTasks.getSelectedValue();
@@ -569,12 +579,10 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCompleted;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonRequestPartsList;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
     private javax.swing.JButton buttonUpdatePartsUsed;
     private javax.swing.JButton buttonUpdateTaskTime;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
@@ -597,11 +605,13 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JPanel panelTask;
     private javax.swing.JButton removePartButton;
     private javax.swing.JButton removeTaskButton;
+    private javax.swing.JButton sendYardButton;
     private javax.swing.JTextArea textAreaJobDetails;
     private javax.swing.JTextField textFieldPartsUsedQuanity;
     private javax.swing.JTextField textFieldSearchParts;
     private javax.swing.JTextField textFieldSearchTasks;
     private javax.swing.JTextField textFieldTime;
     private javax.swing.JTextField textFieldUserDetails;
+    private javax.swing.JCheckBox yardCheckBox;
     // End of variables declaration//GEN-END:variables
 }
