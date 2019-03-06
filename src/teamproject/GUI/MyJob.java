@@ -233,13 +233,18 @@ public class MyJob extends javax.swing.JPanel {
         if(listAssignedJobs.getSelectedValue() != null){
             selectedJob = listAssignedJobs.getSelectedValue();
             String[] parts = selectedJob.split(", ");
+            for (String p : parts){
+                System.out.println(p);
+            }
             
             String[] jobParts = parts[0].split(": ");
             int jobID = Integer.parseInt(jobParts[1]);
+            String[] regParts = parts[1].split(": ");
+            String vehicleReg = regParts[1];
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
-            new Job(username, jobID);
+            new Job(username, jobID, vehicleReg);
         }
     }//GEN-LAST:event_buttonViewJobActionPerformed
 
