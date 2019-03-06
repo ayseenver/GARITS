@@ -228,7 +228,7 @@ public class Job extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaJobDetails = new javax.swing.JTextArea();
         labelPartsUsed = new javax.swing.JLabel();
-        buttonCompleted = new javax.swing.JButton();
+        updateJobButton = new javax.swing.JButton();
         panelPart = new javax.swing.JPanel();
         jScrollPane9 = new javax.swing.JScrollPane();
         listAvailableParts = new javax.swing.JList<>();
@@ -262,6 +262,7 @@ public class Job extends javax.swing.JPanel {
         lblAvailableParts1 = new javax.swing.JLabel();
         sendYardButton = new javax.swing.JButton();
         yardCheckBox = new javax.swing.JCheckBox();
+        jobCompletedButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -284,14 +285,14 @@ public class Job extends javax.swing.JPanel {
         labelPartsUsed.setText("Parts Used:");
         add(labelPartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 260, -1, -1));
 
-        buttonCompleted.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonCompleted.setText("Job Completed");
-        buttonCompleted.addActionListener(new java.awt.event.ActionListener() {
+        updateJobButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        updateJobButton.setText("Update Job");
+        updateJobButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCompletedActionPerformed(evt);
+                updateJobButtonActionPerformed(evt);
             }
         });
-        add(buttonCompleted, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
+        add(updateJobButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 660, -1, -1));
 
         panelPart.setBackground(new java.awt.Color(204, 204, 204));
         panelPart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -447,6 +448,15 @@ public class Job extends javax.swing.JPanel {
 
         yardCheckBox.setText("Confirm Send Vehicle to Yard");
         add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
+
+        jobCompletedButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jobCompletedButton.setText("Job Completed");
+        jobCompletedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jobCompletedButtonActionPerformed(evt);
+            }
+        });
+        add(jobCompletedButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
@@ -457,12 +467,12 @@ public class Job extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
-    private void buttonCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompletedActionPerformed
+    private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new MainMenu(username);
-    }//GEN-LAST:event_buttonCompletedActionPerformed
+    }//GEN-LAST:event_updateJobButtonActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
         // TODO add your handling code here:
@@ -572,12 +582,18 @@ public class Job extends javax.swing.JPanel {
         ListUsedParts();
     }//GEN-LAST:event_removePartButtonActionPerformed
 
+    private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
+    }//GEN-LAST:event_jobCompletedButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPartButton;
     private javax.swing.JButton addTaskButton;
     private javax.swing.JButton buttonBack;
-    private javax.swing.JButton buttonCompleted;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
@@ -588,6 +604,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JButton jobCompletedButton;
     private javax.swing.JLabel labelAvailableParts;
     private javax.swing.JLabel labelAvailableTasks;
     private javax.swing.JLabel labelJob;
@@ -612,6 +629,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldSearchTasks;
     private javax.swing.JTextField textFieldTime;
     private javax.swing.JTextField textFieldUserDetails;
+    private javax.swing.JButton updateJobButton;
     private javax.swing.JCheckBox yardCheckBox;
     // End of variables declaration//GEN-END:variables
 }
