@@ -25,9 +25,11 @@ public class Job extends javax.swing.JPanel {
     ArrayList<String> tasks = new ArrayList<>();
     ArrayList<String> actualTasks = new ArrayList<>();
     ArrayList<String> parts = new ArrayList<>();
+    ArrayList<String> usedParts = new ArrayList<>();
     String[] taskArray;
     String[] actualTaskArray;
     String[] partArray;
+    String[] usedPartArray;
     Connection connection;
     int jobID;
     String vehicleReg;
@@ -86,14 +88,13 @@ public class Job extends javax.swing.JPanel {
         catch(SQLException e)
         {
           System.err.println(e.getMessage());
-        }
-        
+        }        
     }
     
     private void ListAllParts(){
         listAvailableParts.removeAll();
         
-        //add all tasks to task list
+        //add all parts to part list
         try{
         while(rs.next())
           {
@@ -110,6 +111,29 @@ public class Job extends javax.swing.JPanel {
         listAvailableParts.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return partArray.length; }
             public String getElementAt(int i) { return partArray[i]; }
+        });
+    }
+    
+    private void ListUsedParts(){
+        listPartsUsed.removeAll();
+        
+        //add all parts to used part list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = rs.getString("partName");
+            usedParts.add(part);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
         });
     }
     
@@ -224,7 +248,7 @@ public class Job extends javax.swing.JPanel {
         textFieldSearchParts = new javax.swing.JTextField();
         buttonSearchParts = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
-        listPastsUsed = new javax.swing.JList<>();
+        listPartsUsed = new javax.swing.JList<>();
         textFieldPartsUsedQuanity = new javax.swing.JTextField();
         labelPartsUsedQuantity = new javax.swing.JLabel();
         buttonUpdatePartsUsed = new javax.swing.JButton();
@@ -287,11 +311,6 @@ public class Job extends javax.swing.JPanel {
         panelPart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listAvailableParts.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listAvailableParts.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane9.setViewportView(listAvailableParts);
 
         panelPart.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 75, 226, 204));
@@ -305,13 +324,8 @@ public class Job extends javax.swing.JPanel {
         });
         panelPart.add(buttonSearchParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, -1, -1));
 
-        listPastsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listPastsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane8.setViewportView(listPastsUsed);
+        listPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane8.setViewportView(listPartsUsed);
 
         panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 79, 230, 200));
         panelPart.add(textFieldPartsUsedQuanity, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 285, 33, -1));
@@ -333,7 +347,7 @@ public class Job extends javax.swing.JPanel {
                 addPartButtonActionPerformed(evt);
             }
         });
-        panelPart.add(addPartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, -1, -1));
+        panelPart.add(addPartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
 
         removePartButton.setText("<");
         removePartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -349,21 +363,11 @@ public class Job extends javax.swing.JPanel {
         panelTask.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane5.setViewportView(listTasksCarriedOut);
 
         panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 200));
 
         listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
@@ -516,8 +520,8 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRequestPartsListActionPerformed
 
     private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
-        String selectedAdd = listAvailableTasks.getSelectedValue();
-        actualTasks.add(selectedAdd);
+        String selected = listAvailableTasks.getSelectedValue();
+        actualTasks.add(selected);
         actualTaskArray = CreateArray(actualTasks);
                 
         listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
@@ -525,13 +529,13 @@ public class Job extends javax.swing.JPanel {
             public String getElementAt(int i) { return actualTaskArray[i]; }
         });
         
-        tasks.remove(selectedAdd);
+        tasks.remove(selected);
         ListAllTasks();
     }//GEN-LAST:event_addTaskButtonActionPerformed
 
     private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
-        String selectedRemove = listTasksCarriedOut.getSelectedValue(); 
-        actualTasks.remove(selectedRemove);
+        String selected = listTasksCarriedOut.getSelectedValue(); 
+        actualTasks.remove(selected);
         actualTaskArray = CreateArray(actualTasks);
                 
         listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
@@ -539,17 +543,38 @@ public class Job extends javax.swing.JPanel {
             public String getElementAt(int i) { return actualTaskArray[i]; }
         });
         
-        tasks.add(selectedRemove);
+        tasks.add(selected);
         ListAllTasks();
         ListActualTasks();
     }//GEN-LAST:event_removeTaskButtonActionPerformed
 
     private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
-        // TODO add your handling code here:
+        String selected = listAvailableParts.getSelectedValue();
+        usedParts.add(selected);
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+        
+        parts.remove(selected);
+        ListAllParts();
     }//GEN-LAST:event_addPartButtonActionPerformed
 
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
-        // TODO add your handling code here:
+        String selected = listPartsUsed.getSelectedValue(); 
+        usedParts.remove(selected);
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+        
+        parts.add(selected);
+        ListAllParts();
+        ListUsedParts();
     }//GEN-LAST:event_removePartButtonActionPerformed
 
 
@@ -582,7 +607,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JLabel lblAvailableParts1;
     private javax.swing.JList<String> listAvailableParts;
     private javax.swing.JList<String> listAvailableTasks;
-    private javax.swing.JList<String> listPastsUsed;
+    private javax.swing.JList<String> listPartsUsed;
     private javax.swing.JList<String> listTasksCarriedOut;
     private javax.swing.JPanel panelPart;
     private javax.swing.JPanel panelTask;
