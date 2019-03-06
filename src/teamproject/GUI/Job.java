@@ -43,22 +43,49 @@ public class Job extends javax.swing.JPanel {
         this.textFieldUserDetails.setText(username);
         EstablishConnection();
         
+        GetTasks();
         ListAllTasks();
+        GetActualTasks();
         ListActualTasks();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void ListAllTasks(){
-        
+    private void GetTasks(){
         try{
-            this.rs = statement.executeQuery("select * from Task");
+            this.rs = statement.executeQuery("select * from Task where description not in "
+                    + "(select description from Task where taskID = " 
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + "))");
         }
         catch(SQLException e)
         {
           System.err.println(e.getMessage());
         }
+    }
+    
+    private void GetActualTasks(){
+        //get all actual tasks descriptions for this job
+        try{
+            String sql = ("select description from Task where taskID = "
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+    }
+    
+    private void ListAllTasks(){
+        listAvailableTasks.removeAll();
         
         //add all tasks to task list
         try{
@@ -81,23 +108,7 @@ public class Job extends javax.swing.JPanel {
     }
     
     private void ListActualTasks(){
-        //get all actual tasks descriptions for this job
-        try{
-            String sql = ("select description from Task where taskID = "
-                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
+        listTasksCarriedOut.removeAll();
         
         //add all actual task descriptions to task list
         try{
@@ -173,8 +184,6 @@ public class Job extends javax.swing.JPanel {
         panelTask = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         listTasksCarriedOut = new javax.swing.JList<>();
-        buttonMoveTaskToCarriedOut = new javax.swing.JButton();
-        buttonMoveTaskToAvailable = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         listAvailableTasks = new javax.swing.JList<>();
         textFieldTime = new javax.swing.JTextField();
@@ -184,6 +193,8 @@ public class Job extends javax.swing.JPanel {
         labelAvailableTasks = new javax.swing.JLabel();
         textFieldSearchTasks = new javax.swing.JTextField();
         buttonSearchTasks = new javax.swing.JButton();
+        addTaskButton = new javax.swing.JButton();
+        removeTaskButton = new javax.swing.JButton();
         buttonInfromCustomer = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
@@ -194,7 +205,6 @@ public class Job extends javax.swing.JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -299,22 +309,6 @@ public class Job extends javax.swing.JPanel {
 
         panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 200));
 
-        buttonMoveTaskToCarriedOut.setText(">");
-        buttonMoveTaskToCarriedOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToCarriedOutActionPerformed(evt);
-            }
-        });
-        panelTask.add(buttonMoveTaskToCarriedOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 172, 30, -1));
-
-        buttonMoveTaskToAvailable.setText("<");
-        buttonMoveTaskToAvailable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToAvailableActionPerformed(evt);
-            }
-        });
-        panelTask.add(buttonMoveTaskToAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 132, 30, -1));
-
         listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -353,6 +347,22 @@ public class Job extends javax.swing.JPanel {
             }
         });
         panelTask.add(buttonSearchTasks, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, -1, -1));
+
+        addTaskButton.setText(">");
+        addTaskButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addTaskButtonActionPerformed(evt);
+            }
+        });
+        panelTask.add(addTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, -1, -1));
+
+        removeTaskButton.setText("<");
+        removeTaskButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeTaskButtonActionPerformed(evt);
+            }
+        });
+        panelTask.add(removeTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
 
@@ -408,17 +418,9 @@ public class Job extends javax.swing.JPanel {
         add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 590, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonMoveTaskToAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToAvailableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToAvailableActionPerformed
-
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
-
-    private void buttonMoveTaskToCarriedOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToCarriedOutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToCarriedOutActionPerformed
 
     private void buttonMovePartToUsedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMovePartToUsedActionPerformed
         // TODO add your handling code here:
@@ -472,16 +474,48 @@ public class Job extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonRequestPartsListActionPerformed
 
+    private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
+        String selectedAdd = listAvailableTasks.getSelectedValue();
+        
+        actualTasks.add(selectedAdd);
+        
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+        
+        tasks.remove(selectedAdd);
+        ListAllTasks();
+    }//GEN-LAST:event_addTaskButtonActionPerformed
+
+    private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
+        String selectedRemove = listTasksCarriedOut.getSelectedValue();
+        
+        actualTasks.remove(selectedRemove);
+        
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+        
+        tasks.add(selectedRemove);
+        ListAllTasks();
+        ListActualTasks();
+    }//GEN-LAST:event_removeTaskButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addTaskButton;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCompleted;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonInfromCustomer;
     private javax.swing.JButton buttonMovePartToAvailable;
     private javax.swing.JButton buttonMovePartToUsed;
-    private javax.swing.JButton buttonMoveTaskToAvailable;
-    private javax.swing.JButton buttonMoveTaskToCarriedOut;
     private javax.swing.JButton buttonRequestPartsList;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
@@ -508,6 +542,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JList<String> listTasksCarriedOut;
     private javax.swing.JPanel panelPart;
     private javax.swing.JPanel panelTask;
+    private javax.swing.JButton removeTaskButton;
     private javax.swing.JTextArea textAreaJobDetails;
     private javax.swing.JTextField textFieldPartsUsedQuanity;
     private javax.swing.JTextField textFieldSearchParts;
