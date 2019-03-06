@@ -268,7 +268,6 @@ public class Job extends javax.swing.JPanel {
         buttonSearchTasks = new javax.swing.JButton();
         addTaskButton = new javax.swing.JButton();
         removeTaskButton = new javax.swing.JButton();
-        buttonInfromCustomer = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
@@ -419,14 +418,6 @@ public class Job extends javax.swing.JPanel {
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
 
-        buttonInfromCustomer.setText("Inform Customer about cost");
-        buttonInfromCustomer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonInfromCustomerActionPerformed(evt);
-            }
-        });
-        add(buttonInfromCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 560, 210, -1));
-
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);
@@ -468,7 +459,7 @@ public class Job extends javax.swing.JPanel {
         add(buttonRequestPartsList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
 
         jCheckBox1.setText("Confirm Send Vehicle to Yard");
-        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 590, -1, -1));
+        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
@@ -488,12 +479,6 @@ public class Job extends javax.swing.JPanel {
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
-
-    private void buttonInfromCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfromCustomerActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new MainMenu(username);
-    }//GEN-LAST:event_buttonInfromCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
         // TODO add your handling code here:
@@ -584,7 +569,6 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCompleted;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonInfromCustomer;
     private javax.swing.JButton buttonRequestPartsList;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
