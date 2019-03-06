@@ -12,21 +12,15 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class CreateJobCustomer extends javax.swing.JPanel {
-    private String username;
-    
+
     /**
      * Creates new form NewJPanel
      */
-    
-    public CreateJobCustomer(String username) {
-        this.username = username;
+    public CreateJobCustomer() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.textFieldUserDetails.setText(username);
-        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -63,9 +57,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         buttonAddNewVehicle = new javax.swing.JButton();
         buttonNewCustomer = new javax.swing.JButton();
 
-        setMinimumSize(new java.awt.Dimension(1280, 720));
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelCreateJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -194,7 +185,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CreateJobTask(username);
+        CreateJobTask createJobTask = new CreateJobTask();
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
@@ -220,7 +211,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonAddNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewVehicleActionPerformed

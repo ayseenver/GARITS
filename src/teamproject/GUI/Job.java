@@ -12,20 +12,15 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class Job extends javax.swing.JPanel {
-    private String username;    
-    
+
     /**
      * Creates new form NewJPanel
      */
-    public Job(String username) {
-        this.username = username;
+    public Job() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.labelLoggedIn.setText(username);
-        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -80,8 +75,6 @@ public class Job extends javax.swing.JPanel {
         buttonRequestPartsList = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
 
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -322,7 +315,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompletedActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonCompletedActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
@@ -332,7 +325,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonInfromCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfromCustomerActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonInfromCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -346,7 +339,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        MainMenu mainMenuFranchisee = new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonUpdatePartsUsedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdatePartsUsedActionPerformed
@@ -356,7 +349,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonRequestPartsListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRequestPartsListActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        MainMenu mainMenu = new MainMenu();
     }//GEN-LAST:event_buttonRequestPartsListActionPerformed
 
 

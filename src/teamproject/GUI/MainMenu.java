@@ -5,11 +5,6 @@
  */
 package teamproject.GUI;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JFrame;
 
 /**
@@ -21,70 +16,14 @@ public class MainMenu extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    
-    private ResultSet rs;
-    private Statement statement;
-    private String roleName;
-    private String username;
-    
-    public MainMenu(String username) {
-        this.username = username;
+    public MainMenu() {
+
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.textFieldUserDetails.setText(username);
-        
-        Connection connection = null;
-        try
-        {
-          // create a database connection
-          connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-          this.statement = connection.createStatement();
-          this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            this.rs = statement.executeQuery("select * from User");
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String user = rs.getString("username");
-            
-            if (username.equals(user)){
-               this.rs = statement.executeQuery("select roleName from User where username='user1'");
-               roleName = rs.getString("roleName");
-            }
-          }        
-        }
-        catch(SQLException e){
-        }
-        
-        /*
-        if (roleName.equals("receptionist")){
-            this.receptionist_menu();
-        }
-        */
-        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-    
-    public void receptionist_menu(){
-        this.buttonAllocateJob.setVisible(false);
-        this.buttonMyJobs.setVisible(false);
     }
 
     /**
@@ -103,17 +42,13 @@ public class MainMenu extends javax.swing.JPanel {
         buttonInvoices = new javax.swing.JButton();
         buttonMyJobs = new javax.swing.JButton();
         buttonAllocateJob = new javax.swing.JButton();
-        buttonReport = new javax.swing.JButton();
+        buttonCustomers = new javax.swing.JButton();
         buttonJobList = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         lblLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
-        buttonUserAccount = new javax.swing.JButton();
-        buttonCustomers = new javax.swing.JButton();
-        buttonDatabase = new javax.swing.JButton();
+        buttonCustomers1 = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -174,14 +109,14 @@ public class MainMenu extends javax.swing.JPanel {
         });
         add(buttonAllocateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 220, 230, -1));
 
-        buttonReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonReport.setText("All Reports");
-        buttonReport.addActionListener(new java.awt.event.ActionListener() {
+        buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonCustomers.setText("All Reports");
+        buttonCustomers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonReportActionPerformed(evt);
+                buttonCustomersActionPerformed(evt);
             }
         });
-        add(buttonReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 640, 230, -1));
+        add(buttonCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 640, 230, -1));
 
         buttonJobList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonJobList.setText("Job List");
@@ -197,10 +132,10 @@ public class MainMenu extends javax.swing.JPanel {
                 textFieldUserDetailsActionPerformed(evt);
             }
         });
-        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 0, 220, 30));
+        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         lblLoggedIn.setText("Logged In as:");
-        add(lblLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, -1, -1));
+        add(lblLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
@@ -209,84 +144,66 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
-        buttonUserAccount.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonUserAccount.setText("User Accounts");
-        buttonUserAccount.addActionListener(new java.awt.event.ActionListener() {
+        buttonCustomers1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonCustomers1.setText("View Customers");
+        buttonCustomers1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonUserAccountActionPerformed(evt);
+                buttonCustomers1ActionPerformed(evt);
             }
         });
-        add(buttonUserAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 600, 230, -1));
-
-        buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonCustomers.setText("View Customers");
-        buttonCustomers.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCustomersActionPerformed(evt);
-            }
-        });
-        add(buttonCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 580, 230, -1));
-
-        buttonDatabase.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonDatabase.setText("Database");
-        buttonDatabase.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDatabaseActionPerformed(evt);
-            }
-        });
-        add(buttonDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 550, 230, -1));
+        add(buttonCustomers1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 580, 230, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CreateJobCustomer(username);
+        new CreateJobCustomer();
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
     private void buttonRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemindersActionPerformed
           JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new ReminderGUI(username);
+        new ReminderGUI();
     }//GEN-LAST:event_buttonRemindersActionPerformed
 
     private void buttonStockControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockControlActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new StockControl(username);
+        new StockControl();
                 
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Invoice(username);
+        new Invoice();
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MyJob(username);
+        MyJob myJob = new MyJob();
     }//GEN-LAST:event_buttonMyJobsActionPerformed
 
     private void buttonAllocateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new AllocateJob(username);
+        new AllocateJob();
     }//GEN-LAST:event_buttonAllocateJobActionPerformed
 
-    private void buttonReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReportActionPerformed
+    private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Report(username);
+        new Report();
         
-    }//GEN-LAST:event_buttonReportActionPerformed
+    }//GEN-LAST:event_buttonCustomersActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new JobList(username);
+        new JobList();
     }//GEN-LAST:event_buttonJobListActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -297,39 +214,24 @@ public class MainMenu extends javax.swing.JPanel {
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
-    private void buttonUserAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserAccountActionPerformed
+    private void buttonCustomers1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomers1ActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new UserAccount(username);
-       
-    }//GEN-LAST:event_buttonUserAccountActionPerformed
-
-    private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-         new CustomerList(username);
-    }//GEN-LAST:event_buttonCustomersActionPerformed
-
-    private void buttonDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDatabaseActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new Database(username);
-    }//GEN-LAST:event_buttonDatabaseActionPerformed
+        new CustomerList();
+    }//GEN-LAST:event_buttonCustomers1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAllocateJob;
     private javax.swing.JButton buttonCreateJob;
     private javax.swing.JButton buttonCustomers;
-    private javax.swing.JButton buttonDatabase;
+    private javax.swing.JButton buttonCustomers1;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonInvoices;
     private javax.swing.JButton buttonJobList;
     private javax.swing.JButton buttonMyJobs;
     private javax.swing.JButton buttonReminders;
-    private javax.swing.JButton buttonReport;
     private javax.swing.JButton buttonStockControl;
-    private javax.swing.JButton buttonUserAccount;
     private javax.swing.JLabel lblLoggedIn;
     private javax.swing.JLabel lblMainMenu;
     private javax.swing.JTextField textFieldUserDetails;

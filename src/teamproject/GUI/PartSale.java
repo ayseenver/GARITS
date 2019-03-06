@@ -12,20 +12,15 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class PartSale extends javax.swing.JPanel {
-    private String username;
 
     /**
      * Creates new form NewJPanel
      */
-    public PartSale(String username) {
-        this.username = username;
+    public PartSale() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.textFieldUserDetails.setText(username);
-        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -58,8 +53,6 @@ public class PartSale extends javax.swing.JPanel {
         listCart = new javax.swing.JList<>();
         buttonSearchAllStock = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -176,7 +169,7 @@ public class PartSale extends javax.swing.JPanel {
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Invoice(username);
+        Invoice invoice = new Invoice();
     }//GEN-LAST:event_buttonOrderActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
@@ -198,7 +191,7 @@ public class PartSale extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new StockControl(username);
+        StockControl stockControl= new StockControl();
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
