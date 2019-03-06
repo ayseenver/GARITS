@@ -235,7 +235,7 @@ public class MyJob extends javax.swing.JPanel {
             String[] parts = selectedJob.split(", ");
             
             String[] jobParts = parts[0].split(": ");
-            String jobID = jobParts[1];
+            int jobID = Integer.parseInt(jobParts[1]);
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();

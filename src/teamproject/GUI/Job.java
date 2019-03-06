@@ -19,7 +19,7 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class Job extends javax.swing.JPanel {
-    private String username;   
+    private final String username;   
     ResultSet rs;
     Statement statement;
     ArrayList<String> tasks = new ArrayList<>();
@@ -27,12 +27,12 @@ public class Job extends javax.swing.JPanel {
     String[] taskArray;
     String[] actualTaskArray;
     Connection connection;
-    String jobID;
+    int jobID;
     
     /**
      * Creates new form NewJPanel
      */
-    public Job(String username, String jobID) {
+    public Job(String username, int jobID) {
         this.username = username;
         this.jobID = jobID;
         initComponents();
@@ -81,8 +81,10 @@ public class Job extends javax.swing.JPanel {
     }
     
     private void ListActualTasks(){
+        //get all actual tasks descriptions for this job
         try{
-            String sql = ("select * from Actual_Task where JobjobID = '" + jobID) +"'";
+            String sql = ("select description from Task where taskID = "
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -97,17 +99,17 @@ public class Job extends javax.swing.JPanel {
           System.err.println(e.getMessage());
         }
         
-        //add all actual tasks to actual task list
+        //add all actual task descriptions to task list
         try{
         while(rs.next())
           {
             // read the result set
-            String actualTask = rs.getString("TasktaskID");
+            String actualTask = rs.getString("description");
             actualTasks.add(actualTask);
           } 
         }
         catch(SQLException e){
-        }
+        }        
         
         actualTaskArray = CreateArray(actualTasks);
                 
