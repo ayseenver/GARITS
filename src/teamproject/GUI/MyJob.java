@@ -12,20 +12,15 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class MyJob extends javax.swing.JPanel {
-    private String username;
-    
+
     /**
      * Creates new form NewJPanel
      */
-    public MyJob(String username) {
-        this.username = username;
+    public MyJob() {
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.textFieldUserDetails.setText(username);
-        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -51,8 +46,6 @@ public class MyJob extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchJobs.setText("Search");
@@ -138,7 +131,7 @@ public class MyJob extends javax.swing.JPanel {
     private void buttonViewJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new Job(username);
+        new Job();
     }//GEN-LAST:event_buttonViewJobActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -152,7 +145,7 @@ public class MyJob extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new MainMenu(username);
+        new MainMenu();
     }//GEN-LAST:event_buttonBackActionPerformed
 
 
