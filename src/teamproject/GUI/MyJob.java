@@ -5,6 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 
 /**
@@ -13,6 +20,12 @@ import javax.swing.JFrame;
  */
 public class MyJob extends javax.swing.JPanel {
     private String username;
+    ArrayList<String> assignedJobs = new ArrayList<>();
+    String[] jobArray;
+    ResultSet rs;
+    Connection connection;
+    Statement statement;
+    String id;
     
     /**
      * Creates new form NewJPanel
@@ -25,9 +38,91 @@ public class MyJob extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        EstablishConnection();
+        
+        ShowAssignedJobs();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
+    private void ShowAssignedJobs(){
+        try{
+            String sql = ("select ID from Mechanic where Userusername = '" + username) +"'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+            id = rs.getString("ID");
+            System.out.println(id);
+            //this.rs = statement.executeQuery("select * from Job");
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            String sql = ("select * from Job where MechanicID = '" + id) +"'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String job = "Job ID: " + rs.getString("jobID") +", Vehicle reg: " + rs.getString("VehicleregistrationNumber") +", Booked in: " + rs.getString("dateBookedIn");
+            assignedJobs.add(job);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        
+        jobArray = CreateArray(assignedJobs);
+                
+        listAssignedJobs.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return jobArray.length; }
+            public String getElementAt(int i) { return jobArray[i]; }
+        });
+    }
+    
+    private void EstablishConnection(){
+        connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+            this.statement = connection.createStatement();
+            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -146,7 +241,7 @@ public class MyJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

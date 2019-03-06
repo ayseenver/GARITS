@@ -59,7 +59,6 @@ public class ReminderGUI extends javax.swing.JPanel {
         buttonView = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchReminders.setText("Search");
