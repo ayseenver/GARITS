@@ -5,6 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 
 /**
@@ -12,24 +19,128 @@ import javax.swing.JFrame;
  * @author ahmetsesli
  */
 public class Job extends javax.swing.JPanel {
-    private String username;    
+    private String username;   
+    ResultSet rs;
+    Statement statement;
+    ArrayList<String> tasks = new ArrayList<>();
+    ArrayList<String> actualTasks = new ArrayList<>();
+    String[] taskArray;
+    String[] actualTaskArray;
+    Connection connection;
+    String jobID;
     
     /**
      * Creates new form NewJPanel
      */
-    public Job(String username) {
+    public Job(String username, String jobID) {
         this.username = username;
+        this.jobID = jobID;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
         
-        this.labelLoggedIn.setText(username);
+        this.textFieldUserDetails.setText(username);
+        EstablishConnection();
+        
+        ListAllTasks();
+        ListActualTasks();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void ListAllTasks(){
+        
+        try{
+            this.rs = statement.executeQuery("select * from Task");
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        //add all tasks to task list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String task = rs.getString("description");
+            tasks.add(task);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        taskArray = CreateArray(tasks);
+                
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return taskArray.length; }
+            public String getElementAt(int i) { return taskArray[i]; }
+        });
+    }
+    
+    private void ListActualTasks(){
+        try{
+            String sql = ("select * from Actual_Task where JobjobID = '" + jobID) +"'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        //add all actual tasks to actual task list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String actualTask = rs.getString("TasktaskID");
+            actualTasks.add(actualTask);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+    }
+    
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
+    private void EstablishConnection(){
+        connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+            this.statement = connection.createStatement();
+            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+        {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -340,7 +451,7 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

@@ -26,6 +26,7 @@ public class MyJob extends javax.swing.JPanel {
     Connection connection;
     Statement statement;
     String id;
+    String selectedJob;
     
     /**
      * Creates new form NewJPanel
@@ -64,8 +65,6 @@ public class MyJob extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
             id = rs.getString("ID");
-            System.out.println(id);
-            //this.rs = statement.executeQuery("select * from Job");
         }
         catch(SQLException e)
         {
@@ -231,9 +230,17 @@ public class MyJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldSearchJobsActionPerformed
 
     private void buttonViewJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewJobActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new Job(username);
+        if(listAssignedJobs.getSelectedValue() != null){
+            selectedJob = listAssignedJobs.getSelectedValue();
+            String[] parts = selectedJob.split(", ");
+            
+            String[] jobParts = parts[0].split(": ");
+            String jobID = jobParts[1];
+
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            new Job(username, jobID);
+        }
     }//GEN-LAST:event_buttonViewJobActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
