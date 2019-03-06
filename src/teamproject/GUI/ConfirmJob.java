@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -28,9 +29,10 @@ public class ConfirmJob extends javax.swing.JPanel {
     ArrayList<String> requiredTasks = new ArrayList<>();
     int bayID;
     String jobType;
-    Connection connection;
-    Statement statement;
     ResultSet rs;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();  
 
     /**
      * Creates new form NewJPanel
@@ -48,7 +50,8 @@ public class ConfirmJob extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
-        EstablishConnection();
+        connection = db.connect();
+        statement = db.getStatement();
         
         ShowVehicleDetails();
         ShowTaskDetails();
@@ -76,23 +79,6 @@ public class ConfirmJob extends javax.swing.JPanel {
             public int getSize() { return requiredTaskArray.length; }
             public String getElementAt(int i) { return requiredTaskArray[i]; }
         });
-    }
-    
-    private void EstablishConnection(){
-        connection = null;
-        try
-        {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-            this.statement = connection.createStatement();
-            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
     }
     
     private void WriteToDatabase(){
@@ -245,6 +231,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         WriteToDatabase();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
@@ -253,6 +240,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 

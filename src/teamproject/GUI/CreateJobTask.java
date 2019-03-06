@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -23,20 +24,21 @@ import teamproject.Customer_Account.Vehicle;
  */
 public class CreateJobTask extends javax.swing.JPanel {
     private String username;
-    private ResultSet rs;    
-    private Statement statement;
+    private ResultSet rs;
     String[] taskArray;
     String[] requiredTaskArray;
     String[] bayArray;
     ArrayList<String> requiredTasks = new ArrayList<>();
     ArrayList<String> tasks = new ArrayList<>();
-    private Connection connection;
     String bayType;
     String bayID;
     String jobType;
     Job job;
     Vehicle v;
     Customer c;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();  
     
     
     /**
@@ -54,7 +56,8 @@ public class CreateJobTask extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
-        EstablishConnection();
+        connection = db.connect();
+        statement = db.getStatement();
         
         try{
             this.rs = statement.executeQuery("select * from Task");
@@ -149,23 +152,6 @@ public class CreateJobTask extends javax.swing.JPanel {
             public int getSize() { return taskArray.length; }
             public String getElementAt(int i) { return taskArray[i]; }
         });
-    }
-    
-    private void EstablishConnection(){
-        connection = null;
-        try
-        {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-            this.statement = connection.createStatement();
-            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
     }
 
     /**
@@ -354,6 +340,7 @@ public class CreateJobTask extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
 
             f.dispose();
+            db.closeConnection(connection);
             new ConfirmJob(username, v, c, requiredTasks, bayID, jobType);         
         }
     }//GEN-LAST:event_createJobButtonActionPerformed
@@ -363,12 +350,14 @@ public class CreateJobTask extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new CreateJobCustomer(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 

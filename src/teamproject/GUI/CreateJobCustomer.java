@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -22,14 +23,15 @@ import teamproject.Customer_Account.Vehicle;
  */
 public class CreateJobCustomer extends javax.swing.JPanel {
     private final String username;
-    private Statement statement;
     private ResultSet rsC;
     private ResultSet rsV;
     String[] nameArray;
     String[] detailArray;
-    private Connection connection;
     Vehicle v = new Vehicle();
     Customer c = new Customer();
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
     
     /**
      * Creates new form NewJPanel
@@ -43,7 +45,8 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
-        EstablishConnection();
+        connection = db.connect();
+        statement = db.getStatement();
         
         try{
             this.rsC = statement.executeQuery("select * from Customer");
@@ -84,23 +87,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
-    }
-    
-    private void EstablishConnection(){
-        connection = null;
-        try
-        {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-            this.statement = connection.createStatement();
-            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        }
-        catch(SQLException e)
-        {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
     }
 
     /**
@@ -257,6 +243,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         if(v.getRegistrationNumber() != null && c.getName() != null){
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
+            db.closeConnection(connection);
             new CreateJobTask(username, v, c);        
         }       
     }//GEN-LAST:event_buttonNextActionPerformed
@@ -264,10 +251,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
         String temp = (listVehicle.getSelectedValue());
         String[] details = temp.split(", ");
-        
-        for (String s : details){
-            System.out.println(s);
-        }
         
         try{
             String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) +"'";
@@ -342,7 +325,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
-        System.out.println(temp);
         try{
             String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) +"'";
             PreparedStatement ps = null;
@@ -454,12 +436,14 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
