@@ -1,55 +1,47 @@
 package teamproject.Databases;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DB_ImplClass implements DBConnectivity {
+        Connection connection;
+        Statement statement;
 
-	/**
-	 * 
-	 * @param SQL
-	 * @param connect
-	 */
-	public ResultSet read(String SQL, Connection connect) {
-		// TODO - implement DB_ImplClass.read
-		throw new UnsupportedOperationException();
+        public DB_ImplClass() {
+        }
+
+	public Connection connect() {
+        connection = null;
+        try
+        {
+            // create a database connection
+            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
+            this.statement = connection.createStatement();
+            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        }
+        catch(SQLException e)
+            {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
+        return connection;
 	}
 
-	/**
-	 * 
-	 * @param SQL
-	 * @param connect
-	 */
-	public int write(String SQL, Connection connect) {
-		// TODO - implement DB_ImplClass.write
-		throw new UnsupportedOperationException();
+	public void closeConnection(Connection connect) {
+                try{
+                    connect.close(); 
+                }
+                catch(SQLException e){
+                    e.printStackTrace();
+                }
 	}
 
-	/**
-	 * 
-	 * @param SQL
-	 */
-	public Connection connect(String SQL) {
-		// TODO - implement DB_ImplClass.connect
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param connect
-	 */
-	public ResultSet closeConnection(Connection connect) {
-		// TODO - implement DB_ImplClass.closeConnection
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param DB
-	 */
-	public static DB_ImplClass DB_ImplClass(String DB) {
-		// TODO - implement DB_ImplClass.DB_ImplClass
-		throw new UnsupportedOperationException();
-	}
-
+    public Statement getStatement() {
+        return statement;
+    }
+        
 }

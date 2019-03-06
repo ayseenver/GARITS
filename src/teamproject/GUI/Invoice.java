@@ -62,6 +62,8 @@ public class Invoice extends javax.swing.JPanel {
         buttonPrint1 = new javax.swing.JButton();
         labelCustomerInfomation = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchInvoices.setText("Search");

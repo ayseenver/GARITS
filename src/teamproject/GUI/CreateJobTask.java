@@ -204,6 +204,8 @@ public class CreateJobTask extends javax.swing.JPanel {
         removeTask = new javax.swing.JButton();
         addTask = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelSelectTasks.setFont(new java.awt.Font("Lucida Grande", 1, 48)); // NOI18N

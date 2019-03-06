@@ -8,27 +8,13 @@ public interface DBConnectivity {
 	/**
 	 * 
 	 * @param SQL
-	 * @param connect
 	 */
-	abstract ResultSet read(String SQL, Connection connect);
-
-	/**
-	 * 
-	 * @param SQL
-	 * @param connect
-	 */
-	abstract int write(String SQL, Connection connect);
-
-	/**
-	 * 
-	 * @param SQL
-	 */
-	abstract Connection connect(String SQL);
+	abstract Connection connect();
 
 	/**
 	 * 
 	 * @param connect
 	 */
-	ResultSet closeConnection(Connection connect);
+	void closeConnection(Connection connect);
 
 }

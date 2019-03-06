@@ -49,6 +49,8 @@ public class Database extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonTransferData1 = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelDatabase.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

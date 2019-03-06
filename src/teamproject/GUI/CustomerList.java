@@ -61,6 +61,8 @@ public class CustomerList extends javax.swing.JPanel {
         comboBoxPaymentMethod = new javax.swing.JComboBox<>();
         labelSelectCustomer = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
+        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelCustomers.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N

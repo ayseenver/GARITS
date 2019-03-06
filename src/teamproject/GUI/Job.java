@@ -5,35 +5,222 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
  * @author ahmetsesli
  */
 public class Job extends javax.swing.JPanel {
-    private String username;    
+    private final String username;   
+    ResultSet rs;
+    ArrayList<String> tasks = new ArrayList<>();
+    ArrayList<String> actualTasks = new ArrayList<>();
+    ArrayList<String> parts = new ArrayList<>();
+    ArrayList<String> usedParts = new ArrayList<>();
+    String[] taskArray;
+    String[] actualTaskArray;
+    String[] partArray;
+    String[] usedPartArray;
+    int jobID;
+    String vehicleReg;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    
     
     /**
      * Creates new form NewJPanel
      */
-    public Job(String username) {
+    public Job(String username, int jobID, String vehicleReg) {
         this.username = username;
+        this.jobID = jobID;
+        this.vehicleReg = vehicleReg;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
         
-        this.labelLoggedIn.setText(username);
+        this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        GetTasks();
+        ListAllTasks();
+        GetActualTasks();
+        ListActualTasks();
+        GetParts();
+        ListAllParts();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+<<<<<<< HEAD
     Job() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+=======
+    private void GetTasks(){
+        try{
+            this.rs = statement.executeQuery("select * from Task where description not in "
+                    + "(select description from Task where taskID = " 
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + "))");
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+    }
+    
+    private void GetParts(){        
+        try{
+            String sql = ("select * from sparepart where vehicleType = "
+                    + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "')");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }        
+    }
+    
+    private void ListAllParts(){
+        listAvailableParts.removeAll();
+        
+        //add all parts to part list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = rs.getString("partName");
+            parts.add(part);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        partArray = CreateArray(parts);
+                
+        listAvailableParts.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partArray.length; }
+            public String getElementAt(int i) { return partArray[i]; }
+        });
+    }
+    
+    private void ListUsedParts(){
+        listPartsUsed.removeAll();
+        
+        //add all parts to used part list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = rs.getString("partName");
+            usedParts.add(part);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+    }
+    
+    private void GetActualTasks(){
+        //get all actual tasks descriptions for this job
+        try{
+            String sql = ("select description from Task where taskID = "
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+    }
+    
+    private void ListAllTasks(){
+        listAvailableTasks.removeAll();
+        
+        //add all tasks to task list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String task = rs.getString("description");
+            tasks.add(task);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        taskArray = CreateArray(tasks);
+                
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return taskArray.length; }
+            public String getElementAt(int i) { return taskArray[i]; }
+        });
+    }
+    
+    private void ListActualTasks(){
+        listTasksCarriedOut.removeAll();
+        
+        //add all actual task descriptions to task list
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String actualTask = rs.getString("description");
+            actualTasks.add(actualTask);
+          } 
+        }
+        catch(SQLException e){
+        }        
+        
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+    }
+    
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
+>>>>>>> my-jobs
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,24 +235,22 @@ public class Job extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaJobDetails = new javax.swing.JTextArea();
         labelPartsUsed = new javax.swing.JLabel();
-        buttonCompleted = new javax.swing.JButton();
+        updateJobButton = new javax.swing.JButton();
         panelPart = new javax.swing.JPanel();
         jScrollPane9 = new javax.swing.JScrollPane();
         listAvailableParts = new javax.swing.JList<>();
         textFieldSearchParts = new javax.swing.JTextField();
         buttonSearchParts = new javax.swing.JButton();
-        buttonMovePartToUsed = new javax.swing.JButton();
-        buttonMovePartToAvailable = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
-        listPastsUsed = new javax.swing.JList<>();
+        listPartsUsed = new javax.swing.JList<>();
         textFieldPartsUsedQuanity = new javax.swing.JTextField();
         labelPartsUsedQuantity = new javax.swing.JLabel();
         buttonUpdatePartsUsed = new javax.swing.JButton();
+        addPartButton = new javax.swing.JButton();
+        removePartButton = new javax.swing.JButton();
         panelTask = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         listTasksCarriedOut = new javax.swing.JList<>();
-        buttonMoveTaskToCarriedOut = new javax.swing.JButton();
-        buttonMoveTaskToAvailable = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         listAvailableTasks = new javax.swing.JList<>();
         textFieldTime = new javax.swing.JTextField();
@@ -75,15 +260,18 @@ public class Job extends javax.swing.JPanel {
         labelAvailableTasks = new javax.swing.JLabel();
         textFieldSearchTasks = new javax.swing.JTextField();
         buttonSearchTasks = new javax.swing.JButton();
-        buttonInfromCustomer = new javax.swing.JButton();
+        addTaskButton = new javax.swing.JButton();
+        removeTaskButton = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         lblAvailableParts1 = new javax.swing.JLabel();
-        buttonRequestPartsList = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        sendYardButton = new javax.swing.JButton();
+        yardCheckBox = new javax.swing.JCheckBox();
+        jobCompletedButton = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -104,24 +292,19 @@ public class Job extends javax.swing.JPanel {
         labelPartsUsed.setText("Parts Used:");
         add(labelPartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 260, -1, -1));
 
-        buttonCompleted.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonCompleted.setText("Job Completed");
-        buttonCompleted.addActionListener(new java.awt.event.ActionListener() {
+        updateJobButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        updateJobButton.setText("Update Job");
+        updateJobButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCompletedActionPerformed(evt);
+                updateJobButtonActionPerformed(evt);
             }
         });
-        add(buttonCompleted, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
+        add(updateJobButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 660, -1, -1));
 
         panelPart.setBackground(new java.awt.Color(204, 204, 204));
         panelPart.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listAvailableParts.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listAvailableParts.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane9.setViewportView(listAvailableParts);
 
         panelPart.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 75, 226, 204));
@@ -135,29 +318,8 @@ public class Job extends javax.swing.JPanel {
         });
         panelPart.add(buttonSearchParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, -1, -1));
 
-        buttonMovePartToUsed.setText(">");
-        buttonMovePartToUsed.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMovePartToUsedActionPerformed(evt);
-            }
-        });
-        panelPart.add(buttonMovePartToUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(258, 172, 30, -1));
-
-        buttonMovePartToAvailable.setText("<");
-        buttonMovePartToAvailable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMovePartToAvailableActionPerformed(evt);
-            }
-        });
-        panelPart.add(buttonMovePartToAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(258, 132, 30, -1));
-
-        listPastsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listPastsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane8.setViewportView(listPastsUsed);
+        listPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane8.setViewportView(listPartsUsed);
 
         panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 79, 230, 200));
         panelPart.add(textFieldPartsUsedQuanity, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 285, 33, -1));
@@ -173,43 +335,33 @@ public class Job extends javax.swing.JPanel {
         });
         panelPart.add(buttonUpdatePartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 285, -1, -1));
 
+        addPartButton.setText(">");
+        addPartButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPartButtonActionPerformed(evt);
+            }
+        });
+        panelPart.add(addPartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
+
+        removePartButton.setText("<");
+        removePartButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removePartButtonActionPerformed(evt);
+            }
+        });
+        panelPart.add(removePartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, -1, -1));
+
         add(panelPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 240, 550, 320));
 
         panelTask.setBackground(new java.awt.Color(204, 204, 204));
         panelTask.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane5.setViewportView(listTasksCarriedOut);
 
         panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 200));
 
-        buttonMoveTaskToCarriedOut.setText(">");
-        buttonMoveTaskToCarriedOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToCarriedOutActionPerformed(evt);
-            }
-        });
-        panelTask.add(buttonMoveTaskToCarriedOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 172, 30, -1));
-
-        buttonMoveTaskToAvailable.setText("<");
-        buttonMoveTaskToAvailable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMoveTaskToAvailableActionPerformed(evt);
-            }
-        });
-        panelTask.add(buttonMoveTaskToAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 132, 30, -1));
-
         listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
@@ -243,15 +395,23 @@ public class Job extends javax.swing.JPanel {
         });
         panelTask.add(buttonSearchTasks, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, -1, -1));
 
-        add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
-
-        buttonInfromCustomer.setText("Inform Customer about cost");
-        buttonInfromCustomer.addActionListener(new java.awt.event.ActionListener() {
+        addTaskButton.setText(">");
+        addTaskButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonInfromCustomerActionPerformed(evt);
+                addTaskButtonActionPerformed(evt);
             }
         });
-        add(buttonInfromCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 560, 210, -1));
+        panelTask.add(addTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, -1, -1));
+
+        removeTaskButton.setText("<");
+        removeTaskButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeTaskButtonActionPerformed(evt);
+            }
+        });
+        panelTask.add(removeTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
+
+        add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,69 +445,59 @@ public class Job extends javax.swing.JPanel {
         lblAvailableParts1.setText("Available Parts:");
         add(lblAvailableParts1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
 
-        buttonRequestPartsList.setText("Send Vehicle to Yard");
-        buttonRequestPartsList.addActionListener(new java.awt.event.ActionListener() {
+        sendYardButton.setText("Send Vehicle to Yard");
+        sendYardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonRequestPartsListActionPerformed(evt);
+                sendYardButtonActionPerformed(evt);
             }
         });
-        add(buttonRequestPartsList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
+        add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
 
-        jCheckBox1.setText("Confirm Send Vehicle to Yard");
-        add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 590, -1, -1));
+        yardCheckBox.setText("Confirm Send Vehicle to Yard");
+        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
+
+        jobCompletedButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jobCompletedButton.setText("Job Completed");
+        jobCompletedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jobCompletedButtonActionPerformed(evt);
+            }
+        });
+        add(jobCompletedButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void buttonMoveTaskToAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToAvailableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToAvailableActionPerformed
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
-    private void buttonMoveTaskToCarriedOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoveTaskToCarriedOutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMoveTaskToCarriedOutActionPerformed
-
-    private void buttonMovePartToUsedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMovePartToUsedActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMovePartToUsedActionPerformed
-
-    private void buttonMovePartToAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMovePartToAvailableActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonMovePartToAvailableActionPerformed
-
     private void buttonSearchPartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchPartsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
-    private void buttonCompletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompletedActionPerformed
+    private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
-    }//GEN-LAST:event_buttonCompletedActionPerformed
+    }//GEN-LAST:event_updateJobButtonActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
-
-    private void buttonInfromCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInfromCustomerActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        new MainMenu(username);
-    }//GEN-LAST:event_buttonInfromCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
@@ -355,33 +505,113 @@ public class Job extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonUpdatePartsUsedActionPerformed
 
-    private void buttonRequestPartsListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRequestPartsListActionPerformed
+    private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
+        if (yardCheckBox.isSelected()){
+        try{
+            String sql = ("update job set BaybayID = null where jobID = " + jobID);
+            
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+            
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username); 
+        }
+    }//GEN-LAST:event_sendYardButtonActionPerformed
+
+    private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
+        String selected = listAvailableTasks.getSelectedValue();
+        actualTasks.add(selected);
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+        
+        tasks.remove(selected);
+        ListAllTasks();
+    }//GEN-LAST:event_addTaskButtonActionPerformed
+
+    private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
+        String selected = listTasksCarriedOut.getSelectedValue(); 
+        actualTasks.remove(selected);
+        actualTaskArray = CreateArray(actualTasks);
+                
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return actualTaskArray.length; }
+            public String getElementAt(int i) { return actualTaskArray[i]; }
+        });
+        
+        tasks.add(selected);
+        ListAllTasks();
+        ListActualTasks();
+    }//GEN-LAST:event_removeTaskButtonActionPerformed
+
+    private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
+        String selected = listAvailableParts.getSelectedValue();
+        usedParts.add(selected);
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+        
+        parts.remove(selected);
+        ListAllParts();
+    }//GEN-LAST:event_addPartButtonActionPerformed
+
+    private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
+        String selected = listPartsUsed.getSelectedValue(); 
+        usedParts.remove(selected);
+        usedPartArray = CreateArray(usedParts);
+                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+        
+        parts.add(selected);
+        ListAllParts();
+        ListUsedParts();
+    }//GEN-LAST:event_removePartButtonActionPerformed
+
+    private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
-    }//GEN-LAST:event_buttonRequestPartsListActionPerformed
+    }//GEN-LAST:event_jobCompletedButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addPartButton;
+    private javax.swing.JButton addTaskButton;
     private javax.swing.JButton buttonBack;
-    private javax.swing.JButton buttonCompleted;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonInfromCustomer;
-    private javax.swing.JButton buttonMovePartToAvailable;
-    private javax.swing.JButton buttonMovePartToUsed;
-    private javax.swing.JButton buttonMoveTaskToAvailable;
-    private javax.swing.JButton buttonMoveTaskToCarriedOut;
-    private javax.swing.JButton buttonRequestPartsList;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
     private javax.swing.JButton buttonUpdatePartsUsed;
     private javax.swing.JButton buttonUpdateTaskTime;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JButton jobCompletedButton;
     private javax.swing.JLabel labelAvailableParts;
     private javax.swing.JLabel labelAvailableTasks;
     private javax.swing.JLabel labelJob;
@@ -393,16 +623,21 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JLabel lblAvailableParts1;
     private javax.swing.JList<String> listAvailableParts;
     private javax.swing.JList<String> listAvailableTasks;
-    private javax.swing.JList<String> listPastsUsed;
+    private javax.swing.JList<String> listPartsUsed;
     private javax.swing.JList<String> listTasksCarriedOut;
     private javax.swing.JPanel panelPart;
     private javax.swing.JPanel panelTask;
+    private javax.swing.JButton removePartButton;
+    private javax.swing.JButton removeTaskButton;
+    private javax.swing.JButton sendYardButton;
     private javax.swing.JTextArea textAreaJobDetails;
     private javax.swing.JTextField textFieldPartsUsedQuanity;
     private javax.swing.JTextField textFieldSearchParts;
     private javax.swing.JTextField textFieldSearchTasks;
     private javax.swing.JTextField textFieldTime;
     private javax.swing.JTextField textFieldUserDetails;
+    private javax.swing.JButton updateJobButton;
+    private javax.swing.JCheckBox yardCheckBox;
     // End of variables declaration//GEN-END:variables
 
     void setType(String jobType) {
