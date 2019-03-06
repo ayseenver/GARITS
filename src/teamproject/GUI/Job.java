@@ -64,12 +64,6 @@ public class Job extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-<<<<<<< HEAD
-    Job() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-=======
     private void GetTasks(){
         try{
             this.rs = statement.executeQuery("select * from Task where description not in "
@@ -219,8 +213,6 @@ public class Job extends javax.swing.JPanel {
         newArray = tasks.toArray(newArray);
         return newArray;
     }
-    
->>>>>>> my-jobs
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -262,6 +254,9 @@ public class Job extends javax.swing.JPanel {
         buttonSearchTasks = new javax.swing.JButton();
         addTaskButton = new javax.swing.JButton();
         removeTaskButton = new javax.swing.JButton();
+        buttonUpdateTaskCost = new javax.swing.JButton();
+        textFieldCost = new javax.swing.JTextField();
+        labelTime1 = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
@@ -365,10 +360,16 @@ public class Job extends javax.swing.JPanel {
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
-        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(391, 285, 33, -1));
+
+        textFieldTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldTimeActionPerformed(evt);
+            }
+        });
+        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 33, -1));
 
         labelTime.setText("Update Time:");
-        panelTask.add(labelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 290, -1, -1));
+        panelTask.add(labelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, -1, -1));
 
         buttonUpdateTaskTime.setText("Update");
         buttonUpdateTaskTime.addActionListener(new java.awt.event.ActionListener() {
@@ -376,7 +377,7 @@ public class Job extends javax.swing.JPanel {
                 buttonUpdateTaskTimeActionPerformed(evt);
             }
         });
-        panelTask.add(buttonUpdateTaskTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 285, -1, -1));
+        panelTask.add(buttonUpdateTaskTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, -1, 20));
 
         labelTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelTasksCarriedOut.setText("Tasks carried out:");
@@ -410,6 +411,24 @@ public class Job extends javax.swing.JPanel {
             }
         });
         panelTask.add(removeTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
+
+        buttonUpdateTaskCost.setText("Update");
+        buttonUpdateTaskCost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUpdateTaskCostActionPerformed(evt);
+            }
+        });
+        panelTask.add(buttonUpdateTaskCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, -1, 20));
+
+        textFieldCost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldCostActionPerformed(evt);
+            }
+        });
+        panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 300, 33, -1));
+
+        labelTime1.setText("Update Cost:");
+        panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
 
@@ -596,6 +615,18 @@ public class Job extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_jobCompletedButtonActionPerformed
 
+    private void textFieldTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldTimeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldTimeActionPerformed
+
+    private void textFieldCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldCostActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldCostActionPerformed
+
+    private void buttonUpdateTaskCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskCostActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPartButton;
@@ -605,6 +636,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
     private javax.swing.JButton buttonUpdatePartsUsed;
+    private javax.swing.JButton buttonUpdateTaskCost;
     private javax.swing.JButton buttonUpdateTaskTime;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
@@ -620,6 +652,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JLabel labelPartsUsedQuantity;
     private javax.swing.JLabel labelTasksCarriedOut;
     private javax.swing.JLabel labelTime;
+    private javax.swing.JLabel labelTime1;
     private javax.swing.JLabel lblAvailableParts1;
     private javax.swing.JList<String> listAvailableParts;
     private javax.swing.JList<String> listAvailableTasks;
@@ -631,6 +664,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton removeTaskButton;
     private javax.swing.JButton sendYardButton;
     private javax.swing.JTextArea textAreaJobDetails;
+    private javax.swing.JTextField textFieldCost;
     private javax.swing.JTextField textFieldPartsUsedQuanity;
     private javax.swing.JTextField textFieldSearchParts;
     private javax.swing.JTextField textFieldSearchTasks;
