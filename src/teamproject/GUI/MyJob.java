@@ -219,9 +219,6 @@ public class MyJob extends javax.swing.JPanel {
         if(listAssignedJobs.getSelectedValue() != null){
             selectedJob = listAssignedJobs.getSelectedValue();
             String[] parts = selectedJob.split(", ");
-            for (String p : parts){
-                System.out.println(p);
-            }
             
             String[] jobParts = parts[0].split(": ");
             int jobID = Integer.parseInt(jobParts[1]);
