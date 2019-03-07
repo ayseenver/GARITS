@@ -15,7 +15,6 @@ import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
-import teamproject.Jobs.Task;
 
 /**
  *
@@ -94,18 +93,18 @@ public class ConfirmJob extends javax.swing.JPanel {
             catch (Exception e) {
                 e.printStackTrace();
             }
+            ps.executeUpdate();
         }
         catch(SQLException e)
         {
           System.err.println(e.getMessage());
         }
         
-        //insert the actual tasks
+        //insert the actual tasks for this job
         for (String t : requiredTasks){
             try{
                 String sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
-                        + " values ((select jobID from job where VehicleregistrationNumber = '" + v.getRegistrationNumber() + "' and dateBookedIn = date('now')"
-                        + " and BaybayID = (select bayID from bay where bayID = '" + bayID + "')),"
+                        + " values ((select MAX(jobID) from job),"
                         + "(select taskID from Task where description = '" + t + "'), "
                         + "(select defaultHours from Task where description = '" + t + "'), "
                         + "(select defaultCost from Task where description = '" + t + "'))");
@@ -116,6 +115,7 @@ public class ConfirmJob extends javax.swing.JPanel {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
+                ps.executeUpdate();
             }
             catch(SQLException e)
             {
