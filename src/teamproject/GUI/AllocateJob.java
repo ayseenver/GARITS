@@ -5,7 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +19,11 @@ import javax.swing.JFrame;
  */
 public class AllocateJob extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] jobArray;
     
     /**
      * Creates new form NewJPanel
@@ -25,11 +36,58 @@ public class AllocateJob extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowUnallocatedJobs();
+        ShowMechanics();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void ShowUnallocatedJobs(){
+        try{
+            this.rs = statement.executeQuery("select * from Job where dateCompleted is null and MechanicID is null");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listUnallocatedJobs.removeAll();
+        ArrayList<String> jobs = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
+                    + ", Booked on: " + rs.getString("dateBookedIn");
+            jobs.add(job);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        jobArray = CreateArray(jobs);
+                
+        listUnallocatedJobs.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return jobArray.length; }
+            public String getElementAt(int i) { return jobArray[i]; }
+        });  
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,10 +113,9 @@ public class AllocateJob extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
-        listNotAllocatedJobs1 = new javax.swing.JList<>();
+        listUnallocatedJobs = new javax.swing.JList<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelJobAllocation.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -79,7 +136,7 @@ public class AllocateJob extends javax.swing.JPanel {
         add(labelSelectMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 320, -1, -1));
 
         labelNotAllocatedJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelNotAllocatedJobs.setText("Not allocated Jobs:");
+        labelNotAllocatedJobs.setText("Unallocated Jobs:");
         add(labelNotAllocatedJobs, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
 
         listMechanics.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -152,13 +209,8 @@ public class AllocateJob extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
 
-        listNotAllocatedJobs1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listNotAllocatedJobs1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane7.setViewportView(listNotAllocatedJobs1);
+        listUnallocatedJobs.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane7.setViewportView(listUnallocatedJobs);
 
         add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 1160, 120));
     }// </editor-fold>//GEN-END:initComponents
@@ -207,7 +259,7 @@ public class AllocateJob extends javax.swing.JPanel {
     private javax.swing.JLabel labelSelectMechanic;
     private javax.swing.JList<String> listAllocatedJobs;
     private javax.swing.JList<String> listMechanics;
-    private javax.swing.JList<String> listNotAllocatedJobs1;
+    private javax.swing.JList<String> listUnallocatedJobs;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
 }

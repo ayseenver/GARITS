@@ -1,3 +1,7 @@
 /dist/
 GARITSDB.db
+<<<<<<< Updated upstream
+=======
+/build/
+>>>>>>> Stashed changes
 /nbproject/private/
