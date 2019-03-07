@@ -330,9 +330,13 @@ public class CreateJobTask extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createJobButtonActionPerformed
-        bayID = listAvailableBays.getSelectedValue();
-        String[] bayDetails = bayID.split(": ");
-        bayID = bayDetails[0];
+        if (checkBoxYard.isSelected()){
+            bayID = "yard";
+        }else{
+            bayID = listAvailableBays.getSelectedValue();
+            String[] bayDetails = bayID.split(": ");
+            bayID = bayDetails[0];
+        }
         
         if(bayID != null && bayType != null && jobType != null){
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();

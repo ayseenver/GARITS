@@ -26,7 +26,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     Customer c;
     String[] requiredTaskArray;
     ArrayList<String> requiredTasks = new ArrayList<>();
-    int bayID;
+    String bayID;
     String jobType;
     ResultSet rs;
     Statement statement;
@@ -41,7 +41,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.v = v;
         this.c = c;
         this.requiredTasks = tasks;
-        this.bayID = Integer.parseInt(bayID);
+        this.bayID = bayID;
         this.jobType = jobType;
         initComponents();
         JFrame frame = new JFrame();
@@ -80,12 +80,22 @@ public class ConfirmJob extends javax.swing.JPanel {
     
     private void WriteToDatabase(){
         //insert the job
+        String sql;
         try{
-            String sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
+            if(bayID.equals("yard")){
+                sql = ("insert into Job(VehicleregistrationNumber, dateBookedIn, type)"
                     + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
-                    + "(select bayID from Bay where bayID = " + bayID + "), "
                     + "date('now'), '"
                     + jobType + "')");
+            }else{
+                int bayIDInt = Integer.parseInt(bayID);
+                sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
+                    + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
+                    + "(select bayID from Bay where bayID = " + bayIDInt + "), "
+                    + "date('now'), '"
+                    + jobType + "')");
+            }
+
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -103,7 +113,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         //insert the actual tasks for this job
         for (String t : requiredTasks){
             try{
-                String sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
+                sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
                         + " values ((select MAX(jobID) from job),"
                         + "(select taskID from Task where description = '" + t + "'), "
                         + "(select defaultHours from Task where description = '" + t + "'), "
@@ -122,7 +132,6 @@ public class ConfirmJob extends javax.swing.JPanel {
               System.err.println(e.getMessage());
             }      
         }
-
     }
     
     /**
