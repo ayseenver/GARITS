@@ -501,7 +501,27 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_updateJobButtonActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
-        // TODO add your handling code here:
+        String sql = "";
+        String hours = textFieldTime.getText();
+        try{
+            if(!hours.equals("")){
+                sql = ("update actual_task set actualHours = " + Double.parseDouble(hours) + " "
+                        + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '" 
+                        + listTasksCarriedOut.getSelectedValue() + "')");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+            }         
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -624,7 +644,27 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldCostActionPerformed
 
     private void buttonUpdateTaskCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskCostActionPerformed
-        // TODO add your handling code here:
+        String sql = "";
+        String cost = textFieldCost.getText();
+        try{
+            if(!cost.equals("")){
+                sql = ("update actual_task set actualCost = " + Double.parseDouble(cost) + " "
+                        + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '" 
+                        + listTasksCarriedOut.getSelectedValue() + "')");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+            }         
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
 
 
