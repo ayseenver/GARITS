@@ -6,7 +6,6 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +15,7 @@ import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
+import teamproject.Jobs.Task;
 
 /**
  *
@@ -58,8 +58,6 @@ public class ConfirmJob extends javax.swing.JPanel {
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        System.out.println(v.getRegistrationNumber());
     }
     
     private String[] CreateArray(ArrayList<String> tasks){
@@ -82,14 +80,13 @@ public class ConfirmJob extends javax.swing.JPanel {
     }
     
     private void WriteToDatabase(){
-        String regNo = "'" + v.getRegistrationNumber() + "'";
-        String jt = "'" + jobType + "'";
+        //insert the job
         try{
             String sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
-                    + " values ((select registrationNumber from Vehicle where registrationNumber = " + regNo + "), "
+                    + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                     + "(select bayID from Bay where bayID = " + bayID + "), "
-                    + "date('now'), "
-                    + jt + ")");
+                    + "date('now'), '"
+                    + jobType + "')");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -97,12 +94,35 @@ public class ConfirmJob extends javax.swing.JPanel {
             catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println(ps.executeUpdate());
         }
         catch(SQLException e)
         {
           System.err.println(e.getMessage());
         }
+        
+        //insert the actual tasks
+        for (String t : requiredTasks){
+            try{
+                String sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
+                        + " values ((select jobID from job where VehicleregistrationNumber = '" + v.getRegistrationNumber() + "' and dateBookedIn = date('now')"
+                        + " and BaybayID = (select bayID from bay where bayID = '" + bayID + "')),"
+                        + "(select taskID from Task where description = '" + t + "'), "
+                        + "(select defaultHours from Task where description = '" + t + "'), "
+                        + "(select defaultCost from Task where description = '" + t + "'))");
+                PreparedStatement ps = null;
+                try {
+                ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            catch(SQLException e)
+            {
+              System.err.println(e.getMessage());
+            }      
+        }
+
     }
     
     /**

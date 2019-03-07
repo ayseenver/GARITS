@@ -6,13 +6,11 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
@@ -403,13 +401,11 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void bayTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bayTypeComboActionPerformed
         bayType = bayTypeCombo.getSelectedItem().toString();
-        System.out.println(bayType);
         UpdateBayList();
     }//GEN-LAST:event_bayTypeComboActionPerformed
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
         jobType = jobTypeCombo.getSelectedItem().toString();
-        System.out.println(jobType);
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
 

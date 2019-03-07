@@ -3,10 +3,12 @@ package teamproject.Jobs;
 import teamproject.Jobs.Task;
 
 public class ActualTask {
-
 	private double actualHour;
 	private double actualCost;
 
+        public ActualTask() {
+        }
+        
 	public double getActualHour() {
 		return this.actualHour;
 	}
@@ -29,17 +31,6 @@ public class ActualTask {
 	 */
 	public void setActualCost(double actualCost) {
 		this.actualCost = actualCost;
-	}
-
-	/**
-	 * 
-	 * @param task
-	 * @param actualHour
-	 * @param actualCost
-	 */
-	public static ActualTask ActualTask(Task task, double actualHour, double actualCost) {
-		// TODO - implement ActualTask.ActualTask
-		throw new UnsupportedOperationException();
 	}
 
 }
