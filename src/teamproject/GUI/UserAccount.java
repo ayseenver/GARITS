@@ -229,7 +229,7 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 460, 130, 30));
 
-        comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic" }));
+        comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic", "foreperson", "franchisee", "admin" }));
         add(comboBoxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 580, 130, -1));
 
         labelUserID.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
