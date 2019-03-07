@@ -116,14 +116,14 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonNewUser">
       <Properties>
-        <Property name="text" type="java.lang.String" value="New User"/>
+        <Property name="text" type="java.lang.String" value="Create New User"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonNewUserActionPerformed"/>
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="430" y="460" width="130" height="30"/>
+          <AbsoluteConstraints x="220" y="610" width="130" height="30"/>
         </Constraint>
       </Constraints>
     </Component>

@@ -11,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
 import teamproject.User_Accounts.User;
@@ -28,6 +26,7 @@ public class UserAccount extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
     String[] userArray;
+    User u = new User();
 
     /**
      * Creates new form NewJPanel
@@ -81,6 +80,24 @@ public class UserAccount extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+    
+    private void SelectUser(){
+        try{
+            String sql = ("select * from user where username = '" + listUsers.getSelectedValue() + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }
     
     /**
@@ -152,13 +169,13 @@ public class UserAccount extends javax.swing.JPanel {
         labelSelectUser.setText("Select User:");
         add(labelSelectUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
 
-        buttonNewUser.setText("New User");
+        buttonNewUser.setText("Create New User");
         buttonNewUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonNewUserActionPerformed(evt);
             }
         });
-        add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 460, 130, 30));
+        add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 610, 130, 30));
 
         buttonSearch.setText("Search");
         buttonSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -257,16 +274,21 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonNewUserActionPerformed
-
-    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSearchActionPerformed
-
-    private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
+        User newU = new User();
+        newU.setFirstName(textFieldFirstName.getText());
+        newU.setLastName(textFieldLastName.getText());
+        newU.setPassword(textFieldPassword.getText());
+        newU.setRoleName(comboBoxRole.getSelectedItem().toString());
+        newU.setUsername(textFieldUserID.getText());
+        
         try{
-            String sql = ("select * from user where username = '" + listUsers.getSelectedValue() + "'");
+            String sql = ("insert into user (username, password, roleName, firstName, surname)"
+                    + "values("
+                    + "'" + newU.getUsername() + "',"
+                    + "'" + newU.getPassword() + "',"
+                    + "'" + newU.getRoleName() + "',"
+                    + "'" + newU.getFirstName() + "',"
+                    + "'" + newU.getLastName() + "')");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -274,14 +296,22 @@ public class UserAccount extends javax.swing.JPanel {
             catch (Exception e) {
                 e.printStackTrace();
             }
-            rs = ps.executeQuery();
+            ps.executeUpdate();
         }
         catch(SQLException e)
         {
           System.err.println(e.getMessage());
         }
+    }//GEN-LAST:event_buttonNewUserActionPerformed
+
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
+    private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
+        SelectUser();
         
-        User u = new User();
+        //display the user details at the boxes at the botton
         try{
             u.setFirstName(rs.getString("firstName"));
         }
@@ -326,7 +356,7 @@ public class UserAccount extends javax.swing.JPanel {
         textFieldFirstName.setText(u.getFirstName());
         textFieldLastName.setText(u.getLastName());
         textFieldPassword.setText(u.getPassword());
-        comboBoxRole.setSelectedItem(u.getRoleName());
+        comboBoxRole.setSelectedItem(u.getRoleName()); 
     }//GEN-LAST:event_buttonEditUserActionPerformed
 
     private void buttonUpdateDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateDetailsActionPerformed
@@ -337,7 +367,7 @@ public class UserAccount extends javax.swing.JPanel {
                     + "roleName = '" + comboBoxRole.getSelectedItem().toString() + "',"
                     + "firstName = '" + textFieldFirstName.getText() + "',"
                     + "surname = '" + textFieldLastName.getText() + "'"
-                    + "where username = '" + rs.getString("username") + "'");
+                    + "where username = '" + u.getUsername() + "'");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -354,7 +384,26 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateDetailsActionPerformed
 
     private void buttonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteUserActionPerformed
-        // TODO add your handling code here:
+        SelectUser();
+        
+        //delete selected user from database.
+        try{
+            String sql = ("delete from user "
+                    + "where username = '" + rs.getString("username") + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
     }//GEN-LAST:event_buttonDeleteUserActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
