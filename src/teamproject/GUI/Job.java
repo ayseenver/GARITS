@@ -59,6 +59,8 @@ public class Job extends javax.swing.JPanel {
         ListActualTasks();
         GetParts();
         ListAllParts();
+        GetActualParts();
+        ListUsedParts();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,10 +78,30 @@ public class Job extends javax.swing.JPanel {
         }
     }
     
+    private void GetActualTasks(){
+        //get all actual tasks descriptions for this job
+        try{
+            String sql = ("select description from Task where taskID = "
+                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+    }
+    
     private void GetParts(){        
         try{
-            String sql = ("select * from sparepart where vehicleType = "
-                    + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "')");
+            String sql = ("select * from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "') "
+                    + "and partID not in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -93,6 +115,25 @@ public class Job extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }        
+    }
+    
+    private void GetActualParts(){
+        //get all actual tasks descriptions for this job
+        try{
+            String sql = ("select partName from sparepart where partID in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }
     
     private void ListAllParts(){
@@ -139,26 +180,6 @@ public class Job extends javax.swing.JPanel {
             public int getSize() { return usedPartArray.length; }
             public String getElementAt(int i) { return usedPartArray[i]; }
         });
-    }
-    
-    private void GetActualTasks(){
-        //get all actual tasks descriptions for this job
-        try{
-            String sql = ("select description from Task where taskID = "
-                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
     }
     
     private void ListAllTasks(){
