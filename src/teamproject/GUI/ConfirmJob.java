@@ -134,7 +134,6 @@ public class ConfirmJob extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonEditJob = new javax.swing.JButton();
         labelConfirmDetails = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaAccountHolder = new javax.swing.JTextArea();
@@ -154,17 +153,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         labelCustomerDetails1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        buttonEditJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonEditJob.setText(" Edit Job");
-        buttonEditJob.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditJobActionPerformed(evt);
-            }
-        });
-        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 150, -1));
 
         labelConfirmDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelConfirmDetails.setText("Are the details correct?");
@@ -243,10 +232,6 @@ public class ConfirmJob extends javax.swing.JPanel {
         add(labelCustomerDetails1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 250, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonEditJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditJobActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonEditJobActionPerformed
-
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
@@ -272,7 +257,6 @@ public class ConfirmJob extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCreateJob;
-    private javax.swing.JButton buttonEditJob;
     private javax.swing.JButton buttonExit;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
