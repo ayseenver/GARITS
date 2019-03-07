@@ -5,7 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +19,11 @@ import javax.swing.JFrame;
  */
 public class UserAccount extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] userArray;
 
     /**
      * Creates new form NewJPanel
@@ -25,8 +36,49 @@ public class UserAccount extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        try{
+            this.rs = statement.executeQuery("select * from User");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listUsers.removeAll();
+        ArrayList<String> users = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String user = rs.getString("username");
+            users.add(user);
+          } 
+        }
+        catch(SQLException e){
+        }
+        
+        userArray = CreateArray(users);
+                
+        listUsers.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return userArray.length; }
+            public String getElementAt(int i) { return userArray[i]; }
+        });
     }
 
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,7 +117,6 @@ public class UserAccount extends javax.swing.JPanel {
         textFieldLastName1 = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelUserAccounts.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -89,11 +140,6 @@ public class UserAccount extends javax.swing.JPanel {
         add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 660, -1, -1));
 
         listUsers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listUsers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane9.setViewportView(listUsers);
 
         add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 1140, 240));
@@ -230,12 +276,14 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
