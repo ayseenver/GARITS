@@ -8,6 +8,9 @@ public class User {
 	private String password;
 	private String roleName;
 
+    public User() {
+    }
+        
 	/**
 	 * 
 	 * @param username
@@ -81,19 +84,6 @@ public class User {
 	 */
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-
-	/**
-	 * 
-	 * @param username
-	 * @param firstName
-	 * @param lastName
-	 * @param password
-	 * @param roleName
-	 */
-	public static User User(String username, String firstName, String lastName, String password, String roleName) {
-		// TODO - implement User.User
-		throw new UnsupportedOperationException();
 	}
 
 }

@@ -6,12 +6,16 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
+import teamproject.User_Accounts.User;
 
 /**
  *
@@ -114,7 +118,7 @@ public class UserAccount extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         labelLastName1 = new javax.swing.JLabel();
-        textFieldLastName1 = new javax.swing.JTextField();
+        textFieldPassword = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -204,7 +208,7 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 460, 130, 30));
 
-        comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic" }));
         add(comboBoxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 580, 130, -1));
 
         labelUserID.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
@@ -242,12 +246,13 @@ public class UserAccount extends javax.swing.JPanel {
         labelLastName1.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelLastName1.setText("Password:");
         add(labelLastName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 580, -1, -1));
-        add(textFieldLastName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 130, -1));
+        add(textFieldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 130, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
@@ -260,11 +265,92 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
-        // TODO add your handling code here:
+        try{
+            String sql = ("select * from user where username = '" + listUsers.getSelectedValue() + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        User u = new User();
+        try{
+            u.setFirstName(rs.getString("firstName"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            u.setLastName(rs.getString("surname"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            u.setPassword(rs.getString("password"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            u.setRoleName(rs.getString("roleName"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            u.setUsername(rs.getString("username"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        textFieldUserID.setText(u.getUsername());
+        textFieldFirstName.setText(u.getFirstName());
+        textFieldLastName.setText(u.getLastName());
+        textFieldPassword.setText(u.getPassword());
+        comboBoxRole.setSelectedItem(u.getRoleName());
     }//GEN-LAST:event_buttonEditUserActionPerformed
 
     private void buttonUpdateDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateDetailsActionPerformed
-        // TODO add your handling code here:
+        try{
+            String sql = ("Update user "
+                    + "set username = '" + textFieldUserID.getText() + "',"
+                    + "password = '" + textFieldPassword.getText() + "',"
+                    + "roleName = '" + comboBoxRole.getSelectedItem().toString() + "',"
+                    + "firstName = '" + textFieldFirstName.getText() + "',"
+                    + "surname = '" + textFieldLastName.getText() + "'"
+                    + "where username = '" + rs.getString("username") + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonUpdateDetailsActionPerformed
 
     private void buttonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteUserActionPerformed
@@ -312,7 +398,7 @@ public class UserAccount extends javax.swing.JPanel {
     private javax.swing.JList<String> listUsers;
     private javax.swing.JTextField textFieldFirstName;
     private javax.swing.JTextField textFieldLastName;
-    private javax.swing.JTextField textFieldLastName1;
+    private javax.swing.JTextField textFieldPassword;
     private javax.swing.JTextField textFieldSearch;
     private javax.swing.JTextField textFieldUserDetails;
     private javax.swing.JTextField textFieldUserID;
