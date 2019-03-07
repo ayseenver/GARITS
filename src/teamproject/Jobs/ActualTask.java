@@ -1,7 +1,5 @@
 package teamproject.Jobs;
 
-import teamproject.Jobs.Task;
-
 public class ActualTask {
 	private double actualHour;
 	private double actualCost;
