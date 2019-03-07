@@ -582,6 +582,28 @@ public class Job extends javax.swing.JPanel {
         
         tasks.remove(selected);
         ListAllTasks();
+        
+        //insert the actual tasks for this job
+        String sql;
+        try{
+            sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
+                    + " values (("+jobID+"), "
+                    + "(select taskID from Task where description = '" + selected + "'), "
+                    + "(select defaultHours from Task where description = '" + selected + "'), "
+                    + "(select defaultCost from Task where description = '" + selected + "'))");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }      
     }//GEN-LAST:event_addTaskButtonActionPerformed
 
     private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
@@ -597,12 +619,33 @@ public class Job extends javax.swing.JPanel {
         tasks.add(selected);
         ListAllTasks();
         ListActualTasks();
+        
+        //delete this task from the list of actal tasks
+        String sql;
+        try{
+            sql = ("delete from Actual_Task"
+                    + " where JobjobID = "+jobID+" "
+                    + "and TasktaskID = (select taskID from Task where description = '" + selected + "')");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }  
     }//GEN-LAST:event_removeTaskButtonActionPerformed
 
     private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
         String selected = listAvailableParts.getSelectedValue();
         usedParts.add(selected);
         usedPartArray = CreateArray(usedParts);
+        System.out.println(selected);
                 
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return usedPartArray.length; }
@@ -611,6 +654,26 @@ public class Job extends javax.swing.JPanel {
         
         parts.remove(selected);
         ListAllParts();
+        
+        //insert part into the parts used for this job
+        String sql;
+        try{
+            sql = ("insert into Job_Part_Record(PartpartID, JobjobID)"
+                    + " values ((select partID from sparepart where partName = '" + selected + "'), "
+                    + "" + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        } 
     }//GEN-LAST:event_addPartButtonActionPerformed
 
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
@@ -626,6 +689,26 @@ public class Job extends javax.swing.JPanel {
         parts.add(selected);
         ListAllParts();
         ListUsedParts();
+        
+        //delete part from job_part_record
+        String sql;
+        try{
+            sql = ("delete from Job_Part_Record"
+                    + " where JobjobID = "+jobID+" "
+                    + "and PartpartID = (select partID from sparepart where partName = '" + selected + "')");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }  
     }//GEN-LAST:event_removePartButtonActionPerformed
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed

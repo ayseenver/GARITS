@@ -87,7 +87,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     }
     
     private void UpdateBayList(){
-        listAvailableTasks.removeAll();
+        listAvailableBays.removeAll();
         ArrayList<String> bays = new ArrayList<>();
         //get all bays
         try{
@@ -130,7 +130,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     }
     
     private void UpdateTaskList(){
-        listAvailableBays.removeAll();
+        listAvailableTasks.removeAll();
         
         //add all tasks to task list
         try{
