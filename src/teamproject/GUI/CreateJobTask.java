@@ -67,12 +67,9 @@ public class CreateJobTask extends javax.swing.JPanel {
           System.err.println(e.getMessage());
         }
         
-        listAvailableTasks.removeAll();
         listRequiredTasks.removeAll();
-        listAvailableBays.removeAll();
         
         UpdateTaskList();
-        
         UpdateBayList();
         
         

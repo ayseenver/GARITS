@@ -44,6 +44,16 @@ public class UserAccount extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
         
+        UpdateUserList();        
+    }
+
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
+    private void UpdateUserList(){
         try{
             this.rs = statement.executeQuery("select * from User");
         }
@@ -74,12 +84,6 @@ public class UserAccount extends javax.swing.JPanel {
             public int getSize() { return userArray.length; }
             public String getElementAt(int i) { return userArray[i]; }
         });
-    }
-
-    private String[] CreateArray(ArrayList<String> tasks){
-        String[] newArray = new String[tasks.size()];
-        newArray = tasks.toArray(newArray);
-        return newArray;
     }
     
     private void SelectUser(){
@@ -302,6 +306,7 @@ public class UserAccount extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }
+        UpdateUserList();
     }//GEN-LAST:event_buttonNewUserActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -403,7 +408,7 @@ public class UserAccount extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }
-        
+        UpdateUserList();
     }//GEN-LAST:event_buttonDeleteUserActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
