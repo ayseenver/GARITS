@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -411,11 +412,43 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
     private void textFieldConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldConfigureThresholdActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_textFieldConfigureThresholdActionPerformed
 
     private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
-        // TODO add your handling code here:
+        String sql = "";
+        String selected  = listStock.getSelectedValue();
+        
+        String[] parts = selected.split(", ");
+        String[] nameParts = parts[0].split(": ");
+        String partName = nameParts[1];
+        
+        String[] vParts = parts[1].split(": ");
+        String vType = vParts[1];
+        
+        String threshold = textFieldConfigureThreshold.getText();
+        if (selected != null){
+            try{
+                if(!threshold.equals("")){
+                    sql = ("update sparepart set threshold = " + Double.parseDouble(threshold) + " "
+                            + "where partName = '" + partName + "' and vehicleType = '" + vType + "'");
+                PreparedStatement ps = null;
+                try {
+                ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+                }  
+                textFieldConfigureThreshold.setText("");
+                ShowLowParts();
+            }
+            catch(SQLException e)
+            {
+              System.err.println(e.getMessage());
+            }     
+        }
     }//GEN-LAST:event_buttonConfigureThresholdActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
