@@ -363,7 +363,7 @@ public class StockControl extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new PartOrder(username);
+        new PartOrder(username, order);
     }//GEN-LAST:event_buttonOrderActionPerformed
 
     private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed

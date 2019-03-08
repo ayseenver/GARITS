@@ -5,7 +5,16 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,21 +22,38 @@ import javax.swing.JFrame;
  */
 public class PartOrder extends javax.swing.JPanel {
     private String username;
+    String vehicleReg;
+    Statement statement;
+    Connection connection = null;
+    ResultSet rs;
+    DB_ImplClass db = new DB_ImplClass();
+    ArrayList<String> order = new ArrayList<>();
 
     /**
      * Creates new form NewJPanel
      */
-    public PartOrder(String username) {
+    public PartOrder(String username, ArrayList<String> order) {
         this.username = username;
+        this.order = order;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowOrderDetails();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void ShowOrderDetails(){
+        for (String s : order) {
+            textAreaPartsOrder.append(s+"\n");
+        }
     }
 
     /**
@@ -49,7 +75,6 @@ public class PartOrder extends javax.swing.JPanel {
         buttonDone = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelPartsOrder.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -77,6 +102,11 @@ public class PartOrder extends javax.swing.JPanel {
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -90,14 +120,70 @@ public class PartOrder extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        // TODO add your handling code here:
+        String fileName = "order-by-"+username+".txt";
+        try{
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.println(textAreaPartsOrder.getText());
+            writer.close();  
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
+        //create a order record in the database.
+        String sql;
+        try{
+            sql = ("insert into partOrder(orderNumber) values (null)");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        
+        for (String s : order){
+            String[] parts = s.split(", ");
+            String[] nameParts = parts[0].split(": ");
+            String partName = nameParts[1];
+            String[] vParts = parts[1].split(": ");
+            String vType = vParts[1];
+            
+            try{
+                sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber)"
+                        + " values ((select partID from sparepart where partName = '" + partName + "' and "
+                        + "vehicleType = '" + vType + "'), (select orderNumber from partOrder where orderNumber = (select max(orderNumber) from partOrder)))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+        }
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
+        System.exit(0);
+    }//GEN-LAST:event_buttonExitActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
