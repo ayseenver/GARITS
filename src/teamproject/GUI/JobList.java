@@ -213,6 +213,8 @@ public class JobList extends javax.swing.JPanel {
         String[] regParts = details[1].split(": ");
         vehicleReg = regParts[1];
         
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
         new Job(username, jobID, vehicleReg);
     }//GEN-LAST:event_buttonSelectJobActionPerformed

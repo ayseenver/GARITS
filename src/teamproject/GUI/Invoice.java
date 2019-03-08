@@ -5,7 +5,16 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +22,13 @@ import javax.swing.JFrame;
  */
 public class Invoice extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] invoiceArray;
+    String jobNumber;
+    String invoiceNumber;
 
     /**
      * Creates new form NewJPanel
@@ -25,11 +41,200 @@ public class Invoice extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowAllInvoices();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    private void GetJobAndInvoiceNumber(){
+        String[] parts = listInvoices.getSelectedValue().split(", ");
+        String[] idParts = parts[0].split(": ");
+        String[] jobParts = parts[1].split(": ");
+        invoiceNumber = idParts[1];
+        jobNumber = jobParts[1];
+    }
+    
+    private String GetInvoiceDetails(){
+        GetJobAndInvoiceNumber();
+        String result = "";
+        result += ("Invoice number : " + invoiceNumber + "\n");
+        result += ("Job number : " + jobNumber + "\n\n");
+        result += ("Description of work: \n");
+        
+        //get all task descriptions for the actual tasks for this job
+        try{
+            String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        int i = 1;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task description.
+            String task = i+") " + rs.getString("description");
+            result +=(task+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        //get all actual task hours for this job
+        try{
+            String sql = ("select * from actual_task where JobjobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalHours = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task hours
+            totalHours += Double.parseDouble(rs.getString("actualHours"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        result +=("\nParts used: \n");
+        
+        //get all parts used for this job
+        try{
+            String sql = ("select * from sparePart where partID in (select PartpartID from job_part_record where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalPartsCost = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get part name description.
+            String part = rs.getString("partName") + ", £" + Double.parseDouble(rs.getString("sellingPrice"));
+            totalPartsCost += Double.parseDouble(rs.getString("sellingPrice"));
+            result +=(part+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        result +=("Total parts cost: £" + totalPartsCost + "\n");
+        
+        //get hourly rate for this mechanic
+        try{
+            String sql = ("select hourlyRate from mechanic where ID = (select MechanicID from job where jobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double hourlyRate = 0;
+        try{
+        while(rs.next())
+          {
+            hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        double totalCost = (hourlyRate * totalHours) + totalPartsCost;
+        result +=("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
+        result +=("\nGrand total: £" + totalCost + "\n");
+        return result;
+    }
 
+    private void ShowAllInvoices(){
+        //get all unpaid invoices
+        try{
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment)");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listInvoices.removeAll();
+        ArrayList<String> invoices = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Job ID: " + rs.getString("JobjobID");
+            invoices.add(invoice);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        invoiceArray = CreateArray(invoices);
+                
+        listInvoices.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return invoiceArray.length; }
+            public String getElementAt(int i) { return invoiceArray[i]; }
+        });  
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,13 +247,11 @@ public class Invoice extends javax.swing.JPanel {
         buttonSearchInvoices = new javax.swing.JButton();
         buttonPay = new javax.swing.JButton();
         labelInvoice = new javax.swing.JLabel();
-        textFieldAmount = new javax.swing.JTextField();
         labelDetail = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listInvoices = new javax.swing.JList<>();
         buttonView = new javax.swing.JButton();
-        buttonPrint = new javax.swing.JButton();
-        labelAmount = new javax.swing.JLabel();
+        buttonPayLater = new javax.swing.JButton();
         comboxBoxPaymentType = new javax.swing.JComboBox<>();
         labelInvoices = new javax.swing.JLabel();
         labelPaymentType = new javax.swing.JLabel();
@@ -59,11 +262,10 @@ public class Invoice extends javax.swing.JPanel {
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        buttonPrint1 = new javax.swing.JButton();
+        buttonPrintInvoice = new javax.swing.JButton();
         labelCustomerInfomation = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchInvoices.setText("Search");
@@ -81,30 +283,17 @@ public class Invoice extends javax.swing.JPanel {
                 buttonPayActionPerformed(evt);
             }
         });
-        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 630, -1, -1));
+        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 637, -1, -1));
 
         labelInvoice.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelInvoice.setText("Invoices");
         add(labelInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, -1, -1));
-
-        textFieldAmount.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldAmount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldAmountActionPerformed(evt);
-            }
-        });
-        add(textFieldAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 630, 90, 30));
 
         labelDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDetail.setText("Detail:");
         add(labelDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 360, -1, -1));
 
         listInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listInvoices.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listInvoices);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 1160, 140));
@@ -118,22 +307,18 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 340, -1, -1));
 
-        buttonPrint.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrint.setText("Pay Later");
-        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
+        buttonPayLater.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPayLater.setText("Pay Later");
+        buttonPayLater.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrintActionPerformed(evt);
+                buttonPayLaterActionPerformed(evt);
             }
         });
-        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
-
-        labelAmount.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        labelAmount.setText("Amount:");
-        add(labelAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 640, -1, -1));
+        add(buttonPayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
 
         comboxBoxPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 640, -1, -1));
+        comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "card" }));
+        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 640, -1, -1));
 
         labelInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelInvoices.setText("Invoices:");
@@ -141,7 +326,7 @@ public class Invoice extends javax.swing.JPanel {
 
         labelPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelPaymentType.setText("Payment Type:");
-        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 640, -1, -1));
+        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
 
         textFieldSearchInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
@@ -185,14 +370,14 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
 
-        buttonPrint1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrint1.setText("Print Invoice");
-        buttonPrint1.addActionListener(new java.awt.event.ActionListener() {
+        buttonPrintInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPrintInvoice.setText("Print Invoice");
+        buttonPrintInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrint1ActionPerformed(evt);
+                buttonPrintInvoiceActionPerformed(evt);
             }
         });
-        add(buttonPrint1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
+        add(buttonPrintInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 630, -1, -1));
 
         labelCustomerInfomation.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelCustomerInfomation.setText("*Pay Later option needs to be configured");
@@ -204,20 +389,43 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
-        // TODO add your handling code here:
+        GetJobAndInvoiceNumber();
+        //create a payment record in the database.
+        String sql;
+        try{
+            sql = ("insert into Payment(paymentType, JobjobID)"
+                    + " values ( '" + comboxBoxPaymentType.getSelectedItem().toString() + "', "
+                    + "(select jobID from job where jobID = " + jobNumber + "))");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        } 
+        
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
     }//GEN-LAST:event_buttonPayActionPerformed
 
-    private void textFieldAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldAmountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldAmountActionPerformed
-
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        // TODO add your handling code here:
+        textAreaInvoiceDetail.setText("");
+        
+        GetJobAndInvoiceNumber();
+        textAreaInvoiceDetail.append(GetInvoiceDetails());
     }//GEN-LAST:event_buttonViewActionPerformed
 
-    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
+    private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrintActionPerformed
+    }//GEN-LAST:event_buttonPayLaterActionPerformed
 
     private void textFieldSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchInvoicesActionPerformed
         // TODO add your handling code here:
@@ -228,32 +436,48 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrint1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrint1ActionPerformed
+    private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
+        String details = GetInvoiceDetails();
+        String fileName = "Invoice-number-"+invoiceNumber+".txt";
+        if(listInvoices.getSelectedValue() != null){
+            try{
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                writer.println(details);
+                writer.close();  
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username);   
+        }
+    }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPay;
-    private javax.swing.JButton buttonPrint;
-    private javax.swing.JButton buttonPrint1;
+    private javax.swing.JButton buttonPayLater;
+    private javax.swing.JButton buttonPrintInvoice;
     private javax.swing.JButton buttonSearchInvoices;
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel labelAmount;
     private javax.swing.JLabel labelCustomerInfomation;
     private javax.swing.JLabel labelDetail;
     private javax.swing.JLabel labelInvoice;
@@ -262,7 +486,6 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JLabel labelPaymentType;
     private javax.swing.JList<String> listInvoices;
     private javax.swing.JTextArea textAreaInvoiceDetail;
-    private javax.swing.JTextField textFieldAmount;
     private javax.swing.JTextField textFieldSearchInvoices;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
