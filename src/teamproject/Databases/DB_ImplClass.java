@@ -1,6 +1,7 @@
 package teamproject.Databases;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,5 +44,22 @@ public class DB_ImplClass implements DBConnectivity {
     public Statement getStatement() {
         return statement;
     }
-        
+    
+    public void Backup(Connection c){
+        try{
+            c.createStatement().executeUpdate("backup to database.db");
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }   
+    
+    public void Restore(Connection c){
+        try{
+            c.createStatement().executeUpdate("restore from database.db");
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }   
 }
