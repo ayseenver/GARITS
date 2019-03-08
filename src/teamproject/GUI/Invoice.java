@@ -265,7 +265,7 @@ public class Invoice extends javax.swing.JPanel {
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         textAreaInvoiceDetail.setText("");
-        
+
         String[] parts = listInvoices.getSelectedValue().split(", ");
         String[] idParts = parts[0].split(": ");
         String[] jobParts = parts[1].split(": ");
@@ -276,7 +276,7 @@ public class Invoice extends javax.swing.JPanel {
         textAreaInvoiceDetail.append("Job number : " + jobNumber + "\n\n");
         textAreaInvoiceDetail.append("Description of work: \n");
         
-        //get all actual tasks for this job
+        //get all task descriptions for the actual tasks for this job
         try{
             String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
             PreparedStatement ps = null;
@@ -299,12 +299,108 @@ public class Invoice extends javax.swing.JPanel {
           {
             // read the result set. Get task description.
             String task = i+") " + rs.getString("description");
-            textAreaInvoiceDetail.append(task);
+            textAreaInvoiceDetail.append(task+"\n");
           } 
         }
         catch(SQLException e){
             System.err.println(e.getMessage());
         }
+        
+        //get all actual task hours for this job
+        try{
+            String sql = ("select * from actual_task where JobjobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalHours = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task hours
+            totalHours += Double.parseDouble(rs.getString("actualHours"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        textAreaInvoiceDetail.append("\nParts used: \n");
+        
+        //get all parts used for this job
+        try{
+            String sql = ("select * from sparePart where partID in (select PartpartID from job_part_record where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalPartsCost = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get part name description.
+            String part = rs.getString("partName") + ", £" + Double.parseDouble(rs.getString("sellingPrice"));
+            totalPartsCost += Double.parseDouble(rs.getString("sellingPrice"));
+            textAreaInvoiceDetail.append(part+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        textAreaInvoiceDetail.append("Total parts cost: £" + totalPartsCost + "\n");
+        
+        //get hourly rate for this mechanic
+        try{
+            String sql = ("select hourlyRate from mechanic where ID = (select MechanicID from job where jobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double hourlyRate = 0;
+        try{
+        while(rs.next())
+          {
+            hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        double totalCost = (hourlyRate * totalHours) + totalPartsCost;
+        textAreaInvoiceDetail.append("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
+        textAreaInvoiceDetail.append("\nGrand total: £" + totalCost + "\n");
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
