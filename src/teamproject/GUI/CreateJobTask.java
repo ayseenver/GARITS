@@ -204,22 +204,22 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelCreateJob.setText("Create Job");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, -1, -1));
 
-        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT inspection", "repair" }));
+        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT inspection", "Repair" }));
         bayTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bayTypeComboActionPerformed(evt);
             }
         });
-        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 610, -1, -1));
+        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 600, -1, -1));
 
         listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listAvailableBays);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 550, 220, 80));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 550, 220, 80));
 
         labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelAvailableBay.setText("Bay Available:");
-        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 520, -1, -1));
+        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 520, -1, -1));
 
         labelBayType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelBayType.setText("Bay Type:");
@@ -235,7 +235,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 jobTypeComboActionPerformed(evt);
             }
         });
-        add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, -1, -1));
+        add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 550, -1, -1));
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,7 +257,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonBack.setText("Back");
+        buttonBack.setText("Edit Job Customer");
         buttonBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackActionPerformed(evt);
@@ -271,7 +271,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 checkBoxYardActionPerformed(evt);
             }
         });
-        add(checkBoxYard, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 600, -1, -1));
+        add(checkBoxYard, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 600, -1, -1));
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
