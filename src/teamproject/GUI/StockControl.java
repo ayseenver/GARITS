@@ -25,6 +25,8 @@ public class StockControl extends javax.swing.JPanel {
     ResultSet rs;
     String[] partArray;
     String[] lowPartArray;
+    String[] partOrder;
+    ArrayList<String> order = new ArrayList<>();
     
     /**
      * Creates new form NewJPanel
@@ -120,6 +122,45 @@ public class StockControl extends javax.swing.JPanel {
         newArray = tasks.toArray(newArray);
         return newArray;
     }
+    
+    private void AddPartAll(){
+        String selected = listStock.getSelectedValue();
+        
+        order.add(selected);
+        
+        partOrder = CreateArray(order);
+                
+        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partOrder.length; }
+            public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
+    
+    private void AddPartLow(){
+        String selected = listLowStock.getSelectedValue();
+        
+        order.add(selected);
+        
+        partOrder = CreateArray(order);
+                
+        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partOrder.length; }
+            public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
+    
+    private void RemovePart(){
+        String selected = listPartsOrder.getSelectedValue();
+        
+        order.remove(selected);
+        
+        partOrder = CreateArray(order);
+                
+        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partOrder.length; }
+            public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -139,7 +180,7 @@ public class StockControl extends javax.swing.JPanel {
         lblPartsOrder = new javax.swing.JLabel();
         buttonStockLevelReport = new javax.swing.JButton();
         buttonRemove = new javax.swing.JButton();
-        buttonSelectToOrderAllStock = new javax.swing.JButton();
+        buttonAllStockOrder = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         listLowStock = new javax.swing.JList<>();
         textFieldQuantity = new javax.swing.JTextField();
@@ -149,7 +190,7 @@ public class StockControl extends javax.swing.JPanel {
         lblLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        selectFromLowStock = new javax.swing.JButton();
+        buttonLowStockOrder = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         listPartsOrder = new javax.swing.JList<>();
         buttonSearchAllStock = new javax.swing.JButton();
@@ -211,13 +252,13 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 620, 150, -1));
 
-        buttonSelectToOrderAllStock.setText("Select to Order");
-        buttonSelectToOrderAllStock.addActionListener(new java.awt.event.ActionListener() {
+        buttonAllStockOrder.setText("Select to Order");
+        buttonAllStockOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSelectToOrderAllStockActionPerformed(evt);
+                buttonAllStockOrderActionPerformed(evt);
             }
         });
-        add(buttonSelectToOrderAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 320, -1, -1));
+        add(buttonAllStockOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 320, -1, -1));
 
         listLowStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane4.setViewportView(listLowStock);
@@ -266,20 +307,15 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
 
-        selectFromLowStock.setText(" Select to Order");
-        selectFromLowStock.addActionListener(new java.awt.event.ActionListener() {
+        buttonLowStockOrder.setText(" Select to Order");
+        buttonLowStockOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectFromLowStockActionPerformed(evt);
+                buttonLowStockOrderActionPerformed(evt);
             }
         });
-        add(selectFromLowStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 510, -1, -1));
+        add(buttonLowStockOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 510, -1, -1));
 
         listPartsOrder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", " " };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane6.setViewportView(listPartsOrder);
 
         add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 550, 930, 130));
@@ -337,12 +373,12 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
-        // TODO add your handling code here:
+        RemovePart();
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
-    private void buttonSelectToOrderAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectToOrderAllStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSelectToOrderAllStockActionPerformed
+    private void buttonAllStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllStockOrderActionPerformed
+        AddPartAll();
+    }//GEN-LAST:event_buttonAllStockOrderActionPerformed
 
     private void textFieldQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQuantityActionPerformed
         // TODO add your handling code here:
@@ -359,9 +395,9 @@ public class StockControl extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void selectFromLowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFromLowStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_selectFromLowStockActionPerformed
+    private void buttonLowStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLowStockOrderActionPerformed
+        AddPartLow();
+    }//GEN-LAST:event_buttonLowStockOrderActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
         // TODO add your handling code here:
@@ -388,15 +424,16 @@ public class StockControl extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAllStockOrder;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonChangeQuantity;
     private javax.swing.JButton buttonConfigureThreshold;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonLowStockOrder;
     private javax.swing.JButton buttonOrder;
     private javax.swing.JButton buttonPartSale;
     private javax.swing.JButton buttonRemove;
     private javax.swing.JButton buttonSearchAllStock;
-    private javax.swing.JButton buttonSelectToOrderAllStock;
     private javax.swing.JButton buttonStockLevelReport;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
@@ -409,7 +446,6 @@ public class StockControl extends javax.swing.JPanel {
     private javax.swing.JList<String> listLowStock;
     private javax.swing.JList<String> listPartsOrder;
     private javax.swing.JList<String> listStock;
-    private javax.swing.JButton selectFromLowStock;
     private javax.swing.JTextField textFieldConfigureThreshold;
     private javax.swing.JTextField textFieldQuantity;
     private javax.swing.JTextField textFieldSearchAllStock;
