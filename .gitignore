@@ -1,3 +1,5 @@
 /dist/
 GARITSDB.db
 *.db
+/nbproject/private/
+>>>>>>> 85fa04e70d42e2799df0838dce755dca7f4a6705
