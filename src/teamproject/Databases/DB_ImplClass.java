@@ -47,7 +47,7 @@ public class DB_ImplClass implements DBConnectivity {
     
     public void Backup(Connection c){
         try{
-            c.createStatement().executeUpdate("backup to db/database.db");
+            c.createStatement().executeUpdate("backup to database.db");
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
@@ -56,7 +56,7 @@ public class DB_ImplClass implements DBConnectivity {
     
     public void Restore(Connection c){
         try{
-            c.createStatement().executeUpdate("restore from db/database.db");
+            c.createStatement().executeUpdate("restore from database.db");
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
