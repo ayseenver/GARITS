@@ -55,6 +55,140 @@ public class Invoice extends javax.swing.JPanel {
         invoiceNumber = idParts[1];
         jobNumber = jobParts[1];
     }
+    
+    private String GetInvoiceDetails(){
+        String result = "";
+        result += ("Invoice number : " + invoiceNumber + "\n");
+        result += ("Job number : " + jobNumber + "\n\n");
+        result += ("Description of work: \n");
+        
+        //get all task descriptions for the actual tasks for this job
+        try{
+            String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        int i = 1;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task description.
+            String task = i+") " + rs.getString("description");
+            result +=(task+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        //get all actual task hours for this job
+        try{
+            String sql = ("select * from actual_task where JobjobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalHours = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task hours
+            totalHours += Double.parseDouble(rs.getString("actualHours"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        result +=("\nParts used: \n");
+        
+        //get all parts used for this job
+        try{
+            String sql = ("select * from sparePart where partID in (select PartpartID from job_part_record where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double totalPartsCost = 0;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get part name description.
+            String part = rs.getString("partName") + ", £" + Double.parseDouble(rs.getString("sellingPrice"));
+            totalPartsCost += Double.parseDouble(rs.getString("sellingPrice"));
+            result +=(part+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        result +=("Total parts cost: £" + totalPartsCost + "\n");
+        
+        //get hourly rate for this mechanic
+        try{
+            String sql = ("select hourlyRate from mechanic where ID = (select MechanicID from job where jobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        double hourlyRate = 0;
+        try{
+        while(rs.next())
+          {
+            hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        double totalCost = (hourlyRate * totalHours) + totalPartsCost;
+        result +=("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
+        result +=("\nGrand total: £" + totalCost + "\n");
+        return result;
+    }
 
     private void ShowAllInvoices(){
         //get all unpaid invoices
@@ -283,136 +417,7 @@ public class Invoice extends javax.swing.JPanel {
         textAreaInvoiceDetail.setText("");
         
         GetJobAndInvoiceNumber();
-        
-        textAreaInvoiceDetail.append("Invoice number : " + invoiceNumber + "\n");
-        textAreaInvoiceDetail.append("Job number : " + jobNumber + "\n\n");
-        textAreaInvoiceDetail.append("Description of work: \n");
-        
-        //get all task descriptions for the actual tasks for this job
-        try{
-            String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        int i = 1;
-        try{
-        while(rs.next())
-          {
-            // read the result set. Get task description.
-            String task = i+") " + rs.getString("description");
-            textAreaInvoiceDetail.append(task+"\n");
-          } 
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
-        
-        //get all actual task hours for this job
-        try{
-            String sql = ("select * from actual_task where JobjobID = " + jobNumber);
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        double totalHours = 0;
-        try{
-        while(rs.next())
-          {
-            // read the result set. Get task hours
-            totalHours += Double.parseDouble(rs.getString("actualHours"));
-          } 
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
-        
-        textAreaInvoiceDetail.append("\nParts used: \n");
-        
-        //get all parts used for this job
-        try{
-            String sql = ("select * from sparePart where partID in (select PartpartID from job_part_record where JobjobID = " + jobNumber + ")");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        double totalPartsCost = 0;
-        try{
-        while(rs.next())
-          {
-            // read the result set. Get part name description.
-            String part = rs.getString("partName") + ", £" + Double.parseDouble(rs.getString("sellingPrice"));
-            totalPartsCost += Double.parseDouble(rs.getString("sellingPrice"));
-            textAreaInvoiceDetail.append(part+"\n");
-          } 
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
-        
-        textAreaInvoiceDetail.append("Total parts cost: £" + totalPartsCost + "\n");
-        
-        //get hourly rate for this mechanic
-        try{
-            String sql = ("select hourlyRate from mechanic where ID = (select MechanicID from job where jobID = " + jobNumber + ")");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        double hourlyRate = 0;
-        try{
-        while(rs.next())
-          {
-            hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
-          } 
-        }
-        catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
-        
-        double totalCost = (hourlyRate * totalHours) + totalPartsCost;
-        textAreaInvoiceDetail.append("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
-        textAreaInvoiceDetail.append("\nGrand total: £" + totalCost + "\n");
+        textAreaInvoiceDetail.append(GetInvoiceDetails());
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
