@@ -5,7 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +19,12 @@ import javax.swing.JFrame;
  */
 public class StockControl extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] partArray;
+    String[] lowPartArray;
     
     /**
      * Creates new form NewJPanel
@@ -25,9 +37,88 @@ public class StockControl extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowAllParts();
+        ShowLowParts();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void ShowAllParts(){
+        try{
+            this.rs = statement.executeQuery("select * from sparepart");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        ArrayList<String> parts = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = "Part Name: " + rs.getString("partName") + ", Vehicle Type: " + rs.getString("vehicleType");
+            parts.add(part);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        partArray = CreateArray(parts);
+                
+        listStock.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partArray.length; }
+            public String getElementAt(int i) { return partArray[i]; }
+        });  
+    }
+    
+    private void ShowLowParts(){
+        try{
+            this.rs = statement.executeQuery("select * from sparepart where quantity < threshold");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        ArrayList<String> parts = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = "Part Name: " + rs.getString("partName") + ", Vehicle Type: " + rs.getString("vehicleType");
+            parts.add(part);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        lowPartArray = CreateArray(parts);
+                
+        listLowStock.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return lowPartArray.length; }
+            public String getElementAt(int i) { return lowPartArray[i]; }
+        });  
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
     }
 
     /**
@@ -67,7 +158,6 @@ public class StockControl extends javax.swing.JPanel {
         buttonConfigureThreshold = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblStockControl.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -75,11 +165,6 @@ public class StockControl extends javax.swing.JPanel {
         add(lblStockControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 30, -1, -1));
 
         listStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listStock.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listStock);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 1160, 140));
@@ -135,11 +220,6 @@ public class StockControl extends javax.swing.JPanel {
         add(buttonSelectToOrderAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 320, -1, -1));
 
         listLowStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listLowStock.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane4.setViewportView(listLowStock);
 
         add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 370, 1160, 140));
@@ -170,6 +250,11 @@ public class StockControl extends javax.swing.JPanel {
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -240,12 +325,14 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new PartOrder(username);
     }//GEN-LAST:event_buttonOrderActionPerformed
 
     private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new Report(username);
     }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
@@ -268,6 +355,7 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
@@ -282,6 +370,7 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new PartSale(username);
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
@@ -292,6 +381,10 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonConfigureThresholdActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_buttonExitActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
