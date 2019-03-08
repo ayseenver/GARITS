@@ -25,6 +25,8 @@ public class Invoice extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
     String[] invoiceArray;
+    String jobNumber;
+    String invoiceNumber;
 
     /**
      * Creates new form NewJPanel
@@ -44,6 +46,14 @@ public class Invoice extends javax.swing.JPanel {
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void GetJobAndInvoiceNumber(){
+        String[] parts = listInvoices.getSelectedValue().split(", ");
+        String[] idParts = parts[0].split(": ");
+        String[] jobParts = parts[1].split(": ");
+        invoiceNumber = idParts[1];
+        jobNumber = jobParts[1];
     }
 
     private void ShowAllInvoices(){
@@ -100,13 +110,11 @@ public class Invoice extends javax.swing.JPanel {
         buttonSearchInvoices = new javax.swing.JButton();
         buttonPay = new javax.swing.JButton();
         labelInvoice = new javax.swing.JLabel();
-        textFieldAmount = new javax.swing.JTextField();
         labelDetail = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listInvoices = new javax.swing.JList<>();
         buttonView = new javax.swing.JButton();
         buttonPayLater = new javax.swing.JButton();
-        labelAmount = new javax.swing.JLabel();
         comboxBoxPaymentType = new javax.swing.JComboBox<>();
         labelInvoices = new javax.swing.JLabel();
         labelPaymentType = new javax.swing.JLabel();
@@ -138,19 +146,11 @@ public class Invoice extends javax.swing.JPanel {
                 buttonPayActionPerformed(evt);
             }
         });
-        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 630, -1, -1));
+        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 637, -1, -1));
 
         labelInvoice.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelInvoice.setText("Invoices");
         add(labelInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, -1, -1));
-
-        textFieldAmount.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldAmount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldAmountActionPerformed(evt);
-            }
-        });
-        add(textFieldAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 630, 90, 30));
 
         labelDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDetail.setText("Detail:");
@@ -179,13 +179,9 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonPayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
 
-        labelAmount.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        labelAmount.setText("Amount:");
-        add(labelAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 640, -1, -1));
-
         comboxBoxPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 640, -1, -1));
+        comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "card" }));
+        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 640, -1, -1));
 
         labelInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelInvoices.setText("Invoices:");
@@ -193,7 +189,7 @@ public class Invoice extends javax.swing.JPanel {
 
         labelPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelPaymentType.setText("Payment Type:");
-        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 640, -1, -1));
+        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
 
         textFieldSearchInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
@@ -244,7 +240,7 @@ public class Invoice extends javax.swing.JPanel {
                 buttonPrintInvoiceActionPerformed(evt);
             }
         });
-        add(buttonPrintInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
+        add(buttonPrintInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 630, -1, -1));
 
         labelCustomerInfomation.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelCustomerInfomation.setText("*Pay Later option needs to be configured");
@@ -256,21 +252,37 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
-        // TODO add your handling code here:
+        GetJobAndInvoiceNumber();
+        //create a payment record in the database.
+        String sql;
+        try{
+            sql = ("insert into Payment(paymentType, JobjobID)"
+                    + " values ( '" + comboxBoxPaymentType.getSelectedItem().toString() + "', "
+                    + "(select jobID from job where jobID = " + jobNumber + "))");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        } 
+        
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
     }//GEN-LAST:event_buttonPayActionPerformed
-
-    private void textFieldAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldAmountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldAmountActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         textAreaInvoiceDetail.setText("");
-
-        String[] parts = listInvoices.getSelectedValue().split(", ");
-        String[] idParts = parts[0].split(": ");
-        String[] jobParts = parts[1].split(": ");
-        String invoiceNumber = idParts[1];
-        String jobNumber = jobParts[1];
+        
+        GetJobAndInvoiceNumber();
         
         textAreaInvoiceDetail.append("Invoice number : " + invoiceNumber + "\n");
         textAreaInvoiceDetail.append("Job number : " + jobNumber + "\n\n");
@@ -443,7 +455,6 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel labelAmount;
     private javax.swing.JLabel labelCustomerInfomation;
     private javax.swing.JLabel labelDetail;
     private javax.swing.JLabel labelInvoice;
@@ -452,7 +463,6 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JLabel labelPaymentType;
     private javax.swing.JList<String> listInvoices;
     private javax.swing.JTextArea textAreaInvoiceDetail;
-    private javax.swing.JTextField textFieldAmount;
     private javax.swing.JTextField textFieldSearchInvoices;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
