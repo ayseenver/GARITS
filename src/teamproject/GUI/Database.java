@@ -5,7 +5,10 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +16,9 @@ import javax.swing.JFrame;
  */
 public class Database extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
 
     /**
      * Creates new form NewJPanel
@@ -24,7 +30,9 @@ public class Database extends javax.swing.JPanel {
         frame.add(this);
         frame.pack();
         
-        this.labelLoggedIn.setText(username);
+        this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,29 +50,28 @@ public class Database extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         labelDatabase = new javax.swing.JLabel();
-        buttonTransferData = new javax.swing.JButton();
+        buttonRestore = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
-        buttonTransferData1 = new javax.swing.JButton();
+        buttonBackup = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelDatabase.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelDatabase.setText("Database");
         add(labelDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 20, -1, -1));
 
-        buttonTransferData.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonTransferData.setText("Restore");
-        buttonTransferData.addActionListener(new java.awt.event.ActionListener() {
+        buttonRestore.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonRestore.setText("Restore");
+        buttonRestore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTransferDataActionPerformed(evt);
+                buttonRestoreActionPerformed(evt);
             }
         });
-        add(buttonTransferData, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 380, 200, -1));
+        add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 380, 200, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -94,23 +101,24 @@ public class Database extends javax.swing.JPanel {
         });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
-        buttonTransferData1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonTransferData1.setText("Backup");
-        buttonTransferData1.addActionListener(new java.awt.event.ActionListener() {
+        buttonBackup.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonBackup.setText("Backup");
+        buttonBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTransferData1ActionPerformed(evt);
+                buttonBackupActionPerformed(evt);
             }
         });
-        add(buttonTransferData1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 330, 200, -1));
+        add(buttonBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 330, 200, -1));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonTransferDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTransferDataActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonTransferDataActionPerformed
+    private void buttonRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRestoreActionPerformed
+        db.Restore(connection);
+    }//GEN-LAST:event_buttonRestoreActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
@@ -119,21 +127,22 @@ public class Database extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
-    private void buttonTransferData1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTransferData1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonTransferData1ActionPerformed
+    private void buttonBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackupActionPerformed
+        db.Backup(connection);
+    }//GEN-LAST:event_buttonBackupActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonBackup;
     private javax.swing.JButton buttonExit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JButton buttonTransferData;
-    private javax.swing.JButton buttonTransferData1;
+    private javax.swing.JButton buttonRestore;
     private javax.swing.JLabel labelDatabase;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JTextField textFieldUserDetails;
