@@ -75,7 +75,7 @@ public class MyJob extends javax.swing.JPanel {
         }
         
         try{
-            String sql = ("select * from Job where MechanicID = '" + id) +"'";
+            String sql = ("select * from Job where MechanicID = '" + id) +"' and dateCompleted is null";
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
