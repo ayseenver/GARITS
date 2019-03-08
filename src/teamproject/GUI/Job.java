@@ -733,6 +733,45 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_removePartButtonActionPerformed
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
+        String sql;
+        //set completion date to today
+        try{
+            sql = ("update job "
+                    + "set dateCompleted = date('now') "
+                    + "where jobID = '" +  jobID + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        //create an invoice in the database.
+        try{
+            sql = ("insert into Invoice(dateProduced, JobjobID)"
+                    + " values (date('now'), "
+                    + "" + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        } 
+        
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);

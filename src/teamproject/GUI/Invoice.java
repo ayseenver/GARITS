@@ -5,7 +5,13 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +19,11 @@ import javax.swing.JFrame;
  */
 public class Invoice extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] invoiceArray;
 
     /**
      * Creates new form NewJPanel
@@ -25,11 +36,57 @@ public class Invoice extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowAllInvoices();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void ShowAllInvoices(){
+        //get all unpaid invoices
+        try{
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment)");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        listInvoices.removeAll();
+        ArrayList<String> invoices = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Job ID: " + rs.getString("JobjobID");
+            invoices.add(invoice);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        invoiceArray = CreateArray(invoices);
+                
+        listInvoices.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return invoiceArray.length; }
+            public String getElementAt(int i) { return invoiceArray[i]; }
+        });  
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,7 +104,7 @@ public class Invoice extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         listInvoices = new javax.swing.JList<>();
         buttonView = new javax.swing.JButton();
-        buttonPrint = new javax.swing.JButton();
+        buttonPayLater = new javax.swing.JButton();
         labelAmount = new javax.swing.JLabel();
         comboxBoxPaymentType = new javax.swing.JComboBox<>();
         labelInvoices = new javax.swing.JLabel();
@@ -59,11 +116,10 @@ public class Invoice extends javax.swing.JPanel {
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        buttonPrint1 = new javax.swing.JButton();
+        buttonPrintInvoice = new javax.swing.JButton();
         labelCustomerInfomation = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchInvoices.setText("Search");
@@ -100,11 +156,6 @@ public class Invoice extends javax.swing.JPanel {
         add(labelDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 360, -1, -1));
 
         listInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listInvoices.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listInvoices);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 1160, 140));
@@ -118,14 +169,14 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 340, -1, -1));
 
-        buttonPrint.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrint.setText("Pay Later");
-        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
+        buttonPayLater.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPayLater.setText("Pay Later");
+        buttonPayLater.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrintActionPerformed(evt);
+                buttonPayLaterActionPerformed(evt);
             }
         });
-        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
+        add(buttonPayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
 
         labelAmount.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelAmount.setText("Amount:");
@@ -185,14 +236,14 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
 
-        buttonPrint1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrint1.setText("Print Invoice");
-        buttonPrint1.addActionListener(new java.awt.event.ActionListener() {
+        buttonPrintInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPrintInvoice.setText("Print Invoice");
+        buttonPrintInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrint1ActionPerformed(evt);
+                buttonPrintInvoiceActionPerformed(evt);
             }
         });
-        add(buttonPrint1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
+        add(buttonPrintInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
 
         labelCustomerInfomation.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelCustomerInfomation.setText("*Pay Later option needs to be configured");
@@ -215,9 +266,9 @@ public class Invoice extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonViewActionPerformed
 
-    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
+    private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrintActionPerformed
+    }//GEN-LAST:event_buttonPayLaterActionPerformed
 
     private void textFieldSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchInvoicesActionPerformed
         // TODO add your handling code here:
@@ -228,26 +279,28 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrint1ActionPerformed
+    private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrint1ActionPerformed
+    }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPay;
-    private javax.swing.JButton buttonPrint;
-    private javax.swing.JButton buttonPrint1;
+    private javax.swing.JButton buttonPayLater;
+    private javax.swing.JButton buttonPrintInvoice;
     private javax.swing.JButton buttonSearchInvoices;
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
