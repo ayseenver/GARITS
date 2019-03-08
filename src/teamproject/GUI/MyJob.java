@@ -132,7 +132,6 @@ public class MyJob extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchJobs.setText("Search");
@@ -198,13 +197,13 @@ public class MyJob extends javax.swing.JPanel {
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonBack.setText("Back");
+        buttonBack.setText("Main Menu");
         buttonBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackActionPerformed(evt);
             }
         });
-        add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
+        add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchJobsActionPerformed

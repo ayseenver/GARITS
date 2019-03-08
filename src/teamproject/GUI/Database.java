@@ -74,7 +74,7 @@ public class Database extends javax.swing.JPanel {
         add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 380, 200, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonBack.setText("Back");
+        buttonBack.setText("Main Menu");
         buttonBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackActionPerformed(evt);

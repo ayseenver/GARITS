@@ -318,7 +318,7 @@ public class Invoice extends javax.swing.JPanel {
 
         comboxBoxPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "card" }));
-        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 640, -1, -1));
+        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 640, -1, -1));
 
         labelInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelInvoices.setText("Invoices:");
@@ -326,7 +326,7 @@ public class Invoice extends javax.swing.JPanel {
 
         labelPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelPaymentType.setText("Payment Type:");
-        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
+        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 640, -1, -1));
 
         textFieldSearchInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
@@ -362,7 +362,7 @@ public class Invoice extends javax.swing.JPanel {
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonBack.setText("Back");
+        buttonBack.setText("Main Menu");
         buttonBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackActionPerformed(evt);
