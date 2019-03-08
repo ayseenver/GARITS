@@ -16,5 +16,9 @@ public interface DBConnectivity {
 	 * @param connect
 	 */
 	void closeConnection(Connection connect);
+        
+        void Backup(Connection c);
+        
+        void Restore(Connection c);
 
 }
