@@ -97,7 +97,6 @@ public class CreateJobTask extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             this.rs = ps.executeQuery();
-            //this.rsV = statement.executeQuery("select * from Vehicle where Customername =");
         }
         catch(SQLException e)
         {

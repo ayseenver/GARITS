@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,6 +26,7 @@ public class AllocateJob extends javax.swing.JPanel {
     ResultSet rs;
     String[] jobArray;
     String[] mechArray;
+    int jobID;
     
     /**
      * Creates new form NewJPanel
@@ -41,7 +43,6 @@ public class AllocateJob extends javax.swing.JPanel {
         statement = db.getStatement();
         
         ShowUnallocatedJobs();
-        ShowMechanics();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,8 +139,8 @@ public class AllocateJob extends javax.swing.JPanel {
         labelNotAllocatedJobs = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         listMechanics = new javax.swing.JList<>();
-        buttonAddToList = new javax.swing.JButton();
-        buttonAllocatedToMechanic = new javax.swing.JButton();
+        buttonSelectJob = new javax.swing.JButton();
+        buttonAllocateToMechanic = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
@@ -163,32 +164,27 @@ public class AllocateJob extends javax.swing.JPanel {
         add(labelNotAllocatedJobs, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
 
         listMechanics.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listMechanics.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane4.setViewportView(listMechanics);
 
         add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 430, 1160, 190));
 
-        buttonAddToList.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        buttonAddToList.setText("Select Job");
-        buttonAddToList.addActionListener(new java.awt.event.ActionListener() {
+        buttonSelectJob.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        buttonSelectJob.setText("Select Job");
+        buttonSelectJob.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAddToListActionPerformed(evt);
+                buttonSelectJobActionPerformed(evt);
             }
         });
-        add(buttonAddToList, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 400, -1, -1));
+        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 400, -1, -1));
 
-        buttonAllocatedToMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        buttonAllocatedToMechanic.setText("Allocate To Mechanic");
-        buttonAllocatedToMechanic.addActionListener(new java.awt.event.ActionListener() {
+        buttonAllocateToMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        buttonAllocateToMechanic.setText("Allocate To Mechanic");
+        buttonAllocateToMechanic.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAllocatedToMechanicActionPerformed(evt);
+                buttonAllocateToMechanicActionPerformed(evt);
             }
         });
-        add(buttonAllocatedToMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 630, -1, -1));
+        add(buttonAllocateToMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 630, -1, -1));
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -224,9 +220,37 @@ public class AllocateJob extends javax.swing.JPanel {
         add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 1160, 210));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonAllocatedToMechanicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocatedToMechanicActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonAllocatedToMechanicActionPerformed
+    private void buttonAllocateToMechanicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateToMechanicActionPerformed
+        //get the selected mechanic's first and last name
+        String[] parts = listMechanics.getSelectedValue().split(" ");
+        String firstName = parts[0];
+        String lastName = parts[1];
+        //update job with this mechanic's ID
+        try{
+            String sql = ("update job "
+                    + "set MechanicID = (select ID from mechanic where Userusername = (select username from user where firstname = '" + firstName + "' "
+                    + "and surname = '" + lastName + "')) "
+                    + "where jobID = '" +  jobID + "'");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        //go to main menu
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
+    }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
         // TODO add your handling code here:
@@ -245,16 +269,24 @@ public class AllocateJob extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonAddToListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToListActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonAddToListActionPerformed
+    private void buttonSelectJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectJobActionPerformed
+        if (listUnallocatedJobs.getSelectedValue() != null){
+            String job = listUnallocatedJobs.getSelectedValue();
+            String[] jobParts = job.split(", ");
+            String[] idParts = jobParts[0].split(": ");
+            jobID = Integer.parseInt(idParts[1]);
+            System.out.println("ID: " + jobID);
+            
+            ShowMechanics();
+        }
+    }//GEN-LAST:event_buttonSelectJobActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAddToList;
-    private javax.swing.JButton buttonAllocatedToMechanic;
+    private javax.swing.JButton buttonAllocateToMechanic;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonSelectJob;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLabel labelJobAllocation;
