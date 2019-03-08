@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -263,7 +264,47 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldAmountActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        // TODO add your handling code here:
+        textAreaInvoiceDetail.setText("");
+        
+        String[] parts = listInvoices.getSelectedValue().split(", ");
+        String[] idParts = parts[0].split(": ");
+        String[] jobParts = parts[1].split(": ");
+        String invoiceNumber = idParts[1];
+        String jobNumber = jobParts[1];
+        
+        textAreaInvoiceDetail.append("Invoice number : " + invoiceNumber + "\n");
+        textAreaInvoiceDetail.append("Job number : " + jobNumber + "\n\n");
+        textAreaInvoiceDetail.append("Description of work: \n");
+        
+        //get all actual tasks for this job
+        try{
+            String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        int i = 1;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task description.
+            String task = i+") " + rs.getString("description");
+            textAreaInvoiceDetail.append(task);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
