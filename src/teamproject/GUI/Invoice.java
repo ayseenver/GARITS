@@ -448,10 +448,12 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
+        String details = GetInvoiceDetails();
+        String fileName = "Invoice-number-"+invoiceNumber+".txt";
         if(listInvoices.getSelectedValue() != null){
             try{
-                PrintWriter writer = new PrintWriter("the-file-name.txt", "UTF-8");
-                writer.println(GetInvoiceDetails());
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                writer.println(details);
                 writer.close();  
             }catch (IOException e){
                 System.out.println(e.getMessage());
