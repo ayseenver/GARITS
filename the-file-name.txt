@@ -1,0 +1,15 @@
+Invoice number : 1
+Job number : 23
+
+Description of work: 
+1) Change oil
+
+Parts used: 
+Water bottle, £65.0
+Window wiper, £65.0
+Total parts cost: £130.0
+
+Total labour cost: £105.0
+
+Grand total: £235.0
+

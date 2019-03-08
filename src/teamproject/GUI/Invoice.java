@@ -5,6 +5,8 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +59,7 @@ public class Invoice extends javax.swing.JPanel {
     }
     
     private String GetInvoiceDetails(){
+        GetJobAndInvoiceNumber();
         String result = "";
         result += ("Invoice number : " + invoiceNumber + "\n");
         result += ("Job number : " + jobNumber + "\n\n");
@@ -445,7 +448,20 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
-        // TODO add your handling code here:
+        if(listInvoices.getSelectedValue() != null){
+            try{
+                PrintWriter writer = new PrintWriter("the-file-name.txt", "UTF-8");
+                writer.println(GetInvoiceDetails());
+                writer.close();  
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username);   
+        }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
 
