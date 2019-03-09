@@ -53,12 +53,17 @@ public class Invoice extends javax.swing.JPanel {
     private void GetJobAndInvoiceNumber(){
         String[] parts = listInvoices.getSelectedValue().split(", ");
         String[] idParts = parts[0].split(": ");
-        String[] jobParts = parts[1].split(": ");
         invoiceNumber = idParts[1];
-        jobNumber = jobParts[1];
+        
+        try{
+            String[] jobParts = parts[1].split(": ");
+            jobNumber = jobParts[1];
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+        }
     }
     
-    private String GetInvoiceDetails(){
+    private String GetJobInvoiceDetails(){
         GetJobAndInvoiceNumber();
         String result = "";
         result += ("Invoice number : " + invoiceNumber + "\n");
@@ -192,9 +197,80 @@ public class Invoice extends javax.swing.JPanel {
         result +=("\nGrand total: £" + totalCost + "\n");
         return result;
     }
+    
+    private String GetPartInvoiceDetails(){
+        GetJobAndInvoiceNumber();
+        String result = "";
+        result += ("Invoice number : " + invoiceNumber + "\n");
+        result += ("Parts sold: \n");
+        
+        //get all part IDs on this invoice
+        try{
+            String sql = ("select * from sparePart where partID in (select SparePartpartID from invoice_SparePart where InvoiceinvoiceNumber = " + invoiceNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get task hours
+            result += rs.getString("partName") + "\n";
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        result += "\n";
+        
+        //get total selling price for all of these parts
+        try{
+            String sql = ("select sum(sellingPrice) from sparePart where partID in (select SparePartpartID from invoice_SparePart where InvoiceinvoiceNumber = " + invoiceNumber + ")");
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        Double sellingPrice = 0.00;
+        try{
+        while(rs.next())
+          {
+            // read the result set. Get part name description.
+            sellingPrice = Double.parseDouble(rs.getString("sum(sellingPrice)"));
+            result +=("Total cost: £" + sellingPrice+"\n");
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        double totalCost = (sellingPrice * 1.2);
+        result +=("\nGrand total: £" + totalCost + "\n");
+        return result;
+    }
 
     private void ShowAllInvoices(){
-        //get all unpaid invoices
+        //get all unpaid invoices for jobs
         try{
             this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment)");
         }
@@ -205,7 +281,6 @@ public class Invoice extends javax.swing.JPanel {
           System.err.println(e.getMessage());
         }
         
-        listInvoices.removeAll();
         ArrayList<String> invoices = new ArrayList<>();
         
         try{
@@ -220,6 +295,28 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         
+        invoices.add("\n");
+        
+        //get all invoices for part sales
+        try{
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID is null");
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Job ID: " + rs.getString("JobjobID");
+            invoices.add(invoice);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
         
         invoiceArray = CreateArray(invoices);
                 
@@ -420,7 +517,11 @@ public class Invoice extends javax.swing.JPanel {
         textAreaInvoiceDetail.setText("");
         
         GetJobAndInvoiceNumber();
-        textAreaInvoiceDetail.append(GetInvoiceDetails());
+        if (!jobNumber.equals("null")){
+            textAreaInvoiceDetail.append(GetJobInvoiceDetails()); 
+        }else{
+            textAreaInvoiceDetail.append(GetPartInvoiceDetails()); 
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
@@ -448,7 +549,13 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
-        String details = GetInvoiceDetails();
+        String details;
+        if (jobNumber != null){
+            details = GetJobInvoiceDetails();
+        }else{
+            details = GetPartInvoiceDetails();
+        }
+        
         String fileName = "Invoice-number-"+invoiceNumber+".txt";
         if(listInvoices.getSelectedValue() != null){
             try{
