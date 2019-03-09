@@ -73,6 +73,7 @@ public class PartOrder extends javax.swing.JPanel {
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonDone = new javax.swing.JButton();
+        buttonBack = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -117,6 +118,15 @@ public class PartOrder extends javax.swing.JPanel {
             }
         });
         add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 640, -1, -1));
+
+        buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonBack.setText("Back");
+        buttonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBackActionPerformed(evt);
+            }
+        });
+        add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
@@ -185,8 +195,16 @@ public class PartOrder extends javax.swing.JPanel {
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
+    private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new StockControl(username);
+    }//GEN-LAST:event_buttonBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPrint;

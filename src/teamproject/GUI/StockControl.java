@@ -162,6 +162,15 @@ public class StockControl extends javax.swing.JPanel {
             public String getElementAt(int i) { return partOrder[i]; }
         });
     }
+    
+    private boolean IsPartInOrder(String s){
+        for(int i = 0; i< listPartsOrder.getModel().getSize();i++){
+            if (listPartsOrder.getModel().getElementAt(i).equals(s)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -378,7 +387,10 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAllStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllStockOrderActionPerformed
-        AddPartAll();
+        boolean x = IsPartInOrder(listStock.getSelectedValue());
+        if (x == false){
+            AddPartAll();   
+        }
     }//GEN-LAST:event_buttonAllStockOrderActionPerformed
 
     private void textFieldQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQuantityActionPerformed
@@ -397,7 +409,10 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonLowStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLowStockOrderActionPerformed
-        AddPartLow();
+        boolean x = IsPartInOrder(listLowStock.getSelectedValue());
+        if (x == false){
+            AddPartLow();   
+        }
     }//GEN-LAST:event_buttonLowStockOrderActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
@@ -418,7 +433,6 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
         String sql = "";
         String selected  = listStock.getSelectedValue();
-        System.out.println(selected);
         
         String[] parts = selected.split(", ");
         String partName = parts[0];        
