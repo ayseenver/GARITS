@@ -201,7 +201,7 @@ public class Invoice extends javax.swing.JPanel {
     private String GetPartInvoiceDetails(){
         GetJobAndInvoiceNumber();
         String result = "";
-        result += ("Invoice number : " + invoiceNumber + "\n");
+        result += ("Invoice number : " + invoiceNumber + "\n\n");
         result += ("Parts sold: \n");
         
         //get all part IDs on this invoice
@@ -549,8 +549,9 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
+        GetJobAndInvoiceNumber();
         String details;
-        if (jobNumber != null){
+        if (!jobNumber.equals("null")){
             details = GetJobInvoiceDetails();
         }else{
             details = GetPartInvoiceDetails();
