@@ -50,6 +50,12 @@ public class StockControl extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
+    public StockControl(String username, ArrayList<String> order) {
+        this(username);
+        this.order = order;
+        UpdateOrder();
+    }
+    
     private void ShowAllParts(){
         try{
             this.rs = statement.executeQuery("select * from sparepart");
@@ -127,40 +133,48 @@ public class StockControl extends javax.swing.JPanel {
     private void AddPartAll(){
         String selected = listStock.getSelectedValue();
         String[] parts = selected.split(", ");
-        for (String s : parts){
-            System.out.println(s);
-        }
         
-        order.add(selected);
+        String partName = parts[0];
+        String vType = parts[1];
         
-        partOrder = CreateArray(order);
-                
-        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return partOrder.length; }
-            public String getElementAt(int i) { return partOrder[i]; }
-        });
+        /*
+        String[] qParts = parts[2].split(": ");
+        String quantity = qParts[1];
+       
+        String[] tParts = parts[3].split(": ");
+        String threshold = qParts[1];
+        */
+        
+        String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
+        
+        order.add(partToOrder);
+        UpdateOrder();
     }
     
     private void AddPartLow(){
         String selected = listLowStock.getSelectedValue();
         
-        order.add(selected);
+        String[] parts = selected.split(", ");
         
-        partOrder = CreateArray(order);
-                
-        listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return partOrder.length; }
-            public String getElementAt(int i) { return partOrder[i]; }
-        });
+        String partName = parts[0];
+        String vType = parts[1];
+        
+        
+        String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
+        
+        order.add(partToOrder);
+        UpdateOrder();
     }
     
     private void RemovePart(){
         String selected = listPartsOrder.getSelectedValue();
         
         order.remove(selected);
-        
-        partOrder = CreateArray(order);
-                
+        UpdateOrder();
+    }
+    
+    private void UpdateOrder(){
+        partOrder = CreateArray(order);                
         listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return partOrder.length; }
             public String getElementAt(int i) { return partOrder[i]; }
@@ -168,8 +182,13 @@ public class StockControl extends javax.swing.JPanel {
     }
     
     private boolean IsPartInOrder(String s){
+        String[] parts = s.split(", ");
+        String nameAndType = parts[0] + ", " + parts[1];
         for(int i = 0; i< listPartsOrder.getModel().getSize();i++){
-            if (listPartsOrder.getModel().getElementAt(i).equals(s)){
+            String check = listPartsOrder.getModel().getElementAt(i);
+            String[] checkParts = check.split(", ");
+            check = checkParts[0] + ", " + checkParts[1];
+            if (check.equals(nameAndType)){
                 return true;
             }
         }
@@ -402,7 +421,16 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldQuantityActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
-        // TODO add your handling code here:
+        String quantity = textFieldQuantity.getText();
+        
+        if (!quantity.equals("")){
+            String selected = listPartsOrder.getSelectedValue();
+            order.remove(selected);
+            String[] parts = selected.split(", ");
+            selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+            order.add(selected);
+        }
+        UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

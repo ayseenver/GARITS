@@ -199,7 +199,7 @@ public class PartOrder extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new StockControl(username);
+        new StockControl(username, order);
     }//GEN-LAST:event_buttonBackActionPerformed
 
 
