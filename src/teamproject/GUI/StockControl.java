@@ -67,7 +67,7 @@ public class StockControl extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String part = "Part Name: " + rs.getString("partName") + ", Vehicle Type: " + rs.getString("vehicleType");
+            String part = rs.getString("partName") + ", "+ rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
             parts.add(part);
           } 
         }
@@ -101,7 +101,7 @@ public class StockControl extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String part = "Part Name: " + rs.getString("partName") + ", Vehicle Type: " + rs.getString("vehicleType");
+            String part = rs.getString("partName") + ", "+ rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
             parts.add(part);
           } 
         }
@@ -418,13 +418,11 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
         String sql = "";
         String selected  = listStock.getSelectedValue();
+        System.out.println(selected);
         
         String[] parts = selected.split(", ");
-        String[] nameParts = parts[0].split(": ");
-        String partName = nameParts[1];
-        
-        String[] vParts = parts[1].split(": ");
-        String vType = vParts[1];
+        String partName = parts[0];        
+        String vType = parts[1];
         
         String threshold = textFieldConfigureThreshold.getText();
         if (selected != null){
@@ -443,6 +441,7 @@ public class StockControl extends javax.swing.JPanel {
                 }  
                 textFieldConfigureThreshold.setText("");
                 ShowLowParts();
+                ShowAllParts();
             }
             catch(SQLException e)
             {
