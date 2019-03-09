@@ -371,7 +371,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new CustomerList(username);
+        new CustomerList(username);  
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVehicleActionPerformed

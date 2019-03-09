@@ -21,7 +21,7 @@ import teamproject.Databases.DB_ImplClass;
  */
 public class UpdateCustomerVehicle extends javax.swing.JPanel {
   
-    private String username;
+    private String username;  
         Statement statement;
         Connection connection = null;
         DB_ImplClass db = new DB_ImplClass();
@@ -383,7 +383,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
           System.err.println(e.getMessage());
         }
           try{
-            ve.setModel(rs.getString("model"));
+            ve.setModel(rs.getString("model"));  
         }
         catch(SQLException e)
         {
