@@ -70,7 +70,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }
-           listVehicles.removeAll();
+           listVehicles.removeAll();   
            ArrayList<String> vehicles = new ArrayList<>();
            
            try{

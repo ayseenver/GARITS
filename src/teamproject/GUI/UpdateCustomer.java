@@ -22,7 +22,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private String username;
         Statement statement;
         Connection connection = null;
-        DB_ImplClass db = new DB_ImplClass();
+        DB_ImplClass db = new DB_ImplClass();   
         ResultSet rc;
         Customer c = new Customer();
         String Discount;
