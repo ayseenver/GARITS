@@ -126,6 +126,10 @@ public class StockControl extends javax.swing.JPanel {
     
     private void AddPartAll(){
         String selected = listStock.getSelectedValue();
+        String[] parts = selected.split(", ");
+        for (String s : parts){
+            System.out.println(s);
+        }
         
         order.add(selected);
         
