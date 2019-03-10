@@ -104,9 +104,7 @@ public class PartSale extends javax.swing.JPanel {
         });
     }
 
-    private void RemovePart(){
-        String selected = listCart.getSelectedValue();
-        
+    private void RemovePart(String selected){   
         order.remove(selected);
         
         partOrder = CreateArray(order);
@@ -349,21 +347,27 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonProduceInvoiceActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
-        RemovePart();
+        String selected = listCart.getSelectedValue();
+        if(!(selected==null)){
+            RemovePart(selected);
+        }
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCartActionPerformed
-        boolean x = IsPartInOrder(listStock.getSelectedValue());
-        if (x == false){
-            AddPart();   
+        String selected = listStock.getSelectedValue();
+        if(!(selected==null)){
+            boolean x = IsPartInOrder(selected);
+            if (x == false){
+                AddPart();   
+            }
         }
     }//GEN-LAST:event_buttonAddToCartActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
         String quantity = textFieldQuantity.getText();
+        String selected = listCart.getSelectedValue();
         
-        if (!quantity.equals("")){
-            String selected = listCart.getSelectedValue();
+        if (!quantity.equals("") && !(selected==null)){
             order.remove(selected);
             String[] parts = selected.split(", ");
             selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
