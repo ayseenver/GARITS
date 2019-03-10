@@ -239,7 +239,11 @@ public class Invoice extends javax.swing.JPanel {
         
         //get total selling price for all of these parts
         try{
-            String sql = ("select sum(sellingPrice) from sparePart where partID in (select SparePartpartID from invoice_SparePart where InvoiceinvoiceNumber = " + invoiceNumber + ")");
+            String sql = ("select sum(sellingPrice * quantity) from "
+                    + "(SELECT Invoice_SparePart.InvoiceinvoiceNumber, Invoice_SparePart.SparePartpartID, Invoice_SparePart.quantity, SparePart.* "
+                    + "FROM Invoice_SparePart "
+                    + "INNER JOIN SparePart ON Invoice_SparePart.SparePartpartID=SparePart.partID "
+                    + "where Invoice_SparePart.InvoiceinvoiceNumber = " + invoiceNumber + ")");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -259,7 +263,7 @@ public class Invoice extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set. Get part name description.
-            sellingPrice = Double.parseDouble(rs.getString("sum(sellingPrice)"));
+            sellingPrice = Double.parseDouble(rs.getString("sum(sellingPrice * quantity)"));
             result +=("Total cost: £" + sellingPrice+"\n");
           } 
         }
