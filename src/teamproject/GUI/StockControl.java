@@ -405,13 +405,13 @@ public class StockControl extends javax.swing.JPanel {
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
         String quantity = textFieldQuantity.getText();
+        String selected = listPartsOrder.getSelectedValue();
         
-        if (!quantity.equals("")){
-            String selected = listPartsOrder.getSelectedValue();
-            order.remove(selected);
+        if (!quantity.equals("") && !(selected==null)){            
+            int i = order.indexOf(selected);
             String[] parts = selected.split(", ");
             selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
-            order.add(selected);
+            order.set(i, selected);
         }
         UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed

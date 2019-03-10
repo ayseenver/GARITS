@@ -120,7 +120,10 @@ public class Job extends javax.swing.JPanel {
     private void GetActualParts(){
         //get all actual tasks descriptions for this job
         try{
-            String sql = ("select partName from sparepart where partID in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
+            String sql = ("SELECT job_part_record.quantity, SparePart.* "
+                    + "FROM job_part_record "
+                    + "INNER JOIN SparePart ON job_part_record.PartpartID=SparePart.partID "
+                    + "where job_part_record.jobjobID = " + jobID);
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -167,7 +170,7 @@ public class Job extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String part = rs.getString("partName");
+            String part = rs.getString("partName") + ", Quantity: " + rs.getString("quantity");
             usedParts.add(part);
           } 
         }
@@ -179,6 +182,14 @@ public class Job extends javax.swing.JPanel {
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return usedPartArray.length; }
             public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+    }
+    
+    private void UpdateUsedParts(){
+        usedPartArray = CreateArray(usedParts);                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+        public int getSize() { return usedPartArray.length; }
+        public String getElementAt(int i) { return usedPartArray[i]; }
         });
     }
     
@@ -227,7 +238,6 @@ public class Job extends javax.swing.JPanel {
             public String getElementAt(int i) { return actualTaskArray[i]; }
         });
     }
-    
     
     private String[] CreateArray(ArrayList<String> tasks){
         String[] newArray = new String[tasks.size()];
@@ -544,14 +554,15 @@ public class Job extends javax.swing.JPanel {
         String quantity = textFieldQuantity.getText();
         if(!(selected==null) && !(quantity.equals(""))){
             int q = Integer.parseInt(quantity);
+            String[] selectedParts = selected.split(", ");
+            String partName = selectedParts[0];
             String sql;
 
-            try{
+            try{               
                 sql = ("UPDATE Job_Part_Record "
                         + "SET quantity = " + q + " "
-                        + "WHERE PartpartID = (select partID from sparepart where vehicleType = "
-                        + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "')"
-                        + "and partName = '" + selected + "')"
+                        + "WHERE PartpartID = (select partID from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "')"
+                        + "and partName = '" + partName + "')"
                         + " AND JobjobID = " + jobID);
                 PreparedStatement ps = null;
                 try {
@@ -567,7 +578,9 @@ public class Job extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }     
             textFieldQuantity.setText("");
+            usedParts.set(usedParts.indexOf(selected), partName+", Quantity: " + q);
         }
+        UpdateUsedParts();
     }//GEN-LAST:event_buttonUpdateQuantityActionPerformed
 
     private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
