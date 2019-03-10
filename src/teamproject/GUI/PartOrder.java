@@ -141,6 +141,7 @@ public class PartOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
+
         //create a order record in the database.
         String sql;
         try{
@@ -161,15 +162,17 @@ public class PartOrder extends javax.swing.JPanel {
         
         for (String s : order){
             String[] parts = s.split(", ");
-            String[] nameParts = parts[0].split(": ");
-            String partName = nameParts[1];
-            String[] vParts = parts[1].split(": ");
-            String vType = vParts[1];
+            String partName = parts[0];
+            String vType = parts[1];
+            String[] qParts = parts[2].split(": ");
+            int quantity = Integer.parseInt(qParts[1]);
             
             try{
-                sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber)"
+                sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber, quantity)"
                         + " values ((select partID from sparepart where partName = '" + partName + "' and "
-                        + "vehicleType = '" + vType + "'), (select orderNumber from partOrder where orderNumber = (select max(orderNumber) from partOrder)))");
+                        + "vehicleType = '" + vType + "'), "
+                        + "(select orderNumber from partOrder where orderNumber = (select max(orderNumber) from partOrder))"
+                        + ", "+ quantity + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -183,6 +186,32 @@ public class PartOrder extends javax.swing.JPanel {
             {
                 System.err.println(e.getMessage());
             } 
+            
+            //update the stock levels
+            try{
+                sql = ("UPDATE SparePart "
+                        + "SET quantity = (select quantity from sparePart where partID in "
+                        + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
+                        + "(select max(partorderordernumber) from sparepart_partorder)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity 
+                        + " WHERE partID = (select partID from sparePart where partID in "
+                        + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
+                        + "(select max(ordernumber) from partorder)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+            
         }
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
