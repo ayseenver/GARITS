@@ -72,7 +72,7 @@ public class PartOrder extends javax.swing.JPanel {
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
-        buttonDone = new javax.swing.JButton();
+        buttonConfirm = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
@@ -110,14 +110,14 @@ public class PartOrder extends javax.swing.JPanel {
         });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
-        buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonDone.setText("Done");
-        buttonDone.addActionListener(new java.awt.event.ActionListener() {
+        buttonConfirm.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonConfirm.setText("Confirm Order");
+        buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDoneActionPerformed(evt);
+                buttonConfirmActionPerformed(evt);
             }
         });
-        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 640, -1, -1));
+        add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 640, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -140,12 +140,85 @@ public class PartOrder extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
-    private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
+    private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        
+        //create a order record in the database.
+        String sql;
+        try{
+            sql = ("insert into partOrder(orderNumber) values (null)");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        
+        for (String s : order){
+            String[] parts = s.split(", ");
+            String partName = parts[0];
+            String vType = parts[1];
+            String[] qParts = parts[2].split(": ");
+            int quantity = Integer.parseInt(qParts[1]);
+            
+            try{
+                sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber, quantity)"
+                        + " values ((select partID from sparepart where partName = '" + partName + "' and "
+                        + "vehicleType = '" + vType + "'), "
+                        + "(select orderNumber from partOrder where orderNumber = (select max(orderNumber) from partOrder))"
+                        + ", "+ quantity + ")");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+            
+            //update the stock levels
+            try{
+                sql = ("UPDATE SparePart "
+                        + "SET quantity = (select quantity from sparePart where partID in "
+                        + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
+                        + "(select max(partorderordernumber) from sparepart_partorder)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity 
+                        + " WHERE partID = (select partID from sparePart where partID in "
+                        + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
+                        + "(select max(ordernumber) from partorder)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+            
+        }
+        
         db.closeConnection(connection);
         new MainMenu(username);
-    }//GEN-LAST:event_buttonDoneActionPerformed
+    }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         db.closeConnection(connection);
@@ -162,7 +235,7 @@ public class PartOrder extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
-    private javax.swing.JButton buttonDone;
+    private javax.swing.JButton buttonConfirm;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPrint;
     private javax.swing.JScrollPane jScrollPane1;
