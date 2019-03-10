@@ -343,7 +343,7 @@ public class PartSale extends javax.swing.JPanel {
         }
         
         db.closeConnection(connection);
-        new StockControl(username);
+        new Invoice(username);
     }//GEN-LAST:event_buttonProduceInvoiceActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
