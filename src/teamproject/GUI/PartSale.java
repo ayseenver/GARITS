@@ -368,10 +368,10 @@ public class PartSale extends javax.swing.JPanel {
         String selected = listCart.getSelectedValue();
         
         if (!quantity.equals("") && !(selected==null)){
-            order.remove(selected);
+            int i = order.indexOf(selected);
             String[] parts = selected.split(", ");
             selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
-            order.add(selected);
+            order.set(i, selected);
         }
         UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
