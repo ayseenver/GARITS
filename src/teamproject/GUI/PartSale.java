@@ -5,7 +5,14 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
@@ -13,6 +20,14 @@ import javax.swing.JFrame;
  */
 public class PartSale extends javax.swing.JPanel {
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] partArray;
+    String[] partOrder;
+    ArrayList<String> order = new ArrayList<>();
+    int quantity;
 
     /**
      * Creates new form NewJPanel
@@ -25,9 +40,99 @@ public class PartSale extends javax.swing.JPanel {
         frame.pack();
         
         this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+        
+        ShowAllParts();
         
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void ShowAllParts(){
+        try{
+            this.rs = statement.executeQuery("select * from sparepart");
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          System.err.println(e.getMessage());
+        }
+        
+        ArrayList<String> parts = new ArrayList<>();
+        
+        try{
+        while(rs.next())
+          {
+            // read the result set
+            String part = rs.getString("partName") + ", "+ rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
+            parts.add(part);
+          } 
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+        partArray = CreateArray(parts);
+                
+        listStock.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partArray.length; }
+            public String getElementAt(int i) { return partArray[i]; }
+        });  
+    }
+    
+    private void AddPart(){        
+        String selected = listStock.getSelectedValue();
+        
+        String[] parts = selected.split(", ");  
+        String partName = parts[0];
+        String vType = parts[1];   
+        
+        String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
+        
+        order.add(partToOrder);
+        UpdateOrder();
+    }
+    
+    private void UpdateOrder(){
+        partOrder = CreateArray(order);                
+        listCart.setModel(new javax.swing.AbstractListModel<String>() {
+        public int getSize() { return partOrder.length; }
+        public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
+
+    private void RemovePart(String selected){   
+        order.remove(selected);
+        
+        partOrder = CreateArray(order);
+                
+        listCart.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() { return partOrder.length; }
+            public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
+    
+    private String[] CreateArray(ArrayList<String> tasks){
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+    
+    private boolean IsPartInOrder(String s){
+        String[] parts = s.split(", ");
+        String nameAndType = parts[0] + ", " + parts[1];
+        for(int i = 0; i< listCart.getModel().getSize();i++){
+            String check = listCart.getModel().getElementAt(i);
+            String[] checkParts = check.split(", ");
+            check = checkParts[0] + ", " + checkParts[1];
+            if (check.equals(nameAndType)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -44,7 +149,7 @@ public class PartSale extends javax.swing.JPanel {
         listStock = new javax.swing.JList<>();
         labelAllStock = new javax.swing.JLabel();
         textFieldSearchAllStock = new javax.swing.JTextField();
-        buttonOrder = new javax.swing.JButton();
+        buttonProduceInvoice = new javax.swing.JButton();
         labelCart = new javax.swing.JLabel();
         buttonRemove = new javax.swing.JButton();
         buttonAddToCart = new javax.swing.JButton();
@@ -59,7 +164,6 @@ public class PartSale extends javax.swing.JPanel {
         buttonSearchAllStock = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -67,11 +171,6 @@ public class PartSale extends javax.swing.JPanel {
         add(labelPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, -1, -1));
 
         listStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listStock.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listStock);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 1160, 210));
@@ -88,14 +187,14 @@ public class PartSale extends javax.swing.JPanel {
         });
         add(textFieldSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
-        buttonOrder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonOrder.setText("Produce Invoice");
-        buttonOrder.addActionListener(new java.awt.event.ActionListener() {
+        buttonProduceInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonProduceInvoice.setText("Produce Invoice");
+        buttonProduceInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonOrderActionPerformed(evt);
+                buttonProduceInvoiceActionPerformed(evt);
             }
         });
-        add(buttonOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 620, -1, -1));
+        add(buttonProduceInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 620, -1, -1));
 
         labelCart.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelCart.setText("Cart:");
@@ -118,11 +217,6 @@ public class PartSale extends javax.swing.JPanel {
         add(buttonAddToCart, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 410, -1, -1));
 
         textFieldQuantity.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldQuantity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldQuantityActionPerformed(evt);
-            }
-        });
         add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 560, 30, 30));
 
         buttonChangeQuantity.setText("Change Quantity");
@@ -139,6 +233,11 @@ public class PartSale extends javax.swing.JPanel {
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -151,11 +250,6 @@ public class PartSale extends javax.swing.JPanel {
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
 
         listCart.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listCart.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", " " };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane6.setViewportView(listCart);
 
         add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 460, 960, 190));
@@ -173,31 +267,119 @@ public class PartSale extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldSearchAllStockActionPerformed
 
-    private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
+    private void buttonProduceInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProduceInvoiceActionPerformed
+        String sql;
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+
+        //create a new invoice
+        try{
+            sql = ("INSERT INTO Invoice (dateProduced) VALUES (date('now'))");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        } 
+        
+        for (String s : order){
+            String[] parts = s.split(", ");
+            String partName = parts[0];        
+            String vType = parts[1];
+            String[] qParts = parts[2].split(": ");
+            int quantity = Integer.parseInt(qParts[1]);
+        
+            //create a new part invoice for this part
+            try{
+                sql = ("INSERT INTO Invoice_SparePart (InvoiceinvoiceNumber, SparePartpartID, quantity) "
+                        + "VALUES ((select max(invoiceNumber) from invoice), "
+                        + "(select partID from sparepart where partName = '" + partName + "' and vehicleType = '" + vType + "'), "
+                        + ""+ quantity +")");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+            
+            //update the stock levels
+            try{
+                sql = ("UPDATE SparePart "
+                        + "SET quantity = (select quantity from sparePart where partID in "
+                        + "(select sparepartpartid from invoice_sparepart where InvoiceinvoiceNumber = "
+                        + "(select max(invoiceInvoiceNumber) from invoice_sparepart)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') - " + quantity 
+                        + " WHERE partID = (select partID from sparePart where partID in "
+                        + "(select sparepartpartid from invoice_sparepart where InvoiceinvoiceNumber = "
+                        + "(select max(invoiceInvoiceNumber) from invoice_sparepart)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+        }
+        
+        db.closeConnection(connection);
         new Invoice(username);
-    }//GEN-LAST:event_buttonOrderActionPerformed
+    }//GEN-LAST:event_buttonProduceInvoiceActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
-        // TODO add your handling code here:
+        String selected = listCart.getSelectedValue();
+        if(!(selected==null)){
+            RemovePart(selected);
+        }
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCartActionPerformed
-        // TODO add your handling code here:
+        String selected = listStock.getSelectedValue();
+        if(!(selected==null)){
+            boolean x = IsPartInOrder(selected);
+            if (x == false){
+                AddPart();   
+            }
+        }
     }//GEN-LAST:event_buttonAddToCartActionPerformed
 
-    private void textFieldQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQuantityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldQuantityActionPerformed
-
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
-        // TODO add your handling code here:
+        String quantity = textFieldQuantity.getText();
+        String selected = listCart.getSelectedValue();
+        
+        if (!quantity.equals("") && !(selected==null)){
+            int i = order.indexOf(selected);
+            String[] parts = selected.split(", ");
+            selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+            order.set(i, selected);
+        }
+        UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new StockControl(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
@@ -205,13 +387,18 @@ public class PartSale extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
 
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
+        System.exit(0);
+    }//GEN-LAST:event_buttonExitActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddToCart;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonChangeQuantity;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonOrder;
+    private javax.swing.JButton buttonProduceInvoice;
     private javax.swing.JButton buttonRemove;
     private javax.swing.JButton buttonSearchAllStock;
     private javax.swing.JScrollPane jScrollPane2;

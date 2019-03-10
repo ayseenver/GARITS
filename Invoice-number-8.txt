@@ -1,0 +1,9 @@
+Invoice number : 8
+Parts sold: 
+Water bottle
+Window wiper
+
+Total cost: £130.0
+
+Grand total: £156.0
+

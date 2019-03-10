@@ -120,7 +120,10 @@ public class Job extends javax.swing.JPanel {
     private void GetActualParts(){
         //get all actual tasks descriptions for this job
         try{
-            String sql = ("select partName from sparepart where partID in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
+            String sql = ("SELECT job_part_record.quantity, SparePart.* "
+                    + "FROM job_part_record "
+                    + "INNER JOIN SparePart ON job_part_record.PartpartID=SparePart.partID "
+                    + "where job_part_record.jobjobID = " + jobID);
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -167,7 +170,7 @@ public class Job extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String part = rs.getString("partName");
+            String part = rs.getString("partName") + ", Quantity: " + rs.getString("quantity");
             usedParts.add(part);
           } 
         }
@@ -179,6 +182,14 @@ public class Job extends javax.swing.JPanel {
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return usedPartArray.length; }
             public String getElementAt(int i) { return usedPartArray[i]; }
+        });
+    }
+    
+    private void UpdateUsedParts(){
+        usedPartArray = CreateArray(usedParts);                
+        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
+        public int getSize() { return usedPartArray.length; }
+        public String getElementAt(int i) { return usedPartArray[i]; }
         });
     }
     
@@ -228,7 +239,6 @@ public class Job extends javax.swing.JPanel {
         });
     }
     
-    
     private String[] CreateArray(ArrayList<String> tasks){
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
@@ -256,9 +266,9 @@ public class Job extends javax.swing.JPanel {
         buttonSearchParts = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         listPartsUsed = new javax.swing.JList<>();
-        textFieldPartsUsedQuanity = new javax.swing.JTextField();
+        textFieldQuantity = new javax.swing.JTextField();
         labelPartsUsedQuantity = new javax.swing.JLabel();
-        buttonUpdatePartsUsed = new javax.swing.JButton();
+        buttonUpdateQuantity = new javax.swing.JButton();
         addPartButton = new javax.swing.JButton();
         removePartButton = new javax.swing.JButton();
         panelTask = new javax.swing.JPanel();
@@ -338,18 +348,18 @@ public class Job extends javax.swing.JPanel {
         jScrollPane8.setViewportView(listPartsUsed);
 
         panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 79, 230, 200));
-        panelPart.add(textFieldPartsUsedQuanity, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 285, 33, -1));
+        panelPart.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 285, 33, -1));
 
         labelPartsUsedQuantity.setText("Update Quantity:");
         panelPart.add(labelPartsUsedQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, -1, -1));
 
-        buttonUpdatePartsUsed.setText("Update");
-        buttonUpdatePartsUsed.addActionListener(new java.awt.event.ActionListener() {
+        buttonUpdateQuantity.setText("Update");
+        buttonUpdateQuantity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonUpdatePartsUsedActionPerformed(evt);
+                buttonUpdateQuantityActionPerformed(evt);
             }
         });
-        panelPart.add(buttonUpdatePartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 285, -1, -1));
+        panelPart.add(buttonUpdateQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 285, -1, -1));
 
         addPartButton.setText(">");
         addPartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -381,12 +391,6 @@ public class Job extends javax.swing.JPanel {
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
-
-        textFieldTime.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldTimeActionPerformed(evt);
-            }
-        });
         panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 33, -1));
 
         labelTime.setText("Update Time:");
@@ -440,24 +444,12 @@ public class Job extends javax.swing.JPanel {
             }
         });
         panelTask.add(buttonUpdateTaskCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, -1, 20));
-
-        textFieldCost.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldCostActionPerformed(evt);
-            }
-        });
         panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 300, 33, -1));
 
         labelTime1.setText("Update Cost:");
         panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
-
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -545,10 +537,6 @@ public class Job extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
 
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         db.closeConnection(connection);
         System.exit(0);
@@ -561,9 +549,39 @@ public class Job extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonUpdatePartsUsedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdatePartsUsedActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonUpdatePartsUsedActionPerformed
+    private void buttonUpdateQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateQuantityActionPerformed
+        String selected = listPartsUsed.getSelectedValue();
+        String quantity = textFieldQuantity.getText();
+        if(!(selected==null) && !(quantity.equals(""))){
+            int q = Integer.parseInt(quantity);
+            String[] selectedParts = selected.split(", ");
+            String partName = selectedParts[0];
+            String sql;
+
+            try{               
+                sql = ("UPDATE Job_Part_Record "
+                        + "SET quantity = " + q + " "
+                        + "WHERE PartpartID = (select partID from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "')"
+                        + "and partName = '" + partName + "')"
+                        + " AND JobjobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            }     
+            textFieldQuantity.setText("");
+            usedParts.set(usedParts.indexOf(selected), partName+", Quantity: " + q);
+        }
+        UpdateUsedParts();
+    }//GEN-LAST:event_buttonUpdateQuantityActionPerformed
 
     private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
         if (yardCheckBox.isSelected()){
@@ -592,6 +610,7 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_sendYardButtonActionPerformed
 
     private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
+
         String selected = listAvailableTasks.getSelectedValue();
         actualTasks.add(selected);
         actualTaskArray = CreateArray(actualTasks);
@@ -666,7 +685,6 @@ public class Job extends javax.swing.JPanel {
         String selected = listAvailableParts.getSelectedValue();
         usedParts.add(selected);
         usedPartArray = CreateArray(usedParts);
-        System.out.println(selected);
                 
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return usedPartArray.length; }
@@ -679,9 +697,9 @@ public class Job extends javax.swing.JPanel {
         //insert part into the parts used for this job
         String sql;
         try{
-            sql = ("insert into Job_Part_Record(PartpartID, JobjobID)"
+            sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
                     + " values ((select partID from sparepart where partName = '" + selected + "'), "
-                    + "" + jobID + ")");
+                    + "" + jobID + ", 1)");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -734,57 +752,135 @@ public class Job extends javax.swing.JPanel {
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
-        //set completion date to today
-        try{
-            sql = ("update job "
-                    + "set dateCompleted = date('now') "
-                    + "where jobID = '" +  jobID + "'");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
+        int initialQuantity = 0;
+        int usedQuantity = 0;
         
-        //create an invoice in the database.
-        try{
-            sql = ("insert into Invoice(dateProduced, JobjobID)"
-                    + " values (date('now'), "
-                    + "" + jobID + ")");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+        for (String s : usedParts){
+            
+            //get quantity of inital parts
+            try{
+                sql = ("select * from sparePart where partName = '" + s + "' "
+                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
             }
-            ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-            System.err.println(e.getMessage());
-        } 
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            }
+            
+            try{
+            while(rs.next())
+              {
+                // read the result set
+                initialQuantity = Integer.parseInt(rs.getString("quantity"));
+              } 
+            }
+            catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
+            
+            //get quantity of used parts
+            try{
+                sql = ("select quantity from job_part_record where PartpartID = "
+                        + "(select partID from sparePart where partName = '" + s + "' "
+                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            }
+            
+            try{
+            while(rs.next())
+              {
+                // read the result set
+                usedQuantity = Integer.parseInt(rs.getString("quantity"));
+              } 
+            }
+            catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
         
+        //update the quantity in the stock ledger
+         try{
+             sql = ("UPDATE SparePart "
+                     + "SET quantity = " + (initialQuantity - usedQuantity) 
+                     + " WHERE partID = (select partID from sparePart where partName = '" + s 
+                     + "' and vehicleType = (select model from vehicle where registrationNumber = '" 
+                     + vehicleReg + "'))");
+             PreparedStatement ps = null;
+             try {
+             ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+           System.err.println(e.getMessage());
+         }
+
+         //set completion date to today
+         try{
+             sql = ("update job "
+                     + "set dateCompleted = date('now') "
+                     + "where jobID = '" +  jobID + "'");
+             PreparedStatement ps = null;
+             try {
+             ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+           System.err.println(e.getMessage());
+         }
+
+         //create an invoice in the database.
+         try{
+             sql = ("insert into Invoice(dateProduced, JobjobID)"
+                     + " values (date('now'), "
+                     + "" + jobID + ")");
+             PreparedStatement ps = null;
+             try {
+                 ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+             System.err.println(e.getMessage());
+         } 
+        }
+
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_jobCompletedButtonActionPerformed
-
-    private void textFieldTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldTimeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldTimeActionPerformed
-
-    private void textFieldCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldCostActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldCostActionPerformed
 
     private void buttonUpdateTaskCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskCostActionPerformed
         String sql = "";
@@ -818,7 +914,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSearchParts;
     private javax.swing.JButton buttonSearchTasks;
-    private javax.swing.JButton buttonUpdatePartsUsed;
+    private javax.swing.JButton buttonUpdateQuantity;
     private javax.swing.JButton buttonUpdateTaskCost;
     private javax.swing.JButton buttonUpdateTaskTime;
     private javax.swing.JScrollPane jScrollPane10;
@@ -848,7 +944,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton sendYardButton;
     private javax.swing.JTextArea textAreaJobDetails;
     private javax.swing.JTextField textFieldCost;
-    private javax.swing.JTextField textFieldPartsUsedQuanity;
+    private javax.swing.JTextField textFieldQuantity;
     private javax.swing.JTextField textFieldSearchParts;
     private javax.swing.JTextField textFieldSearchTasks;
     private javax.swing.JTextField textFieldTime;
