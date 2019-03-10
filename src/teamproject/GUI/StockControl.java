@@ -137,14 +137,6 @@ public class StockControl extends javax.swing.JPanel {
         String partName = parts[0];
         String vType = parts[1];
         
-        /*
-        String[] qParts = parts[2].split(": ");
-        String quantity = qParts[1];
-       
-        String[] tParts = parts[3].split(": ");
-        String threshold = qParts[1];
-        */
-        
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
         
         order.add(partToOrder);
@@ -299,11 +291,6 @@ public class StockControl extends javax.swing.JPanel {
         add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 370, 1160, 140));
 
         textFieldQuantity.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldQuantity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldQuantityActionPerformed(evt);
-            }
-        });
         add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 590, 30, 30));
 
         buttonChangeQuantity.setText("Change Quantity");
@@ -415,10 +402,6 @@ public class StockControl extends javax.swing.JPanel {
             AddPartAll();   
         }
     }//GEN-LAST:event_buttonAllStockOrderActionPerformed
-
-    private void textFieldQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQuantityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldQuantityActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
         String quantity = textFieldQuantity.getText();

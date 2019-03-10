@@ -83,19 +83,27 @@ public class PartSale extends javax.swing.JPanel {
         });  
     }
     
-    private void AddPart(){
+    private void AddPart(){        
         String selected = listStock.getSelectedValue();
         
-        order.add(selected);
+        String[] parts = selected.split(", ");  
+        String partName = parts[0];
+        String vType = parts[1];   
         
-        partOrder = CreateArray(order);
-                
-        listCart.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return partOrder.length; }
-            public String getElementAt(int i) { return partOrder[i]; }
-        });
+        String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
+        
+        order.add(partToOrder);
+        UpdateOrder();
     }
     
+    private void UpdateOrder(){
+        partOrder = CreateArray(order);                
+        listCart.setModel(new javax.swing.AbstractListModel<String>() {
+        public int getSize() { return partOrder.length; }
+        public String getElementAt(int i) { return partOrder[i]; }
+        });
+    }
+
     private void RemovePart(){
         String selected = listCart.getSelectedValue();
         
@@ -113,6 +121,20 @@ public class PartSale extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+    
+    private boolean IsPartInOrder(String s){
+        String[] parts = s.split(", ");
+        String nameAndType = parts[0] + ", " + parts[1];
+        for(int i = 0; i< listCart.getModel().getSize();i++){
+            String check = listCart.getModel().getElementAt(i);
+            String[] checkParts = check.split(", ");
+            check = checkParts[0] + ", " + checkParts[1];
+            if (check.equals(nameAndType)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -248,12 +270,13 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldSearchAllStockActionPerformed
 
     private void buttonProduceInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProduceInvoiceActionPerformed
+        String sql;
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
 
         //create a new invoice
         try{
-            String sql = ("INSERT INTO Invoice (dateProduced) VALUES (date('now'))");
+            sql = ("INSERT INTO Invoice (dateProduced) VALUES (date('now'))");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -272,12 +295,40 @@ public class PartSale extends javax.swing.JPanel {
             String[] parts = s.split(", ");
             String partName = parts[0];        
             String vType = parts[1];
+            String[] qParts = parts[2].split(": ");
+            int quantity = Integer.parseInt(qParts[1]);
         
             //create a new part invoice for this part
             try{
-                String sql = ("INSERT INTO Invoice_SparePart (InvoiceinvoiceNumber, SparePartpartID) "
+                sql = ("INSERT INTO Invoice_SparePart (InvoiceinvoiceNumber, SparePartpartID, quantity) "
                         + "VALUES ((select max(invoiceNumber) from invoice), "
-                        + "(select partID from sparepart where partName = '" + partName + "' and vehicleType = '" + vType + "'))");
+                        + "(select partID from sparepart where partName = '" + partName + "' and vehicleType = '" + vType + "'), "
+                        + ""+ quantity +")");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            } 
+            
+            //update the stock levels
+            try{
+                sql = ("UPDATE SparePart "
+                        + "SET quantity = (select quantity from sparePart where partID in "
+                        + "(select sparepartpartid from invoice_sparepart where InvoiceinvoiceNumber = "
+                        + "(select max(invoiceInvoiceNumber) from invoice_sparepart)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') - " + quantity 
+                        + " WHERE partID = (select partID from sparePart where partID in "
+                        + "(select sparepartpartid from invoice_sparepart where InvoiceinvoiceNumber = "
+                        + "(select max(invoiceInvoiceNumber) from invoice_sparepart)) "
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "')");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -294,7 +345,7 @@ public class PartSale extends javax.swing.JPanel {
         }
         
         db.closeConnection(connection);
-        new Invoice(username);
+        new StockControl(username);
     }//GEN-LAST:event_buttonProduceInvoiceActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
@@ -302,13 +353,23 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCartActionPerformed
-        AddPart();
+        boolean x = IsPartInOrder(listStock.getSelectedValue());
+        if (x == false){
+            AddPart();   
+        }
     }//GEN-LAST:event_buttonAddToCartActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
-        if (!textFieldQuantity.getText().equals("")){
-            quantity = Integer.parseInt(textFieldQuantity.getText());
+        String quantity = textFieldQuantity.getText();
+        
+        if (!quantity.equals("")){
+            String selected = listCart.getSelectedValue();
+            order.remove(selected);
+            String[] parts = selected.split(", ");
+            selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+            order.add(selected);
         }
+        UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

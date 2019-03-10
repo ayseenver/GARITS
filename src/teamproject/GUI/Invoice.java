@@ -206,7 +206,10 @@ public class Invoice extends javax.swing.JPanel {
         
         //get all part IDs on this invoice
         try{
-            String sql = ("select * from sparePart where partID in (select SparePartpartID from invoice_SparePart where InvoiceinvoiceNumber = " + invoiceNumber + ")");
+            String sql = ("SELECT Invoice_SparePart.InvoiceinvoiceNumber, Invoice_SparePart.SparePartpartID, Invoice_SparePart.quantity, SparePart.* "
+                    + "FROM Invoice_SparePart "
+                    + "INNER JOIN SparePart ON Invoice_SparePart.SparePartpartID=SparePart.partID "
+                    + "where Invoice_SparePart.InvoiceinvoiceNumber = " + invoiceNumber);
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -224,14 +227,14 @@ public class Invoice extends javax.swing.JPanel {
         try{
         while(rs.next())
           {
-            // read the result set. Get task hours
-            result += rs.getString("partName") + "\n";
+            // read the result set. Get part name and quantity
+            result += rs.getString("partName") + ", Quantity: " + rs.getString("quantity");
           } 
         }
         catch(SQLException e){
             System.err.println(e.getMessage());
         }
-        
+
         result += "\n";
         
         //get total selling price for all of these parts

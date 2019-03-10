@@ -141,7 +141,6 @@ public class PartOrder extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
-
         //create a order record in the database.
         String sql;
         try{
