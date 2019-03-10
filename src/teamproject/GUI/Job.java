@@ -739,44 +739,130 @@ public class Job extends javax.swing.JPanel {
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
-        //set completion date to today
-        try{
-            sql = ("update job "
-                    + "set dateCompleted = date('now') "
-                    + "where jobID = '" +  jobID + "'");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
+        int initialQuantity = 0;
+        int usedQuantity = 0;
         
-        //create an invoice in the database.
-        try{
-            sql = ("insert into Invoice(dateProduced, JobjobID)"
-                    + " values (date('now'), "
-                    + "" + jobID + ")");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+        for (String s : usedParts){
+            
+            //get quantity of inital parts
+            try{
+                sql = ("select * from sparePart where partName = '" + s + "' "
+                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
             }
-            ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-            System.err.println(e.getMessage());
-        } 
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            }
+            
+            try{
+            while(rs.next())
+              {
+                // read the result set
+                initialQuantity = Integer.parseInt(rs.getString("quantity"));
+              } 
+            }
+            catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
+            
+            //get quantity of used parts
+            try{
+                sql = ("select quantity from job_part_record where PartpartID = "
+                        + "(select partID from sparePart where partName = '" + s + "' "
+                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } 
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            }
+            catch(SQLException e)
+            {
+                System.err.println(e.getMessage());
+            }
+            
+            try{
+            while(rs.next())
+              {
+                // read the result set
+                usedQuantity = Integer.parseInt(rs.getString("quantity"));
+              } 
+            }
+            catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
         
+        //update the quantity in the stock ledger
+         try{
+             sql = ("UPDATE SparePart "
+                     + "SET quantity = " + (initialQuantity - usedQuantity) 
+                     + " WHERE partID = (select partID from sparePart where partName = '" + s 
+                     + "' and vehicleType = (select model from vehicle where registrationNumber = '" 
+                     + vehicleReg + "'))");
+             PreparedStatement ps = null;
+             try {
+             ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+           System.err.println(e.getMessage());
+         }
+
+         //set completion date to today
+         try{
+             sql = ("update job "
+                     + "set dateCompleted = date('now') "
+                     + "where jobID = '" +  jobID + "'");
+             PreparedStatement ps = null;
+             try {
+             ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+           System.err.println(e.getMessage());
+         }
+
+         //create an invoice in the database.
+         try{
+             sql = ("insert into Invoice(dateProduced, JobjobID)"
+                     + " values (date('now'), "
+                     + "" + jobID + ")");
+             PreparedStatement ps = null;
+             try {
+                 ps = connection.prepareStatement(sql);
+             } 
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+             ps.executeUpdate();
+         }
+         catch(SQLException e)
+         {
+             System.err.println(e.getMessage());
+         } 
+        }
+
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
