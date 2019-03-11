@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -12,27 +8,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-/**
- *
- * @author ahmetsesli
- */
+
 public class UpdateCustomerVehicle extends javax.swing.JPanel {
   
     private String username;  
         Statement statement;
         Connection connection = null;
+        Customer c;
         DB_ImplClass db = new DB_ImplClass();
         ResultSet rs;
         String [] vehicleArray;
         Vehicle ve = new Vehicle();
-        
-        
-    public UpdateCustomerVehicle(String username) {
+        ArrayList<String> vehicles = new ArrayList<>();
+        ArrayList<String> customers = new ArrayList<>();
+
+    public UpdateCustomerVehicle(String username, Customer c) {
         this.username = username;
         this.ve = ve;
+        this.c = c;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -43,20 +41,40 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-                
+        
         Vehicles();
         selectVehicle();
         
     }
+    
      private String[] CreateArray(ArrayList<String> vehicles){
         String[] newArray = new String[vehicles.size()];
         newArray = vehicles.toArray(newArray);
         return newArray;
     }
      
+     private void NoList(){
+        try {
+      String sql = ("Select * from vehicle where ID = '" + null);  
+       PreparedStatement ps = null;
+      try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        }  
+         catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+     
+     }
+     
      private void Vehicles(){
         try {
-           String sql = ("Select * from Vehicle");
+           String sql = ("Select * from Vehicle where Customername = '" + c.getName() + "'");
             PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -109,6 +127,52 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         }
         
         }
+      
+       private void WriteToDatabase(){
+       String sql ;
+       //for (String t : vehicles)
+       try {
+        sql = ("Insert into Vehicle values(( Select registrationNumber from Vehicle where registrationNumber = '" + textFieldRegistrationNo.getText()+") ,"
+                + "(Select make from Vehicle where make = '" + textFieldMake.getText() + ") , "
+                + "(Select model from Vehicle where model = '" + textFieldModel.getText() + ") , "
+                + "(Select engineSerial from Vehicle where engineSerial = '" + textFieldEngineSerialNo.getText()+ ") , "
+                + "(Select chassisNumber from Vehicle where chassisNumber = '" + textFieldChassisNo.getText()+ ") , "
+                + "(Select colour from Vehicle where colour = '" + textFieldColour.getText() + "))");
+                
+        PreparedStatement ps = null;  
+         try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }  
+         ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        } 
+       
+       try {
+           String SQL = null;
+           for (String cu : customers)
+           SQL = ("Insert into Customer values(name, emailAddress, address, postCode, telephoneNumber, fax)" + cu);
+           PreparedStatement ps = null;  
+           try {
+            ps = connection.prepareStatement(SQL);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }  
+         ps.executeUpdate();
+        }
+       catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        } 
+        
+       }
+     
   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -228,6 +292,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(textFieldColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 510, 250, -1));
 
         buttonSaveVehicleChanges.setText("Save Changes");
+        buttonSaveVehicleChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSaveVehicleChangesActionPerformed(evt);
+            }
+        });
         jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 600, 130, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -243,11 +312,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
-        listVehicles.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane5.setViewportView(listVehicles);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 700, -1));
@@ -365,6 +429,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonEditVehicle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditVehicle1ActionPerformed
+        if(listVehicles.getSelectedValue() == null){
+        String mess = "Please choose vehicle record first!";   
+        JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
         selectVehicle();
        
         try{
@@ -417,7 +485,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
        textFieldEngineSerialNo.setText(ve.getEngineSerial());
        textFieldChassisNo.setText(ve.getChassisNumber());
        textFieldColour.setText(ve.getColour());
-       
+        }
     }//GEN-LAST:event_buttonEditVehicle1ActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
@@ -428,6 +496,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         textFieldChassisNo.setText("");
         textFieldColour.setText("");
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
+
+    private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
+        WriteToDatabase();
+    }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

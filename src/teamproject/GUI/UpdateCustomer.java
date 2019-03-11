@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -10,26 +6,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JFrame;
 import teamproject.Customer_Account.Customer;
+import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-/**
- *
- * @author ahmetsesli
- */
+
 public class UpdateCustomer extends javax.swing.JPanel {
     private String username;
         Statement statement;
-        Connection connection = null;
+        Connection connection;
         DB_ImplClass db = new DB_ImplClass();   
         ResultSet rc;
         Customer c = new Customer();
+        Vehicle v = new Vehicle();
         String Discount;
+        
         
     public UpdateCustomer(String username) {
         this.username = username;
-        this.c = c;
         this.Discount = Discount;
         initComponents();
         JFrame frame = new JFrame();
@@ -43,88 +40,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
         statement = db.getStatement();
     }
 
-    UpdateCustomer(String username, Customer c) {
-        this.username = username;
+    public UpdateCustomer(String username, Customer c, Vehicle v) {
+        this(username);
         this.c = c;
-        
-        initComponents();
-        JFrame frame = new JFrame();
-        frame.add(this);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        this.textFieldUsername.setText(username);
-        connection = db.connect();
-        statement = db.getStatement();
-        
+        this.v = v;
+                
         CustDetails();
     }
+     
       private void CustDetails(){
-      try {
-            String sql = ("select * from Customer");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-          rc = ps.executeQuery();
-        } 
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setName(rc.getString("name"));
-        }  
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-           c.setEmailAddress(rc.getString("emailAddress"));
-        } 
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try {
-           c.setAddress(rc.getString("address"));
-        }
-         catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try {
-           c.setPostCode(rc.getString("postCode"));
-        }
-         catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try {
-           c.setTelephoneNumber(rc.getString("telephoneNumber"));
-        }
-         catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-           c.setFax(rc.getString("fax"));
-        }
-         catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
         textFieldFullName.setText(c.getName());
         textFieldEmail.setText(c.getEmailAddress());
         textAreaAddress.setText(c.getAddress());
@@ -132,6 +56,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldTelephone.setText(c.getTelephoneNumber());
         textFieldFax.setText(c.getFax());
        }
+      
+      private void CreateCustomer(){
+          c.setAddress(textAreaAddress.getText());
+          c.setEmailAddress(textFieldEmail.getText());
+          c.setName(textFieldFullName.getText());
+      }
     
     
     @SuppressWarnings("unchecked")
@@ -371,13 +301,16 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new CustomerList(username);  
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVehicleActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        new UpdateCustomerVehicle(username);
+        db.closeConnection(connection);
+        CreateCustomer();
+        new UpdateCustomerVehicle(username, c);
     }//GEN-LAST:event_buttonVehicleActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

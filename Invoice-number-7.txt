@@ -1,0 +1,12 @@
+Invoice number : 7
+Job number : 6
+
+Description of work: 
+
+Parts used: 
+Total parts cost: £0.0
+
+Total labour cost: £0.0
+
+Grand total: £0.0
+

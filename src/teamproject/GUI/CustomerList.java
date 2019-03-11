@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -11,15 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-/**
- *
- * @author ahmetsesli
- */
+
+
 public class CustomerList extends javax.swing.JPanel {
     private String username;
     private String DiscountType;
@@ -52,7 +50,7 @@ public class CustomerList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
         
-          try {
+        try {
             this.rsC = statement.executeQuery("select * from Customer");
         }
         catch(SQLException e)
@@ -84,13 +82,80 @@ public class CustomerList extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                
     }
+    
      private String[] CreateArray(ArrayList<String> customers){
         String[] newArray = new String[customers.size()];
         newArray = customers.toArray(newArray);
         return newArray;
     }
 
-  
+     private void GetSelectedCustomer(){
+        try {
+            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue().toString()) + "'";
+            PreparedStatement ps = null;
+            try {
+            ps = connection.prepareStatement(sql);
+            } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rsC = ps.executeQuery();
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setName(rsC.getString("name"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setAddress(rsC.getString("address"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setPostCode(rsC.getString("postCode"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+        
+        try{
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+                
+        try{
+            c.setFax(rsC.getString("fax"));
+        }
+        catch(SQLException e)
+        {
+          System.err.println(e.getMessage());
+        }
+
+     }
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -245,6 +310,10 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
+        if (listCustomers.getSelectedValue() == null){
+            String mess = "Please choose customer first!";   
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
         details = (listCustomers.getSelectedValue());
       
         try {
@@ -280,6 +349,7 @@ public class CustomerList extends javax.swing.JPanel {
             public int getSize() { return detailArray.length; }
             public String getElementAt(int i) { return detailArray[i]; }
         });
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
@@ -308,10 +378,19 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditCustomerActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new UpdateCustomer(username, c);
+            if(listCustomers.getSelectedValue() == null) {
+             String mess = "Please choose customer and vehicle record first!";   
+             JOptionPane.showMessageDialog(new JFrame(), mess);
+            } else if (listDetails.getSelectedValue() == null) {
+             String mess = "Please choose the vehicle record!";   
+             JOptionPane.showMessageDialog(new JFrame(), mess);   
+            } else {
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            GetSelectedCustomer();  
+            db.closeConnection(connection);
+            new UpdateCustomer(username, c, v);
+            }
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
     private void comboBoxPaymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxPaymentMethodActionPerformed
