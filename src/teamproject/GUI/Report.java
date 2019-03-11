@@ -6,8 +6,11 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
 
@@ -225,9 +228,95 @@ public class Report extends javax.swing.JPanel {
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         if(!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))){
+            String fromDate = textFieldFrom.getText();
+            String[] fromParts = fromDate.split("/");
+            String fromDay = fromParts[0];
+            String fromMonth = fromParts[1];
+            String fromYear = fromParts[2];
+            fromDate = "'"+fromYear+"-"+fromMonth+"-"+fromDay+"'";
+            
+            String toDate = textFieldTill.getText();
+            String[] toParts = toDate.split("/");
+            String toDay = toParts[0];
+            String toMonth = toParts[1];
+            String toYear = toParts[2];
+            toDate = "'"+toYear+"-"+toMonth+"-"+toDay+"'";
+            
+            System.out.println(fromDate + ", " + toDate);
+                        
             if (selected.equals("Monthly vehicle report")){
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
                 String jobType = comboBoxJobTypeVehicle.getSelectedItem().toString();
+               
+                try{
+                    String sql = "";
+                    if(jobType.equals("Overall")){
+                        //all the jobs from casual customers
+                        if (customerType.equals("Casual")){
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name not in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ")");
+                        }else{ //all the jobs from account holders
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ")");
+                        }
+                    }
+                    else{
+                        //all the jobs of this type from casual customers
+                        if (customerType.equals("Casual")){
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name not in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ") "
+                                    + "and type = '" + jobType + "'");
+                        }else{ //all the jobs of this type from account holders
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ") "
+                                    + "and type = '" + jobType + "'");
+                        }
+                    }                    
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } 
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                }
+                catch(SQLException e)
+                {
+                  System.err.println(e.getMessage());
+                }
+                
+                textAreaReport.setText("");
+                ArrayList<String> jobs = new ArrayList<>();
+                
+                try{
+                    while (rs.next()){
+                        String job = "JobID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                        textAreaReport.append(job+"\n");
+                        jobs.add(job);
+                    }
+                    String text = textAreaReport.getText();
+                    textAreaReport.setText("Booked in " + jobs.size() + " vehicles. Details: \n\n" + text);
+                }catch(SQLException e){
+                    System.err.println(e.getMessage());
+                }
+                
             }else if (selected.equals("Average job time and price")){
                 String mechanic = comboBoxMechanic.getSelectedItem().toString();
                 String jobType = comboBoxJobTypeJob.getSelectedItem().toString();
