@@ -270,7 +270,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(buttonSetDiscountPlan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 460, 70, 30));
 
         buttonVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonVehicle.setText("View Vehicle");
+        buttonVehicle.setText("View Vehicles");
         buttonVehicle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonVehicleActionPerformed(evt);

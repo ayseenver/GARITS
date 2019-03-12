@@ -205,7 +205,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         listVehicles = new javax.swing.JList<>();
-        buttonNewVehicle = new javax.swing.JButton();
         labelVariableDiscount = new javax.swing.JLabel();
         textFieldLastServiceDay = new javax.swing.JTextField();
         textFieldLastServiceMonth = new javax.swing.JTextField();
@@ -274,7 +273,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(labelChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, -1, -1));
 
         labelLastMoTDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelLastMoTDate.setText("Last MoT Date: ");
+        labelLastMoTDate.setText("Next MoT Date: ");
         jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 570, 140, -1));
 
         labelEngineSerialNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -297,7 +296,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonSaveVehicleChangesActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 600, 130, -1));
+        jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 610, 130, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomerDetails.setText("Customer Vehicles");
@@ -315,14 +314,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jScrollPane5.setViewportView(listVehicles);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 700, -1));
-
-        buttonNewVehicle.setText("New Vehicle");
-        buttonNewVehicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonNewVehicleActionPerformed(evt);
-            }
-        });
-        jPanel1.add(buttonNewVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 150, -1, -1));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
@@ -370,7 +361,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(textFieldLastMoTMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 570, 30, 30));
 
         labelLastServiceDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelLastServiceDate.setText("Last Service Date: ");
+        labelLastServiceDate.setText("Next Service Date: ");
         jPanel1.add(labelLastServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 540, -1, -1));
 
         labelServiceDateFormat.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
@@ -488,15 +479,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonEditVehicle1ActionPerformed
 
-    private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
-        textFieldRegistrationNo.setText("");
-        textFieldMake.setText("");
-        textFieldModel.setText("");  
-        textFieldEngineSerialNo.setText("");
-        textFieldChassisNo.setText("");
-        textFieldColour.setText("");
-    }//GEN-LAST:event_buttonNewVehicleActionPerformed
-
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
         WriteToDatabase();
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
@@ -507,7 +489,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonEditVehicle1;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonNewVehicle;
     private javax.swing.JButton buttonSaveVehicleChanges;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;

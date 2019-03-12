@@ -194,7 +194,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
 
         labelCustomerDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelCustomerDetail.setText("Detail:");
+        labelCustomerDetail.setText("Vehicle Details: ");
         add(labelCustomerDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 190, -1, -1));
 
         buttonSearchCustomer.setText("Search");
@@ -215,11 +215,6 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 620, 100, -1));
 
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane10.setViewportView(listCustomers);
 
         add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 560, 400));
@@ -264,13 +259,13 @@ public class CustomerList extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, -1, -1));
 
-        buttonEditCustomer.setText("Edit details");
+        buttonEditCustomer.setText("Edit customer details");
         buttonEditCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 620, 100, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 620, 140, -1));
 
         buttonConfirmPayment.setText("Confirm");
         add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
