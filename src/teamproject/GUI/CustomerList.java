@@ -33,10 +33,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     public CustomerList(String username) {
         this.username = username;
-        this.DiscountType = DiscountType;
         this.payment = "invoice";
-        this.v = v;
-        this.c = c;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -88,7 +85,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void GetSelectedCustomer() {
         try {
-            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue().toString()) + "'";
+            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "'";
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -135,7 +132,6 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
     }
 
     @SuppressWarnings("unchecked")
@@ -211,7 +207,7 @@ public class CustomerList extends javax.swing.JPanel {
 
         labelVariableCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelVariableCustomer.setText("*only customer that have flexible discount ");
-        add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
+        add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 650, -1, -1));
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -256,12 +252,7 @@ public class CustomerList extends javax.swing.JPanel {
         labelPayCustomer.setText("Pay Customer:");
         add(labelPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 620, -1, -1));
 
-        comboBoxPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "invoice", "send cheque" }));
-        comboBoxPaymentMethod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxPaymentMethodActionPerformed(evt);
-            }
-        });
+        comboBoxPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "send cheque" }));
         add(comboBoxPaymentMethod, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 620, -1, -1));
 
         labelSelectCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -294,7 +285,7 @@ public class CustomerList extends javax.swing.JPanel {
             details = (listCustomers.getSelectedValue());
 
             try {
-                String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) + "'";
+                String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue()) + "'";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -335,7 +326,6 @@ public class CustomerList extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new UpdateCustomer(username);
-
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -345,7 +335,6 @@ public class CustomerList extends javax.swing.JPanel {
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         db.closeConnection(connection);
         System.exit(0);
-
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -359,10 +348,7 @@ public class CustomerList extends javax.swing.JPanel {
         if (listCustomers.getSelectedValue() == null) {
             String mess = "Please choose customer and vehicle record first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else if (listDetails.getSelectedValue() == null) {
-            String mess = "Please choose the vehicle record!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
+        }else {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             GetSelectedCustomer();
@@ -370,10 +356,6 @@ public class CustomerList extends javax.swing.JPanel {
             new UpdateCustomer(username, c, v);
         }
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
-
-    private void comboBoxPaymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxPaymentMethodActionPerformed
-        payment = comboBoxPaymentMethod.getSelectedItem().toString();
-    }//GEN-LAST:event_comboBoxPaymentMethodActionPerformed
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
