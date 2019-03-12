@@ -1,4 +1,3 @@
-
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -16,9 +15,8 @@ import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-
-
 public class CustomerList extends javax.swing.JPanel {
+
     private String username;
     private String DiscountType;
     String payment;
@@ -26,14 +24,13 @@ public class CustomerList extends javax.swing.JPanel {
     private ResultSet rsC;
     private ResultSet rsD;
     private Statement statement;
-    String [] nameArray;
-    String [] detailArray;
+    String[] nameArray;
+    String[] detailArray;
     Customer c = new Customer();
     Vehicle v = new Vehicle();
-    Connection connection = null;         
-    DB_ImplClass db = new DB_ImplClass(); 
-    
-    
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+
     public CustomerList(String username) {
         this.username = username;
         this.DiscountType = DiscountType;
@@ -44,118 +41,103 @@ public class CustomerList extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         try {
             this.rsC = statement.executeQuery("select * from Customer");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+
+        listCustomers.removeAll();
+        ArrayList<String> names = new ArrayList<>();
+
+        try {
+            while (rsC.next()) {
+                // read the result set
+                String name = rsC.getString("name");
+                names.add(name);
+            }
+        } catch (SQLException e) {
         }
-          
-           listCustomers.removeAll();
-           ArrayList<String> names = new ArrayList<>();
-           
-           try{
-        while(rsC.next())
-          {
-            // read the result set
-            String name = rsC.getString("name");
-            names.add(name);
-          } 
-        }
-        catch(SQLException e){
-        }
-           nameArray = CreateArray(names);
-        
+        nameArray = CreateArray(names);
+
         listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return nameArray.length;}
-            public String getElementAt(int i) { return nameArray[i];}
+            public int getSize() {
+                return nameArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return nameArray[i];
+            }
         });
-     
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-               
+
     }
-    
-     private String[] CreateArray(ArrayList<String> customers){
+
+    private String[] CreateArray(ArrayList<String> customers) {
         String[] newArray = new String[customers.size()];
         newArray = customers.toArray(newArray);
         return newArray;
     }
 
-     private void GetSelectedCustomer(){
+    private void GetSelectedCustomer() {
         try {
             String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue().toString()) + "'";
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             this.rsC = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setName(rsC.getString("name"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setEmailAddress(rsC.getString("emailAddress"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setAddress(rsC.getString("address"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setPostCode(rsC.getString("postCode"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-                
-        try{
-            c.setFax(rsC.getString("fax"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
-     }
-     
+        try {
+            c.setName(rsC.getString("name"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setAddress(rsC.getString("address"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setPostCode(rsC.getString("postCode"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setFax(rsC.getString("fax"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -181,7 +163,7 @@ public class CustomerList extends javax.swing.JPanel {
         labelSelectCustomer = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
         listDetails = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
+        buttonDone = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -291,13 +273,13 @@ public class CustomerList extends javax.swing.JPanel {
 
         add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 220, 560, 390));
 
-        jButton1.setText("Done");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonDone.setText("Done");
+        buttonDone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonDoneActionPerformed(evt);
             }
         });
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 670, 80, 30));
+        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 670, 80, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -305,50 +287,51 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        if (listCustomers.getSelectedValue() == null){
-            String mess = "Please choose customer first!";   
+        if (listCustomers.getSelectedValue() == null) {
+            String mess = "Please choose customer first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-        details = (listCustomers.getSelectedValue());
-      
-        try {
-            String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) + "'";
-            PreparedStatement ps = null;
+            details = (listCustomers.getSelectedValue());
+
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) + "'";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rsD = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            this.rsD = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        listDetails.removeAll();
-        ArrayList<String> vehicle = new ArrayList<>();
-        
-        try {
-        while (rsD.next()){
-        String detail = rsD.getString("registrationNumber")+ ", "+ rsD.getString("make")+ ", "+ rsD.getString("model")+", "+rsD.getString("engineSerial")+", "+rsD.getString("chassisNumber")+", "+rsD.getString("colour");
-        vehicle.add(detail);
-        }
-        }
-        catch(SQLException e){
-        }
-        detailArray = CreateArray(vehicle);
-        
-        listDetails.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return detailArray.length; }
-            public String getElementAt(int i) { return detailArray[i]; }
-        });
+
+            listDetails.removeAll();
+            ArrayList<String> vehicle = new ArrayList<>();
+
+            try {
+                while (rsD.next()) {
+                    String detail = rsD.getString("registrationNumber") + ", " + rsD.getString("make") + ", " + rsD.getString("model") + ", " + rsD.getString("engineSerial") + ", " + rsD.getString("chassisNumber") + ", " + rsD.getString("colour");
+                    vehicle.add(detail);
+                }
+            } catch (SQLException e) {
+            }
+            detailArray = CreateArray(vehicle);
+
+            listDetails.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return detailArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return detailArray[i];
+                }
+            });
         }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
-       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new UpdateCustomer(username);
@@ -360,56 +343,56 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-         db.closeConnection(connection);
+        db.closeConnection(connection);
         System.exit(0);
-        
+
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditCustomerActionPerformed
-            if(listCustomers.getSelectedValue() == null) {
-             String mess = "Please choose customer and vehicle record first!";   
-             JOptionPane.showMessageDialog(new JFrame(), mess);
-            } else if (listDetails.getSelectedValue() == null) {
-             String mess = "Please choose the vehicle record!";   
-             JOptionPane.showMessageDialog(new JFrame(), mess);   
-            } else {
+        if (listCustomers.getSelectedValue() == null) {
+            String mess = "Please choose customer and vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else if (listDetails.getSelectedValue() == null) {
+            String mess = "Please choose the vehicle record!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
-            GetSelectedCustomer();  
+            GetSelectedCustomer();
             db.closeConnection(connection);
             new UpdateCustomer(username, c, v);
-            }
+        }
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
     private void comboBoxPaymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxPaymentMethodActionPerformed
         payment = comboBoxPaymentMethod.getSelectedItem().toString();
     }//GEN-LAST:event_comboBoxPaymentMethodActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new MainMenu(username);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonDoneActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonConfirmPayment;
+    private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonEditCustomer;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchCustomer;
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboBoxPaymentMethod;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;

@@ -1,4 +1,3 @@
-
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -13,19 +12,18 @@ import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-
 public class UpdateCustomerVehicle extends javax.swing.JPanel {
-  
-    private String username;  
-        Statement statement;
-        Connection connection = null;
-        Customer c;
-        DB_ImplClass db = new DB_ImplClass();
-        ResultSet rs;
-        String [] vehicleArray;
-        Vehicle ve = new Vehicle();
-        ArrayList<String> vehicles = new ArrayList<>();
-        ArrayList<String> customers = new ArrayList<>();
+
+    private String username;
+    Statement statement;
+    Connection connection = null;
+    Customer c;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] vehicleArray;
+    Vehicle ve = new Vehicle();
+    ArrayList<String> vehicles = new ArrayList<>();
+    ArrayList<String> customers = new ArrayList<>();
 
     public UpdateCustomerVehicle(String username, Customer c) {
         this.username = username;
@@ -37,143 +35,132 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         Vehicles();
         selectVehicle();
-        
+
     }
-    
-     private String[] CreateArray(ArrayList<String> vehicles){
+
+    private String[] CreateArray(ArrayList<String> vehicles) {
         String[] newArray = new String[vehicles.size()];
         newArray = vehicles.toArray(newArray);
         return newArray;
     }
-     
-     private void NoList(){
+
+    private void NoList() {
         try {
-      String sql = ("Select * from vehicle where ID = '" + null);  
-       PreparedStatement ps = null;
-      try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        }  
-         catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-     
-     }
-     
-     private void Vehicles(){
-        try {
-           String sql = ("Select * from Vehicle where Customername = '" + c.getName() + "'");
+            String sql = ("Select * from vehicle where ID = '" + null);
             PreparedStatement ps = null;
-        try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-           listVehicles.removeAll();   
-           ArrayList<String> vehicles = new ArrayList<>();
-           
-           try{
-        while(rs.next())
-          {
-            // read the result set
-            String v = rs.getString("registrationNumber")+", "+rs.getString("make")+", "+rs.getString("model")+", "+rs.getString("engineSerial")+", "+rs.getString("chassisNumber")+", "+rs.getString("colour");
-            vehicles.add(v);
-          } 
-        }
-        catch(SQLException e){
-        }
-           
-          vehicleArray = CreateArray(vehicles); 
-          
-          listVehicles.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return vehicleArray.length; }
-            public String getElementAt(int i) { return vehicleArray[i]; }
-        });
-     }
-     
-      private void selectVehicle(){
+
+    }
+
+    private void Vehicles() {
         try {
-        String sql = ("Select * from vehicle");
-        PreparedStatement ps = null;
-        try {
-            ps = connection.prepareStatement(sql);
-            }  catch (Exception e) {
+            String sql = ("Select * from Vehicle where Customername = '" + c.getName() + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        rs = ps.executeQuery();
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+        listVehicles.removeAll();
+        ArrayList<String> vehicles = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String v = rs.getString("registrationNumber") + ", " + rs.getString("make") + ", " + rs.getString("model") + ", " + rs.getString("engineSerial") + ", " + rs.getString("chassisNumber") + ", " + rs.getString("colour");
+                vehicles.add(v);
+            }
+        } catch (SQLException e) {
         }
-        
-        }
-      
-       private void WriteToDatabase(){
-       String sql ;
-       //for (String t : vehicles)
-       try {
-        sql = ("Insert into Vehicle values(( Select registrationNumber from Vehicle where registrationNumber = '" + textFieldRegistrationNo.getText()+") ,"
-                + "(Select make from Vehicle where make = '" + textFieldMake.getText() + ") , "
-                + "(Select model from Vehicle where model = '" + textFieldModel.getText() + ") , "
-                + "(Select engineSerial from Vehicle where engineSerial = '" + textFieldEngineSerialNo.getText()+ ") , "
-                + "(Select chassisNumber from Vehicle where chassisNumber = '" + textFieldChassisNo.getText()+ ") , "
-                + "(Select colour from Vehicle where colour = '" + textFieldColour.getText() + "))");
-                
-        PreparedStatement ps = null;  
-         try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+
+        vehicleArray = CreateArray(vehicles);
+
+        listVehicles.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return vehicleArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return vehicleArray[i];
+            }
+        });
+    }
+
+    private void selectVehicle() {
+        try {
+            String sql = ("Select * from vehicle");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
-            }  
-         ps.executeUpdate();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        } 
-       
-       try {
-           String SQL = null;
-           for (String cu : customers)
-           SQL = ("Insert into Customer values(name, emailAddress, address, postCode, telephoneNumber, fax)" + cu);
-           PreparedStatement ps = null;  
-           try {
-            ps = connection.prepareStatement(SQL);
-            } 
-            catch (Exception e) {
+
+    }
+
+    private void WriteToDatabase() {
+        String sql;
+        //for (String t : vehicles)
+        try {
+            sql = ("Insert into Vehicle values(( Select registrationNumber from Vehicle where registrationNumber = '" + textFieldRegistrationNo.getText() + ") ,"
+                    + "(Select make from Vehicle where make = '" + textFieldMake.getText() + ") , "
+                    + "(Select model from Vehicle where model = '" + textFieldModel.getText() + ") , "
+                    + "(Select engineSerial from Vehicle where engineSerial = '" + textFieldEngineSerialNo.getText() + ") , "
+                    + "(Select chassisNumber from Vehicle where chassisNumber = '" + textFieldChassisNo.getText() + ") , "
+                    + "(Select colour from Vehicle where colour = '" + textFieldColour.getText() + "))");
+
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
-            }  
-         ps.executeUpdate();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-       catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        } 
-        
-       }
-     
-  
+
+        try {
+            String SQL = null;
+            for (String cu : customers) {
+                SQL = ("Insert into Customer values(name, emailAddress, address, postCode, telephoneNumber, fax)" + cu);
+            }
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(SQL);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -420,62 +407,50 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonEditVehicle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditVehicle1ActionPerformed
-        if(listVehicles.getSelectedValue() == null){
-        String mess = "Please choose vehicle record first!";   
-        JOptionPane.showMessageDialog(new JFrame(), mess);
+        if (listVehicles.getSelectedValue() == null) {
+            String mess = "Please choose vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-        selectVehicle();
-       
-        try{
-            ve.setRegistrationNumber(rs.getString("registrationNumber"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-       
-        try{
-            ve.setMake(rs.getString("make"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-          try{
-            ve.setModel(rs.getString("model"));  
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-          try{
-            ve.setEngineSerial(rs.getString("engineSerial"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-          try{
-            ve.setChassisNumber(rs.getString("chassisNumber"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-       try{
-            ve.setColour(rs.getString("colour"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-       
-       textFieldRegistrationNo.setText(ve.getRegistrationNumber());
-       textFieldMake.setText(ve.getMake());
-       textFieldModel.setText(ve.getModel());
-       textFieldEngineSerialNo.setText(ve.getEngineSerial());
-       textFieldChassisNo.setText(ve.getChassisNumber());
-       textFieldColour.setText(ve.getColour());
+            selectVehicle();
+
+            try {
+                ve.setRegistrationNumber(rs.getString("registrationNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                ve.setMake(rs.getString("make"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setModel(rs.getString("model"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setEngineSerial(rs.getString("engineSerial"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setChassisNumber(rs.getString("chassisNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setColour(rs.getString("colour"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            textFieldRegistrationNo.setText(ve.getRegistrationNumber());
+            textFieldMake.setText(ve.getMake());
+            textFieldModel.setText(ve.getModel());
+            textFieldEngineSerialNo.setText(ve.getEngineSerial());
+            textFieldChassisNo.setText(ve.getChassisNumber());
+            textFieldColour.setText(ve.getColour());
         }
     }//GEN-LAST:event_buttonEditVehicle1ActionPerformed
 

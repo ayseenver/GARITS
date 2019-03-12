@@ -1,4 +1,3 @@
-
 package teamproject.GUI;
 
 import java.sql.Connection;
@@ -13,18 +12,17 @@ import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
-
 public class UpdateCustomer extends javax.swing.JPanel {
+
     private String username;
-        Statement statement;
-        Connection connection;
-        DB_ImplClass db = new DB_ImplClass();   
-        ResultSet rc;
-        Customer c = new Customer();
-        Vehicle v = new Vehicle();
-        String Discount;
-        
-        
+    Statement statement;
+    Connection connection;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rc;
+    Customer c = new Customer();
+    Vehicle v = new Vehicle();
+    String Discount;
+
     public UpdateCustomer(String username) {
         this.username = username;
         this.Discount = Discount;
@@ -34,7 +32,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -44,26 +42,25 @@ public class UpdateCustomer extends javax.swing.JPanel {
         this(username);
         this.c = c;
         this.v = v;
-                
+
         CustDetails();
     }
-     
-      private void CustDetails(){
+
+    private void CustDetails() {
         textFieldFullName.setText(c.getName());
         textFieldEmail.setText(c.getEmailAddress());
         textAreaAddress.setText(c.getAddress());
         textFieldPostCode.setText(c.getPostCode());
         textFieldTelephone.setText(c.getTelephoneNumber());
         textFieldFax.setText(c.getFax());
-       }
-      
-      private void CreateCustomer(){
-          c.setAddress(textAreaAddress.getText());
-          c.setEmailAddress(textFieldEmail.getText());
-          c.setName(textFieldFullName.getText());
-      }
-    
-    
+    }
+
+    private void CreateCustomer() {
+        c.setAddress(textAreaAddress.getText());
+        c.setEmailAddress(textFieldEmail.getText());
+        c.setName(textFieldFullName.getText());
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -295,14 +292,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSetDiscountPlan1ActionPerformed
 
     private void checkBoxConfigurePayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxConfigurePayLaterActionPerformed
-        
+
     }//GEN-LAST:event_checkBoxConfigurePayLaterActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);  
+        new CustomerList(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVehicleActionPerformed
@@ -318,7 +315,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void comboBoxDiscountPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxDiscountPlanActionPerformed
-        Discount = comboBoxDiscountPlan.getSelectedItem().toString(); 
+        Discount = comboBoxDiscountPlan.getSelectedItem().toString();
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
 
