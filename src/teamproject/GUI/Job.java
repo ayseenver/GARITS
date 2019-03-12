@@ -154,8 +154,6 @@ public class Job extends javax.swing.JPanel {
     }
 
     private void ListUsedParts() {
-        listPartsUsed.removeAll();
-
         //add all parts to used part list
         try {
             while (rs.next()) {
@@ -164,6 +162,7 @@ public class Job extends javax.swing.JPanel {
                 usedParts.add(part);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         usedPartArray = CreateArray(usedParts);
@@ -686,34 +685,32 @@ public class Job extends javax.swing.JPanel {
         String selected = listAvailableParts.getSelectedValue();
         usedParts.add(selected);
         usedPartArray = CreateArray(usedParts);
-
+               
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return usedPartArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return usedPartArray[i];
-            }
+            public int getSize() { return usedPartArray.length; }
+            public String getElementAt(int i) { return usedPartArray[i]; }
         });
-
+        
         parts.remove(selected);
         ListAllParts();
-
+        
         //insert part into the parts used for this job
         String sql;
-        try {
+        try{
             sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
                     + " values ((select partID from sparepart where partName = '" + selected + "'), "
                     + "" + jobID + ", 1)");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        } catch (SQLException e) {
+        }
+        catch(SQLException e)
+        {
             System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_addPartButtonActionPerformed
@@ -721,6 +718,14 @@ public class Job extends javax.swing.JPanel {
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
         String selected = listPartsUsed.getSelectedValue();
         usedParts.remove(selected);
+        try{
+            String[] parts = selected.split(", ");
+            selected = parts[0];
+            usedParts.remove(selected);
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+
         usedPartArray = CreateArray(usedParts);
 
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
@@ -759,8 +764,12 @@ public class Job extends javax.swing.JPanel {
         String sql;
         int initialQuantity = 0;
         int usedQuantity = 0;
+        String[] sArray;
+        String s;
 
-        for (String s : usedParts) {
+        for (String x : usedParts) {
+            sArray = x.split(", ");
+            s = sArray[0];
             //get quantity of inital parts
             try {
                 sql = ("select * from sparePart where partName = '" + s + "' "
@@ -777,10 +786,7 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                while (rs.next()) {
-                    // read the result set
-                    initialQuantity = Integer.parseInt(rs.getString("quantity"));
-                }
+                initialQuantity = Integer.parseInt(rs.getString("quantity"));
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
@@ -802,10 +808,7 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                while (rs.next()) {
-                    // read the result set
-                    usedQuantity = Integer.parseInt(rs.getString("quantity"));
-                }
+                usedQuantity = Integer.parseInt(rs.getString("quantity"));
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
@@ -871,8 +874,10 @@ public class Job extends javax.swing.JPanel {
         }
 
         try {
-            int hourlyRate = Integer.parseInt(rs.getString("hourlyRate"));
-            totalCost *= hourlyRate;
+            while (rs.next()) {
+                int hourlyRate = Integer.parseInt(rs.getString("hourlyRate"));
+                totalCost *= hourlyRate;
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

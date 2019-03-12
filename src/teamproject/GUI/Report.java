@@ -362,9 +362,13 @@ public class Report extends javax.swing.JPanel {
                     //get average time and price for every job
                     if (mechanic.equals("None")) {
                         if (jobType.equals("Overall")) {
-                            sql = ("select avg(totalCost), avg(totalHours) from job where dateBookedIn BETWEEN " + fromDate + " AND " + toDate);
+                            sql = ("select avg(totalCost), avg(totalHours) from job "
+                                    + "where dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "dateCompleted is not null");
                         } else {
-                            sql = ("select avg(totalCost), avg(totalHours) from job where type = '" + jobType + "' and dateBookedIn BETWEEN " + fromDate + " AND " + toDate);
+                            sql = ("select avg(totalCost), avg(totalHours) from job where type = '" + jobType + "' "
+                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "dateCompleted is not null");
                         }
                     } else {//get average time and price for this mechanic
                         //get the mechanic name
@@ -378,14 +382,16 @@ public class Report extends javax.swing.JPanel {
                                     + "where MechanicID in "
                                     + "(select ID from mechanic where Userusername in "
                                     + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
-                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate);
+                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "dateCompleted is not null");
                         } else {
                             sql = ("select avg(totalCost), avg(totalHours) from job "
                                     + "where MechanicID in "
                                     + "(select ID from mechanic where Userusername in "
                                     + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
                                     + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
-                                    + "type = '" + jobType + "'");
+                                    + "type = '" + jobType + "' and "
+                                    + "dateCompleted is not null");
                         }
                     }
                     PreparedStatement ps = null;
@@ -404,7 +410,8 @@ public class Report extends javax.swing.JPanel {
 
                 try {
                     while (rs.next()) {
-                        String result = "Average hours: " + rs.getString("avg(totalHours)")
+                        String result = "For jobs completed in this date range\n"
+                                + "\nAverage hours: " + rs.getString("avg(totalHours)")
                                 + "\nAverage cost (not including VAT): " + rs.getString("avg(totalCost)")
                                 + "\nMechanic name: " + mechanic;
                         textAreaReport.append(result + "\n");
