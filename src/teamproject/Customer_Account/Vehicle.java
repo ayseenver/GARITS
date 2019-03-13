@@ -2,107 +2,103 @@ package teamproject.Customer_Account;
 
 public class Vehicle {
 
-	private String registrationNumber;
-	private String make;
-	private String model;
-	private String engineSerial;
-	private String chassisNumber;
-	private String colour;
-        
-        /**
-	 * 
-	 * @param registrationNumber
-	 * @param make
-	 * @param model
-	 * @param engineSerial
-	 * @param chassisNumber
-	 * @param colour
-	 */
-	public Vehicle Vehicle() {
-		// TODO - implement Vehicle.Vehicle
-		throw new UnsupportedOperationException();
-	}
+    private String registrationNumber;
+    private String make;
+    private String model;
+    private String engineSerial;
+    private String chassisNumber;
+    private String colour;
+    private String nextMoTDate;
+    private String nextServiceDate;
 
-	public String getRegistrationNumber() {
-		return this.registrationNumber;
-	}
+    /**
+     *
+     * @param registrationNumber
+     * @param make
+     * @param model
+     * @param engineSerial
+     * @param chassisNumber
+     * @param colour
+     */
+    public Vehicle Vehicle() {
+        // TODO - implement Vehicle.Vehicle
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * 
-	 * @param registrationNumber
-	 */
-	public void setRegistrationNumber(String registrationNumber) {
-		this.registrationNumber = registrationNumber;
-	}
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
 
-	public String getMake() {
-		return this.make;
-	}
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
 
-	/**
-	 * 
-	 * @param make
-	 */
-	public void setMake(String make) {
-		this.make = make;
-	}
+    public String getMake() {
+        return make;
+    }
 
-	public String getModel() {
-		return this.model;
-	}
+    public void setMake(String make) {
+        this.make = make;
+    }
 
-	/**
-	 * 
-	 * @param model
-	 */
-	public void setModel(String model) {
-		this.model = model;
-	}
+    public String getModel() {
+        return model;
+    }
 
-	public String getEngineSerial() {
-		return this.engineSerial;
-	}
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-	/**
-	 * 
-	 * @param engineSerial
-	 */
-	public void setEngineSerial(String engineSerial) {
-		this.engineSerial = engineSerial;
-	}
+    public String getEngineSerial() {
+        return engineSerial;
+    }
 
-	public String getChassisNumber() {
-		return this.chassisNumber;
-	}
+    public void setEngineSerial(String engineSerial) {
+        this.engineSerial = engineSerial;
+    }
 
-	/**
-	 * 
-	 * @param chassisNumber
-	 */
-	public void setChassisNumber(String chassisNumber) {
-		this.chassisNumber = chassisNumber;
-	}
+    public String getChassisNumber() {
+        return chassisNumber;
+    }
 
-	public String getColour() {
-		return this.colour;
-	}
+    public void setChassisNumber(String chassisNumber) {
+        this.chassisNumber = chassisNumber;
+    }
 
-	/**
-	 * 
-	 * @param colour
-	 */
-	public void setColour(String colour) {
-		this.colour = colour;
-	}
+    public String getColour() {
+        return colour;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    public String getNextMoTDate() {
+        return nextMoTDate;
+    }
+
+    public void setNextMoTDate(String nextMoTDate) {
+        this.nextMoTDate = nextMoTDate;
+    }
+
+    public String getNextServiceDate() {
+        return nextServiceDate;
+    }
+
+    public void setNextServiceDate(String nextServiceDate) {
+        this.nextServiceDate = nextServiceDate;
+    }
+    
+    
 
     @Override
     public String toString() {
-        return "Vehicle:\n" + "registrationNumber=" + registrationNumber 
-                + ",\n make=" + make 
-                + ",\n model=" + model 
-                + ",\n engineSerial=" + engineSerial 
-                + ",\n chassisNumber=" + chassisNumber 
+        return "Vehicle:\n" + "registrationNumber=" + registrationNumber
+                + ",\n make=" + make
+                + ",\n model=" + model
+                + ",\n engineSerial=" + engineSerial
+                + ",\n chassisNumber=" + chassisNumber
                 + ",\n colour=" + colour;
     }
-   
+
 }
