@@ -18,7 +18,6 @@ import teamproject.Databases.DB_ImplClass;
 public class CustomerList extends javax.swing.JPanel {
 
     private String username;
-    private String DiscountType;
     String payment;
     String details;
     private ResultSet rsC;
@@ -27,7 +26,6 @@ public class CustomerList extends javax.swing.JPanel {
     String[] nameArray;
     String[] detailArray;
     Customer c = new Customer();
-    Vehicle v = new Vehicle();
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
 
@@ -160,6 +158,7 @@ public class CustomerList extends javax.swing.JPanel {
         jScrollPane11 = new javax.swing.JScrollPane();
         listDetails = new javax.swing.JList<>();
         buttonDone = new javax.swing.JButton();
+        buttonEditVehicles = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -243,7 +242,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 620, 170, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 620, 170, -1));
 
         buttonConfirmPayment.setText("Confirm");
         add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
@@ -271,6 +270,14 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
         add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 670, 80, 30));
+
+        buttonEditVehicles.setText("Edit vehicles");
+        buttonEditVehicles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditVehiclesActionPerformed(evt);
+            }
+        });
+        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 620, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -285,7 +292,8 @@ public class CustomerList extends javax.swing.JPanel {
             details = (listCustomers.getSelectedValue());
 
             try {
-                String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue()) + "'";
+                String sql = ("select * from Vehicle where CustomerID = "
+                        + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "')");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -346,14 +354,14 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void buttonEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditCustomerActionPerformed
         if (listCustomers.getSelectedValue() == null) {
-            String mess = "Please choose customer and vehicle record first!";
+            String mess = "Please choose customer record first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
-        }else {
+        } else {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             GetSelectedCustomer();
             db.closeConnection(connection);
-            new UpdateCustomer(username, c, v);
+            new UpdateCustomer(username, c);
         }
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
@@ -364,12 +372,26 @@ public class CustomerList extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
+    private void buttonEditVehiclesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditVehiclesActionPerformed
+        if (listCustomers.getSelectedValue() == null) {
+            String mess = "Please choose customer record first!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            GetSelectedCustomer();
+            db.closeConnection(connection);
+            new UpdateCustomerVehicle(username, c);
+        }
+    }//GEN-LAST:event_buttonEditVehiclesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonConfirmPayment;
     private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonEditCustomer;
+    private javax.swing.JButton buttonEditVehicles;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchCustomer;

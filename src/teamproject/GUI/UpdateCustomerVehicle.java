@@ -51,8 +51,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }
 
     private void ShowVehicles() {
+        listVehicles.removeAll();
+        ArrayList<String> vehicles = new ArrayList<>();
+        
+        //get all vehicles belonging to this owner
         try {
-            String sql = ("Select * from Vehicle where Customername = '" + c.getName() + "'");
+            String sql = ("select * from Vehicle where CustomerID = "
+                    + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "')");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -63,8 +68,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        listVehicles.removeAll();
-        ArrayList<String> vehicles = new ArrayList<>();
+
 
         try {
             while (rs.next()) {
@@ -287,7 +291,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             reg = parts[0];
 
             try {
-                String sql = ("Select * from vehicle where registrationNumber = '" + reg +"'");
+                String sql = ("Select * from vehicle where registrationNumber = '" + reg + "'");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -298,7 +302,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             try {
                 ve.setRegistrationNumber(rs.getString("registrationNumber"));
             } catch (SQLException e) {
@@ -330,13 +334,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             try {
                 ve.setNextMoTDate(rs.getString("nextMoTDate"));
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             try {
                 ve.setNextServiceDate(rs.getString("nextServiceDate"));
             } catch (SQLException e) {
@@ -350,19 +354,19 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             textFieldChassisNo.setText(ve.getChassisNumber());
             textFieldColour.setText(ve.getColour());
             textFieldNextServiceDate.setText(ve.getNextServiceDate());
-            textFieldNextMoTDate.setText(ve.getNextMoTDate());            
+            textFieldNextMoTDate.setText(ve.getNextMoTDate());
         }
     }//GEN-LAST:event_buttonEditVehicleActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
         try {
             String sql = ("INSERT INTO Vehicle (registrationNumber, "
-                    + "Customername, Customeraddress, make, "
+                    + "CustomerID, make, "
                     + "model, engineSerial, chassisNumber, colour, "
                     + "nextServiceDate, nextMOTDate) "
                     + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
-                    + "'" + c.getName() + "', "
-                    + "'" + c.getAddress() + "', "
+                    + "(select ID from customer where name = '" + c.getName() + "' "
+                    + "and address = '" + c.getAddress() + "'), "
                     + "'" + textFieldMake.getText() + "', "
                     + "'" + textFieldModel.getText() + "', "
                     + "'" + textFieldEngineSerial.getText() + "', "
@@ -380,13 +384,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        ShowVehicles();
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
         try {
             String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
-                    + "Customername = '" + c.getName() + "', "
-                    + "Customeraddress = '" + c.getAddress() + "', "
                     + "make = '" + textFieldMake.getText() + "', "
                     + "model = '" + textFieldModel.getText() + "', "
                     + "engineSerial = '" + textFieldEngineSerial.getText() + "', "
@@ -395,7 +398,9 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                     + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
                     + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
                     + "WHERE registrationNumber = '" + reg + "' "
-                    + "AND Customername = '" + c.getName() + "'");
+                    + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
+                    + "and address = '" + c.getAddress() + "')");
+
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -406,6 +411,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        ShowVehicles();
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
 
