@@ -243,7 +243,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 620, 140, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 620, 170, -1));
 
         buttonConfirmPayment.setText("Confirm");
         add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));

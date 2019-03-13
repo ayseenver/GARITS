@@ -28,7 +28,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     public UpdateCustomerVehicle(String username, Customer c) {
         this.username = username;
-        this.ve = ve;
         this.c = c;
         initComponents();
         JFrame frame = new JFrame();
@@ -41,8 +40,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        Vehicles();
-        //selectVehicle();
+        ShowVehicles();
 
     }
 
@@ -52,7 +50,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         return newArray;
     }
 
-    private void Vehicles() {
+    private void ShowVehicles() {
         try {
             String sql = ("Select * from Vehicle where Customername = '" + c.getName() + "'");
             PreparedStatement ps = null;
@@ -88,62 +86,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 return vehicleArray[i];
             }
         });
-    }
-/*
-    private void selectVehicle() {
-        try {
-            String sql = ("Select * from vehicle");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-*/
-
-    private void WriteToDatabase() {
-        String sql;
-        //for (String t : vehicles)
-        try {
-            sql = ("Insert into Vehicle values(( Select registrationNumber from Vehicle where registrationNumber = '" + textFieldRegistrationNo.getText() + ") ,"
-                    + "(Select make from Vehicle where make = '" + textFieldMake.getText() + ") , "
-                    + "(Select model from Vehicle where model = '" + textFieldModel.getText() + ") , "
-                    + "(Select engineSerial from Vehicle where engineSerial = '" + textFieldEngineSerial.getText() + ") , "
-                    + "(Select chassisNumber from Vehicle where chassisNumber = '" + textFieldChassisNo.getText() + ") , "
-                    + "(Select colour from Vehicle where colour = '" + textFieldColour.getText() + "))");
-
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            String SQL = null;
-            for (String cu : customers) {
-                SQL = ("Insert into Customer values(name, emailAddress, address, postCode, telephoneNumber, fax)" + cu);
-            }
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(SQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
     }
 
     @SuppressWarnings("unchecked")

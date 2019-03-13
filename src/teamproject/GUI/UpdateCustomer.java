@@ -25,7 +25,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     public UpdateCustomer(String username) {
         this.username = username;
-        this.Discount = Discount;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -43,22 +42,29 @@ public class UpdateCustomer extends javax.swing.JPanel {
         this.c = c;
         this.v = v;
 
-        CustDetails();
+        ShowCustomerDetails();
     }
 
-    private void CustDetails() {
+    private void ShowCustomerDetails() {
         textFieldFullName.setText(c.getName());
         textFieldEmail.setText(c.getEmailAddress());
-        textAreaAddress.setText(c.getAddress());
+        textFieldAddress.setText(c.getAddress());
         textFieldPostCode.setText(c.getPostCode());
         textFieldTelephone.setText(c.getTelephoneNumber());
         textFieldFax.setText(c.getFax());
     }
 
-    private void CreateCustomer() {
-        c.setAddress(textAreaAddress.getText());
-        c.setEmailAddress(textFieldEmail.getText());
+    private void UpdateCustomer() {
+        c.setAddress(textFieldAddress.getText());
+        c.setEmailAddress(textFieldAddress.getText());
         c.setName(textFieldFullName.getText());
+        c.setPostCode(textFieldPostCode.getText());
+        c.setTelephoneNumber(textFieldTelephone.getText());
+        try {
+            c.setFax(textFieldFax.getText());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -79,10 +85,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelTelephone = new javax.swing.JLabel();
         textFieldFax = new javax.swing.JTextField();
         textFieldFullName = new javax.swing.JTextField();
-        textFieldEmail = new javax.swing.JTextField();
+        textFieldAddress = new javax.swing.JTextField();
         textFieldTelephone = new javax.swing.JTextField();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        textAreaAddress = new javax.swing.JTextArea();
         buttonConfirmDiscount = new javax.swing.JButton();
         jLabel59 = new javax.swing.JLabel();
         labelCustomerDetails = new javax.swing.JLabel();
@@ -104,7 +108,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
         comboBoxDiscountPlan = new javax.swing.JComboBox<>();
         labelFax1 = new javax.swing.JLabel();
         buttonSetDiscountPlan1 = new javax.swing.JButton();
+        buttonUpdateCustomer = new javax.swing.JButton();
         buttonVehicle = new javax.swing.JButton();
+        textFieldEmail = new javax.swing.JTextField();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -151,14 +157,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 440, -1, -1));
         jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
         jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
-        jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, 260, -1));
+        jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
         jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 260, -1));
-
-        textAreaAddress.setColumns(20);
-        textAreaAddress.setRows(5);
-        jScrollPane4.setViewportView(textAreaAddress);
-
-        jPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, -1));
 
         buttonConfirmDiscount.setText("Confirm");
         jPanel1.add(buttonConfirmDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 320, 100, -1));
@@ -266,6 +266,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
         });
         jPanel1.add(buttonSetDiscountPlan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 460, 70, 30));
 
+        buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonUpdateCustomer.setText("Update customer details");
+        buttonUpdateCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUpdateCustomerActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 660, -1, -1));
+
         buttonVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonVehicle.setText("View Vehicles");
         buttonVehicle.addActionListener(new java.awt.event.ActionListener() {
@@ -274,13 +283,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         jPanel1.add(buttonVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 660, -1, -1));
+        jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, 260, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchDiscountDetailsActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_textFieldSearchDiscountDetailsActionPerformed
 
     private void buttonSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchDiscountDetailsActionPerformed
@@ -292,7 +301,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSetDiscountPlan1ActionPerformed
 
     private void checkBoxConfigurePayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxConfigurePayLaterActionPerformed
-
+        // TODO add your handling code here:
     }//GEN-LAST:event_checkBoxConfigurePayLaterActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -302,21 +311,85 @@ public class UpdateCustomer extends javax.swing.JPanel {
         new CustomerList(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVehicleActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        CreateCustomer();
-        new UpdateCustomerVehicle(username, c);
-    }//GEN-LAST:event_buttonVehicleActionPerformed
+    private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
+        String originalName;
+        String originalAddress;
+        //This does not work
+        try {
+            originalName = c.getName();
+        } catch (Exception e) {
+            originalName = "";
+        }
+        try {
+            originalAddress = c.getAddress();
+        } catch (Exception e) {
+            originalAddress = "";
+        }
+
+        if (originalName.equals("") && originalAddress.equals("")) {
+            //customer does not exist, create new customer
+            try {
+                String sql = ("INSERT INTO Customer (name, address, emailAddress, "
+                        + "postCode, telephoneNumber, fax, dateCreated) "
+                        + "VALUES ('" + textFieldFullName.getText() + "', "
+                        + "'" + textFieldAddress.getText() + "', "
+                        + "'" + textFieldAddress.getText() + "', "
+                        + "'" + textFieldPostCode.getText() + "', "
+                        + "'" + textFieldTelephone.getText() + "', "
+                        + "'" + textFieldFax.getText() + "', " //optional
+                        + " date('now')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            UpdateCustomer();
+        } else {
+            //customer exists, update customer and vehicles
+            try {
+                String sql = ("UPDATE Customer "
+                        + "SET name = '" + textFieldFullName.getText() + "', "
+                        + "address = '" + textFieldAddress.getText() + "', "
+                        + "emailAddress = '" + textFieldEmail.getText() + "', "
+                        + "postCode = '" + textFieldPostCode.getText() + "', "
+                        + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
+                        + "fax = '" + textFieldFax.getText() + "' " //optional
+                        + "WHERE name = '" + originalName + "' "
+                        + "AND address = '" + originalAddress + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            UpdateCustomer();
+        }
+    }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
         System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void comboBoxDiscountPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxDiscountPlanActionPerformed
         Discount = comboBoxDiscountPlan.getSelectedItem().toString();
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
+
+    private void buttonVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVehicleActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new UpdateCustomerVehicle(username, c);
+    }//GEN-LAST:event_buttonVehicleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -325,6 +398,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSearchDiscountDetails;
     private javax.swing.JButton buttonSetDiscountPlan1;
+    private javax.swing.JButton buttonUpdateCustomer;
     private javax.swing.JButton buttonVehicle;
     private javax.swing.JCheckBox checkBoxAccountHolder;
     private javax.swing.JCheckBox checkBoxConfigurePayLater;
@@ -336,7 +410,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLabel labelAddress;
     private javax.swing.JLabel labelCustomerDetails;
@@ -351,7 +424,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JLabel labelTelephone;
     private javax.swing.JLabel labelVariableDiscount;
     private javax.swing.JList<String> listBusinessType;
-    private javax.swing.JTextArea textAreaAddress;
+    private javax.swing.JTextField textFieldAddress;
     private javax.swing.JTextField textFieldEmail;
     private javax.swing.JTextField textFieldFax;
     private javax.swing.JTextField textFieldFullName;
