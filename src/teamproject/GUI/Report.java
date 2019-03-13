@@ -286,7 +286,6 @@ public class Report extends javax.swing.JPanel {
             if (selected.equals("Monthly vehicle report")) {
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
                 String jobType = comboBoxJobTypeVehicle.getSelectedItem().toString();
-
                 try {
                     String sql = "";
                     if (jobType.equals("Overall")) {
@@ -419,8 +418,37 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
+            } else if (selected.equals("Stock control")) {
+                try{
+                    String sql = "select * from sparePart";
+
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery(); 
+                }catch(SQLException e){
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    while (rs.next()) {
+                        String result = "Part name: " +rs.getString("partName") + "\n"
+                                + "Part ID: " +rs.getString("partID") + "\n"
+                                + "Manufacturer: " +rs.getString("Manufacturername") + "\n"
+                                + "Vehicle type: " +rs.getString("vehicleType") + "\n"
+                                + "Year(s): " +rs.getString("year") + "\n"
+                                + "Price: £" +rs.getString("costPrice") + "\n";
+                        textAreaReport.append(result + "\n");
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
             }
-        } else {
+        }
+        else{
             System.out.println("Pick the dates");
         }
     }//GEN-LAST:event_buttonViewActionPerformed
