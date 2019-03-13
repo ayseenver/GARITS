@@ -206,8 +206,8 @@ public class Report extends javax.swing.JPanel {
         add(labelFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 200, -1, -1));
 
         labelPeriod.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelPeriod.setText("Period(dd/mm/yyyy):");
-        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 160, -1, -1));
+        labelPeriod.setText("Period(yyyy-mm-dd):");
+        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 160, -1, -1));
 
         labelSelectType.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectType.setText("Select Type of Report:");
@@ -269,20 +269,7 @@ public class Report extends javax.swing.JPanel {
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         if (!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))) {
-            String fromDate = textFieldFrom.getText();
-            String[] fromParts = fromDate.split("/");
-            String fromDay = fromParts[0];
-            String fromMonth = fromParts[1];
-            String fromYear = fromParts[2];
-            fromDate = "'" + fromYear + "-" + fromMonth + "-" + fromDay + "'";
-
-            String toDate = textFieldTill.getText();
-            String[] toParts = toDate.split("/");
-            String toDay = toParts[0];
-            String toMonth = toParts[1];
-            String toYear = toParts[2];
-            toDate = "'" + toYear + "-" + toMonth + "-" + toDay + "'";
-
+            
             if (selected.equals("Monthly vehicle report")) {
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
                 String jobType = comboBoxJobTypeVehicle.getSelectedItem().toString();
@@ -296,14 +283,15 @@ public class Report extends javax.swing.JPanel {
                                     + "(select registrationNumber from vehicle where Customername in "
                                     + "(select name from customer where name not in "
                                     + "(select Customername from customerAccount))) "
-                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ")");
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " AND " + textFieldTill.getText() + ")");
                         } else { //all the jobs from account holders
                             sql = ("select * from job "
                                     + "where VehicleregistrationNumber in "
                                     + "(select registrationNumber from vehicle where Customername in "
                                     + "(select name from customer where name in "
                                     + "(select Customername from customerAccount))) "
-                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ")");
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ")");
                         }
                     } else {
                         //all the jobs of this type from casual customers
@@ -313,7 +301,8 @@ public class Report extends javax.swing.JPanel {
                                     + "(select registrationNumber from vehicle where Customername in "
                                     + "(select name from customer where name not in "
                                     + "(select Customername from customerAccount))) "
-                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ") "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ") "
                                     + "and type = '" + jobType + "'");
                         } else { //all the jobs of this type from account holders
                             sql = ("select * from job "
@@ -321,7 +310,8 @@ public class Report extends javax.swing.JPanel {
                                     + "(select registrationNumber from vehicle where Customername in "
                                     + "(select name from customer where name in "
                                     + "(select Customername from customerAccount))) "
-                                    + "and (dateBookedIn BETWEEN " + fromDate + " AND " + toDate + ") "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ") "
                                     + "and type = '" + jobType + "'");
                         }
                     }
@@ -362,11 +352,13 @@ public class Report extends javax.swing.JPanel {
                     if (mechanic.equals("None")) {
                         if (jobType.equals("Overall")) {
                             sql = ("select avg(totalCost), avg(totalHours) from job "
-                                    + "where dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "where dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
                                     + "dateCompleted is not null");
                         } else {
                             sql = ("select avg(totalCost), avg(totalHours) from job where type = '" + jobType + "' "
-                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
                                     + "dateCompleted is not null");
                         }
                     } else {//get average time and price for this mechanic
@@ -381,14 +373,16 @@ public class Report extends javax.swing.JPanel {
                                     + "where MechanicID in "
                                     + "(select ID from mechanic where Userusername in "
                                     + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
-                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
                                     + "dateCompleted is not null");
                         } else {
                             sql = ("select avg(totalCost), avg(totalHours) from job "
                                     + "where MechanicID in "
                                     + "(select ID from mechanic where Userusername in "
                                     + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
-                                    + "and dateBookedIn BETWEEN " + fromDate + " AND " + toDate + " and "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
                                     + "type = '" + jobType + "' and "
                                     + "dateCompleted is not null");
                         }
