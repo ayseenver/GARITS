@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
 import teamproject.Databases.DB_ImplClass;
 
@@ -17,7 +18,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rc;
     Customer c = new Customer();
-    String Discount;
+    String discount;
 
     public UpdateCustomer(String username) {
         this.username = username;
@@ -28,6 +29,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         buttonUpdateCustomer.setVisible(false); //no customer has been passed in, new customer
+        buttonNewCustomer.setVisible(true);
 
         this.textFieldUsername.setText(username);
         connection = db.connect();
@@ -37,6 +39,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     public UpdateCustomer(String username, Customer c) {
         this(username);
         this.c = c;
+        buttonUpdateCustomer.setVisible(true);
         buttonNewCustomer.setVisible(false);
 
         ShowCustomerDetails();
@@ -85,7 +88,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldAddress = new javax.swing.JTextField();
         textFieldTelephone = new javax.swing.JTextField();
         buttonConfirmDiscount = new javax.swing.JButton();
-        jLabel59 = new javax.swing.JLabel();
         labelCustomerDetails = new javax.swing.JLabel();
         buttonBack = new javax.swing.JButton();
         textFieldPercentage = new javax.swing.JTextField();
@@ -121,20 +123,20 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(textFieldPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 410, 260, -1));
 
         labelPostCode.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelPostCode.setText("Post Code:");
-        jPanel1.add(labelPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 410, -1, -1));
+        labelPostCode.setText("*Post Code:");
+        jPanel1.add(labelPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 410, -1, -1));
 
         labelAddress.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelAddress.setText("Address:");
-        jPanel1.add(labelAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 320, -1, -1));
+        labelAddress.setText("*Address:");
+        jPanel1.add(labelAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, -1, -1));
 
         labelEmail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelEmail.setText("Email:");
-        jPanel1.add(labelEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 290, -1, -1));
+        labelEmail.setText("*Email:");
+        jPanel1.add(labelEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 290, -1, -1));
 
         labelFullName.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelFullName.setText("Full Name:");
-        jPanel1.add(labelFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 260, -1, -1));
+        labelFullName.setText("*Full Name:");
+        jPanel1.add(labelFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, -1, -1));
 
         labelLoggedIn.setText("Logged In as:");
         jPanel1.add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
@@ -150,8 +152,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(textFieldUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelTelephone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelTelephone.setText("Telephone:");
-        jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 440, -1, -1));
+        labelTelephone.setText("*Telephone:");
+        jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 440, -1, -1));
         jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
         jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
         jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
@@ -159,10 +161,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         buttonConfirmDiscount.setText("Confirm");
         jPanel1.add(buttonConfirmDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 320, 100, -1));
-
-        jLabel59.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel59.setText("Full Name:");
-        jPanel1.add(jLabel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 260, -1, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomerDetails.setText("Customer Details");
@@ -330,7 +328,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         UpdateCustomer();
-        
+
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
@@ -343,40 +341,47 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void comboBoxDiscountPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxDiscountPlanActionPerformed
-        Discount = comboBoxDiscountPlan.getSelectedItem().toString();
+        discount = comboBoxDiscountPlan.getSelectedItem().toString();
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
     private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
         String originalName = c.getName();
         String originalAddress = c.getAddress();
 
-        //customer exists, update customer
-        try {
-            String sql = ("UPDATE Customer "
-                    + "SET name = '" + textFieldFullName.getText() + "', "
-                    + "address = '" + textFieldAddress.getText() + "', "
-                    + "emailAddress = '" + textFieldEmail.getText() + "', "
-                    + "postCode = '" + textFieldPostCode.getText() + "', "
-                    + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
-                    + "fax = '" + textFieldFax.getText() + "' " //optional
-                    + "WHERE ID = (select ID from customer where name = '" + originalName + "' "
-                    + "and address = '" + originalAddress + "')");
-            PreparedStatement ps = null;
+        if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
+                || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
+                || textFieldTelephone.getText().equals("")) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
+            //customer exists, update customer
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("UPDATE Customer "
+                        + "SET name = '" + textFieldFullName.getText() + "', "
+                        + "address = '" + textFieldAddress.getText() + "', "
+                        + "emailAddress = '" + textFieldEmail.getText() + "', "
+                        + "postCode = '" + textFieldPostCode.getText() + "', "
+                        + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
+                        + "fax = '" + textFieldFax.getText() + "' " //optional
+                        + "WHERE ID = (select ID from customer where name = '" + originalName + "' "
+                        + "and address = '" + originalAddress + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+
+            //go back to customer list
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new CustomerList(username);
         }
-        
-        //go back to customer list
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new CustomerList(username);
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
 
@@ -395,7 +400,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane7;

@@ -53,7 +53,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     private void ShowVehicles() {
         listVehicles.removeAll();
         ArrayList<String> vehicles = new ArrayList<>();
-        
+
         //get all vehicles belonging to this owner
         try {
             String sql = ("select * from Vehicle where CustomerID = "
@@ -68,7 +68,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
 
         try {
             while (rs.next()) {
@@ -151,7 +150,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 660, -1, -1));
 
         labelColour.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelColour.setText("Colour:");
+        labelColour.setText("*Colour:");
         jPanel1.add(labelColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, -1, -1));
 
         labelLoggedIn.setText("Logged In as:");
@@ -172,19 +171,19 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(labelVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 150, -1, -1));
 
         labelRegistrationNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelRegistrationNo.setText("Registration No:");
+        labelRegistrationNo.setText("*Registration No:");
         jPanel1.add(labelRegistrationNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
 
         labelMake.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelMake.setText("Make:");
+        labelMake.setText("*Make:");
         jPanel1.add(labelMake, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 390, -1, -1));
 
         labelModel.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelModel.setText("Model:");
+        labelModel.setText("*Model:");
         jPanel1.add(labelModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, -1, -1));
 
         labelChassisNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelChassisNo.setText("Chassis No:");
+        labelChassisNo.setText("*Chassis No:");
         jPanel1.add(labelChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, -1, -1));
 
         labelLastMoTDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -192,7 +191,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 570, 140, -1));
 
         labelEngineSerialNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelEngineSerialNo.setText("Engine Serial No:");
+        labelEngineSerialNo.setText("*Engine Serial No:");
         jPanel1.add(labelEngineSerialNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 450, -1, -1));
 
         labelMoTDateFormat.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
@@ -263,10 +262,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new MainMenu(username);
+        if (vehicleArray.length > 0) {
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username);
+        }
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -359,59 +360,74 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehicleActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
-        try {
-            String sql = ("INSERT INTO Vehicle (registrationNumber, "
-                    + "CustomerID, make, "
-                    + "model, engineSerial, chassisNumber, colour, "
-                    + "nextServiceDate, nextMOTDate) "
-                    + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
-                    + "(select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "'), "
-                    + "'" + textFieldMake.getText() + "', "
-                    + "'" + textFieldModel.getText() + "', "
-                    + "'" + textFieldEngineSerial.getText() + "', "
-                    + "'" + textFieldChassisNo.getText() + "', "
-                    + "'" + textFieldColour.getText() + "', "
-                    + "'" + textFieldNextServiceDate.getText() + "', "
-                    + "'" + textFieldNextMoTDate.getText() + "')");
-            PreparedStatement ps = null;
+        System.out.println("Make : " + textFieldMake.getText());
+        if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
+                || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
+                || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("INSERT INTO Vehicle (registrationNumber, "
+                        + "CustomerID, make, "
+                        + "model, engineSerial, chassisNumber, colour, "
+                        + "nextServiceDate, nextMOTDate) "
+                        + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
+                        + "(select ID from customer where name = '" + c.getName() + "' "
+                        + "and address = '" + c.getAddress() + "'), "
+                        + "'" + textFieldMake.getText() + "', "
+                        + "'" + textFieldModel.getText() + "', "
+                        + "'" + textFieldEngineSerial.getText() + "', "
+                        + "'" + textFieldChassisNo.getText() + "', "
+                        + "'" + textFieldColour.getText() + "', "
+                        + "'" + textFieldNextServiceDate.getText() + "', "
+                        + "'" + textFieldNextMoTDate.getText() + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            ShowVehicles();
         }
-        ShowVehicles();
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
-        try {
-            String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
-                    + "make = '" + textFieldMake.getText() + "', "
-                    + "model = '" + textFieldModel.getText() + "', "
-                    + "engineSerial = '" + textFieldEngineSerial.getText() + "', "
-                    + "chassisNumber = '" + textFieldChassisNo.getText() + "', "
-                    + "colour = '" + textFieldColour.getText() + "', "
-                    + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
-                    + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
-                    + "WHERE registrationNumber = '" + reg + "' "
-                    + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "')");
-
-            PreparedStatement ps = null;
+        if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
+                || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
+                || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
+                        + "make = '" + textFieldMake.getText() + "', "
+                        + "model = '" + textFieldModel.getText() + "', "
+                        + "engineSerial = '" + textFieldEngineSerial.getText() + "', "
+                        + "chassisNumber = '" + textFieldChassisNo.getText() + "', "
+                        + "colour = '" + textFieldColour.getText() + "', "
+                        + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
+                        + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
+                        + "WHERE registrationNumber = '" + reg + "' "
+                        + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
+                        + "and address = '" + c.getAddress() + "')");
+
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            ShowVehicles();
         }
-        ShowVehicles();
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
 

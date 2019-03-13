@@ -292,8 +292,8 @@ public class CustomerList extends javax.swing.JPanel {
             details = (listCustomers.getSelectedValue());
 
             try {
-                String sql = ("select * from Vehicle where CustomerID = "
-                        + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "')");
+                String sql = ("select * from vehicle where CustomerID = "
+                        + "(select ID from customer where name = '" + details + "')");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -310,10 +310,16 @@ public class CustomerList extends javax.swing.JPanel {
 
             try {
                 while (rsD.next()) {
-                    String detail = rsD.getString("registrationNumber") + ", " + rsD.getString("make") + ", " + rsD.getString("model") + ", " + rsD.getString("engineSerial") + ", " + rsD.getString("chassisNumber") + ", " + rsD.getString("colour");
+                    String detail = rsD.getString("registrationNumber") + ", " 
+                            + rsD.getString("make") + ", " 
+                            + rsD.getString("model") + ", " 
+                            + rsD.getString("engineSerial") 
+                            + ", " + rsD.getString("chassisNumber") 
+                            + ", " + rsD.getString("colour");
                     vehicle.add(detail);
                 }
             } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
             detailArray = CreateArray(vehicle);
 
