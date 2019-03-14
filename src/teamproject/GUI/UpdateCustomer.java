@@ -17,6 +17,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     Connection connection;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rc;
+    ResultSet rs;
     Customer c = new Customer();
     String discount;
 
@@ -29,6 +30,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         buttonUpdateCustomer.setVisible(false); //no customer has been passed in, new customer
+        buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
 
         this.textFieldUsername.setText(username);
@@ -36,10 +38,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
         statement = db.getStatement();
     }
 
-    public UpdateCustomer(String username, Customer c) {
+    public UpdateCustomer(String username, Customer c) { //existing custmer
         this(username);
         this.c = c;
         buttonUpdateCustomer.setVisible(true);
+        buttonDeleteCustomer.setVisible(true);
         buttonNewCustomer.setVisible(false);
 
         ShowCustomerDetails();
@@ -110,6 +113,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonNewCustomer = new javax.swing.JButton();
         textFieldEmail = new javax.swing.JTextField();
         buttonUpdateCustomer = new javax.swing.JButton();
+        buttonDeleteCustomer = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -280,6 +284,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
         });
         jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 670, -1, -1));
 
+        buttonDeleteCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonDeleteCustomer.setText("Delete Customer");
+        buttonDeleteCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeleteCustomerActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 670, -1, -1));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -391,10 +404,83 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
+    private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
+        try {
+            String sql = ("select ID from customer where name = '" + c.getName() + "' "
+                    + "and address = '" + c.getAddress() + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String customerID = "";
+
+        try {
+            customerID = rs.getString("ID");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //turn off foreign key contraints
+        try {
+            statement.executeUpdate("PRAGMA foreign_keys = OFF");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //delete customer with this ID
+        try {
+            String sql = ("delete from customer where ID = " + customerID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //delete all vehciles with this CustomerID
+        try {
+            String sql = ("delete from vehicle where CustomerID = " + customerID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //turn on foreign key contraints
+        try {
+            statement.executeUpdate("PRAGMA foreign_keys = OFF");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //go back to customer list
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new CustomerList(username);
+    }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonConfirmDiscount;
+    private javax.swing.JButton buttonDeleteCustomer;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchDiscountDetails;
