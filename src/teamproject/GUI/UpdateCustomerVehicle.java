@@ -129,6 +129,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         labelServiceDateFormat = new javax.swing.JLabel();
         buttonEditVehicle = new javax.swing.JButton();
         buttonSaveVehicleChanges = new javax.swing.JButton();
+        buttonDeleteVehicle = new javax.swing.JButton();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -227,7 +228,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
         jScrollPane5.setViewportView(listVehicles);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 700, -1));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 700, 120));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
@@ -257,6 +258,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             }
         });
         jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 610, 130, -1));
+
+        buttonDeleteVehicle.setText("Delete");
+        buttonDeleteVehicle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeleteVehicleActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 320, 100, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
@@ -430,9 +439,51 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
+    private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
+        if (listVehicles.getSelectedValue() == null) {
+            String mess = "Please choose vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
+            String selected = listVehicles.getSelectedValue();
+            String [] parts = selected.split(", ");
+            String regNo = parts[0];
+            
+            
+            //turn off foreign key contraints
+            try {
+                statement.executeUpdate("PRAGMA foreign_keys = OFF");
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //delete this vehicle
+            try {
+                String sql = ("delete from vehicle where registrationNumber = " + regNo);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            
+            //turn on foreign key contraints
+            try {
+                statement.executeUpdate("PRAGMA foreign_keys = OFF");
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        ShowVehicles();
+    }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonDeleteVehicle;
     private javax.swing.JButton buttonDone;
     private javax.swing.JButton buttonEditVehicle;
     private javax.swing.JButton buttonExit;
