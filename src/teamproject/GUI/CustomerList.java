@@ -6,13 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
-import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
 public class CustomerList extends javax.swing.JPanel {
