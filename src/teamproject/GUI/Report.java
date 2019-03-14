@@ -577,12 +577,12 @@ public class Report extends javax.swing.JPanel {
                                 + "Year(s): " + rs.getString("year") + "\n"
                                 + "Price: £" + rs.getString("costPrice") + "\n"
                                 + "Initial stock level: " + initialQuantity + "\n"
-                                + "Initial cost: £placeholder\n"
+                                + "Initial cost: " + (initialQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Used: " + usedQuantity + "\n"
                                 + "Sold: " + soldQuantity + "\n"
                                 + "Delivery: " + orderQuantity + "\n"
                                 + "New stock level: " + newQuantity + "\n"
-                                + "Stock cost: £placeholder\n"
+                                + "Stock cost: £" + (newQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Low stock threshold: " + rs.getString("threshold") + "\n";
                         textAreaReport.append(result + "\n");
                     }
