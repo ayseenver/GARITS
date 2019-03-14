@@ -105,6 +105,15 @@ public class Vehicle {
         this.nextMoTDate = nextMoTDate;
     }
 
+    public String getNextServiceDate() {
+        return nextServiceDate;
+    }
+
+    public void setNextServiceDate(String nextServiceDate) {
+        this.nextServiceDate = nextServiceDate;
+    }
+    
+
     @Override
     public String toString() {
         return "Vehicle:\n" + "registrationNumber=" + registrationNumber
