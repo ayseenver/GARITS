@@ -147,7 +147,7 @@ public class PartOrder extends javax.swing.JPanel {
         //create a order record in the database.
         String sql;
         try{
-            sql = ("insert into partOrder(orderNumber) values (null)");
+            sql = ("insert into partOrder(orderNumber, date) values (null, date('now'))");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);

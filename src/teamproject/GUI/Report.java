@@ -5,15 +5,33 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
  * @author ahmetsesli
  */
 public class Report extends javax.swing.JPanel {
+
     private String username;
-    
+    private ResultSet rs;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    String selected;
+    String[] mechArray;
+    HashMap<String, Integer> soldMap = new HashMap<>();
+    HashMap<String, Integer> usedMap = new HashMap<>();
+    HashMap<String, Integer> orderMap = new HashMap<>();
+
     /**
      * Creates new form NewJPanel
      */
@@ -23,11 +41,72 @@ public class Report extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
-        this.textFieldUserDetails1.setText(username);
-        
+
+        this.textFieldUserDetails.setText(username);
+        connection = db.connect();
+        statement = db.getStatement();
+
+        SetPanel();
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowMechanics() {
+        try {
+            this.rs = statement.executeQuery("select * from user where username in (select Userusername from mechanic)");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
+        comboBoxMechanic.removeAllItems();
+        ArrayList<String> mechs = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String mech = rs.getString("firstName") + " " + rs.getString("surname");
+                mechs.add(mech);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        mechArray = CreateArray(mechs);
+
+        comboBoxMechanic.addItem("None");
+
+        for (String m : mechArray) {
+            comboBoxMechanic.addItem(m);
+        }
+    }
+
+    private String[] CreateArray(ArrayList<String> tasks) {
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+
+    private void SetPanel() {
+        selected = comboBoxReportType.getSelectedItem().toString();
+        if (selected.equals("Monthly vehicle report")) {
+            jLayeredPane.removeAll();
+            jLayeredPane.add(monthlyVehiclePanel);
+            jLayeredPane.repaint();
+            jLayeredPane.revalidate();
+        } else if (selected.equals("Average job time and price")) {
+            jLayeredPane.removeAll();
+            ShowMechanics();
+            jLayeredPane.add(jobTypePanel);
+            jLayeredPane.repaint();
+            jLayeredPane.revalidate();
+        } else if (selected.equals("Stock control")) {
+            jLayeredPane.removeAll();
+            jLayeredPane.repaint();
+            jLayeredPane.revalidate();
+        }
     }
 
     /**
@@ -46,24 +125,28 @@ public class Report extends javax.swing.JPanel {
         textAreaReport = new javax.swing.JTextArea();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        textFieldUserDetails1 = new javax.swing.JTextField();
+        textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn1 = new javax.swing.JLabel();
-        textFieldTillYear = new javax.swing.JTextField();
-        textFieldTillMonth = new javax.swing.JTextField();
-        textFieldTillDay = new javax.swing.JTextField();
+        textFieldTill = new javax.swing.JTextField();
         labelTill = new javax.swing.JLabel();
-        textFieldFromYear = new javax.swing.JTextField();
-        textFieldFromMonth = new javax.swing.JTextField();
-        textFieldFromDay = new javax.swing.JTextField();
-        labelSelectMechanic = new javax.swing.JLabel();
+        textFieldFrom = new javax.swing.JTextField();
         labelFrom = new javax.swing.JLabel();
         labelPeriod = new javax.swing.JLabel();
-        comboBoxMechanic = new javax.swing.JComboBox<>();
         labelSelectType = new javax.swing.JLabel();
         comboBoxReportType = new javax.swing.JComboBox<>();
+        jLayeredPane = new javax.swing.JLayeredPane();
+        jobTypePanel = new javax.swing.JPanel();
+        labelCustomerType = new javax.swing.JLabel();
+        comboBoxMechanic = new javax.swing.JComboBox<>();
+        labelJobType1 = new javax.swing.JLabel();
+        comboBoxJobTypeJob = new javax.swing.JComboBox<>();
+        monthlyVehiclePanel = new javax.swing.JPanel();
+        labelCustomerType1 = new javax.swing.JLabel();
+        comboBoxCustomerType = new javax.swing.JComboBox<>();
+        labelJobType2 = new javax.swing.JLabel();
+        comboBoxJobTypeVehicle = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelReports.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -111,134 +194,422 @@ public class Report extends javax.swing.JPanel {
             }
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
-
-        textFieldUserDetails1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetails1ActionPerformed(evt);
-            }
-        });
-        add(textFieldUserDetails1, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
+        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn1.setText("Logged In as:");
         add(labelLoggedIn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
-
-        textFieldTillYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldTillYearActionPerformed(evt);
-            }
-        });
-        add(textFieldTillYear, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 190, 50, 30));
-
-        textFieldTillMonth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldTillMonthActionPerformed(evt);
-            }
-        });
-        add(textFieldTillMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 190, 30, 30));
-
-        textFieldTillDay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldTillDayActionPerformed(evt);
-            }
-        });
-        add(textFieldTillDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 190, 30, 30));
+        add(textFieldTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 190, 100, 30));
 
         labelTill.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelTill.setText("Till");
         add(labelTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 200, -1, -1));
-
-        textFieldFromYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldFromYearActionPerformed(evt);
-            }
-        });
-        add(textFieldFromYear, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 190, 50, 30));
-
-        textFieldFromMonth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldFromMonthActionPerformed(evt);
-            }
-        });
-        add(textFieldFromMonth, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 190, 30, 30));
-
-        textFieldFromDay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldFromDayActionPerformed(evt);
-            }
-        });
-        add(textFieldFromDay, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 190, 30, 30));
-
-        labelSelectMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        labelSelectMechanic.setText("Select Mechanic");
-        add(labelSelectMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 190, -1, -1));
+        add(textFieldFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 190, 100, 30));
 
         labelFrom.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelFrom.setText("From");
         add(labelFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 200, -1, -1));
 
         labelPeriod.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelPeriod.setText("Period(dd/mm/yyyy):");
-        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 160, -1, -1));
-
-        comboBoxMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        comboBoxMechanic.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        add(comboBoxMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 180, -1, 40));
+        labelPeriod.setText("Period(yyyy-mm-dd):");
+        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 160, -1, -1));
 
         labelSelectType.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectType.setText("Select Type of Report:");
         add(labelSelectType, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, -1, -1));
 
         comboBoxReportType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        comboBoxReportType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        add(comboBoxReportType, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 180, -1, 30));
+        comboBoxReportType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monthly vehicle report", "Average job time and price", "Stock control" }));
+        comboBoxReportType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxReportTypeActionPerformed(evt);
+            }
+        });
+        add(comboBoxReportType, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 180, -1, 30));
+
+        labelCustomerType.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelCustomerType.setText("Select mechanic: ");
+        jobTypePanel.add(labelCustomerType);
+
+        comboBoxMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        comboBoxMechanic.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None" }));
+        jobTypePanel.add(comboBoxMechanic);
+
+        labelJobType1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelJobType1.setText("Job Type:");
+        jobTypePanel.add(labelJobType1);
+
+        comboBoxJobTypeJob.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        comboBoxJobTypeJob.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Overall", "MoT", "Service", "Repair" }));
+        jobTypePanel.add(comboBoxJobTypeJob);
+
+        jLayeredPane.add(jobTypePanel);
+        jobTypePanel.setBounds(80, 90, 370, 80);
+
+        labelCustomerType1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelCustomerType1.setText("Customer Type:");
+        monthlyVehiclePanel.add(labelCustomerType1);
+
+        comboBoxCustomerType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        comboBoxCustomerType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Casual", "Account holder" }));
+        monthlyVehiclePanel.add(comboBoxCustomerType);
+
+        labelJobType2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelJobType2.setText("Job Type:");
+        monthlyVehiclePanel.add(labelJobType2);
+
+        comboBoxJobTypeVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        comboBoxJobTypeVehicle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Overall", "MoT", "Service", "Repair" }));
+        monthlyVehiclePanel.add(comboBoxJobTypeVehicle);
+
+        jLayeredPane.add(monthlyVehiclePanel);
+        monthlyVehiclePanel.setBounds(80, 90, 370, 80);
+
+        add(jLayeredPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 50, 520, 170));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        // TODO add your handling code here:
+        if (!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))) {
+
+            if (selected.equals("Monthly vehicle report")) {
+                String customerType = comboBoxCustomerType.getSelectedItem().toString();
+                String jobType = comboBoxJobTypeVehicle.getSelectedItem().toString();
+                try {
+                    String sql = "";
+                    if (jobType.equals("Overall")) {
+                        //all the jobs from casual customers
+                        if (customerType.equals("Casual")) {
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name not in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " AND " + textFieldTill.getText() + ")");
+                        } else { //all the jobs from account holders
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ")");
+                        }
+                    } else {
+                        //all the jobs of this type from casual customers
+                        if (customerType.equals("Casual")) {
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name not in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ") "
+                                    + "and type = '" + jobType + "'");
+                        } else { //all the jobs of this type from account holders
+                            sql = ("select * from job "
+                                    + "where VehicleregistrationNumber in "
+                                    + "(select registrationNumber from vehicle where Customername in "
+                                    + "(select name from customer where name in "
+                                    + "(select Customername from customerAccount))) "
+                                    + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + ") "
+                                    + "and type = '" + jobType + "'");
+                        }
+                    }
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                textAreaReport.setText("");
+                ArrayList<String> jobs = new ArrayList<>();
+
+                try {
+                    while (rs.next()) {
+                        String job = "JobID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                        textAreaReport.append(job + "\n");
+                        jobs.add(job);
+                    }
+                    String text = textAreaReport.getText();
+                    textAreaReport.setText("Booked in " + jobs.size() + " vehicles. Details: \n\n" + text);
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+            } else if (selected.equals("Average job time and price")) {
+                String mechanic = comboBoxMechanic.getSelectedItem().toString();
+
+                String jobType = comboBoxJobTypeJob.getSelectedItem().toString();
+                String sql;
+
+                try {
+                    //get average time and price for every job
+                    if (mechanic.equals("None")) {
+                        if (jobType.equals("Overall")) {
+                            sql = ("select avg(totalCost), avg(totalHours) from job "
+                                    + "where dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
+                                    + "dateCompleted is not null");
+                        } else {
+                            sql = ("select avg(totalCost), avg(totalHours) from job where type = '" + jobType + "' "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
+                                    + "dateCompleted is not null");
+                        }
+                    } else {//get average time and price for this mechanic
+                        //get the mechanic name
+                        String[] mechanicParts = mechanic.split(" ");
+                        String firstName = mechanicParts[0];
+                        String lastName = mechanicParts[1];
+                        mechanic = firstName + " " + lastName;
+
+                        if (jobType.equals("Overall")) {
+                            sql = ("select avg(totalCost), avg(totalHours) from job "
+                                    + "where MechanicID in "
+                                    + "(select ID from mechanic where Userusername in "
+                                    + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
+                                    + "dateCompleted is not null");
+                        } else {
+                            sql = ("select avg(totalCost), avg(totalHours) from job "
+                                    + "where MechanicID in "
+                                    + "(select ID from mechanic where Userusername in "
+                                    + "(select username from user where firstName = '" + firstName + "' and surname = '" + lastName + "')) "
+                                    + "and dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
+                                    + "AND " + textFieldTill.getText() + " and "
+                                    + "type = '" + jobType + "' and "
+                                    + "dateCompleted is not null");
+                        }
+                    }
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                textAreaReport.setText("");
+
+                try {
+                    while (rs.next()) {
+                        String result = "For jobs completed in this date range\n"
+                                + "\nAverage hours: " + rs.getString("avg(totalHours)")
+                                + "\nAverage cost (not including VAT): " + rs.getString("avg(totalCost)")
+                                + "\nMechanic name: " + mechanic;
+                        textAreaReport.append(result + "\n");
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else if (selected.equals("Stock control")) {
+                //get all of the parts sold during this time frame.
+                try {
+                    String sql = "SELECT sparepartpartID, sum(quantity) FROM invoice_sparePart "
+                            + "INNER JOIN invoice ON "
+                            + "invoice.invoiceNumber = invoice_sparePart.invoiceinvoicenumber "
+                            + "where dateProduced between '" + textFieldFrom.getText() + "' "
+                            + "and '" + textFieldTill.getText() + "' "
+                            + "group by sparepartpartID";
+
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                soldMap.clear();
+
+                //add all sold parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        soldMap.put(rs.getString("sparepartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts used on jobs completed during this time frame.
+                try {
+                    String sql = "SELECT PartpartID, sum(quantity) FROM job_part_record "
+                            + "INNER JOIN job ON job.jobID = job_part_record.jobJobID "
+                            + "where dateCompleted between '" + textFieldFrom.getText() + "' "
+                            + "and '" + textFieldTill.getText() + "'"
+                            + "group by PartpartID";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                usedMap.clear();
+
+                //add all used parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        usedMap.put(rs.getString("PartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts ordered during this time frame.
+                try {
+                    String sql = "SELECT SparePartpartID, sum(quantity), date "
+                            + "FROM sparepart_partorder "
+                            + "inner join partOrder on sparePart_partOrder.PartOrderorderNumber = partOrder.orderNumber "
+                            + "where date between '" + textFieldFrom.getText() + "' and '" + textFieldTill.getText() + "' "
+                            + "group by sparePartpartID";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                orderMap.clear();
+
+                //add all ordered parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        usedMap.put(rs.getString("SparePartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts
+                try {
+                    String sql = "select * from sparePart";
+
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    while (rs.next()) {
+                        String partID = rs.getString("partID");
+                        int newQuantity = Integer.parseInt(rs.getString("quantity"));
+                        
+                        int usedQuantity;
+                        String used = usedMap.get(partID) + "";
+                        if (used.equals("null")){
+                            usedQuantity = 0;
+                        }else{
+                            usedQuantity = usedMap.get(partID);
+                        }
+                        
+                        int soldQuantity;
+                        String sold = usedMap.get(partID) + "";
+                        if (sold.equals("null")){
+                            soldQuantity = 0;
+                        }else{
+                            soldQuantity = usedMap.get(partID);
+                        }
+                        
+                        int orderQuantity;
+                        String order = usedMap.get(partID) + "";
+                        if (order.equals("null")){
+                            orderQuantity = 0;
+                        }else{
+                            orderQuantity = usedMap.get(partID);
+                        }
+                        
+                        int initialQuantity = (newQuantity + usedQuantity + soldQuantity) - orderQuantity;
+
+                        String result = "Part name: " + rs.getString("partName") + "\n"
+                                + "Part ID: " + rs.getString("partID") + "\n"
+                                + "Manufacturer: " + rs.getString("Manufacturername") + "\n"
+                                + "Vehicle type: " + rs.getString("vehicleType") + "\n"
+                                + "Year(s): " + rs.getString("year") + "\n"
+                                + "Price: £" + rs.getString("costPrice") + "\n"
+                                + "Initial stock level: " + initialQuantity + "\n"
+                                + "Initial cost: " + (initialQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Used: " + usedQuantity + "\n"
+                                + "Sold: " + soldQuantity + "\n"
+                                + "Delivery: " + orderQuantity + "\n"
+                                + "New stock level: " + newQuantity + "\n"
+                                + "Stock cost: £" + (newQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Low stock threshold: " + rs.getString("threshold") + "\n";
+                        textAreaReport.append(result + "\n");
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } else {
+            System.out.println("Pick the dates");
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        // TODO add your handling code here:
+        db.closeConnection(connection);
+        System.exit(0);
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void textFieldUserDetails1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetails1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetails1ActionPerformed
-
-    private void textFieldTillYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldTillYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldTillYearActionPerformed
-
-    private void textFieldTillMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldTillMonthActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldTillMonthActionPerformed
-
-    private void textFieldTillDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldTillDayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldTillDayActionPerformed
-
-    private void textFieldFromYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFromYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldFromYearActionPerformed
-
-    private void textFieldFromMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFromMonthActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldFromMonthActionPerformed
-
-    private void textFieldFromDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFromDayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldFromDayActionPerformed
+    private void comboBoxReportTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReportTypeActionPerformed
+        SetPanel();
+    }//GEN-LAST:event_comboBoxReportTypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -246,23 +617,28 @@ public class Report extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonPrint;
     private javax.swing.JButton buttonView;
+    private javax.swing.JComboBox<String> comboBoxCustomerType;
+    private javax.swing.JComboBox<String> comboBoxJobTypeJob;
+    private javax.swing.JComboBox<String> comboBoxJobTypeVehicle;
     private javax.swing.JComboBox<String> comboBoxMechanic;
     private javax.swing.JComboBox<String> comboBoxReportType;
+    private javax.swing.JLayeredPane jLayeredPane;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jobTypePanel;
+    private javax.swing.JLabel labelCustomerType;
+    private javax.swing.JLabel labelCustomerType1;
     private javax.swing.JLabel labelFrom;
+    private javax.swing.JLabel labelJobType1;
+    private javax.swing.JLabel labelJobType2;
     private javax.swing.JLabel labelLoggedIn1;
     private javax.swing.JLabel labelPeriod;
     private javax.swing.JLabel labelReports;
-    private javax.swing.JLabel labelSelectMechanic;
     private javax.swing.JLabel labelSelectType;
     private javax.swing.JLabel labelTill;
+    private javax.swing.JPanel monthlyVehiclePanel;
     private javax.swing.JTextArea textAreaReport;
-    private javax.swing.JTextField textFieldFromDay;
-    private javax.swing.JTextField textFieldFromMonth;
-    private javax.swing.JTextField textFieldFromYear;
-    private javax.swing.JTextField textFieldTillDay;
-    private javax.swing.JTextField textFieldTillMonth;
-    private javax.swing.JTextField textFieldTillYear;
-    private javax.swing.JTextField textFieldUserDetails1;
+    private javax.swing.JTextField textFieldFrom;
+    private javax.swing.JTextField textFieldTill;
+    private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
 }

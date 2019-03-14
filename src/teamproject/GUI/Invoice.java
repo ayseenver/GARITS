@@ -102,7 +102,7 @@ public class Invoice extends javax.swing.JPanel {
         
         //get all actual task hours for this job
         try{
-            String sql = ("select * from actual_task where JobjobID = " + jobNumber);
+            String sql = ("select totalHours from job where JobjobID = " + jobNumber);
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
@@ -119,11 +119,8 @@ public class Invoice extends javax.swing.JPanel {
         
         double totalHours = 0;
         try{
-        while(rs.next())
-          {
             // read the result set. Get task hours
-            totalHours += Double.parseDouble(rs.getString("actualHours"));
-          } 
+            totalHours += Double.parseDouble(rs.getString("totalHours"));
         }
         catch(SQLException e){
             System.err.println(e.getMessage());
@@ -192,9 +189,10 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         
-        double totalCost = (hourlyRate * totalHours) + totalPartsCost;
+        double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
         result +=("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
-        result +=("\nGrand total: £" + totalCost + "\n");
+        result +=("\nVAT: " + totalCost * 0.2);
+        result +=("\nGrand total: £" + totalCost * 1.2 + "\n");
         return result;
     }
     
@@ -271,15 +269,16 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         
-        double totalCost = (sellingPrice * 1.2);
-        result +=("\nGrand total: £" + totalCost + "\n");
+        double totalCost = sellingPrice;
+        result +=("\nGrand total: £" + totalCost * 1.2 + "\n");
         return result;
     }
 
     private void ShowAllInvoices(){
         //get all unpaid invoices for jobs
         try{
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment)");
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
+                    + "and JobjobID is not null");
         }
         catch(SQLException e)
         {
@@ -317,7 +316,7 @@ public class Invoice extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Job ID: " + rs.getString("JobjobID");
+            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Part sale";
             invoices.add(invoice);
           } 
         }
