@@ -307,32 +307,39 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
-        try {
-            String sql = ("INSERT INTO Customer (name, address, emailAddress, "
-                    + "postCode, telephoneNumber, fax, dateCreated) "
-                    + "VALUES ('" + textFieldFullName.getText() + "', "
-                    + "'" + textFieldAddress.getText() + "', "
-                    + "'" + textFieldEmail.getText() + "', "
-                    + "'" + textFieldPostCode.getText() + "', "
-                    + "'" + textFieldTelephone.getText() + "', "
-                    + "'" + textFieldFax.getText() + "', "
-                    + "date('now'))");
-            PreparedStatement ps = null;
+        if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
+                || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
+                || textFieldTelephone.getText().equals("")) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("INSERT INTO Customer (name, address, emailAddress, "
+                        + "postCode, telephoneNumber, fax, dateCreated) "
+                        + "VALUES ('" + textFieldFullName.getText() + "', "
+                        + "'" + textFieldAddress.getText() + "', "
+                        + "'" + textFieldEmail.getText() + "', "
+                        + "'" + textFieldPostCode.getText() + "', "
+                        + "'" + textFieldTelephone.getText() + "', "
+                        + "'" + textFieldFax.getText() + "', "
+                        + "date('now'))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        UpdateCustomer();
+            UpdateCustomer();
 
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new UpdateCustomerVehicle(username, c);
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new UpdateCustomerVehicle(username, c);
+        }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
