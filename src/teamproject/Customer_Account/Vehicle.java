@@ -8,8 +8,8 @@ public class Vehicle {
     private String engineSerial;
     private String chassisNumber;
     private String colour;
-    private String nextServiceDate;
     private String nextMoTDate;
+    private String nextServiceDate;
 
     /**
      *
@@ -95,14 +95,6 @@ public class Vehicle {
      */
     public void setColour(String colour) {
         this.colour = colour;
-    }
-
-    public String getNextServiceDate() {
-        return nextServiceDate;
-    }
-
-    public void setNextServiceDate(String nextServiceDate) {
-        this.nextServiceDate = nextServiceDate;
     }
 
     public String getNextMoTDate() {
