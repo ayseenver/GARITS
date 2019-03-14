@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
 
@@ -27,6 +28,9 @@ public class Report extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     String selected;
     String[] mechArray;
+    HashMap<String, Integer> soldMap = new HashMap<>();
+    HashMap<String, Integer> usedMap = new HashMap<>();
+    HashMap<String, Integer> orderMap = new HashMap<>();
 
     /**
      * Creates new form NewJPanel
@@ -269,7 +273,7 @@ public class Report extends javax.swing.JPanel {
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         if (!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))) {
-            
+
             if (selected.equals("Monthly vehicle report")) {
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
                 String jobType = comboBoxJobTypeVehicle.getSelectedItem().toString();
@@ -413,7 +417,115 @@ public class Report extends javax.swing.JPanel {
                     System.err.println(e.getMessage());
                 }
             } else if (selected.equals("Stock control")) {
-                try{
+                //get all of the parts sold during this time frame.
+                try {
+                    String sql = "SELECT sparepartpartID, sum(quantity) FROM invoice_sparePart "
+                            + "INNER JOIN invoice ON "
+                            + "invoice.invoiceNumber = invoice_sparePart.invoiceinvoicenumber "
+                            + "where dateProduced between '" + textFieldFrom.getText() + "' "
+                            + "and '" + textFieldTill.getText() + "' "
+                            + "group by sparepartpartID";
+
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                soldMap.clear();
+
+                //add all sold parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        soldMap.put(rs.getString("sparepartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts used on jobs completed during this time frame.
+                try {
+                    String sql = "SELECT PartpartID, sum(quantity) FROM job_part_record "
+                            + "INNER JOIN job ON job.jobID = job_part_record.jobJobID "
+                            + "where dateCompleted between '" + textFieldFrom.getText() + "' "
+                            + "and '" + textFieldTill.getText() + "'"
+                            + "group by PartpartID";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                usedMap.clear();
+
+                //add all used parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        usedMap.put(rs.getString("PartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts ordered during this time frame.
+                try {
+                    String sql = "SELECT SparePartpartID, sum(quantity), date "
+                            + "FROM sparepart_partorder "
+                            + "inner join partOrder on sparePart_partOrder.PartOrderorderNumber = partOrder.orderNumber "
+                            + "where date between '" + textFieldFrom.getText() + "' and '" + textFieldTill.getText() + "' "
+                            + "group by sparePartpartID";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                orderMap.clear();
+
+                //add all ordered parts and their quantities to a map
+                try {
+                    while (rs.next()) {
+                        int quantity;
+                        if (rs.getString("sum(quantity)") == null) {
+                            quantity = 0;
+                        } else {
+                            quantity = Integer.parseInt(rs.getString("sum(quantity)"));
+                        }
+                        usedMap.put(rs.getString("SparePartpartID"), quantity);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get all of the parts
+                try {
                     String sql = "select * from sparePart";
 
                     PreparedStatement ps = null;
@@ -422,27 +534,63 @@ public class Report extends javax.swing.JPanel {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    rs = ps.executeQuery(); 
-                }catch(SQLException e){
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
 
                 try {
                     while (rs.next()) {
-                        String result = "Part name: " +rs.getString("partName") + "\n"
-                                + "Part ID: " +rs.getString("partID") + "\n"
-                                + "Manufacturer: " +rs.getString("Manufacturername") + "\n"
-                                + "Vehicle type: " +rs.getString("vehicleType") + "\n"
-                                + "Year(s): " +rs.getString("year") + "\n"
-                                + "Price: £" +rs.getString("costPrice") + "\n";
+                        String partID = rs.getString("partID");
+                        int newQuantity = Integer.parseInt(rs.getString("quantity"));
+                        
+                        int usedQuantity;
+                        String used = usedMap.get(partID) + "";
+                        if (used.equals("null")){
+                            usedQuantity = 0;
+                        }else{
+                            usedQuantity = usedMap.get(partID);
+                        }
+                        
+                        int soldQuantity;
+                        String sold = usedMap.get(partID) + "";
+                        if (sold.equals("null")){
+                            soldQuantity = 0;
+                        }else{
+                            soldQuantity = usedMap.get(partID);
+                        }
+                        
+                        int orderQuantity;
+                        String order = usedMap.get(partID) + "";
+                        if (order.equals("null")){
+                            orderQuantity = 0;
+                        }else{
+                            orderQuantity = usedMap.get(partID);
+                        }
+                        
+                        int initialQuantity = (newQuantity + usedQuantity + soldQuantity) - orderQuantity;
+
+                        String result = "Part name: " + rs.getString("partName") + "\n"
+                                + "Part ID: " + rs.getString("partID") + "\n"
+                                + "Manufacturer: " + rs.getString("Manufacturername") + "\n"
+                                + "Vehicle type: " + rs.getString("vehicleType") + "\n"
+                                + "Year(s): " + rs.getString("year") + "\n"
+                                + "Price: £" + rs.getString("costPrice") + "\n"
+                                + "Initial stock level: " + initialQuantity + "\n"
+                                + "Initial cost: £placeholder\n"
+                                + "Used: " + usedQuantity + "\n"
+                                + "Sold: " + soldQuantity + "\n"
+                                + "Delivery: " + orderQuantity + "\n"
+                                + "New stock level: " + newQuantity + "\n"
+                                + "Stock cost: £placeholder\n"
+                                + "Low stock threshold: " + rs.getString("threshold") + "\n";
                         textAreaReport.append(result + "\n");
                     }
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
             }
-        }
-        else{
+        } else {
             System.out.println("Pick the dates");
         }
     }//GEN-LAST:event_buttonViewActionPerformed

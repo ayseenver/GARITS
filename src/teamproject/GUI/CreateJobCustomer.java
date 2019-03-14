@@ -326,7 +326,9 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
         try{
-            String sql = ("select * from Vehicle where Customername = '" + listCustomers.getSelectedValue().toString()) +"'";
+            String sql = ("select * from Vehicle where CustomerID = "
+                    + "(select ID from customer where name = '" + c.getName() + "' "
+                    + "and address = '" + c.getAddress() + "')");
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);

@@ -277,7 +277,8 @@ public class Invoice extends javax.swing.JPanel {
     private void ShowAllInvoices(){
         //get all unpaid invoices for jobs
         try{
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment)");
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
+                    + "and JobjobID is not null");
         }
         catch(SQLException e)
         {
@@ -315,7 +316,7 @@ public class Invoice extends javax.swing.JPanel {
         while(rs.next())
           {
             // read the result set
-            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Job ID: " + rs.getString("JobjobID");
+            String invoice = "Invoice Number: " + rs.getString("invoiceNumber") + ", Part sale";
             invoices.add(invoice);
           } 
         }
