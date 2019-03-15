@@ -7,6 +7,7 @@ package teamproject.Databases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,7 +63,22 @@ public class Automation implements Runnable {
 
         try {
             while (rs.next()) {
-                //do something
+                String regNo = rs.getString("registrationNumber");
+
+                //insert this vehicle into the reminder table to store the reminder for its MoT
+                try {
+                    String sql = ("INSERT INTO VehicleReminder (type, VehicleregistrationNumber) "
+                            + "VALUES ('MoT', '" + regNo + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
