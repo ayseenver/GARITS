@@ -49,7 +49,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     private void ShowAllReminders() {
         //get all MoT reminders
         try {
-            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'MoT'");
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'MoT' and deleted = 0");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -70,7 +70,7 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         //get all service reminders
         try {
-            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'Service'");
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'Service' and deleted = 0");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
