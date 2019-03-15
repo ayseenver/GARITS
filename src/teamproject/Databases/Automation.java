@@ -26,8 +26,8 @@ public class Automation implements Runnable {
     public void run() {
         connect();
         checkDueMoT();
+        checkDueService();
         backupDatabase();
-
         closeConnection();
     }
 
@@ -67,8 +67,44 @@ public class Automation implements Runnable {
 
                 //insert this vehicle into the reminder table to store the reminder for its MoT
                 try {
-                    String sql = ("INSERT INTO VehicleReminder (type, VehicleregistrationNumber) "
-                            + "VALUES ('MoT', '" + regNo + "')");
+                    String sql = ("INSERT INTO VehicleReminder (type, VehicleregistrationNumber, dueDate, deleted) "
+                            + "VALUES ('MoT', (select registrationNumber from vehicle where "
+                            + "registrationNumber = '" + regNo + "'), "
+                            + "'" + rs.getString("nextMoTDate") + "', 0)");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void checkDueService() {
+        //get all vehicles with services due in 7 days (5 working days)
+        try {
+            this.rs = connection.createStatement().executeQuery("select * from vehicle where nextServiceDate = date('now', '+7 day')");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                String regNo = rs.getString("registrationNumber");
+
+                //insert this vehicle into the reminder table to store the reminder for its service
+                try {
+                    String sql = ("INSERT INTO VehicleReminder (type, VehicleregistrationNumber, dueDate, deleted) "
+                            + "VALUES ('Service', (select registrationNumber from vehicle where "
+                            + "registrationNumber = '" + regNo + "'), "
+                            + "'" + rs.getString("nextServiceDate") + "', 0)");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);

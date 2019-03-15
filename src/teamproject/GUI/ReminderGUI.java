@@ -5,14 +5,27 @@
  */
 package teamproject.GUI;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
  * @author ahmetsesli
  */
 public class ReminderGUI extends javax.swing.JPanel {
+
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] reminderArray;
+
     /**
      * Creates new form NewJPanel
      */
@@ -22,11 +35,73 @@ public class ReminderGUI extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
-        
+        connection = db.connect();
+        statement = db.getStatement();
+
+        ShowAllReminders();
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowAllReminders() {
+        //get all MoT reminders
+        try {
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'MoT'");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ArrayList<String> reminders = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        reminders.add("\n");
+
+        //get all service reminders
+        try {
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'Service'");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        reminderArray = CreateArray(reminders);
+
+        listReminders.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return reminderArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return reminderArray[i];
+            }
+        });
+    }
+
+    private String[] CreateArray(ArrayList<String> tasks) {
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
     }
 
     /**
@@ -74,19 +149,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         add(labelReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
 
         textFieldSearchReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchReminders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchRemindersActionPerformed(evt);
-            }
-        });
         add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
         listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listReminders.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listReminders);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 500, 350));
@@ -150,6 +215,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -175,10 +245,6 @@ public class ReminderGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchRemindersActionPerformed
 
-    private void textFieldSearchRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchRemindersActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchRemindersActionPerformed
-
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonPrintAllActionPerformed
@@ -198,12 +264,18 @@ public class ReminderGUI extends javax.swing.JPanel {
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonViewActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
+        System.exit(0);
+    }//GEN-LAST:event_buttonExitActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
