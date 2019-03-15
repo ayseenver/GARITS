@@ -24,7 +24,9 @@ public class Automation implements Runnable {
     @Override
     public void run() {
         connect();
+        checkDueMoT();
         backupDatabase();
+
         closeConnection();
     }
 
@@ -42,21 +44,28 @@ public class Automation implements Runnable {
     }
 
     private void backupDatabase() {
-        connection = null;
         //backup
         try {
             connection.createStatement().executeUpdate("backup to database.db");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
     private void checkDueMoT() {
         //get all vehicles with MoTs due in 7 days (5 working days)
         try {
-            this.rs = statement.executeQuery("select * from vehicle where ");
+            this.rs = connection.createStatement().executeQuery("select * from vehicle where nextMOTDate = date('now', '+7 day')");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                //do something
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
     }
 

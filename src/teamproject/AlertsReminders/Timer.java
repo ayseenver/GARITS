@@ -25,7 +25,7 @@ public class Timer {
         int Minutes = with.get(Calendar.MINUTE);
 
         int MinutesPassed12AM = hour * 60 + Minutes;
-        int MinutesAt8AM = (8 * 60);
+        int MinutesAt8AM = (15 * 60) + 42;
         int OneDayMinutes = 24 * 60;
         long DelayInMinutes;
         
