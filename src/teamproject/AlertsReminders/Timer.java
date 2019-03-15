@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import teamproject.Databases.DB_ImplClass;
-import teamproject.Databases.DatabaseBackup;
+import teamproject.Databases.Automation;
 
 public class Timer {
 
@@ -34,7 +34,7 @@ public class Timer {
         }else{
             DelayInMinutes = OneDayMinutes - (MinutesPassed12AM - MinutesAt8AM);
         }
-        scheduler.scheduleAtFixedRate(new DatabaseBackup(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new Automation(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
     }
 
 }
