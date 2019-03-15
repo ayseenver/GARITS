@@ -2,27 +2,18 @@ package teamproject.User_Accounts;
 
 public class Mechanic extends User {
 
-	private double hourlyRate = 105;
+    private double hourlyRate;
 
-	public double getHourlyRate() {
-		return this.hourlyRate;
-	}
+    public Mechanic(User u) {
+        super(u);
+    }
 
-	/**
-	 * 
-	 * @param hourlyRate
-	 */
-	public void setHourlyRate(double hourlyRate) {
-		this.hourlyRate = hourlyRate;
-	}
+    public double getHourlyRate() {
+        return hourlyRate;
+    }
 
-	/**
-	 * 
-	 * @param hourlyRate
-	 */
-	public static Mechanic Mechanic(double hourlyRate) {
-		// TODO - implement Mechanic.Mechanic
-		throw new UnsupportedOperationException();
-	}
+    public void setHourlyRate(double hourlyRate) {
+        this.hourlyRate = hourlyRate;
+    }
 
 }

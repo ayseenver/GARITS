@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 import teamproject.User_Accounts.User;
 
@@ -20,6 +21,7 @@ import teamproject.User_Accounts.User;
  * @author ahmetsesli
  */
 public class UserAccount extends javax.swing.JPanel {
+
     private String username;
     Statement statement;
     Connection connection = null;
@@ -39,71 +41,88 @@ public class UserAccount extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
-        UpdateUserList();        
+
+        labelHourlyRate.setVisible(false);
+        textFieldHourlyRate.setVisible(false);
+
+        UpdateUserList();
     }
 
-    private String[] CreateArray(ArrayList<String> tasks){
+    private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
     }
-    
-    private void UpdateUserList(){
-        try{
+
+    private void UpdateUserList() {
+        try {
             this.rs = statement.executeQuery("select * from User");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
         listUsers.removeAll();
         ArrayList<String> users = new ArrayList<>();
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String user = rs.getString("username");
-            users.add(user);
-          } 
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+                users.add(user);
+            }
+        } catch (SQLException e) {
         }
-        catch(SQLException e){
-        }
-        
+
         userArray = CreateArray(users);
-                
+
         listUsers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return userArray.length; }
-            public String getElementAt(int i) { return userArray[i]; }
+            public int getSize() {
+                return userArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return userArray[i];
+            }
         });
     }
-    
-    private void SelectUser(){
-        try{
+
+    private void SelectUser() {
+        try {
             String sql = ("select * from user where username = '" + listUsers.getSelectedValue() + "'");
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             rs = ps.executeQuery();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
     }
-    
+
+    private void SelectMechanic() {
+        try {
+            String sql = ("select * from mechanic where userusername in "
+                    + "(select username from user where username = '" + listUsers.getSelectedValue() + "')");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,8 +157,10 @@ public class UserAccount extends javax.swing.JPanel {
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        labelLastName1 = new javax.swing.JLabel();
+        labelPassword = new javax.swing.JLabel();
         textFieldPassword = new javax.swing.JTextField();
+        labelHourlyRate = new javax.swing.JLabel();
+        textFieldHourlyRate = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -230,17 +251,16 @@ public class UserAccount extends javax.swing.JPanel {
         add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 460, 130, 30));
 
         comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic", "foreperson", "franchisee", "admin" }));
+        comboBoxRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRoleActionPerformed(evt);
+            }
+        });
         add(comboBoxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 580, 130, -1));
 
         labelUserID.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelUserID.setText("Username:");
         add(labelUserID, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
-
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -264,10 +284,15 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, -1, -1));
 
-        labelLastName1.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        labelLastName1.setText("Password:");
-        add(labelLastName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 580, -1, -1));
+        labelPassword.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelPassword.setText("Password:");
+        add(labelPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 580, -1, -1));
         add(textFieldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 130, -1));
+
+        labelHourlyRate.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelHourlyRate.setText("Hourly Rate:");
+        add(labelHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 580, -1, -1));
+        add(textFieldHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 580, 130, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
@@ -284,8 +309,8 @@ public class UserAccount extends javax.swing.JPanel {
         newU.setPassword(textFieldPassword.getText());
         newU.setRoleName(comboBoxRole.getSelectedItem().toString());
         newU.setUsername(textFieldUserID.getText());
-        
-        try{
+
+        try {
             String sql = ("insert into user (username, password, roleName, firstName, surname)"
                     + "values("
                     + "'" + newU.getUsername() + "',"
@@ -295,16 +320,13 @@ public class UserAccount extends javax.swing.JPanel {
                     + "'" + newU.getLastName() + "')");
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         UpdateUserList();
     }//GEN-LAST:event_buttonNewUserActionPerformed
@@ -315,57 +337,64 @@ public class UserAccount extends javax.swing.JPanel {
 
     private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
         SelectUser();
-        
-        //display the user details at the boxes at the botton
-        try{
+
+        //update the user object with the details selected
+        try {
             u.setFirstName(rs.getString("firstName"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             u.setLastName(rs.getString("surname"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             u.setPassword(rs.getString("password"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             u.setRoleName(rs.getString("roleName"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             u.setUsername(rs.getString("username"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
+
+        //display the user details at the boxes at the botton
         textFieldUserID.setText(u.getUsername());
         textFieldFirstName.setText(u.getFirstName());
         textFieldLastName.setText(u.getLastName());
         textFieldPassword.setText(u.getPassword());
-        comboBoxRole.setSelectedItem(u.getRoleName()); 
+        comboBoxRole.setSelectedItem(u.getRoleName());
+
+        //if it's a mechanic or foreperson, get their hourly rate.
+        if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
+            labelHourlyRate.setVisible(true);
+            textFieldHourlyRate.setVisible(true);
+
+            SelectMechanic();
+            try {
+                textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            labelHourlyRate.setVisible(false);
+            textFieldHourlyRate.setVisible(false);
+        }
     }//GEN-LAST:event_buttonEditUserActionPerformed
 
     private void buttonUpdateDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateDetailsActionPerformed
-        try{
+        try {
             String sql = ("Update user "
                     + "set username = '" + textFieldUserID.getText() + "',"
                     + "password = '" + textFieldPassword.getText() + "',"
@@ -375,45 +404,56 @@ public class UserAccount extends javax.swing.JPanel {
                     + "where username = '" + u.getUsername() + "'");
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+
+        if (textFieldHourlyRate.isVisible()) {
+            try {
+                String sql = ("Update mechanic "
+                        + "set hourlyRate = '" + textFieldHourlyRate.getText() + "',"
+                        + "userusername = '" + textFieldUserID.getText() + "' "
+                        + "where userusername = '" + u.getUsername() + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
         }
+
+        String mess = "Update complete";
+        JOptionPane.showMessageDialog(new JFrame(), mess);
     }//GEN-LAST:event_buttonUpdateDetailsActionPerformed
 
     private void buttonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteUserActionPerformed
         SelectUser();
-        
+
         //delete selected user from database.
-        try{
+        try {
             String sql = ("delete from user "
                     + "where username = '" + rs.getString("username") + "'");
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         UpdateUserList();
     }//GEN-LAST:event_buttonDeleteUserActionPerformed
-
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         db.closeConnection(connection);
@@ -426,6 +466,17 @@ public class UserAccount extends javax.swing.JPanel {
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
+
+    private void comboBoxRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRoleActionPerformed
+        if (comboBoxRole.getSelectedItem().toString().equals("mechanic")
+                || comboBoxRole.getSelectedItem().toString().equals("foreperson")) {
+            labelHourlyRate.setVisible(true);
+            textFieldHourlyRate.setVisible(true);
+        } else {
+            labelHourlyRate.setVisible(false);
+            textFieldHourlyRate.setVisible(false);
+        }
+    }//GEN-LAST:event_comboBoxRoleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -441,9 +492,10 @@ public class UserAccount extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JLabel labelFirstName;
+    private javax.swing.JLabel labelHourlyRate;
     private javax.swing.JLabel labelLastName;
-    private javax.swing.JLabel labelLastName1;
     private javax.swing.JLabel labelLoggedIn;
+    private javax.swing.JLabel labelPassword;
     private javax.swing.JLabel labelRole;
     private javax.swing.JLabel labelSelectUser;
     private javax.swing.JLabel labelUserAccounts;
@@ -451,6 +503,7 @@ public class UserAccount extends javax.swing.JPanel {
     private javax.swing.JLabel labelUserID;
     private javax.swing.JList<String> listUsers;
     private javax.swing.JTextField textFieldFirstName;
+    private javax.swing.JTextField textFieldHourlyRate;
     private javax.swing.JTextField textFieldLastName;
     private javax.swing.JTextField textFieldPassword;
     private javax.swing.JTextField textFieldSearch;

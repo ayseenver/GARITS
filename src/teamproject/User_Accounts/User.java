@@ -2,88 +2,63 @@ package teamproject.User_Accounts;
 
 public class User {
 
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String password;
-	private String roleName;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String password;
+    private String roleName;
 
     public User() {
     }
-        
-	/**
-	 * 
-	 * @param username
-	 * @param password
-	 */
-	public void login(String username, String password) {
-		// TODO - implement User.login
-		throw new UnsupportedOperationException();
-	}
+    
+    public User(User u) {
+        setUsername(u.getUsername());
+        setFirstName(u.getFirstName());
+        setLastName(u.getLastName());
+        setPassword(u.getPassword());
+        setRoleName(u.getRoleName());
+    }
 
-	public void logout() {
-		// TODO - implement User.logout
-		throw new UnsupportedOperationException();
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getUsername() {
-		return this.username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	/**
-	 * 
-	 * @param username
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getFirstName() {
-		return this.firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	/**
-	 * 
-	 * @param firstName
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getLastName() {
-		return this.lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	/**
-	 * 
-	 * @param lastName
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getPassword() {
-		return this.password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	/**
-	 * 
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getRoleName() {
+        return roleName;
+    }
 
-	public String getRoleName() {
-		return this.roleName;
-	}
-
-	/**
-	 * 
-	 * @param roleName
-	 */
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+    
+    
 
 }
