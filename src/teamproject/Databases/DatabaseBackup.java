@@ -1,22 +1,32 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package teamproject.Databases;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DB_ImplClass implements DBConnectivity {
+/**
+ *
+ * @author Ayse
+ */
+public class DatabaseBackup implements Runnable {
 
     Connection connection;
     Statement statement;
 
-    public DB_ImplClass() {
+    @Override
+    public void run() {
+        backupDatabase();
     }
 
-    public Connection connect() {
+    private void backupDatabase() {
         connection = null;
+        
         try {
             // create a database connection
             connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
@@ -27,34 +37,19 @@ public class DB_ImplClass implements DBConnectivity {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-        return connection;
-    }
 
-    public void closeConnection(Connection connect) {
+        //backup
         try {
-            connect.close();
+            connection.createStatement().executeUpdate("backup to database.db");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        //close connection
+        try {
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public Statement getStatement() {
-        return statement;
-    }
-
-    public void Backup(Connection c) {
-        try {
-            c.createStatement().executeUpdate("backup to database.db");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void Restore(Connection c) {
-        try {
-            c.createStatement().executeUpdate("restore from database.db");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
     }
 }
