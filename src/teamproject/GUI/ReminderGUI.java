@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -26,6 +27,10 @@ public class ReminderGUI extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
     String[] reminderArray;
+    String selected;
+    String type;
+    String vehicle;
+    String date;
 
     /**
      * Creates new form NewJPanel
@@ -105,6 +110,57 @@ public class ReminderGUI extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void SplitSelected() {
+        if (listReminders.getSelectedValue() != null) {
+            selected = listReminders.getSelectedValue();
+            String[] parts = selected.split(", ");
+
+            String[] typeParts = parts[0].split(": ");
+            type = typeParts[1];
+
+            String[] vehicleParts = parts[1].split(": ");
+            vehicle = vehicleParts[1];
+
+            String[] dateParts = parts[2].split(": ");
+            date = dateParts[1];
+        } else {
+            String mess = "Please select a reminder";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }
+
+    private void CreateMoTReminder() {
+        String result = "";
+
+        SplitSelected();
+
+        result += "Reminder - MoT Test Due\n";
+        result += "Vehicle registration no.: " + vehicle + "\tRenewal test date: " + date + "\n";
+        result += "According to our records, the above vehicle is due to have its MoT certificate renewed on the date shown.\n";
+        /*if customer is account holder
+        result += "Account Holders customers such as yourself are assured of our prompt attention, "
+                + "and we hope that you will use our services "
+                + "on this occasion in order to have the necessary test carried out on your vehicle.\n";
+         */
+        textAreaDescription.setText(result);
+    }
+
+    private void CreateServiceReminder() {
+        String result = "";
+
+        SplitSelected();
+
+        result += "Reminder - Service Due\n";
+        result += "Vehicle registration no.: " + vehicle + "\tService date: " + date + "\n";
+        result += "According to our records, the above vehicle is due to be serviced on the date shown.\n";
+        /*if customer is account holder
+        result += "Account Holders customers such as yourself are assured of our prompt attention, "
+                + "and we hope that you will use our services "
+                + "on this occasion in order to have the necessary service carried out on your vehicle.\n";
+         */
+        textAreaDescription.setText(result);
     }
 
     /**
@@ -195,7 +251,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         });
         add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
 
-        comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Payment" }));
         add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, -1, -1));
 
         labelDescription.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -261,37 +317,27 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrintTypeActionPerformed
 
     private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed
-        String selected = listReminders.getSelectedValue();
-        String[] parts = selected.split(", ");
-
-        String[] typeParts = parts[0].split(": ");
-        String type = typeParts[1];
-
-        String[] vehicleParts = parts[1].split(": ");
-        String vehicle = vehicleParts[1];
-
-        String[] dateParts = parts[2].split(": ");
-        String date = dateParts[1];
-        
-        String sql;
-        try {
-            sql = ("update vehicleReminder "
-                    + "set deleted = 1 "
-                    + "where type = '" + type + "' and "
-                    + "vehicleregistrationNumber = '" + vehicle + "' and "
-                    + "dueDate = '" + date + "'");
-            PreparedStatement ps = null;
+        SplitSelected();
+        if (listReminders.getSelectedValue() != null) {
+            String sql;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("update vehicleReminder "
+                        + "set deleted = 1 "
+                        + "where type = '" + type + "' and "
+                        + "vehicleregistrationNumber = '" + vehicle + "' and "
+                        + "dueDate = '" + date + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            ShowAllReminders();
         }
-        
-        ShowAllReminders();
     }//GEN-LAST:event_buttonDismissActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -302,7 +348,14 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        // TODO add your handling code here:
+        SplitSelected();
+        if (listReminders.getSelectedValue() != null) {
+            if (type.equals("MoT")) {
+                CreateMoTReminder();
+            } else if (type.equals("Service")) {
+                CreateServiceReminder();
+            }
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
