@@ -229,7 +229,7 @@ public class AllocateJob extends javax.swing.JPanel {
         try{
             String sql = ("update job "
                     + "set MechanicID = (select ID from mechanic where Userusername = (select username from user where firstname = '" + firstName + "' "
-                    + "and surname = '" + lastName + "')) "
+                    + "and surname = '" + lastName + "')), status = 'Allocated' "
                     + "where jobID = '" +  jobID + "'");
             PreparedStatement ps = null;
             try {

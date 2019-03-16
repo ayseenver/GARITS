@@ -5,14 +5,36 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import teamproject.Databases.DB_ImplClass;
 
 /**
  *
  * @author ahmetsesli
  */
 public class ReminderGUI extends javax.swing.JPanel {
+
     private String username;
+    Statement statement;
+    Connection connection = null;
+    DB_ImplClass db = new DB_ImplClass();
+    ResultSet rs;
+    String[] reminderArray;
+    String selected;
+    String type;
+    String vehicle;
+    String date;
+    String reminderNo;
+
     /**
      * Creates new form NewJPanel
      */
@@ -22,11 +44,256 @@ public class ReminderGUI extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
-        
+        connection = db.connect();
+        statement = db.getStatement();
+
+        ShowAllReminders();
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowAllReminders() {
+        //get all MoT reminders
+        try {
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'MoT' and deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ArrayList<String> reminders = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber") + ", "
+                        + "Due: " + rs.getString("dueDate");
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        reminders.add("\n");
+
+        //get all service reminders
+        try {
+            this.rs = statement.executeQuery("select * from VehicleReminder where type = 'Service' and deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber") + ", "
+                        + "Due: " + rs.getString("dueDate");
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        reminders.add("\n");
+
+        //get all payment reminders
+        try {
+            this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                    + "from paymentreminder inner join invoice on "
+                    + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                    + "inner join job on job.jobID = invoice.JobjobID "
+                    + "where deleted = 0 "
+                    + "order by reminderNumber asc");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: Payment, Vehicle: " + rs.getString("VehicleregistrationNumber")
+                        + ", Invoice date: " + rs.getString("dateProduced")
+                        + ", Reminder number: " + rs.getString("reminderNumber");
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        reminderArray = CreateArray(reminders);
+
+        listReminders.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return reminderArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return reminderArray[i];
+            }
+        });
+    }
+
+    private String[] CreateArray(ArrayList<String> tasks) {
+        String[] newArray = new String[tasks.size()];
+        newArray = tasks.toArray(newArray);
+        return newArray;
+    }
+
+    private void SplitSelected() {
+        if (listReminders.getSelectedValue() != null) {
+            selected = listReminders.getSelectedValue();
+            String[] parts = selected.split(", ");
+
+            String[] typeParts = parts[0].split(": ");
+            type = typeParts[1];
+
+            String[] vehicleParts = parts[1].split(": ");
+            vehicle = vehicleParts[1];
+
+            String[] dateParts = parts[2].split(": ");
+            date = dateParts[1];
+
+            if (type.equals("Payment")) {
+                String[] reminderParts = parts[3].split(": ");
+                reminderNo = reminderParts[1];
+            }
+        } else {
+            String mess = "Please select a reminder";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }
+
+    private void SplitString(String s) {
+        String[] parts = s.split(", ");
+
+        String[] typeParts = parts[0].split(": ");
+        type = typeParts[1];
+
+        String[] vehicleParts = parts[1].split(": ");
+        vehicle = vehicleParts[1];
+
+        String[] dateParts = parts[2].split(": ");
+        date = dateParts[1];
+
+        if (type.equals("Payment")) {
+            String[] reminderParts = parts[3].split(": ");
+            reminderNo = reminderParts[1];
+        }
+    }
+
+    private String CreateMoTReminder() {
+        String result = "";
+
+        result += "Reminder - MoT Test Due\n";
+        result += "Vehicle registration no.: " + vehicle + "\tRenewal test date: " + date + "\n";
+        result += "According to our records, the above vehicle is due to have its MoT certificate renewed on the date shown.\n";
+        /*if customer is account holder
+        result += "Account Holders customers such as yourself are assured of our prompt attention, "
+                + "and we hope that you will use our services "
+                + "on this occasion in order to have the necessary test carried out on your vehicle.\n";
+         */
+        return result;
+    }
+
+    private String CreateServiceReminder() {
+        String result = "";
+
+        result += "Reminder - Service Due\n";
+        result += "Vehicle registration no.: " + vehicle + "\tService date: " + date + "\n";
+        result += "According to our records, the above vehicle is due to be serviced on the date shown.\n";
+        /*if customer is account holder
+        result += "Account Holders customers such as yourself are assured of our prompt attention, "
+                + "and we hope that you will use our services "
+                + "on this occasion in order to have the necessary service carried out on your vehicle.\n";
+         */
+        return result;
+    }
+
+    private String CreatePaymentReminder() {
+        System.out.println(listReminders.getSelectedValue());
+
+        try {
+            this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                    + "from paymentreminder inner join invoice on "
+                    + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                    + "inner join job on job.jobID = invoice.JobjobID "
+                    + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String totalCost = "";
+        String invoiceNumber = "";
+
+        try {
+            while (rs.next()) {
+                try {
+                    totalCost = rs.getString("totalCost");
+                    invoiceNumber = rs.getString("InvoiceinvoiceNumber");
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        String result = "";
+
+        if (reminderNo.equals("1")) {
+            //invoice number 1
+            result += "Reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "According to our records, it appears that we have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above.\n";
+            result += "We would appreciate payment at your earliest convenience.\n";
+            result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+        } else if (reminderNo.equals("2")) {
+            //invoice number 2
+            result += "Second reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "It appears that we still have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above, despite a reminder letter posted to you 1 month later.";
+            result += "We would appreciate it if you would settle this invoice in full by return. \n";
+            result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+        } else {
+            //invoice number 3
+            result += "Final reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "Despite two reminders, it appears that we still have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above.\n";
+            result += "Unless you pay the outstanding amount in full within SEVEN DAYS, or contact us with proposals for repayment, "
+                    + "we will have no option but to refer the matter to our solicitor.\n";
+            result += "Please send payment immediately to avoid further action.\n";
+        }
+
+        return result;
+    }
+
+    private void Print() {
+        String fileName = "reminder-" + type + "-" + vehicle + ".txt";
+
+        String details = "";
+        if (type.equals("MoT")) {
+            details = CreateMoTReminder();
+        } else if (type.equals("Service")) {
+            details = CreateServiceReminder();
+        }else if (type.equals("Payment")){
+            details = CreatePaymentReminder();
+        }
+
+        try {
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.println(details);
+            writer.close();
+            String mess = "Printed sucessfully";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -44,9 +311,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         listReminders = new javax.swing.JList<>();
         buttonPrintAll = new javax.swing.JButton();
-        buttonPrintSelected = new javax.swing.JButton();
+        buttonPrint = new javax.swing.JButton();
         buttonPrintType = new javax.swing.JButton();
-        buttonAcknowledge = new javax.swing.JButton();
+        buttonDismiss = new javax.swing.JButton();
         comboBoxType = new javax.swing.JComboBox<>();
         labelDescription = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -74,22 +341,13 @@ public class ReminderGUI extends javax.swing.JPanel {
         add(labelReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
 
         textFieldSearchReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchReminders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchRemindersActionPerformed(evt);
-            }
-        });
         add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
         listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listReminders.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(listReminders);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 500, 350));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 590, 350));
 
         buttonPrintAll.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintAll.setText("Print All");
@@ -98,16 +356,16 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonPrintAllActionPerformed(evt);
             }
         });
-        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 550, -1, -1));
 
-        buttonPrintSelected.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrintSelected.setText("Print Selected ");
-        buttonPrintSelected.addActionListener(new java.awt.event.ActionListener() {
+        buttonPrint.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPrint.setText("Print");
+        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrintSelectedActionPerformed(evt);
+                buttonPrintActionPerformed(evt);
             }
         });
-        add(buttonPrintSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 550, -1, -1));
+        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 550, -1, -1));
 
         buttonPrintType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintType.setText("Print Selected Type ");
@@ -118,31 +376,32 @@ public class ReminderGUI extends javax.swing.JPanel {
         });
         add(buttonPrintType, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 550, -1, -1));
 
-        buttonAcknowledge.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonAcknowledge.setText("Dismiss Reminder");
-        buttonAcknowledge.addActionListener(new java.awt.event.ActionListener() {
+        buttonDismiss.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonDismiss.setText("Dismiss");
+        buttonDismiss.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAcknowledgeActionPerformed(evt);
+                buttonDismissActionPerformed(evt);
             }
         });
-        add(buttonAcknowledge, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
+        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
 
-        comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, -1, -1));
+        comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Payment" }));
+        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 560, -1, -1));
 
         labelDescription.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDescription.setText("Description:");
-        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 170, -1, -1));
+        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 170, -1, -1));
 
         textAreaDescription.setColumns(20);
+        textAreaDescription.setLineWrap(true);
         textAreaDescription.setRows(5);
         jScrollPane1.setViewportView(textAreaDescription);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 200, 630, 350));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 200, 520, 350));
 
         labelType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelType.setText("Type:");
-        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 550, -1, -1));
+        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, -1));
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -150,6 +409,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
         add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -175,43 +439,120 @@ public class ReminderGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchRemindersActionPerformed
 
-    private void textFieldSearchRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchRemindersActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchRemindersActionPerformed
-
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
-        // TODO add your handling code here:
+        for (int i = 0; i < listReminders.getModel().getSize(); i++) {
+            String current = listReminders.getModel().getElementAt(i);
+            if (current != null && (!(current.equals("\n")))) {
+                SplitString(current);
+                Print();
+            }
+        }
     }//GEN-LAST:event_buttonPrintAllActionPerformed
 
-    private void buttonPrintSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintSelectedActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrintSelectedActionPerformed
+    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
+        if (listReminders.getSelectedValue() != null) {
+            SplitSelected();
+            Print();
+        }
+    }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonPrintTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintTypeActionPerformed
-        // TODO add your handling code here:
+        for (int i = 0; i < listReminders.getModel().getSize(); i++) {
+            String current = listReminders.getModel().getElementAt(i);
+            if (current != null && (!(current.equals("\n")))) {
+                SplitString(current);
+                if (type.equals(comboBoxType.getSelectedItem().toString())) {
+                    Print();
+                }
+            }
+        }
     }//GEN-LAST:event_buttonPrintTypeActionPerformed
 
-    private void buttonAcknowledgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAcknowledgeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonAcknowledgeActionPerformed
+    private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed
+        SplitSelected();
+        if (listReminders.getSelectedValue() != null) {
+            String sql;
+            try {
+                if (type.equals("MoT") || type.equals("Service")) {
+                    sql = ("update vehicleReminder "
+                            + "set deleted = 1 "
+                            + "where type = '" + type + "' and "
+                            + "vehicleregistrationNumber = '" + vehicle + "' and "
+                            + "dueDate = '" + date + "'");
+                } else {
+
+                    try {
+                        this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                                + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                                + "from paymentreminder inner join invoice on "
+                                + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                                + "inner join job on job.jobID = invoice.JobjobID "
+                                + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    
+                    String invoiceNo = "";                   
+                    try{
+                        while(rs.next()){
+                            invoiceNo = rs.getString("invoiceinvoicenumber");
+                        }
+                    }catch(SQLException e){
+                        System.err.println(e.getMessage());
+                    }
+
+                    sql = ("update paymentReminder "
+                            + "set deleted = 1 where "
+                            + "reminderNumber = " + reminderNo + " and "
+                            + "Invoiceinvoicenumber = " + invoiceNo);
+                }
+
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            ShowAllReminders();
+        }
+    }//GEN-LAST:event_buttonDismissActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+        db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        // TODO add your handling code here:
+        SplitSelected();
+        if (listReminders.getSelectedValue() != null) {
+            if (type.equals("MoT")) {
+                textAreaDescription.setText(CreateMoTReminder());
+            } else if (type.equals("Service")) {
+                textAreaDescription.setText(CreateServiceReminder());
+            } else if (type.equals("Payment")) {
+                textAreaDescription.setText(CreatePaymentReminder());
+            }
+        }
     }//GEN-LAST:event_buttonViewActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        db.closeConnection(connection);
+        System.exit(0);
+    }//GEN-LAST:event_buttonExitActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAcknowledge;
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonDismiss;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonPrint;
     private javax.swing.JButton buttonPrintAll;
-    private javax.swing.JButton buttonPrintSelected;
     private javax.swing.JButton buttonPrintType;
     private javax.swing.JButton buttonSearchReminders;
     private javax.swing.JButton buttonView;

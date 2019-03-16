@@ -22,6 +22,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class CreateJobCustomer extends javax.swing.JPanel {
+
     private final String username;
     private ResultSet rsC;
     private ResultSet rsV;
@@ -32,58 +33,58 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
-    
+
     /**
      * Creates new form NewJPanel
      */
-    
     public CreateJobCustomer(String username) {
         this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
-        try{
+
+        try {
             this.rsC = statement.executeQuery("select * from Customer");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
-        
-        try{
-        while(rsC.next())
-          {
-            // read the result set
-            String name = rsC.getString("name");
-            names.add(name);
-          } 
+
+        try {
+            while (rsC.next()) {
+                // read the result set
+                String name = rsC.getString("name");
+                names.add(name);
+            }
+        } catch (SQLException e) {
         }
-        catch(SQLException e){
-        }
-        
+
         nameArray = CreateArray(names);
-                
+
         listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return nameArray.length; }
-            public String getElementAt(int i) { return nameArray[i]; }
+            public int getSize() {
+                return nameArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return nameArray[i];
+            }
         });
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    private String[] CreateArray(ArrayList<String> tasks){
+
+    private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
@@ -240,82 +241,67 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-        if(v.getRegistrationNumber() != null && c.getName() != null){
+        if (v.getRegistrationNumber() != null && c.getName() != null) {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new CreateJobTask(username, v, c);        
-        }       
+            new CreateJobTask(username, v, c);
+        }
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
         String temp = (listVehicle.getSelectedValue());
         String[] details = temp.split(", ");
-        
-        try{
-            String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) +"'";
+
+        try {
+            String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "'";
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             rsV = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             v.setMake(rsV.getString("make"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             v.setModel(rsV.getString("model"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             v.setRegistrationNumber(rsV.getString("registrationNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             v.setEngineSerial(rsV.getString("engineSerial"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
+
+        try {
             v.setChassisNumber(rsV.getString("chassisNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-                
-        try{
+
+        try {
             v.setColour(rsV.getString("colour"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
+
         textFieldVehicleSelected.setText(v.getRegistrationNumber());
     }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
@@ -325,112 +311,97 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
-        try{
+
+        try {
+            String sql = ("select * from Customer where name = '" + temp + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsC = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setName(rsC.getString("name"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setAddress(rsC.getString("address"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setPostCode(rsC.getString("postCode"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setFax(rsC.getString("fax"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
             String sql = ("select * from Vehicle where CustomerID = "
                     + "(select ID from customer where name = '" + c.getName() + "' "
                     + "and address = '" + c.getAddress() + "')");
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             this.rsV = ps.executeQuery();
-            //this.rsV = statement.executeQuery("select * from Vehicle where Customername =");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
         listVehicle.removeAll();
         ArrayList<String> details = new ArrayList<>();
-        
-        try{
-        while(rsV.next())
-          {
-            // read the result set
-            String detail = rsV.getString("make") + ", " + rsV.getString("model") + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
-            details.add(detail);
-          } 
-        }
-        catch(SQLException e){
-        }
-        
-        detailArray = CreateArray(details);
-        
-        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return detailArray.length; }
-            public String getElementAt(int i) { return detailArray[i]; }
-        });
-        
-        try{
-            String sql = ("select * from Customer where name = '" + temp + "'");
-            PreparedStatement ps = null;
-            try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+
+        try {
+            while (rsV.next()) {
+                // read the result set
+                String detail = rsV.getString("make") + ", " + rsV.getString("model")
+                        + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
+                details.add(detail);
             }
-            rsC = ps.executeQuery();
+        } catch (SQLException e) {
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setName(rsC.getString("name"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setAddress(rsC.getString("address"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setEmailAddress(rsC.getString("emailAddress"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setPostCode(rsC.getString("postCode"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            c.setFax(rsC.getString("fax"));
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
+
+        detailArray = CreateArray(details);
+
+        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return detailArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return detailArray[i];
+            }
+        });
+
+
     }//GEN-LAST:event_buttonFindVehicleActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
