@@ -28,6 +28,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     ArrayList<String> requiredTasks = new ArrayList<>();
     String bayID;
     String jobType;
+    String status;
     ResultSet rs;
     Statement statement;
     Connection connection = null;
@@ -43,6 +44,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.requiredTasks = tasks;
         this.bayID = bayID;
         this.jobType = jobType;
+        status="Created (Mechanic Not Allocated)";
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -83,16 +85,18 @@ public class ConfirmJob extends javax.swing.JPanel {
         String sql;
         try{
             if(bayID.equals("yard")){
-                sql = ("insert into Job(VehicleregistrationNumber, dateBookedIn, type)"
+                sql = ("insert into Job(VehicleregistrationNumber, dateBookedIn, status, type)"
                     + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                     + "date('now'), '"
+                   + status + "', '"
                     + jobType + "')");
             }else{
                 int bayIDInt = Integer.parseInt(bayID);
-                sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
+                sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, status, type)"
                     + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                     + "(select bayID from Bay where bayID = " + bayIDInt + "), "
                     + "date('now'), '"
+                    + status + "', '"
                     + jobType + "')");
             }
 
