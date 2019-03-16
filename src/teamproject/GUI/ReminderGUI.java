@@ -133,10 +133,21 @@ public class ReminderGUI extends javax.swing.JPanel {
         }
     }
 
+    private void SplitString(String s) {
+        String[] parts = s.split(", ");
+
+        String[] typeParts = parts[0].split(": ");
+        type = typeParts[1];
+
+        String[] vehicleParts = parts[1].split(": ");
+        vehicle = vehicleParts[1];
+
+        String[] dateParts = parts[2].split(": ");
+        date = dateParts[1];
+    }
+
     private String CreateMoTReminder() {
         String result = "";
-
-        SplitSelected();
 
         result += "Reminder - MoT Test Due\n";
         result += "Vehicle registration no.: " + vehicle + "\tRenewal test date: " + date + "\n";
@@ -152,8 +163,6 @@ public class ReminderGUI extends javax.swing.JPanel {
     private String CreateServiceReminder() {
         String result = "";
 
-        SplitSelected();
-
         result += "Reminder - Service Due\n";
         result += "Vehicle registration no.: " + vehicle + "\tService date: " + date + "\n";
         result += "According to our records, the above vehicle is due to be serviced on the date shown.\n";
@@ -163,6 +172,27 @@ public class ReminderGUI extends javax.swing.JPanel {
                 + "on this occasion in order to have the necessary service carried out on your vehicle.\n";
          */
         return result;
+    }
+
+    private void Print() {
+        String fileName = "reminder-" + type + "-" + vehicle + ".txt";
+
+        String details = "";
+        if (type.equals("MoT")) {
+            details = CreateMoTReminder();
+        } else if (type.equals("Service")) {
+            details = CreateServiceReminder();
+        }
+
+        try {
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.println(details);
+            writer.close();
+            String mess = "Printed sucessfully";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -254,7 +284,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
 
         comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Payment" }));
-        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, -1, -1));
+        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 560, -1, -1));
 
         labelDescription.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDescription.setText("Description:");
@@ -268,7 +298,7 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         labelType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelType.setText("Type:");
-        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 550, -1, -1));
+        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, -1));
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -307,36 +337,32 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchRemindersActionPerformed
 
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
-        // TODO add your handling code here:
+        for (int i = 0; i < listReminders.getModel().getSize(); i++) {
+            String current = listReminders.getModel().getElementAt(i);
+            if (current != null && (!(current.equals("\n")))) {
+                SplitString(current);
+                Print();
+            }
+        }
     }//GEN-LAST:event_buttonPrintAllActionPerformed
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        SplitSelected();
-
         if (listReminders.getSelectedValue() != null) {
-            String fileName = "reminder-" + type + "-" + vehicle + ".txt";
-
-            String details = "";
-            if (type.equals("MoT")) {
-                details = CreateMoTReminder();
-            } else if (type.equals("Service")) {
-                details = CreateServiceReminder();
-            }
-
-            try {
-                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-                writer.println(details);
-                writer.close();
-                String mess = "Printed sucessfully";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
+            SplitSelected();
+            Print();
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonPrintTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintTypeActionPerformed
-        // TODO add your handling code here:
+        for (int i = 0; i < listReminders.getModel().getSize(); i++) {
+            String current = listReminders.getModel().getElementAt(i);
+            if (current != null && (!(current.equals("\n")))) {
+                SplitString(current);
+                if (type.equals(comboBoxType.getSelectedItem().toString())) {
+                    Print();
+                }
+            }
+        }
     }//GEN-LAST:event_buttonPrintTypeActionPerformed
 
     private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed

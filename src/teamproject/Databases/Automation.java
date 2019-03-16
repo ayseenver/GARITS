@@ -120,6 +120,10 @@ public class Automation implements Runnable {
             System.err.println(e.getMessage());
         }
     }
+    
+    private void checkOneMonthOverdue(){
+        
+    }
 
     private void closeConnection() {
         //close connection

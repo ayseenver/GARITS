@@ -12,10 +12,10 @@ import teamproject.Databases.Automation;
 public class Timer {
 
     public Timer() {
-        ScheduleBackup();
+        Automate();
     }
 
-    private void ScheduleBackup() {
+    private void Automate() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Date aDate = new Date();// Current date or parsed date;
 
