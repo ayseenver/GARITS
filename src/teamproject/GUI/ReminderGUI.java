@@ -5,6 +5,8 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -131,7 +133,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         }
     }
 
-    private void CreateMoTReminder() {
+    private String CreateMoTReminder() {
         String result = "";
 
         SplitSelected();
@@ -144,10 +146,10 @@ public class ReminderGUI extends javax.swing.JPanel {
                 + "and we hope that you will use our services "
                 + "on this occasion in order to have the necessary test carried out on your vehicle.\n";
          */
-        textAreaDescription.setText(result);
+        return result;
     }
 
-    private void CreateServiceReminder() {
+    private String CreateServiceReminder() {
         String result = "";
 
         SplitSelected();
@@ -160,7 +162,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 + "and we hope that you will use our services "
                 + "on this occasion in order to have the necessary service carried out on your vehicle.\n";
          */
-        textAreaDescription.setText(result);
+        return result;
     }
 
     /**
@@ -309,7 +311,28 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrintAllActionPerformed
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        // TODO add your handling code here:
+        SplitSelected();
+
+        if (listReminders.getSelectedValue() != null) {
+            String fileName = "reminder-" + type + "-" + vehicle + ".txt";
+
+            String details = "";
+            if (type.equals("MoT")) {
+                details = CreateMoTReminder();
+            } else if (type.equals("Service")) {
+                details = CreateServiceReminder();
+            }
+
+            try {
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                writer.println(details);
+                writer.close();
+                String mess = "Printed sucessfully";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonPrintTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintTypeActionPerformed
@@ -351,9 +374,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         SplitSelected();
         if (listReminders.getSelectedValue() != null) {
             if (type.equals("MoT")) {
-                CreateMoTReminder();
+                textAreaDescription.setText(CreateMoTReminder());
             } else if (type.equals("Service")) {
-                CreateServiceReminder();
+                textAreaDescription.setText(CreateServiceReminder());
             }
         }
     }//GEN-LAST:event_buttonViewActionPerformed
