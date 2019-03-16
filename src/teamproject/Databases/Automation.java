@@ -137,8 +137,8 @@ public class Automation implements Runnable {
             while (rs.next()) {
                 //insert this job into the reminder table with reminder number 1
                 try {
-                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
-                            + "VALUES (" + rs.getString("invoiceNumber") + ", 1)");
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber, deleted) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 1, 0)");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -167,8 +167,8 @@ public class Automation implements Runnable {
             while (rs.next()) {
                 //insert this job into the reminder table with reminder number 2
                 try {
-                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
-                            + "VALUES (" + rs.getString("invoiceNumber") + ", 2)");
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber, deleted) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 2, 0)");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -197,8 +197,8 @@ public class Automation implements Runnable {
             while (rs.next()) {
                 //insert this job into the reminder table with reminder number 3
                 try {
-                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
-                            + "VALUES (" + rs.getString("invoiceNumber") + ", 3)");
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber, deleted) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 3, 0)");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);

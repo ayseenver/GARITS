@@ -33,6 +33,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     String type;
     String vehicle;
     String date;
+    String reminderNo;
 
     /**
      * Creates new form NewJPanel
@@ -99,7 +100,13 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         //get all payment reminders
         try {
-            this.rs = statement.executeQuery("select * from paymentReminder order by reminderNumber desc");
+            this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                    + "from paymentreminder inner join invoice on "
+                    + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                    + "inner join job on job.jobID = invoice.JobjobID "
+                    + "where deleted = 0 "
+                    + "order by reminderNumber asc");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -107,7 +114,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         try {
             while (rs.next()) {
                 // read the result set
-                String reminder = "Type: Payment reminder, Vehicle: placeholder, date: placeholder";
+                String reminder = "Type: Payment, Vehicle: " + rs.getString("VehicleregistrationNumber")
+                        + ", Invoice date: " + rs.getString("dateProduced")
+                        + ", Reminder number: " + rs.getString("reminderNumber");
                 reminders.add(reminder);
             }
         } catch (SQLException e) {
@@ -146,6 +155,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
             String[] dateParts = parts[2].split(": ");
             date = dateParts[1];
+
+            if (type.equals("Payment")) {
+                String[] reminderParts = parts[3].split(": ");
+                reminderNo = reminderParts[1];
+            }
         } else {
             String mess = "Please select a reminder";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -163,6 +177,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         String[] dateParts = parts[2].split(": ");
         date = dateParts[1];
+
+        if (type.equals("Payment")) {
+            String[] reminderParts = parts[3].split(": ");
+            reminderNo = reminderParts[1];
+        }
     }
 
     private String CreateMoTReminder() {
@@ -194,34 +213,62 @@ public class ReminderGUI extends javax.swing.JPanel {
     }
 
     private String CreatePaymentReminder() {
-        String selected = listReminders.getSelectedValue();
-        //Type: Payment reminder, Vehicle: placeholder, date: placeholder
+        System.out.println(listReminders.getSelectedValue());
+
+        try {
+            this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                    + "from paymentreminder inner join invoice on "
+                    + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                    + "inner join job on job.jobID = invoice.JobjobID "
+                    + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String totalCost = "";
+        String invoiceNumber = "";
+
+        try {
+            while (rs.next()) {
+                try {
+                    totalCost = rs.getString("totalCost");
+                    invoiceNumber = rs.getString("InvoiceinvoiceNumber");
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
         String result = "";
 
-        //invoice number 1
-        result += "Reminder - Invoice number (placeholder)\n";
-        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
-        result += "According to our records, it appears that we have not yet received payment of the above invoice, "
-                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above.\n";
-        result += "We would appreciate payment at your earliest convenience.\n";
-        result += "If you have already sent a payment to us recently, please accept our apologies.\n";
-
-        //invoice number 2
-        result += "Second reminder - Invoice number (placeholder)\n";
-        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
-        result += "It appears that we still have not yet received payment of the above invoice, "
-                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above, despite a reminder letter posted to you 1 month later.";
-        result += "We would appreciate it if you would settle this invoice in full by return. \n";
-        result += "If you have already sent a payment to us recently, please accept our apologies.\n";
-
-        //invoice number 3
-        result += "Final reminder - Invoice number (placeholder)\n";
-        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
-        result += "Despite two reminders, it appears that we still have not yet received payment of the above invoice, "
-                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above.\n";
-        result += "Unless you pay the outstanding amount in full within SEVEN DAYS, or contact us with proposals for repayment, "
-                + "we will have no option but to refer the matter to our solicitor.\n";
-        result += "Please send payment immediately to avoid further action.\n";
+        if (reminderNo.equals("1")) {
+            //invoice number 1
+            result += "Reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "According to our records, it appears that we have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above.\n";
+            result += "We would appreciate payment at your earliest convenience.\n";
+            result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+        } else if (reminderNo.equals("2")) {
+            //invoice number 2
+            result += "Second reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "It appears that we still have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above, despite a reminder letter posted to you 1 month later.";
+            result += "We would appreciate it if you would settle this invoice in full by return. \n";
+            result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+        } else {
+            //invoice number 3
+            result += "Final reminder - Invoice number " + invoiceNumber + "\n";
+            result += "Vehicle registration no.: " + vehicle + "\tTotal amount: " + totalCost + "\n";
+            result += "Despite two reminders, it appears that we still have not yet received payment of the above invoice, "
+                    + "which was posted to you on " + date + ", for work done on the vehicle(s) listed above.\n";
+            result += "Unless you pay the outstanding amount in full within SEVEN DAYS, or contact us with proposals for repayment, "
+                    + "we will have no option but to refer the matter to our solicitor.\n";
+            result += "Please send payment immediately to avoid further action.\n";
+        }
 
         return result;
     }
@@ -234,6 +281,8 @@ public class ReminderGUI extends javax.swing.JPanel {
             details = CreateMoTReminder();
         } else if (type.equals("Service")) {
             details = CreateServiceReminder();
+        }else if (type.equals("Payment")){
+            details = CreatePaymentReminder();
         }
 
         try {
@@ -295,9 +344,10 @@ public class ReminderGUI extends javax.swing.JPanel {
         add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
         listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(listReminders);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 500, 350));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 590, 350));
 
         buttonPrintAll.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintAll.setText("Print All");
@@ -340,13 +390,14 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         labelDescription.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDescription.setText("Description:");
-        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 170, -1, -1));
+        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 170, -1, -1));
 
         textAreaDescription.setColumns(20);
+        textAreaDescription.setLineWrap(true);
         textAreaDescription.setRows(5);
         jScrollPane1.setViewportView(textAreaDescription);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 200, 630, 350));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 200, 520, 350));
 
         labelType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelType.setText("Type:");
@@ -422,11 +473,40 @@ public class ReminderGUI extends javax.swing.JPanel {
         if (listReminders.getSelectedValue() != null) {
             String sql;
             try {
-                sql = ("update vehicleReminder "
-                        + "set deleted = 1 "
-                        + "where type = '" + type + "' and "
-                        + "vehicleregistrationNumber = '" + vehicle + "' and "
-                        + "dueDate = '" + date + "'");
+                if (type.equals("MoT") || type.equals("Service")) {
+                    sql = ("update vehicleReminder "
+                            + "set deleted = 1 "
+                            + "where type = '" + type + "' and "
+                            + "vehicleregistrationNumber = '" + vehicle + "' and "
+                            + "dueDate = '" + date + "'");
+                } else {
+
+                    try {
+                        this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
+                                + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                                + "from paymentreminder inner join invoice on "
+                                + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
+                                + "inner join job on job.jobID = invoice.JobjobID "
+                                + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    
+                    String invoiceNo = "";                   
+                    try{
+                        while(rs.next()){
+                            invoiceNo = rs.getString("invoiceinvoicenumber");
+                        }
+                    }catch(SQLException e){
+                        System.err.println(e.getMessage());
+                    }
+
+                    sql = ("update paymentReminder "
+                            + "set deleted = 1 where "
+                            + "reminderNumber = " + reminderNo + " and "
+                            + "Invoiceinvoicenumber = " + invoiceNo);
+                }
+
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -455,7 +535,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 textAreaDescription.setText(CreateMoTReminder());
             } else if (type.equals("Service")) {
                 textAreaDescription.setText(CreateServiceReminder());
-            } else if (type.equals("Payment reminder")) {
+            } else if (type.equals("Payment")) {
                 textAreaDescription.setText(CreatePaymentReminder());
             }
         }
