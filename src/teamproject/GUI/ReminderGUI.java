@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -59,7 +60,8 @@ public class ReminderGUI extends javax.swing.JPanel {
         try {
             while (rs.next()) {
                 // read the result set
-                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber") + ", "
+                        + "Due: " + rs.getString("dueDate");
                 reminders.add(reminder);
             }
         } catch (SQLException e) {
@@ -78,7 +80,8 @@ public class ReminderGUI extends javax.swing.JPanel {
         try {
             while (rs.next()) {
                 // read the result set
-                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber");
+                String reminder = "Type: " + rs.getString("type") + ", Vehicle: " + rs.getString("VehicleregistrationNumber") + ", "
+                        + "Due: " + rs.getString("dueDate");
                 reminders.add(reminder);
             }
         } catch (SQLException e) {
@@ -119,9 +122,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         listReminders = new javax.swing.JList<>();
         buttonPrintAll = new javax.swing.JButton();
-        buttonPrintSelected = new javax.swing.JButton();
+        buttonPrint = new javax.swing.JButton();
         buttonPrintType = new javax.swing.JButton();
-        buttonAcknowledge = new javax.swing.JButton();
+        buttonDismiss = new javax.swing.JButton();
         comboBoxType = new javax.swing.JComboBox<>();
         labelDescription = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -163,16 +166,16 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonPrintAllActionPerformed(evt);
             }
         });
-        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 550, -1, -1));
+        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 550, -1, -1));
 
-        buttonPrintSelected.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonPrintSelected.setText("Print Selected ");
-        buttonPrintSelected.addActionListener(new java.awt.event.ActionListener() {
+        buttonPrint.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonPrint.setText("Print");
+        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPrintSelectedActionPerformed(evt);
+                buttonPrintActionPerformed(evt);
             }
         });
-        add(buttonPrintSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 550, -1, -1));
+        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 550, -1, -1));
 
         buttonPrintType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintType.setText("Print Selected Type ");
@@ -183,14 +186,14 @@ public class ReminderGUI extends javax.swing.JPanel {
         });
         add(buttonPrintType, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 550, -1, -1));
 
-        buttonAcknowledge.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonAcknowledge.setText("Dismiss Reminder");
-        buttonAcknowledge.addActionListener(new java.awt.event.ActionListener() {
+        buttonDismiss.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonDismiss.setText("Dismiss");
+        buttonDismiss.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAcknowledgeActionPerformed(evt);
+                buttonDismissActionPerformed(evt);
             }
         });
-        add(buttonAcknowledge, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
+        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
 
         comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 550, -1, -1));
@@ -249,17 +252,47 @@ public class ReminderGUI extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonPrintAllActionPerformed
 
-    private void buttonPrintSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintSelectedActionPerformed
+    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonPrintSelectedActionPerformed
+    }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonPrintTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintTypeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonPrintTypeActionPerformed
 
-    private void buttonAcknowledgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAcknowledgeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonAcknowledgeActionPerformed
+    private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed
+        String selected = listReminders.getSelectedValue();
+        String[] parts = selected.split(", ");
+
+        String[] typeParts = parts[0].split(": ");
+        String type = typeParts[1];
+
+        String[] vehicleParts = parts[1].split(": ");
+        String vehicle = vehicleParts[1];
+
+        String[] dateParts = parts[2].split(": ");
+        String date = dateParts[1];
+        
+        String sql;
+        try {
+            sql = ("update vehicleReminder "
+                    + "set deleted = 1 "
+                    + "where type = '" + type + "' and "
+                    + "vehicleregistrationNumber = '" + vehicle + "' and "
+                    + "dueDate = '" + date + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        ShowAllReminders();
+    }//GEN-LAST:event_buttonDismissActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -279,11 +312,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAcknowledge;
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonDismiss;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonPrint;
     private javax.swing.JButton buttonPrintAll;
-    private javax.swing.JButton buttonPrintSelected;
     private javax.swing.JButton buttonPrintType;
     private javax.swing.JButton buttonSearchReminders;
     private javax.swing.JButton buttonView;
