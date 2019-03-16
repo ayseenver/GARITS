@@ -95,6 +95,25 @@ public class ReminderGUI extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
+        reminders.add("\n");
+
+        //get all payment reminders
+        try {
+            this.rs = statement.executeQuery("select * from paymentReminder order by reminderNumber desc");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String reminder = "Type: Payment reminder, Vehicle: placeholder, date: placeholder";
+                reminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         reminderArray = CreateArray(reminders);
 
         listReminders.setModel(new javax.swing.AbstractListModel<String>() {
@@ -171,6 +190,39 @@ public class ReminderGUI extends javax.swing.JPanel {
                 + "and we hope that you will use our services "
                 + "on this occasion in order to have the necessary service carried out on your vehicle.\n";
          */
+        return result;
+    }
+
+    private String CreatePaymentReminder() {
+        String selected = listReminders.getSelectedValue();
+        //Type: Payment reminder, Vehicle: placeholder, date: placeholder
+        String result = "";
+
+        //invoice number 1
+        result += "Reminder - Invoice number (placeholder)\n";
+        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
+        result += "According to our records, it appears that we have not yet received payment of the above invoice, "
+                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above.\n";
+        result += "We would appreciate payment at your earliest convenience.\n";
+        result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+
+        //invoice number 2
+        result += "Second reminder - Invoice number (placeholder)\n";
+        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
+        result += "It appears that we still have not yet received payment of the above invoice, "
+                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above, despite a reminder letter posted to you 1 month later.";
+        result += "We would appreciate it if you would settle this invoice in full by return. \n";
+        result += "If you have already sent a payment to us recently, please accept our apologies.\n";
+
+        //invoice number 3
+        result += "Final reminder - Invoice number (placeholder)\n";
+        result += "Vehicle registration no.: (placeholder) \tTotal amount: (placeholder)\n";
+        result += "Despite two reminders, it appears that we still have not yet received payment of the above invoice, "
+                + "which was posted to you on (placeholder), for work done on the vehicle(s) listed above.\n";
+        result += "Unless you pay the outstanding amount in full within SEVEN DAYS, or contact us with proposals for repayment, "
+                + "we will have no option but to refer the matter to our solicitor.\n";
+        result += "Please send payment immediately to avoid further action.\n";
+
         return result;
     }
 
@@ -403,6 +455,8 @@ public class ReminderGUI extends javax.swing.JPanel {
                 textAreaDescription.setText(CreateMoTReminder());
             } else if (type.equals("Service")) {
                 textAreaDescription.setText(CreateServiceReminder());
+            } else if (type.equals("Payment reminder")) {
+                textAreaDescription.setText(CreatePaymentReminder());
             }
         }
     }//GEN-LAST:event_buttonViewActionPerformed

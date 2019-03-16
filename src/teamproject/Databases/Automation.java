@@ -27,8 +27,10 @@ public class Automation implements Runnable {
         connect();
         checkDueMoT();
         checkDueService();
+        checkOverduePayments();
         backupDatabase();
         closeConnection();
+        System.out.println("done");
     }
 
     private void connect() {
@@ -120,9 +122,97 @@ public class Automation implements Runnable {
             System.err.println(e.getMessage());
         }
     }
-    
-    private void checkOneMonthOverdue(){
-        
+
+    private void checkOverduePayments() {
+        //get all invoices overdue payment by 1 month
+        try {
+            this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
+                    + "(select jobID from job where dateCompleted = date('now', '-1 month') \n"
+                    + "and jobID not in (select jobjobID from payment))");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                //insert this job into the reminder table with reminder number 1
+                try {
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 1)");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //get all invoices overdue payment by 2 months
+        try {
+            this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
+                    + "(select jobID from job where dateCompleted = date('now', '-2 month') \n"
+                    + "and jobID not in (select jobjobID from payment))");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                //insert this job into the reminder table with reminder number 2
+                try {
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 2)");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //get all invoices overdue payment by 3 months
+        try {
+            this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
+                    + "(select jobID from job where dateCompleted = date('now', '-3 month') \n"
+                    + "and jobID not in (select jobjobID from payment))");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                //insert this job into the reminder table with reminder number 3
+                try {
+                    String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber) "
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 3)");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private void closeConnection() {
