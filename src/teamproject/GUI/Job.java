@@ -875,7 +875,7 @@ public class Job extends javax.swing.JPanel {
 
         try {
             while (rs.next()) {
-                int hourlyRate = Integer.parseInt(rs.getString("hourlyRate"));
+                double hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
                 totalCost *= hourlyRate;
             }
         } catch (SQLException e) {
@@ -912,7 +912,7 @@ public class Job extends javax.swing.JPanel {
         try {
             sql = ("update job "
                     + "set dateCompleted = date('now'), totalCost = " + totalCost + ", "
-                    + "totalHours = " + totalHours + " where jobID = '" + jobID + "'");
+                    + "totalHours = " + totalHours + ", status = 'Completed' where jobID = '" + jobID + "'");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
