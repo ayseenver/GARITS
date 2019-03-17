@@ -458,7 +458,80 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         System.err.println(e.getMessage());
                     }
                 } else if (type.equals("Variable")) {
-                    //do stuff
+                    for (Map.Entry<String, String> entry : discountDetail.entrySet()) {
+                        String task = entry.getKey();
+                        String percentage = entry.getValue();
+
+                        //get the ID for the selected task
+                        try {
+                            this.rs = statement.executeQuery("select taskID from Task where description = '" + task + "'");
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        String taskID = "";
+
+                        try {
+                            while (rs.next()) {
+                                taskID = rs.getString("taskID");
+                            }
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        //create a variable discount
+                        try {
+                            String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
+                                    + "sparePartPercentage) "
+                                    + "values (0, 0, 0)";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        //create a task - variable discount record
+                        try {
+                            String sql = "INSERT into task_variablediscount (TasktaskID, VariableDiscountdiscountID, percentage) "
+                                    + "values ((select taskID from task where taskID = '" + taskID + "'), "
+                                    + "(select discountID from variablediscount where discountID in (select max(discountID) "
+                                    + "from variablediscount)), " + percentage +")";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                    }
+
+                    //insert this discount plan into the customer record
+                    try {
+                        String sql = "INSERT INTO DiscountPlan "
+                                + "(VariableDiscountdiscountID, CustomerAccountaccountID) "
+                                + "VALUES ((select discountID from VariableDiscount where discountID in "
+                                + "(select max(discountID) from VariableDiscount)), "
+                                + "(select accountID from customerAccount where accountID in "
+                                + "(select max(accountID) from customerAccount)))";
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
                 }
             }
 
@@ -595,7 +668,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         //turn on foreign key contraints
         try {
-            statement.executeUpdate("PRAGMA foreign_keys = OFF");
+            statement.executeUpdate("PRAGMA foreign_keys = ON");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
