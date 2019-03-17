@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
@@ -20,6 +23,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
     ResultSet rs;
     Customer c = new Customer();
     String discount;
+    String[] discountArray;
+    String[] taskArray;
+    Map<String, String> discountDetail = new HashMap<>();
 
     public UpdateCustomer(String username) {
         this.username = username;
@@ -70,6 +76,44 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
     }
 
+    private void ShowTasks() {
+        try {
+            this.rs = statement.executeQuery("select * from Task");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ArrayList<String> tasks = new ArrayList<>();
+
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listBusinessType.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
+    }
+
+    private String[] CreateArray(ArrayList<String> discounts) {
+        String[] newArray = new String[discounts.size()];
+        newArray = discounts.toArray(newArray);
+        return newArray;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -90,7 +134,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldFullName = new javax.swing.JTextField();
         textFieldAddress = new javax.swing.JTextField();
         textFieldTelephone = new javax.swing.JTextField();
-        buttonConfirmDiscount = new javax.swing.JButton();
         labelCustomerDetails = new javax.swing.JLabel();
         buttonBack = new javax.swing.JButton();
         textFieldPercentage = new javax.swing.JTextField();
@@ -109,7 +152,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonSearchDiscountDetails = new javax.swing.JButton();
         comboBoxDiscountPlan = new javax.swing.JComboBox<>();
         labelFax1 = new javax.swing.JLabel();
-        buttonSetDiscountPlan1 = new javax.swing.JButton();
+        buttonSetDiscountPlan = new javax.swing.JButton();
         buttonNewCustomer = new javax.swing.JButton();
         textFieldEmail = new javax.swing.JTextField();
         buttonUpdateCustomer = new javax.swing.JButton();
@@ -162,9 +205,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
         jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
         jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 260, -1));
-
-        buttonConfirmDiscount.setText("Confirm");
-        jPanel1.add(buttonConfirmDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 320, 100, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomerDetails.setText("Customer Details");
@@ -230,11 +270,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         checkBoxConfigurePayLater.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         checkBoxConfigurePayLater.setText("Pay Later Option");
-        checkBoxConfigurePayLater.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkBoxConfigurePayLaterActionPerformed(evt);
-            }
-        });
         jPanel1.add(checkBoxConfigurePayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 290, -1, -1));
 
         buttonSearchDiscountDetails.setText("Search");
@@ -257,13 +292,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelFax1.setText("Fax:");
         jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
 
-        buttonSetDiscountPlan1.setText("Set");
-        buttonSetDiscountPlan1.addActionListener(new java.awt.event.ActionListener() {
+        buttonSetDiscountPlan.setText("Set");
+        buttonSetDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSetDiscountPlan1ActionPerformed(evt);
+                buttonSetDiscountPlanActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonSetDiscountPlan1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 460, 70, 30));
+        jPanel1.add(buttonSetDiscountPlan, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 460, 70, 30));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonNewCustomer.setText("New customer");
@@ -304,13 +339,18 @@ public class UpdateCustomer extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonSearchDiscountDetailsActionPerformed
 
-    private void buttonSetDiscountPlan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSetDiscountPlan1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSetDiscountPlan1ActionPerformed
-
-    private void checkBoxConfigurePayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxConfigurePayLaterActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkBoxConfigurePayLaterActionPerformed
+    private void buttonSetDiscountPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSetDiscountPlanActionPerformed
+        String selected = listBusinessType.getSelectedValue();
+        String percentage = textFieldPercentage.getText();
+        if (selected == null || percentage.isEmpty()) {
+            String mess = "Select an item and input a percentage";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
+            discountDetail.put(selected, percentage);
+            String mess = "Configured successfully!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }//GEN-LAST:event_buttonSetDiscountPlanActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -348,6 +388,80 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
             UpdateCustomer();
 
+            //if "account holder" selected, insert this customer into account holder table.
+            if (checkBoxAccountHolder.isSelected()) {
+                if (checkBoxConfigurePayLater.isSelected()) {
+                    try {
+                        String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
+                                + "VALUES (1, (select ID from customer where ID in(select max(id) from customer)))";
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                } else {
+                    try {
+                        String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
+                                + "VALUES (0, (select ID from customer where ID in(select max(id) from customer)))";
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+            }
+
+            //if a discount plan is selected, get the details and insert into database
+            if (checkBoxDiscountPlan.isSelected()) {
+                String type = comboBoxDiscountPlan.getSelectedItem().toString();
+                if (type.equals("Fixed")) {
+                    //get the overall percentage
+                    String percentage = discountDetail.get("Overall");
+                    try {
+                        String sql = "INSERT INTO FixedDiscount (percentage) VALUES (" + Double.parseDouble(percentage) + ")";
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+
+                    try {
+                        String sql = "INSERT INTO DiscountPlan "
+                                + "(FixedDiscountdiscountID, CustomerAccountaccountID) "
+                                + "VALUES ((select discountID from fixedDiscount where discountID in "
+                                + "(select max(discountID) from fixedDiscount)), "
+                                + "(select accountID from customerAccount where accountID in "
+                                + "(select max(accountID) from customerAccount)))";
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                } else if (type.equals("Variable")) {
+                    //do stuff
+                }
+            }
+
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
@@ -362,6 +476,23 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     private void comboBoxDiscountPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxDiscountPlanActionPerformed
         discount = comboBoxDiscountPlan.getSelectedItem().toString();
+        ArrayList<String> discounts = new ArrayList<>();
+        if (discount.equals("Fixed")) {
+            discounts.add("Overall");
+            discountArray = CreateArray(discounts);
+
+            listBusinessType.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return discountArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return discountArray[i];
+                }
+            });
+        } else if (discount.equals("Variable")) {
+            ShowTasks();
+        }
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
     private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
@@ -479,12 +610,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
-    private javax.swing.JButton buttonConfirmDiscount;
     private javax.swing.JButton buttonDeleteCustomer;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchDiscountDetails;
-    private javax.swing.JButton buttonSetDiscountPlan1;
+    private javax.swing.JButton buttonSetDiscountPlan;
     private javax.swing.JButton buttonUpdateCustomer;
     private javax.swing.JCheckBox checkBoxAccountHolder;
     private javax.swing.JCheckBox checkBoxConfigurePayLater;
