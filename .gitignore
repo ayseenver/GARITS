@@ -2,3 +2,4 @@
 GARITSDB.db
 *.db
 /nbproject/private/
+/build/
