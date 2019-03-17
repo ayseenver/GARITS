@@ -21,6 +21,7 @@ public class Automation implements Runnable {
     Connection connection;
     Statement statement;
     ResultSet rs;
+    
 
     @Override
     public void run() {

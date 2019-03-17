@@ -1,6 +1,6 @@
 package teamproject.Jobs;
 
-import Spare_Parts.SparePart;
+import teamproject.Spare_Parts.SparePart;
 
 public class SparePartUsed {
 
