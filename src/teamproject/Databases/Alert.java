@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 public class Alert implements Runnable {
 
     ArrayList<String> paymentReminders = new ArrayList<>();
+    ArrayList<String> stockReminders = new ArrayList<>();
     Connection connection;
     Statement statement;
     ResultSet rs;
@@ -49,11 +50,29 @@ public class Alert implements Runnable {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+
+        //get all of the low stock
+        try {
+            this.rs = connection.createStatement().executeQuery("select * from sparepart where quantity < threshold");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        //add them to a string array
+        try {
+            while (rs.next()) {
+                String reminder = rs.getString("partName") + ", " + rs.getString("vehicleType");
+                stockReminders.add(reminder);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
     public void run() {
         paymentAlert();
+        stockAlert();
         closeConnection();
     }
 
@@ -81,13 +100,38 @@ public class Alert implements Runnable {
                     JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
 
+            //achknowledge button selected
             if (i == 0) {
                 remove.add(s);
             }
         }
-        
-        for (String s : remove){
+
+        //don't show these ones again
+        for (String s : remove) {
             paymentReminders.remove(s);
+        }
+    }
+
+    private void stockAlert() {
+        String[] options = new String[2];
+        options[0] = "Achknowledge";
+        options[1] = "Remind later";
+        ArrayList<String> remove = new ArrayList<>();
+
+        for (String s : stockReminders) {
+            int i = JOptionPane.showOptionDialog(new JFrame(), s, "Warning",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, options, options[0]);
+
+            //achknowledge button selected
+            if (i == 0) {
+                remove.add(s);
+            }
+        }
+
+        //don't show these ones again
+        for (String s : remove) {
+            stockReminders.remove(s);
         }
     }
 
