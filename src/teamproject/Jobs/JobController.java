@@ -2,7 +2,7 @@ package teamproject.Jobs;
 
 import teamproject.User_Accounts.Mechanic;
 import java.util.*;
-import Spare_Parts.SparePart;
+import teamproject.Spare_Parts.SparePart;
 import teamproject.Customer_Account.Vehicle;
 
 public class JobController {
