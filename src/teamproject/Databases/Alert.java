@@ -31,7 +31,7 @@ public class Alert implements Runnable {
         //get all the payment reminders
         try {
             this.rs = connection.createStatement().executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
-                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
+                    + "job.dateCompleted, job.jobID, job.totalCost, job.VehicleregistrationNumber "
                     + "from paymentreminder inner join invoice on "
                     + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
                     + "inner join job on job.jobID = invoice.JobjobID "
@@ -44,7 +44,7 @@ public class Alert implements Runnable {
         //add them to a string array
         try {
             while (rs.next()) {
-                String reminder = rs.getString("invoiceinvoicenumber") + ", " + rs.getString("dateProduced");
+                String reminder = "Invoice number: " + rs.getString("invoiceinvoicenumber") + ", Job completed: " + rs.getString("dateCompleted");
                 paymentReminders.add(reminder);
             }
         } catch (SQLException e) {
@@ -61,7 +61,7 @@ public class Alert implements Runnable {
         //add them to a string array
         try {
             while (rs.next()) {
-                String reminder = rs.getString("partName") + ", " + rs.getString("vehicleType");
+                String reminder = "Part name: " + rs.getString("partName") + ", Vehicle: " + rs.getString("vehicleType");
                 stockReminders.add(reminder);
             }
         } catch (SQLException e) {
