@@ -44,7 +44,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.requiredTasks = tasks;
         this.bayID = bayID;
         this.jobType = jobType;
-        status="Created (Mechanic Not Allocated)";
+        status="Created";
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);

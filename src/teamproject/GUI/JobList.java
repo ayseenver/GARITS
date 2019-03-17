@@ -49,7 +49,7 @@ public class JobList extends javax.swing.JPanel {
 
     private void ShowAllJobs(){
         try{
-            this.rs = statement.executeQuery("select * from Job where dateCompleted is null");
+            this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() +"'");
         }
         catch(SQLException e)
         {
@@ -107,6 +107,7 @@ public class JobList extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         buttonSelectJob = new javax.swing.JButton();
+        comboStatus = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -177,6 +178,14 @@ public class JobList extends javax.swing.JPanel {
             }
         });
         add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 630, -1, -1));
+
+        comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Created", "Allocated", "Completed" }));
+        comboStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboStatusActionPerformed(evt);
+            }
+        });
+        add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 190, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -219,12 +228,17 @@ public class JobList extends javax.swing.JPanel {
         new Job(username, jobID, vehicleReg);
     }//GEN-LAST:event_buttonSelectJobActionPerformed
 
+    private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
+        ShowAllJobs();
+    }//GEN-LAST:event_comboStatusActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSearch;
     private javax.swing.JButton buttonSelectJob;
+    private javax.swing.JComboBox<String> comboStatus;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelJobList;
     private javax.swing.JLabel lblLoggedIn;
