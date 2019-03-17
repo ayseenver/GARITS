@@ -96,7 +96,7 @@ public class Alert implements Runnable {
         ArrayList<String> remove = new ArrayList<>();
 
         for (String s : paymentReminders) {
-            int i = JOptionPane.showOptionDialog(new JFrame(), s, "Warning",
+            int i = JOptionPane.showOptionDialog(new JFrame(), s, "Late payment",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
 
@@ -119,7 +119,7 @@ public class Alert implements Runnable {
         ArrayList<String> remove = new ArrayList<>();
 
         for (String s : stockReminders) {
-            int i = JOptionPane.showOptionDialog(new JFrame(), s, "Warning",
+            int i = JOptionPane.showOptionDialog(new JFrame(), s, "Stock alert",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
 
