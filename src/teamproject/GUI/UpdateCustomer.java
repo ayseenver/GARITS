@@ -76,7 +76,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
     }
 
-    private void ShowTasks() {
+    private void ShowVariableTasks() {
         try {
             this.rs = statement.executeQuery("select * from Task");
         } catch (SQLException e) {
@@ -84,6 +84,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
 
         ArrayList<String> tasks = new ArrayList<>();
+        tasks.add("MoT");
+        tasks.add("Service");
+        tasks.add("Parts");
 
         //add all tasks to task list
         try {
@@ -479,11 +482,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
                             System.err.println(e.getMessage());
                         }
 
+                        double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
+                        double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
+                        double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
+
                         //create a variable discount
                         try {
                             String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
                                     + "sparePartPercentage) "
-                                    + "values (0, 0, 0)";
+                                    + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -500,7 +507,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                             String sql = "INSERT into task_variablediscount (TasktaskID, VariableDiscountdiscountID, percentage) "
                                     + "values ((select taskID from task where taskID = '" + taskID + "'), "
                                     + "(select discountID from variablediscount where discountID in (select max(discountID) "
-                                    + "from variablediscount)), " + percentage +")";
+                                    + "from variablediscount)), " + percentage + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -512,26 +519,27 @@ public class UpdateCustomer extends javax.swing.JPanel {
                             System.err.println(e.getMessage());
                         }
 
-                    }
-
-                    //insert this discount plan into the customer record
-                    try {
-                        String sql = "INSERT INTO DiscountPlan "
-                                + "(VariableDiscountdiscountID, CustomerAccountaccountID) "
-                                + "VALUES ((select discountID from VariableDiscount where discountID in "
-                                + "(select max(discountID) from VariableDiscount)), "
-                                + "(select accountID from customerAccount where accountID in "
-                                + "(select max(accountID) from customerAccount)))";
-                        PreparedStatement ps = null;
+                        //insert this discount plan into the customer record
                         try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            String sql = "INSERT INTO DiscountPlan "
+                                    + "(VariableDiscountdiscountID, CustomerAccountaccountID) "
+                                    + "VALUES ((select discountID from VariableDiscount where discountID in "
+                                    + "(select max(discountID) from VariableDiscount)), "
+                                    + "(select accountID from customerAccount where accountID in "
+                                    + "(select max(accountID) from customerAccount)))";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
                         }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
                     }
+                } else if (type.equals("Flexbile")) {
+                    //do stuff
                 }
             }
 
@@ -564,7 +572,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 }
             });
         } else if (discount.equals("Variable")) {
-            ShowTasks();
+            ShowVariableTasks();
+        }else if (discount.equals("Flexbile")) {
+            //do stuff
         }
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
