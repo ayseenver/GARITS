@@ -25,6 +25,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     String discount;
     String[] discountArray;
     String[] taskArray;
+    String[] bandArray;
     Map<String, String> discountDetail = new HashMap<>();
 
     public UpdateCustomer(String username) {
@@ -107,6 +108,38 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
             public String getElementAt(int i) {
                 return taskArray[i];
+            }
+        });
+    }
+
+    private void ShowFlexiBands() {
+        try {
+            this.rs = statement.executeQuery("select * from flexibands");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ArrayList<String> bands = new ArrayList<>();
+        
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String band = rs.getString("bandRange");
+                bands.add(band);
+            }
+        } catch (SQLException e) {
+        }
+
+        bandArray = CreateArray(bands);
+
+        listBusinessType.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return bandArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return bandArray[i];
             }
         });
     }
@@ -262,11 +295,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         });
         jPanel1.add(textFieldSearchDiscountDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 350, 120, 20));
 
-        listBusinessType.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane7.setViewportView(listBusinessType);
 
         jPanel1.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 370, 200, 120));
@@ -573,8 +601,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
             });
         } else if (discount.equals("Variable")) {
             ShowVariableTasks();
-        }else if (discount.equals("Flexbile")) {
-            //do stuff
+        } else if (discount.equals("Flexible")) {
+            ShowFlexiBands();
         }
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
