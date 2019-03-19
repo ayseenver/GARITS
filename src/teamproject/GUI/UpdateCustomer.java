@@ -145,6 +145,199 @@ public class UpdateCustomer extends javax.swing.JPanel {
         });
     }
 
+    private void ExistingCustomerDiscount() {
+        //check for which discount it is
+        String type = comboBoxDiscountPlan.getSelectedItem().toString();
+        if (type.equals("Fixed")) {
+            //get the overall percentage
+            String percentage = discountDetail.get("Overall");
+            try {
+                String sql = "INSERT INTO FixedDiscount (percentage) VALUES ("
+                        + Double.parseDouble(percentage) + ")";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                String sql = "INSERT INTO DiscountPlan "
+                        + "(FixedDiscountdiscountID, CustomerAccountaccountID) "
+                        + "VALUES ((select discountID from fixedDiscount where discountID in "
+                        + "(select max(discountID) from fixedDiscount)), "
+                        + "((select accountID from customeraccount where CustomerID = "
+                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                        + "and address = '" + textFieldAddress.getText() + "'))))";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        } else if (type.equals("Variable")) {
+            double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
+            double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
+            double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
+
+            //create a variable discount
+            try {
+                String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
+                        + "sparePartPercentage) "
+                        + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            for (Map.Entry<String, String> entry : discountDetail.entrySet()) {
+                String task = entry.getKey();
+                String percentage = entry.getValue();
+
+                //get the ID for the selected task
+                try {
+                    this.rs = statement.executeQuery("select taskID from Task where description = '" + task + "'");
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                String taskID = "";
+
+                try {
+                    while (rs.next()) {
+                        taskID = rs.getString("taskID");
+
+                        //create a task - variable discount record
+                        try {
+                            String sql = "INSERT into task_variablediscount (TasktaskID, VariableDiscountdiscountID, percentage) "
+                                    + "values ((select taskID from task where taskID = '" + taskID + "'), "
+                                    + "(select discountID from variablediscount where discountID in (select max(discountID) "
+                                    + "from variablediscount)), " + percentage + ")";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //insert this discount plan into the customer record
+                try {
+                    String sql = "INSERT INTO DiscountPlan "
+                            + "(VariableDiscountdiscountID, CustomerAccountaccountID) "
+                            + "VALUES ((select discountID from VariableDiscount where discountID in "
+                            + "(select max(discountID) from VariableDiscount)), "
+                            + "(select accountID from customeraccount where CustomerID = "
+                            + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                            + "and address = '" + textFieldAddress.getText() + "')))";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } else if (type.equals("Flexible")) {
+            try {
+                String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit) "
+                        + "values (0,0)";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //insert into the discount plan table
+            try {
+                String sql = "INSERT INTO DiscountPlan "
+                        + "(FlexibleDiscountdiscountID, CustomerAccountaccountID) "
+                        + "VALUES ((select discountID from flexibleDiscount where discountID in "
+                        + "(select max(discountID) from flexibleDiscount)), "
+                        + "(select accountID from customeraccount where CustomerID = "
+                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                        + "and address = '" + textFieldAddress.getText() + "')))";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //get all of the flexi bands, create a record for them
+            for (Map.Entry<String, String> entry : discountDetail.entrySet()) {
+                String band = entry.getKey();
+                double percentage = Double.parseDouble(entry.getValue());
+
+                //get the ID for the selected band
+                try {
+                    this.rs = statement.executeQuery("select bandID from flexibands where bandRange = '" + band + "'");
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                String bandID = "";
+
+                try {
+                    while (rs.next()) {
+                        bandID = rs.getString("bandID");
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //create a flexiband - flexibleDiscount record
+                try {
+                    String sql = "INSERT into flexibands_flexiblediscount (flexibleDiscountdiscountID, FlexiBandsbandID, percentage) "
+                            + "values ((select discountID from flexibleDiscount where discountID in(select max(discountID) from flexibleDiscount)), "
+                            + "(select bandID from flexibands where bandID = '" + bandID + "'), " + percentage + ")";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+    }
+
     private String[] CreateArray(ArrayList<String> discounts) {
         String[] newArray = new String[discounts.size()];
         newArray = discounts.toArray(newArray);
@@ -225,6 +418,26 @@ public class UpdateCustomer extends javax.swing.JPanel {
                     System.err.println(e.getMessage());
                 }
             } else if (type.equals("Variable")) {
+                double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
+                double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
+                double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
+
+                //create a variable discount
+                try {
+                    String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
+                            + "sparePartPercentage) "
+                            + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
                 for (Map.Entry<String, String> entry : discountDetail.entrySet()) {
                     String task = entry.getKey();
                     String percentage = entry.getValue();
@@ -241,44 +454,23 @@ public class UpdateCustomer extends javax.swing.JPanel {
                     try {
                         while (rs.next()) {
                             taskID = rs.getString("taskID");
+                            //create a task - variable discount record
+                            try {
+                                String sql = "INSERT into task_variablediscount (TasktaskID, VariableDiscountdiscountID, percentage) "
+                                        + "values ((select taskID from task where taskID = '" + taskID + "'), "
+                                        + "(select discountID from variablediscount where discountID in (select max(discountID) "
+                                        + "from variablediscount)), " + percentage + ")";
+                                PreparedStatement ps = null;
+                                try {
+                                    ps = connection.prepareStatement(sql);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                ps.executeUpdate();
+                            } catch (SQLException e) {
+                                System.err.println(e.getMessage());
+                            }
                         }
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
-                    double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
-                    double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
-
-                    //create a variable discount
-                    try {
-                        String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
-                                + "sparePartPercentage) "
-                                + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    //create a task - variable discount record
-                    try {
-                        String sql = "INSERT into task_variablediscount (TasktaskID, VariableDiscountdiscountID, percentage) "
-                                + "values ((select taskID from task where taskID = '" + taskID + "'), "
-                                + "(select discountID from variablediscount where discountID in (select max(discountID) "
-                                + "from variablediscount)), " + percentage + ")";
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
                     } catch (SQLException e) {
                         System.err.println(e.getMessage());
                     }
@@ -650,7 +842,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             UpdateCustomer();
-            
+
             CreateAccountHolder();
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -747,8 +939,97 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 //if customer is not already an account holder
                 if (accountID.equals("")) {
                     CreateAccountHolder();
-                }else{
+                } else {
                     //get the account holder details and update them.
+                    //update the pay later
+                    if (checkBoxConfigurePayLater.isSelected()) {
+                        try {
+                            String sql = "update CustomerAccount "
+                                    + "set configuredPayLater = 1 "
+                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                                    + "and address = '" + textFieldAddress.getText() + "')";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    } else {
+                        try {
+                            String sql = "update CustomerAccount "
+                                    + "set configuredPayLater = 0 "
+                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                                    + "and address = '" + textFieldAddress.getText() + "')";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                    if (checkBoxDiscountPlan.isSelected()) {
+                        //see if they have any discount plans
+                        try {
+                            String sql = "select * from discountplan "
+                                    + "where CustomerAccountaccountID = "
+                                    + "(select accountID from customeraccount where CustomerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                                    + "and address = '" + textFieldAddress.getText() + "'))";
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            rs = ps.executeQuery();
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        String discountAccountID = "";
+                        try {
+                            while (rs.next()) {
+                                discountAccountID = rs.getString("CustomerAccountaccountID");
+                            }
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        if (discountAccountID.equals("")) {
+                            //there are no discount plans.
+                            ExistingCustomerDiscount();
+                        } else {
+                            //set the existing plans to null and create the new ones.
+                            //first, set all existing plans to null
+                            try {
+                                String sql = "update discountplan set FixedDiscountdiscountID = null, "
+                                        + "variablediscountdiscountID = null, "
+                                        + "flexibleDiscountdiscountID = null "
+                                        + "where CustomerAccountaccountID = "
+                                        + "(select accountID from customeraccount where CustomerID = "
+                                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
+                                        + "and address = '" + textFieldAddress.getText() + "'))";
+                                PreparedStatement ps = null;
+                                try {
+                                    ps = connection.prepareStatement(sql);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                ps.executeUpdate();
+                            } catch (SQLException e) {
+                                System.err.println(e.getMessage());
+                            }
+                            ExistingCustomerDiscount();
+                        }
+                    }
                 }
             }
 
