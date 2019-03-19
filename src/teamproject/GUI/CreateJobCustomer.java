@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
@@ -306,7 +307,43 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-        // TODO add your handling code here:
+         try {
+          String sql = ("select name from Customer where name LIKE '%" + textFieldSearchCustomer.getText() + "%'"); 
+        PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    
+                }
+                this.rsC = ps.executeQuery();
+       } catch (SQLException e) {
+                System.err.println(e.getMessage());
+               
+            }
+       listCustomers.removeAll();
+       ArrayList<String> names = new ArrayList<>();
+
+        try {
+            while (rsC.next()) {
+                // read the result set
+                String name = rsC.getString("name");
+                names.add(name);
+            }
+        } catch (SQLException e) {
+        }
+        nameArray = CreateArray(names);
+
+        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return nameArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return nameArray[i];
+            }
+        });
+       
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed

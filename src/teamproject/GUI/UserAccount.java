@@ -332,7 +332,41 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonNewUserActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-        // TODO add your handling code here:
+        try{
+           String sql = ("select username from user where username LIKE '%" + textFieldSearch.getText() + "%'"); 
+         PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+         listUsers.removeAll();
+         ArrayList<String> users = new ArrayList<>(); 
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+                users.add(user);
+            }
+        } catch (SQLException e) {
+        }
+
+        userArray = CreateArray(users);
+
+        listUsers.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return userArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return userArray[i];
+            }
+        });
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed

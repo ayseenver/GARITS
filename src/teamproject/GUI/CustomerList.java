@@ -277,7 +277,51 @@ public class CustomerList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-        // TODO add your handling code here:
+      
+        try {
+          String sql = ("select name from Customer where name LIKE '%" + textFieldSearchCustomer.getText() + "%'"); 
+        PreparedStatement ps = null;
+       
+                try {
+                    ps = connection.prepareStatement(sql);
+                     
+                } catch (Exception e) {
+                    e.printStackTrace();
+                     
+                }
+                this.rsD = ps.executeQuery();
+           
+       } catch (SQLException e) {
+               System.err.println(e.getMessage());
+              
+            }
+        
+       listCustomers.removeAll();
+       ArrayList<String> names = new ArrayList<>();
+
+        try {
+            while (rsD.next()) {
+                // read the result set
+                String name = rsD.getString("name");
+                names.add(name);
+                
+            }
+        } catch (SQLException e) {
+            
+        }
+        nameArray = CreateArray(names);
+
+        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return nameArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return nameArray[i];
+            }
+            
+        });
+       
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
