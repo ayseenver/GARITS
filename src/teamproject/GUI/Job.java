@@ -926,9 +926,9 @@ public class Job extends javax.swing.JPanel {
 
         //create an invoice in the database.
         try {
-            sql = ("insert into Invoice(dateProduced, JobjobID)"
+            sql = ("insert into Invoice(dateProduced, JobjobID, payLater)"
                     + " values (date('now'), "
-                    + "" + jobID + ")");
+                    + "" + jobID + ", 0)");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
