@@ -13,6 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
 
@@ -323,6 +326,11 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
     }
 
     private void FixedDiscount(String fixedID) {
@@ -392,6 +400,280 @@ public class Invoice extends javax.swing.JPanel {
         //make a standard payment
         StandardPayment();
 
+    }
+
+    private void VariableDiscount(String variableID) {
+        //get the job type
+        try {
+            String sql = ("select type from job where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String jobType = "";
+        try {
+            while (rs.next()) {
+                jobType = rs.getString("type");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //put "percentage" on the end to get the column we need to look for.
+        //e.g; Servicepercentage
+        jobType += "percentage";
+
+        try {
+            String sql = ("select * from variableDiscount where discountID = " + variableID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //get the percentage discount for this type of job, and the part percentage
+        double jobPercentage = 0.0;
+        double partPercentage = 0.0;
+        try {
+            while (rs.next()) {
+                jobPercentage = Double.parseDouble(rs.getString(jobType));
+                partPercentage = Double.parseDouble(rs.getString("SparePartpercentage"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //a map storing the taskID and discount percentage
+        HashMap<String, String> taskDiscount = new HashMap<>();
+
+        //get all task IDs for this job
+        try {
+            String sql = ("select TasktaskID from actual_task where jobjobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //put all IDs in an array list
+        ArrayList<String> taskIDs = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                String ID = rs.getString("TasktaskID");
+                taskIDs.add(ID);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //get the price for each task. Add it to total
+        double totalTaskPrice = 0.0;
+        for (String s : taskIDs) {
+            try {
+                String sql = ("select * from actual_task where tasktaskID = " + s + " and jobjobID = " + jobNumber);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    double price = Double.parseDouble(rs.getString("actualCost"));
+                    totalTaskPrice += price;
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        //loop through the ID list and get the corresponding discount %
+        for (String s : taskIDs) {
+            try {
+                String sql = ("select * from task_variablediscount where tasktaskID = " + s
+                        + " and variableDiscountdiscountID = " + variableID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    String percentage = rs.getString("percentage");
+                    taskDiscount.put(s, percentage); //taskID, percentage
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        //now we have all of the tasks and their percentages, and the overall discount
+        //get all of the parts associated with this job
+        try {
+            String sql = ("select * from job_part_record where jobjobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //put all part IDs in an array lit
+        ArrayList<String> partIDs = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                String ID = rs.getString("PartpartID");
+                partIDs.add(ID);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //loop through the part IDs, get the price for each one and add to total
+        double totalPartCost = 0.0;
+        for (String s : partIDs) {
+            try {
+                String sql = ("select * from sparepart where partID = " + s);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
+                    totalPartCost += sellingPrice;
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        //now has: total part cost, tasks and their percentages, overall job percentage
+        //get the total cost for this job
+        try {
+            String sql = ("select * from job where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        double totalCost = 0.0;
+        try {
+            while (rs.next()) {
+                totalCost = Double.parseDouble(rs.getString("totalCost"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //take away the cost of parts
+        totalCost -= totalPartCost;
+        totalPartCost = totalPartCost * (1 - (partPercentage / 100));
+
+        //this is the total cost after discounting parts
+        totalCost += totalPartCost;
+
+        //now discount the tasks
+        //first take away the price of all the tasks
+        totalCost -= totalTaskPrice;
+
+        //then get each task and its discount percentage
+        //HashMap<String, String> taskDiscount = new HashMap<>();
+        double newTaskPrice = 0.0; // the total price of tasks with discount applied
+        
+        Iterator it = taskDiscount.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            try {
+                String sql = ("select * from actual_task where jobjobID = " + jobNumber
+                        + " and tasktaskID = " + pair.getKey());
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    double originalPrice = Double.parseDouble(rs.getString("actualCost"));
+                    double percentage = Double.parseDouble(pair.getValue() + "");
+                    newTaskPrice += originalPrice * (1-(percentage/100));
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        
+        totalCost += newTaskPrice;
+        
+        //finally, apply overall discount
+        totalCost = totalCost * (1-(jobPercentage/100));
+
+        //update the total cost of the job, taking into account the discounted price
+        try {
+            String sql = ("update job set totalCost = " + totalCost + " where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        StandardPayment();
     }
 
     /**
@@ -568,10 +850,14 @@ public class Invoice extends javax.swing.JPanel {
 
         String accountID = "";
         String fixedID = "";
+        String flexibleID = "";
+        String variableID = "";
         try {
             while (rs.next()) {
                 accountID = rs.getString("CustomerAccountaccountID");
                 fixedID = rs.getString("FixedDiscountdiscountID");
+                flexibleID = rs.getString("FlexibleDiscountdiscountID");
+                variableID = rs.getString("VariableDiscountdiscountID");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -583,18 +869,22 @@ public class Invoice extends javax.swing.JPanel {
             StandardPayment();
         } else {
             //check for fixed discount
-            if (fixedID.equals("")) {
+            if (fixedID == null) {
                 //no fixed discount
             } else {
                 //fixed discount
                 FixedDiscount(fixedID);
             }
-        }
 
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new MainMenu(username);
+            //check for variable discount
+            if (variableID == null) {
+                //no variable discount
+            } else {
+                //variable discount
+                VariableDiscount(variableID);
+
+            }
+        }
     }//GEN-LAST:event_buttonPayActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed

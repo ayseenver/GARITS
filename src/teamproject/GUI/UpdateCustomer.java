@@ -88,6 +88,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         ArrayList<String> tasks = new ArrayList<>();
         tasks.add("MoT");
         tasks.add("Service");
+        tasks.add("Repair");
         tasks.add("Parts");
 
         //add all tasks to task list
@@ -187,12 +188,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
             double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
             double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
             double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
+            double repairPercentage = Double.parseDouble(discountDetail.get("Repair"));
 
             //create a variable discount
             try {
                 String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
-                        + "sparePartPercentage) "
-                        + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
+                        + "sparePartPercentage, repairPercentage) "
+                        + "values (" + motPercentage + ", " + servicePercentage + ", "
+                        + partPercentage + ", " + repairPercentage + ")";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -421,12 +424,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
                 double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
                 double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
+                double repairPercentage = Double.parseDouble(discountDetail.get("Repair"));
 
                 //create a variable discount
                 try {
                     String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
-                            + "sparePartPercentage) "
-                            + "values (" + motPercentage + ", " + servicePercentage + ", " + partPercentage + ")";
+                            + "sparePartPercentage, repairPercentage) "
+                            + "values (" + motPercentage + ", " + servicePercentage + ", " 
+                            + partPercentage + ", " + repairPercentage + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
