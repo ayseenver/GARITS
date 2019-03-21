@@ -625,7 +625,7 @@ public class Invoice extends javax.swing.JPanel {
         //then get each task and its discount percentage
         //HashMap<String, String> taskDiscount = new HashMap<>();
         double newTaskPrice = 0.0; // the total price of tasks with discount applied
-        
+
         Iterator it = taskDiscount.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
@@ -647,17 +647,17 @@ public class Invoice extends javax.swing.JPanel {
                 while (rs.next()) {
                     double originalPrice = Double.parseDouble(rs.getString("actualCost"));
                     double percentage = Double.parseDouble(pair.getValue() + "");
-                    newTaskPrice += originalPrice * (1-(percentage/100));
+                    newTaskPrice += originalPrice * (1 - (percentage / 100));
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
-        
+
         totalCost += newTaskPrice;
-        
+
         //finally, apply overall discount
-        totalCost = totalCost * (1-(jobPercentage/100));
+        totalCost = totalCost * (1 - (jobPercentage / 100));
 
         //update the total cost of the job, taking into account the discounted price
         try {
@@ -672,7 +672,88 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
+
+        StandardPayment();
+    }
+
+    private void FlexibleDiscount(String flexibleID, String accountID) {
+        //get the job price
+        try {
+            String sql = ("select totalCost from job where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        Double totalCost = 0.0;
+        try {
+            while (rs.next()) {
+                totalCost = Double.parseDouble(rs.getString("totalCost"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //get the discount plan for this customer
+        try {
+            String sql = ("select flexibands_flexiblediscount.*, flexiblediscount.orderValueThisMonth "
+                    + "from flexibands_flexiblediscount inner join flexiblediscount on "
+                    + "flexiblediscount.discountID = flexibands_flexiblediscount.FlexibleDiscountdiscountID "
+                    + "where flexiblediscountdiscountID = " + flexibleID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //store each flexi band ID and it's percentage
+        HashMap<String, Double> bandIDPercentage = new HashMap<>();
+        try {
+            while (rs.next()) {
+                String bandID = rs.getString("FlexiBandsbandID");
+                double percentage = Double.parseDouble(rs.getString("percentage"));
+                bandIDPercentage.put(bandID, percentage);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        double percentage = 0.0;
+        if (totalCost >= 0 && totalCost <= 1000) {
+            percentage = bandIDPercentage.get("1");
+        } else if (totalCost >= 1001 && totalCost <= 5000) {
+            percentage = bandIDPercentage.get("2");
+        } else if (totalCost >= 5001 && totalCost <= 10000) {
+            percentage = bandIDPercentage.get("3");
+        }
+
+        totalCost = totalCost * (1 - (percentage / 100));
+
+        //update the total cost of the job, taking into account the discount.
+        try {
+            String sql = ("update job set totalCost = " + totalCost + " where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         StandardPayment();
     }
 
@@ -882,7 +963,14 @@ public class Invoice extends javax.swing.JPanel {
             } else {
                 //variable discount
                 VariableDiscount(variableID);
+            }
 
+            //check for flexible discount
+            if (flexibleID == null) {
+                //no flexible discount
+            } else {
+                //flexible discount
+                FlexibleDiscount(flexibleID, accountID);
             }
         }
     }//GEN-LAST:event_buttonPayActionPerformed
