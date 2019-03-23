@@ -185,7 +185,6 @@ public class CreateJobTask extends javax.swing.JPanel {
         addTask = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelSelectTasks.setFont(new java.awt.Font("Lucida Grande", 1, 48)); // NOI18N
@@ -205,13 +204,13 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelCreateJob.setText("Create Job");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, -1, -1));
 
-        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT inspection", "repair" }));
+        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Repair", "Service" }));
         bayTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bayTypeComboActionPerformed(evt);
             }
         });
-        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 610, -1, -1));
+        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 610, -1, -1));
 
         listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listAvailableBays);
