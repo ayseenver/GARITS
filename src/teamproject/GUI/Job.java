@@ -881,13 +881,103 @@ public class Job extends javax.swing.JPanel {
         String[] sArray;
         String s;
 
-        for (String x : usedParts) {
-            sArray = x.split(", ");
-            s = sArray[0];
-            //get quantity of inital parts
+        try {
+            connection.setAutoCommit(false);
+            for (String x : usedParts) {
+                sArray = x.split(", ");
+                s = sArray[0];
+                //get quantity of inital parts
+                try {
+                    sql = ("select * from sparePart where partName = '" + s + "' "
+                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    initialQuantity = Integer.parseInt(rs.getString("quantity"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get quantity of used parts
+                try {
+                    sql = ("select quantity from job_part_record where PartpartID = "
+                            + "(select partID from sparePart where partName = '" + s + "' "
+                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    usedQuantity = Integer.parseInt(rs.getString("quantity"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //update the quantity in the stock ledger
+                try {
+                    sql = ("UPDATE SparePart "
+                            + "SET quantity = " + (initialQuantity - usedQuantity)
+                            + " WHERE partID = (select partID from sparePart where partName = '" + s
+                            + "' and vehicleType = (select model from vehicle where registrationNumber = '"
+                            + vehicleReg + "'))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+
+            //get actual hours and cost of all the tasks
+            double totalCost = 0.0d;
+            double totalHours = 0.0d;
+
             try {
-                sql = ("select * from sparePart where partName = '" + s + "' "
-                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                sql = ("select * from Actual_Task where jobJobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    totalHours += Double.parseDouble(rs.getString("actualHours"));
+                    totalCost += Double.parseDouble(rs.getString("actualCost"));
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //get the hourly rate for the mechanic assinged to this job, and multiply
+            //that by the total hours spent.
+            try {
+                sql = ("select hourlyRate from mechanic where ID in (select MechanicID from job where jobID = " + jobID + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -900,16 +990,21 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                initialQuantity = Integer.parseInt(rs.getString("quantity"));
+                while (rs.next()) {
+                    double hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
+                    totalCost *= hourlyRate;
+                }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            //get quantity of used parts
+            //add the actual cost of all the parts
             try {
-                sql = ("select quantity from job_part_record where PartpartID = "
-                        + "(select partID from sparePart where partName = '" + s + "' "
-                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                sql = ("select (quantity * sellingPrice) from "
+                        + "(SELECT job_part_record.quantity, SparePart.* "
+                        + "FROM job_part_record INNER JOIN SparePart "
+                        + "ON job_part_record.PartpartID=SparePart.partID "
+                        + "where job_part_record.jobjobID = " + jobID + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -922,18 +1017,18 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                usedQuantity = Integer.parseInt(rs.getString("quantity"));
+                while (rs.next()) {
+                    totalCost += Double.parseDouble(rs.getString("(quantity * sellingPrice)"));
+                }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            //update the quantity in the stock ledger
+            //set completion date to today, and update the total hours and total cost
             try {
-                sql = ("UPDATE SparePart "
-                        + "SET quantity = " + (initialQuantity - usedQuantity)
-                        + " WHERE partID = (select partID from sparePart where partName = '" + s
-                        + "' and vehicleType = (select model from vehicle where registrationNumber = '"
-                        + vehicleReg + "'))");
+                sql = ("update job "
+                        + "set dateCompleted = date('now'), totalCost = " + totalCost + ", "
+                        + "totalHours = " + totalHours + ", status = 'Completed' where jobID = '" + jobID + "'");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -944,150 +1039,68 @@ public class Job extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-        }
 
-        //get actual hours and cost of all the tasks
-        double totalCost = 0.0d;
-        double totalHours = 0.0d;
-
-        try {
-            sql = ("select * from Actual_Task where jobJobID = " + jobID);
-            PreparedStatement ps = null;
+            //unbook the bay from this job
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("select * from bay where bayID in (select baybayID from job where jobID = " + jobID + ")");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                totalHours += Double.parseDouble(rs.getString("actualHours"));
-                totalCost += Double.parseDouble(rs.getString("actualCost"));
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //get the hourly rate for the mechanic assinged to this job, and multiply
-        //that by the total hours spent.
-        try {
-            sql = ("select hourlyRate from mechanic where ID in (select MechanicID from job where jobID = " + jobID + ")");
-            PreparedStatement ps = null;
+            String bayID = "";
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                while (rs.next()) {
+                    bayID = rs.getString("bayID");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                double hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
-                totalCost *= hourlyRate;
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //add the actual cost of all the parts
-        try {
-            sql = ("select (quantity * sellingPrice) from "
-                    + "(SELECT job_part_record.quantity, SparePart.* "
-                    + "FROM job_part_record INNER JOIN SparePart "
-                    + "ON job_part_record.PartpartID=SparePart.partID "
-                    + "where job_part_record.jobjobID = " + jobID + ")");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("update bay set booked = 0 where bayID = " + bayID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                totalCost += Double.parseDouble(rs.getString("(quantity * sellingPrice)"));
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //set completion date to today, and update the total hours and total cost
-        try {
-            sql = ("update job "
-                    + "set dateCompleted = date('now'), totalCost = " + totalCost + ", "
-                    + "totalHours = " + totalHours + ", status = 'Completed' where jobID = '" + jobID + "'");
-            PreparedStatement ps = null;
+            //create an invoice in the database.
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("insert into Invoice(dateProduced, JobjobID, payLater)"
+                        + " values (date('now'), "
+                        + "" + jobID + ", 0)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }
-
-        //unbook the bay from this job
-        try {
-            sql = ("select * from bay where bayID in (select baybayID from job where jobID = " + jobID + ")");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                connection.rollback();
+                connection.setAutoCommit(true); //just in case it had been set to false earlier.
+            } catch (SQLException a) {
+                System.err.println(a.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String bayID = "";
-        try {
-            while (rs.next()) {
-                bayID = rs.getString("bayID");
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            sql = ("update bay set booked = 0 where bayID = " + bayID);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //create an invoice in the database.
-        try {
-            sql = ("insert into Invoice(dateProduced, JobjobID, payLater)"
-                    + " values (date('now'), "
-                    + "" + jobID + ", 0)");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
 
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
