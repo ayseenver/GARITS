@@ -68,9 +68,10 @@
     <Component class="javax.swing.JComboBox" name="bayTypeCombo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="MoT inspection"/>
-            <StringItem index="1" value="repair"/>
+          <StringArray count="3">
+            <StringItem index="0" value="MoT"/>
+            <StringItem index="1" value="Repair"/>
+            <StringItem index="2" value="Service"/>
           </StringArray>
         </Property>
       </Properties>
@@ -82,7 +83,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="390" y="610" width="-1" height="-1"/>
+          <AbsoluteConstraints x="400" y="610" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
