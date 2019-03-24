@@ -37,10 +37,12 @@ public class Timer {
         scheduler.scheduleAtFixedRate(new Automation(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
     }
 
+    /*
     private void Alert() {
         //call the alert class every 15 minutes
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
         exec.scheduleAtFixedRate(new Alert(), 0, 15, TimeUnit.MINUTES);
     }
+*/
 
 }
