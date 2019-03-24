@@ -377,7 +377,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             try {
                 String sql = ("select * from Vehicle where CustomerID = "
                         + "(select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "') and delted = 0");
+                        + "and address = '" + c.getAddress() + "') and deleted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
