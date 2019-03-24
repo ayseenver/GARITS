@@ -132,6 +132,7 @@ public class Job extends javax.swing.JPanel {
 
     private void ListAllParts() {
         listAvailableParts.removeAll();
+        parts.clear();
 
         //add all parts to part list
         try {
@@ -141,6 +142,7 @@ public class Job extends javax.swing.JPanel {
                 parts.add(part);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         partArray = CreateArray(parts);
@@ -205,6 +207,7 @@ public class Job extends javax.swing.JPanel {
                 tasks.add(task);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         taskArray = CreateArray(tasks);
@@ -315,6 +318,34 @@ public class Job extends javax.swing.JPanel {
             }
         }
         );
+    }
+
+    private void UpdateTaskList() {
+        listAvailableTasks.removeAll();
+        tasks.clear();
+
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
     }
 
     /**
@@ -584,11 +615,48 @@ public class Job extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Task where description LIKE '%"
+                    + textFieldSearchTasks.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        UpdateTaskList();
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void buttonSearchPartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchPartsActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchParts.getText() + "%' or vehicleType LIKE '%"
+                    + textFieldSearchParts.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ListAllParts();
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
@@ -810,7 +878,7 @@ public class Job extends javax.swing.JPanel {
             }
         });
 
-        parts.remove(selected);
+        //parts.remove(selected);
         ListAllParts();
 
         //insert part into the parts used for this job

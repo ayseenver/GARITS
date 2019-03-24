@@ -56,7 +56,14 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
+        
+        ShowCustomers();
 
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
@@ -80,9 +87,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
                 return nameArray[i];
             }
         });
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private String[] CreateArray(ArrayList<String> tasks) {
@@ -366,14 +370,32 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Customer where name LIKE '%"
+                    + textFieldSearchCustomer.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rsC = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
         if (temp != null) {
             CreateCustomerObject(temp);
-            
+
             try {
                 String sql = ("select * from Vehicle where CustomerID = "
                         + "(select ID from customer where name = '" + c.getName() + "' "

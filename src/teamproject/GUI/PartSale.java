@@ -45,13 +45,6 @@ public class PartSale extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        ShowAllParts();
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    private void ShowAllParts() {
         try {
             this.rs = statement.executeQuery("select * from sparepart");
         } catch (SQLException e) {
@@ -59,6 +52,14 @@ public class PartSale extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
+
+        ShowAllParts();
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowAllParts() {
 
         ArrayList<String> parts = new ArrayList<>();
 
@@ -398,7 +399,26 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowAllParts();
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

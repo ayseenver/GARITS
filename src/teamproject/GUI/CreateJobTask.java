@@ -66,8 +66,6 @@ public class CreateJobTask extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        listRequiredTasks.removeAll();
-
         UpdateTaskList();
         UpdateBayList();
 
@@ -125,6 +123,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void UpdateTaskList() {
         listAvailableTasks.removeAll();
+        tasks.clear();
 
         //add all tasks to task list
         try {
@@ -134,6 +133,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 tasks.add(task);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         taskArray = CreateArray(tasks);
@@ -371,7 +371,25 @@ public class CreateJobTask extends javax.swing.JPanel {
     }//GEN-LAST:event_checkBoxYardActionPerformed
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Task where description LIKE '%"
+                    + textFieldSearchJobs.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        UpdateTaskList();
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed

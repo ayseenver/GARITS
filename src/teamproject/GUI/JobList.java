@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,13 +44,6 @@ public class JobList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        ShowAllJobs();
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    private void ShowAllJobs() {
         try {
             this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
         } catch (SQLException e) {
@@ -57,6 +51,14 @@ public class JobList extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
+
+        ShowAllJobs();
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowAllJobs() {
 
         listJobList.removeAll();
         ArrayList<String> jobs = new ArrayList<>();
@@ -144,12 +146,6 @@ public class JobList extends javax.swing.JPanel {
         jScrollPane2.setViewportView(listJobList);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 400));
-
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         lblLoggedIn.setText("Logged In as:");
@@ -192,16 +188,34 @@ public class JobList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select job.*, vehicle.*, customer.* from job "
+                    + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
+                    + "inner join customer on customer.ID = vehicle.CustomerID "
+                    + "where registrationNumber like '%" + textFieldSearch.getText() + "%' "
+                    + "or name like '%" + textFieldSearch.getText() + "%' and "
+                    + "status = '" + comboStatus.getSelectedItem().toString() + "'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowAllJobs();
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void textFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldSearchActionPerformed
-
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
