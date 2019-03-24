@@ -12,7 +12,7 @@ public class Timer {
 
     public Timer() {
         Automate();
-        Alert();
+        //Alert();
     }
 
     private void Automate() {
