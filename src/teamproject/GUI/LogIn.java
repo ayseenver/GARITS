@@ -181,6 +181,7 @@ public class LogIn extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
 
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_buttonSigninActionPerformed
 

@@ -91,6 +91,57 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         return newArray;
     }
 
+    private void CreateCustomerObject(String name) {
+        try {
+            String sql = ("select * from Customer where name = '" + name + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsC = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setName(rsC.getString("name"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setAddress(rsC.getString("address"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setPostCode(rsC.getString("postCode"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setFax(rsC.getString("fax"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -321,56 +372,9 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
-        if (!(temp == null)) {
-            try {
-                String sql = ("select * from Customer where name = '" + temp + "'");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rsC = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setName(rsC.getString("name"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setAddress(rsC.getString("address"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setEmailAddress(rsC.getString("emailAddress"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setPostCode(rsC.getString("postCode"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setTelephoneNumber(rsC.getString("telephoneNumber"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                c.setFax(rsC.getString("fax"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
+        if (temp != null) {
+            CreateCustomerObject(temp);
+            
             try {
                 String sql = ("select * from Vehicle where CustomerID = "
                         + "(select ID from customer where name = '" + c.getName() + "' "
@@ -435,8 +439,13 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     private void buttonAddNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
-        if (!(temp == null)) {
+        if (temp != null) {
+            CreateCustomerObject(temp);
             //create a new vehicle for this customer
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new UpdateCustomerVehicle(username, c);
         } else {
             String mess = "Select a customer";
             JOptionPane.showMessageDialog(new JFrame(), mess);
