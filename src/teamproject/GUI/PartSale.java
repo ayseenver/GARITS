@@ -401,6 +401,7 @@ public class PartSale extends javax.swing.JPanel {
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
         try {
             String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
                     + textFieldSearchAllStock.getText() + "%'");
             PreparedStatement ps = null;
 

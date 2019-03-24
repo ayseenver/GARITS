@@ -639,6 +639,7 @@ public class Job extends javax.swing.JPanel {
     private void buttonSearchPartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchPartsActionPerformed
         try {
             String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchParts.getText() + "%' or vehicleType LIKE '%"
                     + textFieldSearchParts.getText() + "%'");
             PreparedStatement ps = null;
 

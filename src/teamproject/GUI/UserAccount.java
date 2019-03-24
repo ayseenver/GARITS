@@ -203,7 +203,7 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 610, 130, 30));
 
-        buttonSearch.setText("Search username");
+        buttonSearch.setText("Search");
         buttonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSearchActionPerformed(evt);
@@ -344,7 +344,9 @@ public class UserAccount extends javax.swing.JPanel {
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
         try {
             String sql = ("select * from user where username LIKE '%"
-                    + textFieldSearch.getText() + "%'");
+                    + textFieldSearch.getText() + "%' "
+                    + "or firstName LIKE '%" + textFieldSearch.getText() + "%' "
+                    + "or surname LIKE '%" + textFieldSearch.getText() + "%'");
             PreparedStatement ps = null;
 
             try {

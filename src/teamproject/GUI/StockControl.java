@@ -45,6 +45,14 @@ public class StockControl extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
+        try {
+            this.rs = statement.executeQuery("select * from sparepart");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
         ShowAllParts();
         ShowLowParts();
 
@@ -59,13 +67,6 @@ public class StockControl extends javax.swing.JPanel {
     }
 
     private void ShowAllParts() {
-        try {
-            this.rs = statement.executeQuery("select * from sparepart");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
 
         ArrayList<String> parts = new ArrayList<>();
 
@@ -454,7 +455,26 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonLowStockOrderActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowAllParts();
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
 
     private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
