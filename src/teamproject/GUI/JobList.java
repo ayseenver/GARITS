@@ -253,6 +253,13 @@ public class JobList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSelectJobActionPerformed
 
     private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
+        try {
+            this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
         ShowAllJobs();
     }//GEN-LAST:event_comboStatusActionPerformed
 
