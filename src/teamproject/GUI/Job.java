@@ -598,7 +598,7 @@ public class Job extends javax.swing.JPanel {
         //insert the new bayID
         bayID = listAvailableBays.getSelectedValue();
         try {
-            if (!(bayID.isEmpty())) {
+            if (!(bayID == null)) {
                 String[] bayParts = bayID.split(": ");
                 bayID = bayParts[0];
                 int bayIDInt = Integer.parseInt(bayID);
