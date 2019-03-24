@@ -281,7 +281,7 @@ public class ReminderGUI extends javax.swing.JPanel {
             details = CreateMoTReminder();
         } else if (type.equals("Service")) {
             details = CreateServiceReminder();
-        }else if (type.equals("Payment")){
+        } else if (type.equals("Payment")) {
             details = CreatePaymentReminder();
         }
 
@@ -453,6 +453,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         if (listReminders.getSelectedValue() != null) {
             SplitSelected();
             Print();
+        } else {
+            String mess = "Select a reminder";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
@@ -491,13 +494,13 @@ public class ReminderGUI extends javax.swing.JPanel {
                     } catch (SQLException e) {
                         System.err.println(e.getMessage());
                     }
-                    
-                    String invoiceNo = "";                   
-                    try{
-                        while(rs.next()){
+
+                    String invoiceNo = "";
+                    try {
+                        while (rs.next()) {
                             invoiceNo = rs.getString("invoiceinvoicenumber");
                         }
-                    }catch(SQLException e){
+                    } catch (SQLException e) {
                         System.err.println(e.getMessage());
                     }
 
