@@ -49,6 +49,15 @@ public class Invoice extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
+        //get all unpaid invoices for jobs
+        try {
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
+                    + "and JobjobID is not null and payLater = 0");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
         ShowAllInvoices();
 
         frame.setVisible(true);
@@ -257,16 +266,6 @@ public class Invoice extends javax.swing.JPanel {
     }
 
     private void ShowAllInvoices() {
-        //get all unpaid invoices for jobs
-        try {
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
-                    + "and JobjobID is not null and payLater = 0");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-
         ArrayList<String> invoices = new ArrayList<>();
 
         try {
@@ -797,13 +796,13 @@ public class Invoice extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        buttonSearchInvoices.setText("Search");
+        buttonSearchInvoices.setText("Search invoice number");
         buttonSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSearchInvoicesActionPerformed(evt);
             }
         });
-        add(buttonSearchInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 170, -1, -1));
+        add(buttonSearchInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 170, -1, -1));
 
         buttonPay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPay.setText("Pay");
@@ -908,7 +907,25 @@ public class Invoice extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInvoicesActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Invoice where invoiceNumber LIKE '%"
+                    + textFieldSearchInvoices.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowAllInvoices();
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed

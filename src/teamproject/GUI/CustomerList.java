@@ -43,6 +43,14 @@ public class CustomerList extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
+        ShowCustomers();
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+    private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
@@ -65,10 +73,6 @@ public class CustomerList extends javax.swing.JPanel {
                 return nameArray[i];
             }
         });
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     private String[] CreateArray(ArrayList<String> customers) {
@@ -278,7 +282,25 @@ public class CustomerList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Customer where name LIKE '%"
+                    + textFieldSearchCustomer.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rsC = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
@@ -307,11 +329,11 @@ public class CustomerList extends javax.swing.JPanel {
 
             try {
                 while (rsD.next()) {
-                    String detail = rsD.getString("registrationNumber") + ", " 
-                            + rsD.getString("make") + ", " 
-                            + rsD.getString("model") + ", " 
-                            + rsD.getString("engineSerial") 
-                            + ", " + rsD.getString("chassisNumber") 
+                    String detail = rsD.getString("registrationNumber") + ", "
+                            + rsD.getString("make") + ", "
+                            + rsD.getString("model") + ", "
+                            + rsD.getString("engineSerial")
+                            + ", " + rsD.getString("chassisNumber")
                             + ", " + rsD.getString("colour");
                     vehicle.add(detail);
                 }

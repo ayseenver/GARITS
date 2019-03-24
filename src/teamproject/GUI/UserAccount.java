@@ -49,6 +49,14 @@ public class UserAccount extends javax.swing.JPanel {
         labelHourlyRate.setVisible(false);
         textFieldHourlyRate.setVisible(false);
 
+        try {
+            this.rs = statement.executeQuery("select * from User");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
         UpdateUserList();
     }
 
@@ -59,13 +67,6 @@ public class UserAccount extends javax.swing.JPanel {
     }
 
     private void UpdateUserList() {
-        try {
-            this.rs = statement.executeQuery("select * from User");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
 
         listUsers.removeAll();
         ArrayList<String> users = new ArrayList<>();
@@ -202,13 +203,13 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 610, 130, 30));
 
-        buttonSearch.setText("Search");
+        buttonSearch.setText("Search username");
         buttonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSearchActionPerformed(evt);
             }
         });
-        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, -1, -1));
         add(textFieldFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 540, 130, -1));
 
         buttonEditUser.setText("Edit User");
@@ -328,11 +329,38 @@ public class UserAccount extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+
+        try {
+            this.rs = statement.executeQuery("select * from User");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
         UpdateUserList();
     }//GEN-LAST:event_buttonNewUserActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from user where username LIKE '%"
+                    + textFieldSearch.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        UpdateUserList();
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
