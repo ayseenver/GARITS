@@ -38,7 +38,7 @@ public class CustomerList extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rsC = statement.executeQuery("select * from Customer");
+            this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -79,7 +79,8 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void GetSelectedCustomer() {
         try {
-            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "'";
+            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "' "
+                    + "and deleted = 0";
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -289,7 +290,7 @@ public class CustomerList extends javax.swing.JPanel {
 
             try {
                 String sql = ("select * from vehicle where CustomerID = "
-                        + "(select ID from customer where name = '" + details + "')");
+                        + "(select ID from customer where name = '" + details + "') and deleted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);

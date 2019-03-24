@@ -430,7 +430,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 try {
                     String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
                             + "sparePartPercentage, repairPercentage) "
-                            + "values (" + motPercentage + ", " + servicePercentage + ", " 
+                            + "values (" + motPercentage + ", " + servicePercentage + ", "
                             + partPercentage + ", " + repairPercentage + ")";
                     PreparedStatement ps = null;
                     try {
@@ -828,14 +828,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
-                        + "postCode, telephoneNumber, fax, dateCreated) "
+                        + "postCode, telephoneNumber, fax, dateCreated, deleted) "
                         + "VALUES ('" + textFieldFullName.getText() + "', "
                         + "'" + textFieldAddress.getText() + "', "
                         + "'" + textFieldEmail.getText() + "', "
                         + "'" + textFieldPostCode.getText() + "', "
                         + "'" + textFieldTelephone.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
-                        + "date('now'))");
+                        + "date('now'), "
+                        + "0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -1087,30 +1088,22 @@ public class UpdateCustomer extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        //turn off foreign key contraints
         try {
-            statement.executeUpdate("PRAGMA foreign_keys = OFF");
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //delete customer with this ID
-        try {
-            String sql = ("delete from customer where ID = " + customerID);
+            String sql = ("update customer set deleted = 1 where ID = " + customerID);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ps.executeUpdate();
+            rs = ps.executeQuery();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
         //delete all vehciles with this CustomerID
         try {
-            String sql = ("delete from vehicle where CustomerID = " + customerID);
+            String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -1118,13 +1111,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //turn on foreign key contraints
-        try {
-            statement.executeUpdate("PRAGMA foreign_keys = ON");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
