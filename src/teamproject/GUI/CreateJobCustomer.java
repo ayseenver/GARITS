@@ -50,7 +50,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rsC = statement.executeQuery("select * from Customer");
+            this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -93,7 +93,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     private void CreateCustomerObject(String name) {
         try {
-            String sql = ("select * from Customer where name = '" + name + "'");
+            String sql = ("select * from Customer where name = '" + name + "' and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -311,7 +311,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             String[] details = temp.split(", ");
 
             try {
-                String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "'";
+                String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "' and deleted = 0";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -378,7 +378,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             try {
                 String sql = ("select * from Vehicle where CustomerID = "
                         + "(select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "')");
+                        + "and address = '" + c.getAddress() + "') and delted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);

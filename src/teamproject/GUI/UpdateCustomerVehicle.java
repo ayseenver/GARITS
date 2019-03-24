@@ -380,7 +380,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 String sql = ("INSERT INTO Vehicle (registrationNumber, "
                         + "CustomerID, make, "
                         + "model, engineSerial, chassisNumber, colour, "
-                        + "nextServiceDate, nextMOTDate) "
+                        + "nextServiceDate, nextMOTDate, deleted) "
                         + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
                         + "(select ID from customer where name = '" + c.getName() + "' "
                         + "and address = '" + c.getAddress() + "'), "
@@ -390,7 +390,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                         + "'" + textFieldChassisNo.getText() + "', "
                         + "'" + textFieldColour.getText() + "', "
                         + "'" + textFieldNextServiceDate.getText() + "', "
-                        + "'" + textFieldNextMoTDate.getText() + "')");
+                        + "'" + textFieldNextMoTDate.getText() + "', 0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -448,17 +448,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             String [] parts = selected.split(", ");
             String regNo = parts[0];
             
-            
-            //turn off foreign key contraints
-            try {
-                statement.executeUpdate("PRAGMA foreign_keys = OFF");
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
+           
             //delete this vehicle
             try {
-                String sql = ("delete from vehicle where registrationNumber = " + regNo);
+                String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -466,13 +459,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            
-            //turn on foreign key contraints
-            try {
-                statement.executeUpdate("PRAGMA foreign_keys = OFF");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
