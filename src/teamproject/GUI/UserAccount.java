@@ -336,60 +336,66 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchActionPerformed
 
     private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
-        SelectUser();
+        String selected = listUsers.getSelectedValue();
+        if (selected != null) {
+            SelectUser();
 
-        //update the user object with the details selected
-        try {
-            u.setFirstName(rs.getString("firstName"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setLastName(rs.getString("surname"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setPassword(rs.getString("password"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setRoleName(rs.getString("roleName"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setUsername(rs.getString("username"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //display the user details at the boxes at the botton
-        textFieldUserID.setText(u.getUsername());
-        textFieldFirstName.setText(u.getFirstName());
-        textFieldLastName.setText(u.getLastName());
-        textFieldPassword.setText(u.getPassword());
-        comboBoxRole.setSelectedItem(u.getRoleName());
-
-        //if it's a mechanic or foreperson, get their hourly rate.
-        if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
-            labelHourlyRate.setVisible(true);
-            textFieldHourlyRate.setVisible(true);
-
-            SelectMechanic();
+            //update the user object with the details selected
             try {
-                textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+                u.setFirstName(rs.getString("firstName"));
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
+            try {
+                u.setLastName(rs.getString("surname"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setPassword(rs.getString("password"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setRoleName(rs.getString("roleName"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setUsername(rs.getString("username"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //display the user details at the boxes at the botton
+            textFieldUserID.setText(u.getUsername());
+            textFieldFirstName.setText(u.getFirstName());
+            textFieldLastName.setText(u.getLastName());
+            textFieldPassword.setText(u.getPassword());
+            comboBoxRole.setSelectedItem(u.getRoleName());
+
+            //if it's a mechanic or foreperson, get their hourly rate.
+            if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
+                labelHourlyRate.setVisible(true);
+                textFieldHourlyRate.setVisible(true);
+
+                SelectMechanic();
+                try {
+                    textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                labelHourlyRate.setVisible(false);
+                textFieldHourlyRate.setVisible(false);
+            }
         } else {
-            labelHourlyRate.setVisible(false);
-            textFieldHourlyRate.setVisible(false);
+            String mess = "Select a user";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonEditUserActionPerformed
 
@@ -436,23 +442,28 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateDetailsActionPerformed
 
     private void buttonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteUserActionPerformed
-        SelectUser();
-
-        //delete selected user from database.
-        try {
-            String sql = ("delete from user "
-                    + "where username = '" + rs.getString("username") + "'");
-            PreparedStatement ps = null;
+        String selected = listUsers.getSelectedValue();
+        if (selected != null) {
+            SelectUser();
+            //delete selected user from database.
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("delete from user "
+                        + "where username = '" + rs.getString("username") + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            UpdateUserList();
+        } else {
+            String mess = "Select a user";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-        UpdateUserList();
     }//GEN-LAST:event_buttonDeleteUserActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -272,7 +273,7 @@ public class Report extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        if (!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))) {
+        if (!(textFieldFrom.getText().isEmpty() && textFieldTill.getText().isEmpty())) {
 
             if (selected.equals("Monthly vehicle report")) {
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
@@ -543,31 +544,31 @@ public class Report extends javax.swing.JPanel {
                     while (rs.next()) {
                         String partID = rs.getString("partID");
                         int newQuantity = Integer.parseInt(rs.getString("quantity"));
-                        
+
                         int usedQuantity;
                         String used = usedMap.get(partID) + "";
-                        if (used.equals("null")){
+                        if (used.equals("null")) {
                             usedQuantity = 0;
-                        }else{
+                        } else {
                             usedQuantity = usedMap.get(partID);
                         }
-                        
+
                         int soldQuantity;
                         String sold = usedMap.get(partID) + "";
-                        if (sold.equals("null")){
+                        if (sold.equals("null")) {
                             soldQuantity = 0;
-                        }else{
+                        } else {
                             soldQuantity = usedMap.get(partID);
                         }
-                        
+
                         int orderQuantity;
                         String order = usedMap.get(partID) + "";
-                        if (order.equals("null")){
+                        if (order.equals("null")) {
                             orderQuantity = 0;
-                        }else{
+                        } else {
                             orderQuantity = usedMap.get(partID);
                         }
-                        
+
                         int initialQuantity = (newQuantity + usedQuantity + soldQuantity) - orderQuantity;
 
                         String result = "Part name: " + rs.getString("partName") + "\n"
@@ -577,12 +578,12 @@ public class Report extends javax.swing.JPanel {
                                 + "Year(s): " + rs.getString("year") + "\n"
                                 + "Price: £" + rs.getString("costPrice") + "\n"
                                 + "Initial stock level: " + initialQuantity + "\n"
-                                + "Initial cost: " + (initialQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Initial cost: " + (initialQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Used: " + usedQuantity + "\n"
                                 + "Sold: " + soldQuantity + "\n"
                                 + "Delivery: " + orderQuantity + "\n"
                                 + "New stock level: " + newQuantity + "\n"
-                                + "Stock cost: £" + (newQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Stock cost: £" + (newQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Low stock threshold: " + rs.getString("threshold") + "\n";
                         textAreaReport.append(result + "\n");
                     }
@@ -591,7 +592,8 @@ public class Report extends javax.swing.JPanel {
                 }
             }
         } else {
-            System.out.println("Pick the dates");
+            String mess = "Select the dates";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
 

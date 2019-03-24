@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -55,15 +56,21 @@ public class Invoice extends javax.swing.JPanel {
     }
 
     private void GetJobAndInvoiceNumber() {
-        String[] parts = listInvoices.getSelectedValue().split(", ");
-        String[] idParts = parts[0].split(": ");
-        invoiceNumber = idParts[1];
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            String[] parts = selected.split(", ");
+            String[] idParts = parts[0].split(": ");
+            invoiceNumber = idParts[1];
 
-        try {
-            String[] jobParts = parts[1].split(": ");
-            jobNumber = jobParts[1];
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            try {
+                String[] jobParts = parts[1].split(": ");
+                jobNumber = jobParts[1];
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }
 
@@ -905,106 +912,124 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
-        GetJobAndInvoiceNumber();
-        String sql;
-        //see if customer is account holder
-        try {
-            sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
-                    + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
-                    + "discountplan.* from job "
-                    + "inner join invoice on job.jobID = invoice.JobjobID "
-                    + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
-                    + "inner join customer on customer.ID = vehicle.CustomerID "
-                    + "inner join customeraccount on customeraccount.CustomerID = customer.ID "
-                    + "inner join discountplan on discountplan.CustomerAccountaccountID = customeraccount.accountID "
-                    + "where jobID = " + jobNumber);
-            PreparedStatement ps = null;
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            GetJobAndInvoiceNumber();
+            String sql;
+            //see if customer is account holder
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
+                        + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
+                        + "discountplan.* from job "
+                        + "inner join invoice on job.jobID = invoice.JobjobID "
+                        + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
+                        + "inner join customer on customer.ID = vehicle.CustomerID "
+                        + "inner join customeraccount on customeraccount.CustomerID = customer.ID "
+                        + "inner join discountplan on discountplan.CustomerAccountaccountID = customeraccount.accountID "
+                        + "where jobID = " + jobNumber);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        String accountID = "";
-        String fixedID = "";
-        String flexibleID = "";
-        String variableID = "";
-        try {
-            while (rs.next()) {
-                accountID = rs.getString("CustomerAccountaccountID");
-                fixedID = rs.getString("FixedDiscountdiscountID");
-                flexibleID = rs.getString("FlexibleDiscountdiscountID");
-                variableID = rs.getString("VariableDiscountdiscountID");
+            String accountID = "";
+            String fixedID = "";
+            String flexibleID = "";
+            String variableID = "";
+            try {
+                while (rs.next()) {
+                    accountID = rs.getString("CustomerAccountaccountID");
+                    fixedID = rs.getString("FixedDiscountdiscountID");
+                    flexibleID = rs.getString("FlexibleDiscountdiscountID");
+                    variableID = rs.getString("VariableDiscountdiscountID");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        if (accountID.equals("")) {
-            //this customer is not an account holder.
-            //proceed to standard payment (no discount) 
-            StandardPayment();
+            if (accountID.equals("")) {
+                //this customer is not an account holder.
+                //proceed to standard payment (no discount) 
+                StandardPayment();
+            } else {
+                //check for fixed discount
+                if (fixedID == null) {
+                    //no fixed discount
+                } else {
+                    //fixed discount
+                    FixedDiscount(fixedID);
+                }
+
+                //check for variable discount
+                if (variableID == null) {
+                    //no variable discount
+                } else {
+                    //variable discount
+                    VariableDiscount(variableID);
+                }
+
+                //check for flexible discount
+                if (flexibleID == null) {
+                    //no flexible discount
+                } else {
+                    //flexible discount
+                    FlexibleDiscount(flexibleID, accountID);
+                }
+            }
         } else {
-            //check for fixed discount
-            if (fixedID == null) {
-                //no fixed discount
-            } else {
-                //fixed discount
-                FixedDiscount(fixedID);
-            }
-
-            //check for variable discount
-            if (variableID == null) {
-                //no variable discount
-            } else {
-                //variable discount
-                VariableDiscount(variableID);
-            }
-
-            //check for flexible discount
-            if (flexibleID == null) {
-                //no flexible discount
-            } else {
-                //flexible discount
-                FlexibleDiscount(flexibleID, accountID);
-            }
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPayActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
         textAreaInvoiceDetail.setText("");
 
-        GetJobAndInvoiceNumber();
-        if (!jobNumber.equals("null")) {
-            textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            GetJobAndInvoiceNumber();
+            if (!jobNumber.equals("null")) {
+                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+            } else {
+                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
+            }
         } else {
-            textAreaInvoiceDetail.append(GetPartInvoiceDetails());
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
-        String[] parts = listInvoices.getSelectedValue().split(", ");
-        String invoicePart = parts[0];
-        String[] invoiceSplit = invoicePart.split(": ");
-        String invoiceNumber = invoiceSplit[1];
-        try {
-            String sql = ("update invoice set payLater = 1 where invoiceNumber = " + invoiceNumber);
-            PreparedStatement ps = null;
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            String[] parts = selected.split(", ");
+            String invoicePart = parts[0];
+            String[] invoiceSplit = invoicePart.split(": ");
+            String invoiceNumber = invoiceSplit[1];
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("update invoice set payLater = 1 where invoiceNumber = " + invoiceNumber);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        ShowAllInvoices();
+            ShowAllInvoices();
+        } else {
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
     }//GEN-LAST:event_buttonPayLaterActionPerformed
 
     private void textFieldSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchInvoicesActionPerformed
@@ -1024,28 +1049,34 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
-        GetJobAndInvoiceNumber();
-        String details;
-        if (!jobNumber.equals("null")) {
-            details = GetJobInvoiceDetails();
-        } else {
-            details = GetPartInvoiceDetails();
-        }
-
-        String fileName = "Invoice-number-" + invoiceNumber + ".txt";
-        if (listInvoices.getSelectedValue() != null) {
-            try {
-                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-                writer.println(details);
-                writer.close();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            GetJobAndInvoiceNumber();
+            String details;
+            if (!jobNumber.equals("null")) {
+                details = GetJobInvoiceDetails();
+            } else {
+                details = GetPartInvoiceDetails();
             }
 
-            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-            f.dispose();
-            db.closeConnection(connection);
-            new MainMenu(username);
+            String fileName = "Invoice-number-" + invoiceNumber + ".txt";
+            if (listInvoices.getSelectedValue() != null) {
+                try {
+                    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                    writer.println(details);
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                db.closeConnection(connection);
+                new MainMenu(username);
+            }
+        } else {
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 

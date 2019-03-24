@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -19,6 +20,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class AllocateJob extends javax.swing.JPanel {
+
     private String username;
     Statement statement;
     Connection connection = null;
@@ -27,7 +29,7 @@ public class AllocateJob extends javax.swing.JPanel {
     String[] jobArray;
     String[] mechArray;
     int jobID;
-    
+
     /**
      * Creates new form NewJPanel
      */
@@ -37,94 +39,94 @@ public class AllocateJob extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         ShowUnallocatedJobs();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void ShowUnallocatedJobs(){
-        try{
+    private void ShowUnallocatedJobs() {
+        try {
             this.rs = statement.executeQuery("select * from Job where dateCompleted is null and MechanicID is null");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
         listUnallocatedJobs.removeAll();
         ArrayList<String> jobs = new ArrayList<>();
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                    + ", Booked on: " + rs.getString("dateBookedIn");
-            jobs.add(job);
-          } 
-        }
-        catch(SQLException e){
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
+                        + ", Booked on: " + rs.getString("dateBookedIn");
+                jobs.add(job);
+            }
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
-        
+
         jobArray = CreateArray(jobs);
-                
+
         listUnallocatedJobs.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return jobArray.length; }
-            public String getElementAt(int i) { return jobArray[i]; }
-        });  
+            public int getSize() {
+                return jobArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return jobArray[i];
+            }
+        });
     }
-    
-    private void ShowMechanics(){
-        try{
+
+    private void ShowMechanics() {
+        try {
             this.rs = statement.executeQuery("select * from user where username in (select Userusername from mechanic)");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
         listMechanics.removeAll();
         ArrayList<String> mechs = new ArrayList<>();
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String mech = rs.getString("firstName") + " " + rs.getString("surname");
-            mechs.add(mech);
-          } 
-        }
-        catch(SQLException e){
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String mech = rs.getString("firstName") + " " + rs.getString("surname");
+                mechs.add(mech);
+            }
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
-        
+
         mechArray = CreateArray(mechs);
-                
+
         listMechanics.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return mechArray.length; }
-            public String getElementAt(int i) { return mechArray[i]; }
-        });  
+            public int getSize() {
+                return mechArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return mechArray[i];
+            }
+        });
     }
-    
-    private String[] CreateArray(ArrayList<String> tasks){
+
+    private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -222,34 +224,37 @@ public class AllocateJob extends javax.swing.JPanel {
 
     private void buttonAllocateToMechanicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateToMechanicActionPerformed
         //get the selected mechanic's first and last name
-        String[] parts = listMechanics.getSelectedValue().split(" ");
-        String firstName = parts[0];
-        String lastName = parts[1];
-        //update job with this mechanic's ID
-        try{
-            String sql = ("update job "
-                    + "set MechanicID = (select ID from mechanic where Userusername = (select username from user where firstname = '" + firstName + "' "
-                    + "and surname = '" + lastName + "')), status = 'Allocated' "
-                    + "where jobID = '" +  jobID + "'");
-            PreparedStatement ps = null;
+        String selected = listMechanics.getSelectedValue();
+        if (selected != null) {
+            String[] parts = selected.split(" ");
+            String firstName = parts[0];
+            String lastName = parts[1];
+            //update job with this mechanic's ID
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("update job "
+                        + "set MechanicID = (select ID from mechanic where Userusername = (select username from user where firstname = '" + firstName + "' "
+                        + "and surname = '" + lastName + "')), status = 'Allocated' "
+                        + "where jobID = '" + jobID + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
+
+            //go to main menu
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username);
+        } else {
+            String mess = "Select a mechanic";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        //go to main menu
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new MainMenu(username);
     }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -270,14 +275,17 @@ public class AllocateJob extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonSelectJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectJobActionPerformed
-        if (listUnallocatedJobs.getSelectedValue() != null){
+        if (listUnallocatedJobs.getSelectedValue() != null) {
             String job = listUnallocatedJobs.getSelectedValue();
             String[] jobParts = job.split(", ");
             String[] idParts = jobParts[0].split(": ");
             jobID = Integer.parseInt(idParts[1]);
             System.out.println("ID: " + jobID);
-            
+
             ShowMechanics();
+        } else {
+            String mess = "Select a job";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonSelectJobActionPerformed
 
