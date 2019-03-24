@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 public class DB_ImplClass implements DBConnectivity {
 
@@ -43,8 +44,13 @@ public class DB_ImplClass implements DBConnectivity {
     }
 
     public void Backup(Connection c) {
+        Date aDate = new Date();
+        String[] dateParts = aDate.toString().split(" ");
+        String date = dateParts[0] + dateParts[1] + dateParts[2];
+
+        String fileName = date + "database.db";
         try {
-            c.createStatement().executeUpdate("backup to database.db");
+            c.createStatement().executeUpdate("backup to " + fileName);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
