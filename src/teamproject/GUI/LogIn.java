@@ -170,17 +170,16 @@ public class LogIn extends javax.swing.JPanel {
                 // read the result set
                 user = rs.getString("username");
                 pass = rs.getString("password");
+                if (username.equals(user) && password.equals(pass)) {
+                    JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                    f.dispose();
+                    db.closeConnection(connection);
+                    new MainMenu(username);
+                }
+            }
+            String mess = "Incorrect details";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
 
-            }
-            if (username.equals(user) && password.equals(pass)) {
-                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-                f.dispose();
-                db.closeConnection(connection);
-                new MainMenu(username);
-            } else {
-                String mess = "Incorrect details";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
-            }
         } catch (SQLException e) {
         }
     }//GEN-LAST:event_buttonSigninActionPerformed
