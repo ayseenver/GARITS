@@ -22,63 +22,159 @@ public class MainMenu extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    
     private ResultSet rs;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     private String roleName;
     private String username;
-    
+
     public MainMenu(String username) {
         this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
-        try{
-            this.rs = statement.executeQuery("select * from User");
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String user = rs.getString("username");
-            
-            if (username.equals(user)){
-               this.rs = statement.executeQuery("select roleName from User where username='user1'");
-               roleName = rs.getString("roleName");
-            }
-          }        
-        }
-        catch(SQLException e){
-        }
-        
-        /*
-        if (roleName.equals("receptionist")){
-            this.receptionist_menu();
-        }
-        */
-        
+
+        GetRole();
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    public void receptionist_menu(){
-        this.buttonAllocateJob.setVisible(false);
-        this.buttonMyJobs.setVisible(false);
+
+    private void GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Rollname from Databse
+                if (username.equals(user)) {
+                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //Code To check Which roleName is selected 
+        if (roleName.equals("receptionist")) {
+            receptionist_menu();
+        } else if (roleName.equals("mechanic")) {
+            mechanic_menu();
+        } else if (roleName.equals("admin")) {
+            admin_menu();
+        } else if (roleName.equals("franchisee")) {
+            franchise_menu();
+        } else if (roleName.equals("foreperson")) {
+            foreperson_menu();
+        }
     }
-    
+
+    // Receptionist View
+    public void receptionist_menu() {
+
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonReport.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonMyJobs.setVisible(false);
+        this.buttonAllocateJob.setVisible(false);
+
+        /*
+        this.buttonJobList.setLocation(490, 220);
+        this.buttonInvoices.setLocation(490, 280);
+        this.buttonReminders.setLocation(490, 340);
+        this.buttonStockControl.setLocation(490, 400);
+         */
+    }
+
+    // Foreperson View 
+    public void foreperson_menu() {
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+
+        /*
+        this.buttonCreateJob.setLocation(490, 160);
+        this.buttonAllocateJob.setLocation(490, 220);
+        this.buttonJobList.setLocation(490, 280);
+        this.buttonMyJobs.setLocation(490, 340);
+        this.buttonInvoices.setLocation(490, 400);
+        this.buttonStockControl.setLocation(490, 520);
+        this.buttonReminders.setLocation(490, 460);
+         */
+    }
+
+    //Franchise View
+    public void franchise_menu() {
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+
+        /*
+        this.buttonCreateJob.setLocation(490, 160);
+        this.buttonAllocateJob.setLocation(490, 220);
+        this.buttonJobList.setLocation(490, 280);
+        this.buttonMyJobs.setLocation(490, 340);
+        this.buttonInvoices.setLocation(490, 400);
+        this.buttonReminders.setLocation(490, 460);
+        this.buttonStockControl.setLocation(490, 520);
+        this.buttonCustomers.setLocation(490, 580);
+        this.buttonReport.setLocation(490, 640);
+         */
+    }
+
+    //Mechanic View
+    public void mechanic_menu() {
+
+        this.buttonAllocateJob.setVisible(false);
+        this.buttonInvoices.setVisible(false);
+        this.buttonReminders.setVisible(false);
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonStockControl.setVisible(false);
+        this.buttonCreateJob.setVisible(false);
+        this.buttonJobList.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+
+        /*
+        this.buttonMyJobs.setLocation(490, 160);
+         */
+    }
+
+    //Admin View
+    public void admin_menu() {
+
+        this.buttonAllocateJob.setVisible(false);
+        this.buttonInvoices.setVisible(false);
+        this.buttonReminders.setVisible(false);
+        this.buttonStockControl.setVisible(false);
+        this.buttonCreateJob.setVisible(false);
+        this.buttonJobList.setVisible(false);
+        this.buttonMyJobs.setVisible(false);
+
+        /*
+        this.buttonDatabase.setLocation(490, 160);
+        this.buttonUserAccount.setLocation(490, 220);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+         */
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -249,7 +345,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new StockControl(username);
-                
+
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
@@ -278,7 +374,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new Report(username);
-        
+
     }//GEN-LAST:event_buttonReportActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
@@ -304,7 +400,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new UserAccount(username);
-       
+
     }//GEN-LAST:event_buttonUserAccountActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed
