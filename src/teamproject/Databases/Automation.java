@@ -6,7 +6,6 @@
 package teamproject.Databases;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,10 +17,10 @@ import java.sql.Statement;
  */
 public class Automation implements Runnable {
 
-    Connection connection;
     Statement statement;
     ResultSet rs;
-    
+    DB_ImplClass db = new DB_ImplClass();
+    Connection connection;
 
     @Override
     public void run() {
@@ -35,25 +34,13 @@ public class Automation implements Runnable {
     }
 
     private void connect() {
-        try {
-            // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:GARITSDB.db");
-            this.statement = connection.createStatement();
-            this.statement.setQueryTimeout(30);  // set timeout to 30 sec.
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
+        connection = db.connect();
     }
 
     private void backupDatabase() {
         //backup
-        try {
-            connection.createStatement().executeUpdate("backup to database.db");
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        System.out.println("backed up");
+        db.Backup(connection);
     }
 
     private void checkDueMoT() {
