@@ -1134,14 +1134,16 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                sql = ("update bay set booked = 0 where bayID = " + bayID);
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!(bayID.isEmpty())) { //if the vehicle is in a bay
+                    sql = ("update bay set booked = 0 where bayID = " + bayID);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
                 }
-                ps.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }

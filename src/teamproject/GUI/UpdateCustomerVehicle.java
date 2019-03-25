@@ -272,10 +272,27 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         if (vehicleArray.length > 0) {
+            try {
+                String sql = ("update customer set deleted = 0 where ID in (select max(id) from customer)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
             new MainMenu(username);
+        } else {
+            String mess = "Customer needs at least one vehicle";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonDoneActionPerformed
 
@@ -371,7 +388,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehicleActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
-        System.out.println("Make : " + textFieldMake.getText());
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
@@ -447,10 +463,9 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
             String selected = listVehicles.getSelectedValue();
-            String [] parts = selected.split(", ");
+            String[] parts = selected.split(", ");
             String regNo = parts[0];
-            
-           
+
             //delete this vehicle
             try {
                 String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);

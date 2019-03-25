@@ -836,7 +836,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldTelephone.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
-                        + "0)");
+                        + "1)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -1085,34 +1085,36 @@ public class UpdateCustomer extends javax.swing.JPanel {
         String customerID = "";
 
         try {
-            customerID = rs.getString("ID");
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            while (rs.next()) {
+                customerID = rs.getString("ID");
+                try {
+                    String sql = ("update customer set deleted = 1 where ID = " + customerID);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
 
-        try {
-            String sql = ("update customer set deleted = 1 where ID = " + customerID);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                //delete all vehciles with this CustomerID
+                try {
+                    String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        //delete all vehciles with this CustomerID
-        try {
-            String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
