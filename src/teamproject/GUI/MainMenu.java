@@ -39,8 +39,8 @@ public class MainMenu extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        GetRole();
         frame.setVisible(true);
+        GetRole();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -95,6 +95,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonInvoices.setLocation(490, 280);
         this.buttonReminders.setLocation(490, 340);
         this.buttonStockControl.setLocation(490, 400);
+         
     }
 
     // Foreperson View 
@@ -193,11 +194,12 @@ public class MainMenu extends javax.swing.JPanel {
         buttonDatabase = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(null);
 
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         lblMainMenu.setText("Main Menu");
-        add(lblMainMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
+        add(lblMainMenu);
+        lblMainMenu.setBounds(410, 40, 374, 92);
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCreateJob.setText("Create Job");
@@ -206,7 +208,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonCreateJobActionPerformed(evt);
             }
         });
-        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 160, 230, -1));
+        add(buttonCreateJob);
+        buttonCreateJob.setBounds(490, 160, 230, 41);
 
         buttonReminders.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReminders.setText("View Reminders");
@@ -215,7 +218,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonRemindersActionPerformed(evt);
             }
         });
-        add(buttonReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 460, 230, -1));
+        add(buttonReminders);
+        buttonReminders.setBounds(490, 460, 230, 41);
 
         buttonStockControl.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonStockControl.setText("Stock Control");
@@ -224,7 +228,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonStockControlActionPerformed(evt);
             }
         });
-        add(buttonStockControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 520, 230, -1));
+        add(buttonStockControl);
+        buttonStockControl.setBounds(490, 520, 230, 41);
 
         buttonInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonInvoices.setText("Invoices");
@@ -233,7 +238,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonInvoicesActionPerformed(evt);
             }
         });
-        add(buttonInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 400, 230, -1));
+        add(buttonInvoices);
+        buttonInvoices.setBounds(490, 400, 230, 41);
 
         buttonMyJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonMyJobs.setText("My Jobs");
@@ -242,7 +248,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonMyJobsActionPerformed(evt);
             }
         });
-        add(buttonMyJobs, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 340, 230, -1));
+        add(buttonMyJobs);
+        buttonMyJobs.setBounds(490, 340, 230, 41);
 
         buttonAllocateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonAllocateJob.setText("Allocate Jobs");
@@ -251,7 +258,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonAllocateJobActionPerformed(evt);
             }
         });
-        add(buttonAllocateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 220, 230, -1));
+        add(buttonAllocateJob);
+        buttonAllocateJob.setBounds(490, 220, 230, 41);
 
         buttonReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReport.setText("All Reports");
@@ -260,7 +268,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonReportActionPerformed(evt);
             }
         });
-        add(buttonReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 640, 230, -1));
+        add(buttonReport);
+        buttonReport.setBounds(490, 640, 230, 41);
 
         buttonJobList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonJobList.setText("Job List");
@@ -269,17 +278,20 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonJobListActionPerformed(evt);
             }
         });
-        add(buttonJobList, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 280, 230, -1));
+        add(buttonJobList);
+        buttonJobList.setBounds(490, 280, 230, 41);
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);
             }
         });
-        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 0, 220, 30));
+        add(textFieldUserDetails);
+        textFieldUserDetails.setBounds(910, 10, 220, 30);
 
         lblLoggedIn.setText("Logged In as:");
-        add(lblLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, -1, -1));
+        add(lblLoggedIn);
+        lblLoggedIn.setBounds(820, 20, 66, 14);
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Logout");
@@ -288,7 +300,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1200, 0, -1, -1));
+        add(buttonExit);
+        buttonExit.setBounds(1140, 10, 120, 33);
 
         buttonUserAccount.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonUserAccount.setText("User Accounts");
@@ -297,7 +310,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonUserAccountActionPerformed(evt);
             }
         });
-        add(buttonUserAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 600, 230, -1));
+        add(buttonUserAccount);
+        buttonUserAccount.setBounds(800, 600, 230, 41);
 
         buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCustomers.setText("View Customers");
@@ -306,7 +320,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonCustomersActionPerformed(evt);
             }
         });
-        add(buttonCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 580, 230, -1));
+        add(buttonCustomers);
+        buttonCustomers.setBounds(490, 580, 230, 41);
 
         buttonDatabase.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonDatabase.setText("Database");
@@ -315,7 +330,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonDatabaseActionPerformed(evt);
             }
         });
-        add(buttonDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 550, 230, -1));
+        add(buttonDatabase);
+        buttonDatabase.setBounds(800, 550, 230, 41);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
