@@ -6,7 +6,6 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,14 +40,13 @@ public class MainMenu extends javax.swing.JPanel {
         statement = db.getStatement();
 
         GetRole();
-
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void GetRole() {
         try {
-            this.rs = statement.executeQuery("select * from User");
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -58,7 +56,7 @@ public class MainMenu extends javax.swing.JPanel {
                 // read the result set
                 String user = rs.getString("username");
 
-                //Code to get Rollname from Databse
+                //Code to get Role name from Databse
                 if (username.equals(user)) {
                     this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
 
@@ -93,12 +91,10 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonMyJobs.setVisible(false);
         this.buttonAllocateJob.setVisible(false);
 
-        /*
         this.buttonJobList.setLocation(490, 220);
         this.buttonInvoices.setLocation(490, 280);
         this.buttonReminders.setLocation(490, 340);
         this.buttonStockControl.setLocation(490, 400);
-         */
     }
 
     // Foreperson View 
@@ -108,7 +104,6 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
 
-        /*
         this.buttonCreateJob.setLocation(490, 160);
         this.buttonAllocateJob.setLocation(490, 220);
         this.buttonJobList.setLocation(490, 280);
@@ -116,7 +111,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonInvoices.setLocation(490, 400);
         this.buttonStockControl.setLocation(490, 520);
         this.buttonReminders.setLocation(490, 460);
-         */
+
     }
 
     //Franchise View
@@ -124,7 +119,6 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonDatabase.setVisible(false);
         this.buttonUserAccount.setVisible(false);
 
-        /*
         this.buttonCreateJob.setLocation(490, 160);
         this.buttonAllocateJob.setLocation(490, 220);
         this.buttonJobList.setLocation(490, 280);
@@ -134,7 +128,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonStockControl.setLocation(490, 520);
         this.buttonCustomers.setLocation(490, 580);
         this.buttonReport.setLocation(490, 640);
-         */
+
     }
 
     //Mechanic View
@@ -151,9 +145,8 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
 
-        /*
         this.buttonMyJobs.setLocation(490, 160);
-         */
+
     }
 
     //Admin View
@@ -166,13 +159,12 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCreateJob.setVisible(false);
         this.buttonJobList.setVisible(false);
         this.buttonMyJobs.setVisible(false);
-
-        /*
-        this.buttonDatabase.setLocation(490, 160);
-        this.buttonUserAccount.setLocation(490, 220);
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
-         */
+
+        this.buttonDatabase.setLocation(490, 160);
+        this.buttonUserAccount.setLocation(490, 220);
+
     }
 
     /**

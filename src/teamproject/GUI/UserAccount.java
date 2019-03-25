@@ -49,14 +49,6 @@ public class UserAccount extends javax.swing.JPanel {
         labelHourlyRate.setVisible(false);
         textFieldHourlyRate.setVisible(false);
 
-        try {
-            this.rs = statement.executeQuery("select * from User");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-
         UpdateUserList();
     }
 
@@ -67,6 +59,13 @@ public class UserAccount extends javax.swing.JPanel {
     }
 
     private void UpdateUserList() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
 
         listUsers.removeAll();
         ArrayList<String> users = new ArrayList<>();
@@ -304,41 +303,49 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewUserActionPerformed
-        User newU = new User();
-        newU.setFirstName(textFieldFirstName.getText());
-        newU.setLastName(textFieldLastName.getText());
-        newU.setPassword(textFieldPassword.getText());
-        newU.setRoleName(comboBoxRole.getSelectedItem().toString());
-        newU.setUsername(textFieldUserID.getText());
+        if (textFieldFirstName.getText().isEmpty() || textFieldLastName.getText().isEmpty()
+                || textFieldPassword.getText().isEmpty() || comboBoxRole.getSelectedItem().toString().isEmpty()
+                || textFieldUserID.getText().isEmpty()) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
 
-        try {
-            String sql = ("insert into user (username, password, roleName, firstName, surname)"
-                    + "values("
-                    + "'" + newU.getUsername() + "',"
-                    + "'" + newU.getPassword() + "',"
-                    + "'" + newU.getRoleName() + "',"
-                    + "'" + newU.getFirstName() + "',"
-                    + "'" + newU.getLastName() + "')");
-            PreparedStatement ps = null;
+            User newU = new User();
+            newU.setFirstName(textFieldFirstName.getText());
+            newU.setLastName(textFieldLastName.getText());
+            newU.setPassword(textFieldPassword.getText());
+            newU.setRoleName(comboBoxRole.getSelectedItem().toString());
+            newU.setUsername(textFieldUserID.getText());
+
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("insert into user (username, password, roleName, firstName, surname, deleted)"
+                        + "values("
+                        + "'" + newU.getUsername() + "',"
+                        + "'" + newU.getPassword() + "',"
+                        + "'" + newU.getRoleName() + "',"
+                        + "'" + newU.getFirstName() + "',"
+                        + "'" + newU.getLastName() + "', 0)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            this.rs = statement.executeQuery("select * from User");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
+            try {
+                this.rs = statement.executeQuery("select * from User");
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
 
-        UpdateUserList();
+            UpdateUserList();
+        }
     }//GEN-LAST:event_buttonNewUserActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -346,7 +353,7 @@ public class UserAccount extends javax.swing.JPanel {
             String sql = ("select * from user where username LIKE '%"
                     + textFieldSearch.getText() + "%' "
                     + "or firstName LIKE '%" + textFieldSearch.getText() + "%' "
-                    + "or surname LIKE '%" + textFieldSearch.getText() + "%'");
+                    + "or surname LIKE '%" + textFieldSearch.getText() + "%' and deleted = 0");
             PreparedStatement ps = null;
 
             try {
@@ -477,7 +484,7 @@ public class UserAccount extends javax.swing.JPanel {
             SelectUser();
             //delete selected user from database.
             try {
-                String sql = ("delete from user "
+                String sql = ("update user set deleted = 1 "
                         + "where username = '" + rs.getString("username") + "'");
                 PreparedStatement ps = null;
                 try {

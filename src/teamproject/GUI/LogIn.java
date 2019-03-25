@@ -140,9 +140,9 @@ public class LogIn extends javax.swing.JPanel {
 
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
         String username = this.textFieldUserName.getText();
-        String password = this.textFieldPassword.getText();
+        String password = new String(this.textFieldPassword.getPassword());
         try {
-            this.rs = statement.executeQuery("select * from User");
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
