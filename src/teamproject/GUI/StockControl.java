@@ -210,7 +210,6 @@ public class StockControl extends javax.swing.JPanel {
         textFieldSearchAllStock = new javax.swing.JTextField();
         buttonOrder = new javax.swing.JButton();
         lblPartsOrder = new javax.swing.JLabel();
-        buttonStockLevelReport = new javax.swing.JButton();
         buttonRemove = new javax.swing.JButton();
         buttonAllStockOrder = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -226,9 +225,10 @@ public class StockControl extends javax.swing.JPanel {
         jScrollPane6 = new javax.swing.JScrollPane();
         listPartsOrder = new javax.swing.JList<>();
         buttonSearchAllStock = new javax.swing.JButton();
-        buttonPartSale = new javax.swing.JButton();
         textFieldConfigureThreshold = new javax.swing.JTextField();
         buttonConfigureThreshold = new javax.swing.JButton();
+        buttonStockLevelReport = new javax.swing.JButton();
+        buttonPartSale = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -266,15 +266,6 @@ public class StockControl extends javax.swing.JPanel {
         lblPartsOrder.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         lblPartsOrder.setText("Parts Order:");
         add(lblPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 520, -1, -1));
-
-        buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonStockLevelReport.setText("Stock Level Report");
-        buttonStockLevelReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStockLevelReportActionPerformed(evt);
-            }
-        });
-        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 140, -1, -1));
 
         buttonRemove.setText("Remove");
         buttonRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -355,15 +346,6 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, -1, -1));
 
-        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonPartSale.setText("Part Sale");
-        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPartSaleActionPerformed(evt);
-            }
-        });
-        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 140, -1, -1));
-
         textFieldConfigureThreshold.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         add(textFieldConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 320, 30, 30));
 
@@ -374,6 +356,24 @@ public class StockControl extends javax.swing.JPanel {
             }
         });
         add(buttonConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 320, -1, -1));
+
+        buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonStockLevelReport.setText("Stock Level Report");
+        buttonStockLevelReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStockLevelReportActionPerformed(evt);
+            }
+        });
+        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 140, -1, -1));
+
+        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonPartSale.setText("Part Sale");
+        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPartSaleActionPerformed(evt);
+            }
+        });
+        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 140, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
@@ -386,13 +386,6 @@ public class StockControl extends javax.swing.JPanel {
         db.closeConnection(connection);
         new PartOrder(username, order);
     }//GEN-LAST:event_buttonOrderActionPerformed
-
-    private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new Report(username);
-    }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
         String selected = listPartsOrder.getSelectedValue();
@@ -477,13 +470,6 @@ public class StockControl extends javax.swing.JPanel {
         ShowAllParts();
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
 
-    private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new PartSale(username);
-    }//GEN-LAST:event_buttonPartSaleActionPerformed
-
     private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
         String sql = "";
         String selected = listStock.getSelectedValue();
@@ -524,6 +510,20 @@ public class StockControl extends javax.swing.JPanel {
         db.closeConnection(connection);
         new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
+
+    private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new Report(username);
+    }//GEN-LAST:event_buttonStockLevelReportActionPerformed
+
+    private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new PartSale(username);
+    }//GEN-LAST:event_buttonPartSaleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
