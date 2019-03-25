@@ -706,12 +706,9 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        //get the discount plan for this customer
+        //get the credit for this customer
         try {
-            String sql = ("select flexibands_flexiblediscount.*, flexiblediscount.orderValueThisMonth "
-                    + "from flexibands_flexiblediscount inner join flexiblediscount on "
-                    + "flexiblediscount.discountID = flexibands_flexiblediscount.FlexibleDiscountdiscountID "
-                    + "where flexiblediscountdiscountID = " + flexibleID);
+            String sql = ("select credit from flexiblediscount where discountID = " + flexibleID);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -723,30 +720,32 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        //store each flexi band ID and it's percentage
-        HashMap<String, Double> bandIDPercentage = new HashMap<>();
+        Double credit = 0.0;
         try {
             while (rs.next()) {
-                String bandID = rs.getString("FlexiBandsbandID");
-                double percentage = Double.parseDouble(rs.getString("percentage"));
-                bandIDPercentage.put(bandID, percentage);
+                credit = Double.parseDouble(rs.getString("credit"));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
-        double percentage = 0.0;
-        if (totalCost >= 0 && totalCost <= 1000) {
-            percentage = bandIDPercentage.get("1");
-        } else if (totalCost >= 1001 && totalCost <= 5000) {
-            percentage = bandIDPercentage.get("2");
-        } else if (totalCost >= 5001 && totalCost <= 10000) {
-            percentage = bandIDPercentage.get("3");
+        totalCost -= credit;
+
+        //set the customer's credit to 0
+        try {
+            String sql = ("update flexiblediscount set credit = 0 where discountID = " + flexibleID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
-        totalCost = totalCost * (1 - (percentage / 100));
-
-        //update the total cost of the job, taking into account the discount.
+        //update the total cost of the job, taking into account the credit.
         try {
             String sql = ("update job set totalCost = " + totalCost + " where jobID = " + jobNumber);
             PreparedStatement ps = null;
@@ -761,6 +760,32 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         StandardPayment();
+    }
+
+    private void CheckAccountHolder() {
+        String sql;
+        //see if customer is account holder
+        try {
+            sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
+                    + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
+                    + "discountplan.* from job "
+                    + "inner join invoice on job.jobID = invoice.JobjobID "
+                    + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
+                    + "inner join customer on customer.ID = vehicle.CustomerID "
+                    + "inner join customeraccount on customeraccount.CustomerID = customer.ID "
+                    + "inner join discountplan on discountplan.CustomerAccountaccountID = customeraccount.accountID "
+                    + "where jobID = " + jobNumber);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 
     /**
@@ -782,7 +807,7 @@ public class Invoice extends javax.swing.JPanel {
         buttonPayLater = new javax.swing.JButton();
         comboxBoxPaymentType = new javax.swing.JComboBox<>();
         labelInvoices = new javax.swing.JLabel();
-        labelPaymentType = new javax.swing.JLabel();
+        labelPayWithCredit = new javax.swing.JLabel();
         textFieldSearchInvoices = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         textAreaInvoiceDetail = new javax.swing.JTextArea();
@@ -792,6 +817,8 @@ public class Invoice extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         buttonPrintInvoice = new javax.swing.JButton();
         labelCustomerInfomation = new javax.swing.JLabel();
+        labelPaymentType1 = new javax.swing.JLabel();
+        payWithCredit = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -852,9 +879,9 @@ public class Invoice extends javax.swing.JPanel {
         labelInvoices.setText("Invoices:");
         add(labelInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
 
-        labelPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        labelPaymentType.setText("Payment Type:");
-        add(labelPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
+        labelPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelPayWithCredit.setText("For flexible discount holders:");
+        add(labelPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 680, -1, -1));
 
         textFieldSearchInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
@@ -904,6 +931,13 @@ public class Invoice extends javax.swing.JPanel {
         labelCustomerInfomation.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelCustomerInfomation.setText("*Pay Later option needs to be configured");
         add(labelCustomerInfomation, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 640, -1, -1));
+
+        labelPaymentType1.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelPaymentType1.setText("Payment Type:");
+        add(labelPaymentType1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
+
+        payWithCredit.setText("pay with discount");
+        add(payWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 680, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInvoicesActionPerformed
@@ -932,28 +966,7 @@ public class Invoice extends javax.swing.JPanel {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
             GetJobAndInvoiceNumber();
-            String sql;
-            //see if customer is account holder
-            try {
-                sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
-                        + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
-                        + "discountplan.* from job "
-                        + "inner join invoice on job.jobID = invoice.JobjobID "
-                        + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
-                        + "inner join customer on customer.ID = vehicle.CustomerID "
-                        + "inner join customeraccount on customeraccount.CustomerID = customer.ID "
-                        + "inner join discountplan on discountplan.CustomerAccountaccountID = customeraccount.accountID "
-                        + "where jobID = " + jobNumber);
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rs = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
+            CheckAccountHolder();
 
             String accountID = "";
             String fixedID = "";
@@ -995,8 +1008,13 @@ public class Invoice extends javax.swing.JPanel {
                 if (flexibleID == null) {
                     //no flexible discount
                 } else {
-                    //flexible discount
-                    FlexibleDiscount(flexibleID, accountID);
+                    if (payWithCredit.isSelected()) {
+                        //flexible discount
+                        FlexibleDiscount(flexibleID, accountID);
+                    } else {
+                        //standard payment - ignore their discount
+                        StandardPayment();
+                    }
                 }
             }
         } else {
@@ -1153,8 +1171,10 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JLabel labelInvoice;
     private javax.swing.JLabel labelInvoices;
     private javax.swing.JLabel labelLoggedIn;
-    private javax.swing.JLabel labelPaymentType;
+    private javax.swing.JLabel labelPayWithCredit;
+    private javax.swing.JLabel labelPaymentType1;
     private javax.swing.JList<String> listInvoices;
+    private javax.swing.JCheckBox payWithCredit;
     private javax.swing.JTextArea textAreaInvoiceDetail;
     private javax.swing.JTextField textFieldSearchInvoices;
     private javax.swing.JTextField textFieldUserDetails;
