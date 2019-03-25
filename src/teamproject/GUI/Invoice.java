@@ -1030,19 +1030,56 @@ public class Invoice extends javax.swing.JPanel {
             String[] invoiceSplit = invoicePart.split(": ");
             String invoiceNumber = invoiceSplit[1];
             try {
-                String sql = ("update invoice set payLater = 1 where invoiceNumber = " + invoiceNumber);
+                String sql = ("select invoice.*, job.jobID, vehicle.registrationNumber, "
+                        + "customer.name, customeraccount.accountID, customeraccount.configuredPayLater "
+                        + "from invoice inner join job on job.jobID = "
+                        + "invoice.JobjobID inner join vehicle on job.VehicleregistrationNumber = "
+                        + "vehicle.registrationNumber inner join customer on vehicle.CustomerID = customer.ID "
+                        + "inner join customeraccount on customeraccount.CustomerID = customer.id "
+                        + "where invoiceNumber = " + invoiceNumber);
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ps.executeUpdate();
+                rs = ps.executeQuery();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            ShowAllInvoices();
+            boolean done = false;
+            try {
+                while (rs.next()) {
+                    String accountID = rs.getString("accountID");
+                    String payLater = rs.getString("configuredPayLater");
+                    if (accountID != null && payLater.equals("1")) {
+                        try {
+                            String sql = ("update invoice set payLater = 1 where invoiceNumber = " + invoiceNumber);
+                            PreparedStatement ps = null;
+                            try {
+                                ps = connection.prepareStatement(sql);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            ps.executeUpdate();
+                            done = true;
+                        } catch (SQLException e) {
+                            System.err.println(e.getMessage());
+                        }
+
+                        ShowAllInvoices();
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            if (done == false) {
+                String mess = "Pay later not configured for this customer";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            }
+
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
