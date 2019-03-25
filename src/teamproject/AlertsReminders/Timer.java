@@ -2,6 +2,7 @@ package teamproject.AlertsReminders;
 
 import java.time.LocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MONTHS;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -43,15 +44,11 @@ public class Timer {
 
     private void CalculateFlexibleDiscounts(LocalDate date) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        LocalDate aDate = LocalDate.now(); // Current date or parsed date;
-
-        long daysBetween = DAYS.between(date, aDate);
-        if (daysBetween > 30) {
-            daysBetween = daysBetween % 30;
+        
+        //if it's the 1st, calculate the flexible discounts for the last month
+        if (date.getDayOfMonth() == 1) {
+            scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 30, TimeUnit.DAYS);
         }
-
-        //every 30 days (1 month)
-        scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 30 - daysBetween, 30, TimeUnit.DAYS);
     }
 
     /*
