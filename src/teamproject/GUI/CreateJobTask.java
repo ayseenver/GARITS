@@ -66,7 +66,7 @@ public class CreateJobTask extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        UpdateTaskList();
+        ShowTaskList();
         UpdateBayList();
 
         frame.setVisible(true);
@@ -121,7 +121,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         });
     }
 
-    private void UpdateTaskList() {
+    private void ShowTaskList() {
         listAvailableTasks.removeAll();
         tasks.clear();
 
@@ -135,6 +135,22 @@ public class CreateJobTask extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+
+        taskArray = CreateArray(tasks);
+
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
+    }
+    
+        private void UpdateTaskList() {
+        listAvailableTasks.removeAll();
 
         taskArray = CreateArray(tasks);
 
