@@ -141,7 +141,8 @@ public class Invoice extends javax.swing.JPanel {
 
         //get all parts used for this job
         try {
-            String sql = ("select * from sparePart where partID in (select PartpartID from job_part_record where JobjobID = " + jobNumber + ")");
+            String sql = ("select * from job_part_record inner join sparepart on sparepart.partID = job_part_record.PartpartID "
+                    + "where jobjobid = " + jobNumber);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -156,9 +157,12 @@ public class Invoice extends javax.swing.JPanel {
         double totalPartsCost = 0;
         try {
             while (rs.next()) {
+                int quantity = Integer.parseInt(rs.getString("quantity"));
+                double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
                 // read the result set. Get part name description.
-                String part = rs.getString("partName") + ", £" + Double.parseDouble(rs.getString("sellingPrice"));
-                totalPartsCost += Double.parseDouble(rs.getString("sellingPrice"));
+                String part = rs.getString("partName") 
+                        + ", £" + sellingPrice + ", quantity: " + quantity;
+                totalPartsCost += (sellingPrice * quantity);
                 result += (part + "\n");
             }
         } catch (SQLException e) {
@@ -192,7 +196,7 @@ public class Invoice extends javax.swing.JPanel {
 
         double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
         result += ("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
-        result += ("\nVAT: " + totalCost * 0.2);
+        result += ("\nVAT: £" + totalCost * 0.2);
         result += ("\nGrand total: £" + totalCost * 1.2 + "\n");
         return result;
     }
