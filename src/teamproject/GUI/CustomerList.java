@@ -18,6 +18,7 @@ public class CustomerList extends javax.swing.JPanel {
     String details;
     private ResultSet rsC;
     private ResultSet rsD;
+    private ResultSet rs;
     private Statement statement;
     String[] nameArray;
     String[] detailArray;
@@ -154,7 +155,6 @@ public class CustomerList extends javax.swing.JPanel {
         buttonEditCustomer = new javax.swing.JButton();
         buttonConfirmPayment = new javax.swing.JButton();
         labelPayCustomer = new javax.swing.JLabel();
-        comboBoxPaymentMethod = new javax.swing.JComboBox<>();
         labelSelectCustomer = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
         listDetails = new javax.swing.JList<>();
@@ -246,14 +246,16 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 620, 170, -1));
 
         buttonConfirmPayment.setText("Confirm");
-        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
+        buttonConfirmPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonConfirmPaymentActionPerformed(evt);
+            }
+        });
+        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 620, 100, -1));
 
         labelPayCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelPayCustomer.setText("Pay Customer:");
         add(labelPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 620, -1, -1));
-
-        comboBoxPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "send cheque" }));
-        add(comboBoxPaymentMethod, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 620, -1, -1));
 
         labelSelectCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectCustomer.setText("Select Customer:");
@@ -412,6 +414,29 @@ public class CustomerList extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonEditVehiclesActionPerformed
 
+    private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
+        if (listCustomers.getSelectedValue() != null) {
+
+            //set this customer's credit to 0
+            try {
+                String sql = ("update flexiblediscount set credit = 0 where discountID = "
+                        + "(select discountID from flexiblediscount where discountID = "
+                        + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
+                        + "(select accountID from customeraccount where customerID = "
+                        + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
@@ -423,7 +448,6 @@ public class CustomerList extends javax.swing.JPanel {
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchCustomer;
     private javax.swing.JButton buttonView;
-    private javax.swing.JComboBox<String> comboBoxPaymentMethod;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
