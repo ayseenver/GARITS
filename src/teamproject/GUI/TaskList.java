@@ -225,7 +225,7 @@ public class TaskList extends javax.swing.JPanel {
         });
         jPanel6.add(addTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, -1, -1));
 
-        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT", "Repair" }));
+        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT" }));
         jobTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jobTypeComboActionPerformed(evt);
@@ -246,7 +246,7 @@ public class TaskList extends javax.swing.JPanel {
 
             f.dispose();
             db.closeConnection(connection);
-            //new ConfirmJob(username, v, c, requiredTasks, bayID, jobType);
+            new MainMenu(username);
         
     }//GEN-LAST:event_doneButtonActionPerformed
 
@@ -291,29 +291,7 @@ public class TaskList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
-       /*        String selected = listRequiredTasks.getSelectedValue();
-
-        if (!(selected == null)) {
-            requiredTasks.remove(selected);
-
-            requiredTaskArray = CreateArray(requiredTasks);
-
-            listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return requiredTaskArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return requiredTaskArray[i];
-                }
-            });
-
-            tasks.add(selected);
-            UpdateTaskList();
-        } else {
-            String mess = "Select a task to remove";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }*/  
+      
        String selected = listDefaultTasks.getSelectedValue();
 
         if (!(selected == null)) {

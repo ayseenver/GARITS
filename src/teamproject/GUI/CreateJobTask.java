@@ -68,7 +68,6 @@ public class CreateJobTask extends javax.swing.JPanel {
 
         UpdateTaskList();
         UpdateBayList();
-
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -124,7 +123,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void UpdateTaskList() {
         listAvailableTasks.removeAll();
         tasks.clear();
-
+        updateDefaultTasks();
         //add all tasks to task list
         try {
             while (rs.next()) {
@@ -417,6 +416,15 @@ public class CreateJobTask extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_removeTaskActionPerformed
+    private void updateDefaultTasks() {
+        try {
+            this.rs = statement.executeQuery("select * from Task where defaultJobType = '" + jobType + "'");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+    }
 
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
         String selected = listAvailableTasks.getSelectedValue();
@@ -451,6 +459,8 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
         jobType = jobTypeCombo.getSelectedItem().toString();
+
+        UpdateTaskList();
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
 
