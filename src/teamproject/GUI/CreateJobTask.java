@@ -46,7 +46,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
         this.bayType = "MoT inspection";
-        this.jobType = "Service";
+        this.jobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
         initComponents();
@@ -418,7 +418,8 @@ public class CreateJobTask extends javax.swing.JPanel {
     }//GEN-LAST:event_removeTaskActionPerformed
     private void updateDefaultTasks() {
         try {
-            this.rs = statement.executeQuery("select * from Task where defaultJobType = '" + jobType + "'");
+            if(!jobType.equalsIgnoreCase("Repair")){
+            this.rs = statement.executeQuery("select * from Task where " + jobType + " = 1");}
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -459,7 +460,11 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
         jobType = jobTypeCombo.getSelectedItem().toString();
-
+        if (jobType.equalsIgnoreCase("Service")) {
+            jobType = "defaultServiceJob";
+        } else if (jobType.equalsIgnoreCase("MoT")) {
+            jobType = "defaultMoTJob";
+        } 
         UpdateTaskList();
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
