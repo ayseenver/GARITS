@@ -279,20 +279,39 @@ public class Job extends javax.swing.JPanel {
         }
 
         ArrayList<String> bays = new ArrayList<>();
-        //get all bays for this job type
-        try {
-            String sql = ("select * from Bay where type = '" + jobType) + "'" + ("and booked = 0");
-            PreparedStatement ps = null;
+
+        if (jobType.equals("MoT")) {
+            //get all bays for this job type
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("select * from Bay where type = 'MoT' and booked = 0");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rs = ps.executeQuery();
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
             }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
+        } else {
+            //get all bays for this job type
+            try {
+                String sql = ("select * from Bay where type = 'Repair' and booked = 0");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rs = ps.executeQuery();
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
         }
 
         //add bays to bay list
