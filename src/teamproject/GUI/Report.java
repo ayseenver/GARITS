@@ -5,14 +5,18 @@
  */
 package teamproject.GUI;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -178,13 +182,13 @@ public class Report extends javax.swing.JPanel {
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 1180, 400));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -268,11 +272,30 @@ public class Report extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        // TODO add your handling code here:
+        if (textAreaReport.getText().isEmpty()) {
+            String mess = "Click 'view' first";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
+            Date aDate = new Date();
+            String[] dateParts = aDate.toString().split(" ");
+            String date = dateParts[0] + dateParts[1] + dateParts[2];
+
+            String fileName = selected + date + "report.txt";
+            try {
+                PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                writer.println(textAreaReport.getText());
+                writer.close();
+                String mess = "Printed successfully";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        if (!(textFieldFrom.getText().equals("") && textFieldTill.getText().equals(""))) {
+        if (!(textFieldFrom.getText().isEmpty() && textFieldTill.getText().isEmpty())) {
+            textAreaReport.setText("");
 
             if (selected.equals("Monthly vehicle report")) {
                 String customerType = comboBoxCustomerType.getSelectedItem().toString();
@@ -284,16 +307,16 @@ public class Report extends javax.swing.JPanel {
                         if (customerType.equals("Casual")) {
                             sql = ("select * from job "
                                     + "where VehicleregistrationNumber in "
-                                    + "(select registrationNumber from vehicle where Customername in "
-                                    + "(select name from customer where name not in "
-                                    + "(select Customername from customerAccount))) "
+                                    + "(select registrationNumber from vehicle where CustomerID in "
+                                    + "(select ID from customer where ID not in "
+                                    + "(select CustomerID from customerAccount))) "
                                     + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " AND " + textFieldTill.getText() + ")");
                         } else { //all the jobs from account holders
                             sql = ("select * from job "
                                     + "where VehicleregistrationNumber in "
-                                    + "(select registrationNumber from vehicle where Customername in "
-                                    + "(select name from customer where name in "
-                                    + "(select Customername from customerAccount))) "
+                                    + "(select registrationNumber from vehicle where CustomerID in "
+                                    + "(select ID from customer where ID in "
+                                    + "(select CustomerID from customerAccount))) "
                                     + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
                                     + "AND " + textFieldTill.getText() + ")");
                         }
@@ -302,18 +325,18 @@ public class Report extends javax.swing.JPanel {
                         if (customerType.equals("Casual")) {
                             sql = ("select * from job "
                                     + "where VehicleregistrationNumber in "
-                                    + "(select registrationNumber from vehicle where Customername in "
-                                    + "(select name from customer where name not in "
-                                    + "(select Customername from customerAccount))) "
+                                    + "(select registrationNumber from vehicle where CustomerID in "
+                                    + "(select ID from customer where ID not in "
+                                    + "(select CustomerID from customerAccount))) "
                                     + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
                                     + "AND " + textFieldTill.getText() + ") "
                                     + "and type = '" + jobType + "'");
                         } else { //all the jobs of this type from account holders
                             sql = ("select * from job "
                                     + "where VehicleregistrationNumber in "
-                                    + "(select registrationNumber from vehicle where Customername in "
-                                    + "(select name from customer where name in "
-                                    + "(select Customername from customerAccount))) "
+                                    + "(select registrationNumber from vehicle where CustomerID in "
+                                    + "(select ID from customer where ID in "
+                                    + "(select CustomerID from customerAccount))) "
                                     + "and (dateBookedIn BETWEEN " + textFieldFrom.getText() + " "
                                     + "AND " + textFieldTill.getText() + ") "
                                     + "and type = '" + jobType + "'");
@@ -329,8 +352,7 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-
-                textAreaReport.setText("");
+                
                 ArrayList<String> jobs = new ArrayList<>();
 
                 try {
@@ -402,8 +424,6 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-
-                textAreaReport.setText("");
 
                 try {
                     while (rs.next()) {
@@ -543,31 +563,31 @@ public class Report extends javax.swing.JPanel {
                     while (rs.next()) {
                         String partID = rs.getString("partID");
                         int newQuantity = Integer.parseInt(rs.getString("quantity"));
-                        
+
                         int usedQuantity;
                         String used = usedMap.get(partID) + "";
-                        if (used.equals("null")){
+                        if (used.equals("null")) {
                             usedQuantity = 0;
-                        }else{
+                        } else {
                             usedQuantity = usedMap.get(partID);
                         }
-                        
+
                         int soldQuantity;
                         String sold = usedMap.get(partID) + "";
-                        if (sold.equals("null")){
+                        if (sold.equals("null")) {
                             soldQuantity = 0;
-                        }else{
+                        } else {
                             soldQuantity = usedMap.get(partID);
                         }
-                        
+
                         int orderQuantity;
                         String order = usedMap.get(partID) + "";
-                        if (order.equals("null")){
+                        if (order.equals("null")) {
                             orderQuantity = 0;
-                        }else{
+                        } else {
                             orderQuantity = usedMap.get(partID);
                         }
-                        
+
                         int initialQuantity = (newQuantity + usedQuantity + soldQuantity) - orderQuantity;
 
                         String result = "Part name: " + rs.getString("partName") + "\n"
@@ -577,12 +597,12 @@ public class Report extends javax.swing.JPanel {
                                 + "Year(s): " + rs.getString("year") + "\n"
                                 + "Price: £" + rs.getString("costPrice") + "\n"
                                 + "Initial stock level: " + initialQuantity + "\n"
-                                + "Initial cost: " + (initialQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Initial cost: " + (initialQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Used: " + usedQuantity + "\n"
                                 + "Sold: " + soldQuantity + "\n"
                                 + "Delivery: " + orderQuantity + "\n"
                                 + "New stock level: " + newQuantity + "\n"
-                                + "Stock cost: £" + (newQuantity *(Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Stock cost: £" + (newQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
                                 + "Low stock threshold: " + rs.getString("threshold") + "\n";
                         textAreaReport.append(result + "\n");
                     }
@@ -591,13 +611,16 @@ public class Report extends javax.swing.JPanel {
                 }
             }
         } else {
-            System.out.println("Pick the dates");
+            String mess = "Select the dates";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

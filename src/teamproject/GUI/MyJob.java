@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -20,6 +21,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class MyJob extends javax.swing.JPanel {
+
     private String username;
     ArrayList<String> assignedJobs = new ArrayList<>();
     String[] jobArray;
@@ -29,7 +31,7 @@ public class MyJob extends javax.swing.JPanel {
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
-    
+
     /**
      * Creates new form NewJPanel
      */
@@ -39,74 +41,70 @@ public class MyJob extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         ShowAssignedJobs();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    private String[] CreateArray(ArrayList<String> tasks){
+
+    private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
     }
-    
-    private void ShowAssignedJobs(){
-        try{
-            String sql = ("select ID from Mechanic where Userusername = '" + username) +"'";
+
+    private void ShowAssignedJobs() {
+        try {
+            String sql = ("select ID from Mechanic where Userusername = '" + username) + "'";
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             this.rs = ps.executeQuery();
             id = rs.getString("ID");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-            String sql = ("select * from Job where MechanicID = '" + id) +"' and dateCompleted is null";
+
+        try {
+            String sql = ("select * from Job where MechanicID = '" + id) + "' and dateCompleted is null";
             PreparedStatement ps = null;
             try {
-            ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String job = "Job ID: " + rs.getString("jobID") + ", Vehicle reg: " + rs.getString("VehicleregistrationNumber") + ", Booked in: " + rs.getString("dateBookedIn");
+                assignedJobs.add(job);
+            }
+        } catch (SQLException e) {
         }
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String job = "Job ID: " + rs.getString("jobID") +", Vehicle reg: " + rs.getString("VehicleregistrationNumber") +", Booked in: " + rs.getString("dateBookedIn");
-            assignedJobs.add(job);
-          } 
-        }
-        catch(SQLException e){
-        }
-        
-        
+
         jobArray = CreateArray(assignedJobs);
-                
+
         listAssignedJobs.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return jobArray.length; }
-            public String getElementAt(int i) { return jobArray[i]; }
+            public int getSize() {
+                return jobArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return jobArray[i];
+            }
         });
     }
 
@@ -132,7 +130,6 @@ public class MyJob extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonSearchJobs.setText("Search");
@@ -189,13 +186,13 @@ public class MyJob extends javax.swing.JPanel {
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -216,10 +213,10 @@ public class MyJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldSearchJobsActionPerformed
 
     private void buttonViewJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewJobActionPerformed
-        if(listAssignedJobs.getSelectedValue() != null){
+        if (listAssignedJobs.getSelectedValue() != null) {
             selectedJob = listAssignedJobs.getSelectedValue();
             String[] parts = selectedJob.split(", ");
-            
+
             String[] jobParts = parts[0].split(": ");
             int jobID = Integer.parseInt(jobParts[1]);
             String[] regParts = parts[1].split(": ");
@@ -227,14 +224,16 @@ public class MyJob extends javax.swing.JPanel {
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
-            try{
+            try {
                 connection.close();
-            }
-            catch(SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             db.closeConnection(connection);
             new Job(username, jobID, vehicleReg);
+        } else {
+            String mess = "Select a job";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewJobActionPerformed
 
@@ -243,8 +242,10 @@ public class MyJob extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

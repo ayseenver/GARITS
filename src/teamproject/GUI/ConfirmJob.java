@@ -28,6 +28,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     ArrayList<String> requiredTasks = new ArrayList<>();
     String bayID;
     String jobType;
+    String status;
     ResultSet rs;
     Statement statement;
     Connection connection = null;
@@ -43,6 +44,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.requiredTasks = tasks;
         this.bayID = bayID;
         this.jobType = jobType;
+        status="Created";
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -83,16 +85,18 @@ public class ConfirmJob extends javax.swing.JPanel {
         String sql;
         try{
             if(bayID.equals("yard")){
-                sql = ("insert into Job(VehicleregistrationNumber, dateBookedIn, type)"
+                sql = ("insert into Job(VehicleregistrationNumber, dateBookedIn, status, type)"
                     + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                     + "date('now'), '"
+                   + status + "', '"
                     + jobType + "')");
             }else{
                 int bayIDInt = Integer.parseInt(bayID);
-                sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, type)"
+                sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, status, type)"
                     + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                     + "(select bayID from Bay where bayID = " + bayIDInt + "), "
                     + "date('now'), '"
+                    + status + "', '"
                     + jobType + "')");
             }
 
@@ -207,25 +211,19 @@ public class ConfirmJob extends javax.swing.JPanel {
         labelAccountHolder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelAccountHolder.setText("Account holder Details: ");
         add(labelAccountHolder, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 520, -1, -1));
-
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -249,17 +247,18 @@ public class ConfirmJob extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonCreateJobActionPerformed
 
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new CreateJobTask(username, v, c);
     }//GEN-LAST:event_buttonBackActionPerformed
 
 

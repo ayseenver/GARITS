@@ -1,4 +1,4 @@
-package Spare_Parts;
+package teamproject.Spare_Parts;
 
 public class PartOrder {
 

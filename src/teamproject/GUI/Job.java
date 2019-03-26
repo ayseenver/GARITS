@@ -30,6 +30,8 @@ public class Job extends javax.swing.JPanel {
     String[] actualTaskArray;
     String[] partArray;
     String[] usedPartArray;
+    String bayID = "";
+    String[] bayArray;
     int jobID;
     String vehicleReg;
     Statement statement;
@@ -60,6 +62,7 @@ public class Job extends javax.swing.JPanel {
         ListAllParts();
         GetActualParts();
         ListUsedParts();
+        UpdateBayList();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,6 +132,7 @@ public class Job extends javax.swing.JPanel {
 
     private void ListAllParts() {
         listAvailableParts.removeAll();
+        parts.clear();
 
         //add all parts to part list
         try {
@@ -138,6 +142,7 @@ public class Job extends javax.swing.JPanel {
                 parts.add(part);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         partArray = CreateArray(parts);
@@ -202,6 +207,7 @@ public class Job extends javax.swing.JPanel {
                 tasks.add(task);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
 
         taskArray = CreateArray(tasks);
@@ -247,6 +253,99 @@ public class Job extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void UpdateBayList() {
+        try {
+            String sql = "select type from job where jobID = " + jobID;
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        String jobType = "";
+        try {
+            while (rs.next()) {
+                jobType = rs.getString("type");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        ArrayList<String> bays = new ArrayList<>();
+        //get all bays for this job type
+        try {
+            String sql = ("select * from Bay where type = '" + jobType) + "'" + ("and booked = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
+        //add bays to bay list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String bay = rs.getString("bayID") + ": " + rs.getString("type");
+                bays.add(bay);
+            }
+        } catch (SQLException e) {
+        }
+
+        bayArray = CreateArray(bays);
+
+        listAvailableBays.setModel(new javax.swing.AbstractListModel<String>() {
+
+            public int getSize() {
+                return bayArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return bayArray[i];
+            }
+        }
+        );
+    }
+
+    private void UpdateTaskList() {
+        listAvailableTasks.removeAll();
+        tasks.clear();
+
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
     }
 
     /**
@@ -301,6 +400,9 @@ public class Job extends javax.swing.JPanel {
         sendYardButton = new javax.swing.JButton();
         yardCheckBox = new javax.swing.JCheckBox();
         jobCompletedButton = new javax.swing.JButton();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        listAvailableBays = new javax.swing.JList<>();
+        labelAvailableBay = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -461,13 +563,13 @@ public class Job extends javax.swing.JPanel {
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -501,19 +603,97 @@ public class Job extends javax.swing.JPanel {
             }
         });
         add(jobCompletedButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
+
+        listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane11.setViewportView(listAvailableBays);
+
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 610, 220, 80));
+
+        labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelAvailableBay.setText("Bay Available:");
+        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 580, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from Task where description LIKE '%"
+                    + textFieldSearchTasks.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        UpdateTaskList();
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void buttonSearchPartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchPartsActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchParts.getText() + "%' or vehicleType LIKE '%"
+                    + textFieldSearchParts.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ListAllParts();
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
+
+        //insert the new bayID
+        bayID = listAvailableBays.getSelectedValue();
+        try {
+            if (!(bayID == null)) {
+                String[] bayParts = bayID.split(": ");
+                bayID = bayParts[0];
+                int bayIDInt = Integer.parseInt(bayID);
+                String sql = ("update job set baybayID = (select bayID from bay where bayID = " + bayIDInt + ") "
+                        + "where jobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+
+                //set the bay to booked
+                sql = ("update bay set booked = 1 where bayID = " + bayIDInt);
+                ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_updateJobButtonActionPerformed
@@ -540,8 +720,10 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -685,32 +867,34 @@ public class Job extends javax.swing.JPanel {
         String selected = listAvailableParts.getSelectedValue();
         usedParts.add(selected);
         usedPartArray = CreateArray(usedParts);
-               
+
         listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return usedPartArray.length; }
-            public String getElementAt(int i) { return usedPartArray[i]; }
+            public int getSize() {
+                return usedPartArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return usedPartArray[i];
+            }
         });
-        
-        parts.remove(selected);
+
+        //parts.remove(selected);
         ListAllParts();
-        
+
         //insert part into the parts used for this job
         String sql;
-        try{
+        try {
             sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
                     + " values ((select partID from sparepart where partName = '" + selected + "'), "
                     + "" + jobID + ", 1)");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_addPartButtonActionPerformed
@@ -718,11 +902,11 @@ public class Job extends javax.swing.JPanel {
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
         String selected = listPartsUsed.getSelectedValue();
         usedParts.remove(selected);
-        try{
+        try {
             String[] parts = selected.split(", ");
             selected = parts[0];
             usedParts.remove(selected);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
 
@@ -767,13 +951,103 @@ public class Job extends javax.swing.JPanel {
         String[] sArray;
         String s;
 
-        for (String x : usedParts) {
-            sArray = x.split(", ");
-            s = sArray[0];
-            //get quantity of inital parts
+        try {
+            connection.setAutoCommit(false);
+            for (String x : usedParts) {
+                sArray = x.split(", ");
+                s = sArray[0];
+                //get quantity of inital parts
+                try {
+                    sql = ("select * from sparePart where partName = '" + s + "' "
+                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    initialQuantity = Integer.parseInt(rs.getString("quantity"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //get quantity of used parts
+                try {
+                    sql = ("select quantity from job_part_record where PartpartID = "
+                            + "(select partID from sparePart where partName = '" + s + "' "
+                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                try {
+                    usedQuantity = Integer.parseInt(rs.getString("quantity"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                //update the quantity in the stock ledger
+                try {
+                    sql = ("UPDATE SparePart "
+                            + "SET quantity = " + (initialQuantity - usedQuantity)
+                            + " WHERE partID = (select partID from sparePart where partName = '" + s
+                            + "' and vehicleType = (select model from vehicle where registrationNumber = '"
+                            + vehicleReg + "'))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+
+            //get actual hours and cost of all the tasks
+            double totalCost = 0.0d;
+            double totalHours = 0.0d;
+
             try {
-                sql = ("select * from sparePart where partName = '" + s + "' "
-                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
+                sql = ("select * from Actual_Task where jobJobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                while (rs.next()) {
+                    totalHours += Double.parseDouble(rs.getString("actualHours"));
+                    totalCost += Double.parseDouble(rs.getString("actualCost"));
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //get the hourly rate for the mechanic assinged to this job, and multiply
+            //that by the total hours spent.
+            try {
+                sql = ("select hourlyRate from mechanic where ID in (select MechanicID from job where jobID = " + jobID + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -786,16 +1060,21 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                initialQuantity = Integer.parseInt(rs.getString("quantity"));
+                while (rs.next()) {
+                    double hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
+                    totalCost *= hourlyRate;
+                }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            //get quantity of used parts
+            //add the actual cost of all the parts
             try {
-                sql = ("select quantity from job_part_record where PartpartID = "
-                        + "(select partID from sparePart where partName = '" + s + "' "
-                        + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
+                sql = ("select (quantity * sellingPrice) from "
+                        + "(SELECT job_part_record.quantity, SparePart.* "
+                        + "FROM job_part_record INNER JOIN SparePart "
+                        + "ON job_part_record.PartpartID=SparePart.partID "
+                        + "where job_part_record.jobjobID = " + jobID + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -808,18 +1087,18 @@ public class Job extends javax.swing.JPanel {
             }
 
             try {
-                usedQuantity = Integer.parseInt(rs.getString("quantity"));
+                while (rs.next()) {
+                    totalCost += Double.parseDouble(rs.getString("(quantity * sellingPrice)"));
+                }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            //update the quantity in the stock ledger
+            //set completion date to today, and update the total hours and total cost
             try {
-                sql = ("UPDATE SparePart "
-                        + "SET quantity = " + (initialQuantity - usedQuantity)
-                        + " WHERE partID = (select partID from sparePart where partName = '" + s
-                        + "' and vehicleType = (select model from vehicle where registrationNumber = '"
-                        + vehicleReg + "'))");
+                sql = ("update job "
+                        + "set dateCompleted = date('now'), totalCost = " + totalCost + ", "
+                        + "totalHours = " + totalHours + ", status = 'Completed' where jobID = '" + jobID + "'");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -830,114 +1109,70 @@ public class Job extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-        }
 
-        //get actual hours and cost of all the tasks
-        double totalCost = 0.0d;
-        double totalHours = 0.0d;
-
-        try {
-            sql = ("select * from Actual_Task where jobJobID = " + jobID);
-            PreparedStatement ps = null;
+            //unbook the bay from this job
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("select * from bay where bayID in (select baybayID from job where jobID = " + jobID + ")");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                totalHours += Double.parseDouble(rs.getString("actualHours"));
-                totalCost += Double.parseDouble(rs.getString("actualCost"));
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //get the hourly rate for the mechanic assinged to this job, and multiply
-        //that by the total hours spent.
-        try {
-            sql = ("select hourlyRate from mechanic where ID in (select MechanicID from job where jobID = " + jobID + ")");
-            PreparedStatement ps = null;
+            String bayID = "";
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                while (rs.next()) {
+                    bayID = rs.getString("bayID");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                int hourlyRate = Integer.parseInt(rs.getString("hourlyRate"));
-                totalCost *= hourlyRate;
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //add the actual cost of all the parts
-        try {
-            sql = ("select (quantity * sellingPrice) from "
-                    + "(SELECT job_part_record.quantity, SparePart.* "
-                    + "FROM job_part_record INNER JOIN SparePart "
-                    + "ON job_part_record.PartpartID=SparePart.partID "
-                    + "where job_part_record.jobjobID = " + jobID + ")");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (!(bayID.isEmpty())) { //if the vehicle is in a bay
+                    sql = ("update bay set booked = 0 where bayID = " + bayID);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            while (rs.next()) {
-                totalCost += Double.parseDouble(rs.getString("(quantity * sellingPrice)"));
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //set completion date to today, and update the total hours and total cost
-        try {
-            sql = ("update job "
-                    + "set dateCompleted = date('now'), totalCost = " + totalCost + ", "
-                    + "totalHours = " + totalHours + " where jobID = '" + jobID + "'");
-            PreparedStatement ps = null;
+            //create an invoice in the database.
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("insert into Invoice(dateProduced, JobjobID, payLater)"
+                        + " values (date('now'), "
+                        + "" + jobID + ", 0)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }
-
-        //create an invoice in the database.
-        try {
-            sql = ("insert into Invoice(dateProduced, JobjobID)"
-                    + " values (date('now'), "
-                    + "" + jobID + ")");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                connection.rollback();
+                connection.setAutoCommit(true); //just in case it had been set to false earlier.
+            } catch (SQLException a) {
+                System.err.println(a.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
 
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -979,11 +1214,13 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonUpdateTaskCost;
     private javax.swing.JButton buttonUpdateTaskTime;
     private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JButton jobCompletedButton;
+    private javax.swing.JLabel labelAvailableBay;
     private javax.swing.JLabel labelAvailableParts;
     private javax.swing.JLabel labelAvailableTasks;
     private javax.swing.JLabel labelJob;
@@ -994,6 +1231,7 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JLabel labelTime;
     private javax.swing.JLabel labelTime1;
     private javax.swing.JLabel lblAvailableParts1;
+    private javax.swing.JList<String> listAvailableBays;
     private javax.swing.JList<String> listAvailableParts;
     private javax.swing.JList<String> listAvailableTasks;
     private javax.swing.JList<String> listPartsUsed;
@@ -1014,7 +1252,4 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JCheckBox yardCheckBox;
     // End of variables declaration//GEN-END:variables
 
-    void setType(String jobType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

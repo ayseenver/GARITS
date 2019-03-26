@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -19,6 +20,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class StockControl extends javax.swing.JPanel {
+
     private String username;
     Statement statement;
     Connection connection = null;
@@ -28,7 +30,7 @@ public class StockControl extends javax.swing.JPanel {
     String[] lowPartArray;
     String[] partOrder;
     ArrayList<String> order = new ArrayList<>();
-    
+
     /**
      * Creates new form NewJPanel
      */
@@ -38,149 +40,154 @@ public class StockControl extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
+        try {
+            this.rs = statement.executeQuery("select * from sparepart");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
         ShowAllParts();
         ShowLowParts();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     public StockControl(String username, ArrayList<String> order) {
         this(username);
         this.order = order;
         UpdateOrder();
     }
-    
-    private void ShowAllParts(){
-        try{
-            this.rs = statement.executeQuery("select * from sparepart");
-        }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
+
+    private void ShowAllParts() {
+
         ArrayList<String> parts = new ArrayList<>();
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String part = rs.getString("partName") + ", "+ rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
-            parts.add(part);
-          } 
-        }
-        catch(SQLException e){
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String part = rs.getString("partName") + ", " + rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
+                parts.add(part);
+            }
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
-        
+
         partArray = CreateArray(parts);
-                
+
         listStock.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return partArray.length; }
-            public String getElementAt(int i) { return partArray[i]; }
-        });  
+            public int getSize() {
+                return partArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return partArray[i];
+            }
+        });
     }
-    
-    private void ShowLowParts(){
-        try{
+
+    private void ShowLowParts() {
+        try {
             this.rs = statement.executeQuery("select * from sparepart where quantity < threshold");
-        }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
-        }
-        
-        ArrayList<String> parts = new ArrayList<>();
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String part = rs.getString("partName") + ", "+ rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
-            parts.add(part);
-          } 
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-        
-        
+
+        ArrayList<String> parts = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String part = rs.getString("partName") + ", " + rs.getString("vehicleType") + ", Quantity: " + rs.getString("quantity") + ", Threshold: " + rs.getString("threshold");
+                parts.add(part);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         lowPartArray = CreateArray(parts);
-                
+
         listLowStock.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return lowPartArray.length; }
-            public String getElementAt(int i) { return lowPartArray[i]; }
-        });  
+            public int getSize() {
+                return lowPartArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return lowPartArray[i];
+            }
+        });
     }
-    
-    private String[] CreateArray(ArrayList<String> tasks){
+
+    private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
     }
-    
-    private void AddPartAll(){
+
+    private void AddPartAll() {
         String selected = listStock.getSelectedValue();
         String[] parts = selected.split(", ");
-        
+
         String partName = parts[0];
         String vType = parts[1];
-        
+
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
-        
+
         order.add(partToOrder);
         UpdateOrder();
     }
-    
-    private void AddPartLow(){
+
+    private void AddPartLow() {
         String selected = listLowStock.getSelectedValue();
-        
+
         String[] parts = selected.split(", ");
-        
+
         String partName = parts[0];
         String vType = parts[1];
-        
-        
+
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
-        
+
         order.add(partToOrder);
         UpdateOrder();
     }
-    
-    private void RemovePart(){
+
+    private void RemovePart() {
         String selected = listPartsOrder.getSelectedValue();
-        
+
         order.remove(selected);
         UpdateOrder();
     }
-    
-    private void UpdateOrder(){
-        partOrder = CreateArray(order);                
+
+    private void UpdateOrder() {
+        partOrder = CreateArray(order);
         listPartsOrder.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return partOrder.length; }
-            public String getElementAt(int i) { return partOrder[i]; }
+            public int getSize() {
+                return partOrder.length;
+            }
+
+            public String getElementAt(int i) {
+                return partOrder[i];
+            }
         });
     }
-    
-    private boolean IsPartInOrder(String s){
+
+    private boolean IsPartInOrder(String s) {
         String[] parts = s.split(", ");
         String nameAndType = parts[0] + ", " + parts[1];
-        for(int i = 0; i< listPartsOrder.getModel().getSize();i++){
+        for (int i = 0; i < listPartsOrder.getModel().getSize(); i++) {
             String check = listPartsOrder.getModel().getElementAt(i);
             String[] checkParts = check.split(", ");
             check = checkParts[0] + ", " + checkParts[1];
-            if (check.equals(nameAndType)){
+            if (check.equals(nameAndType)) {
                 return true;
             }
         }
@@ -203,7 +210,6 @@ public class StockControl extends javax.swing.JPanel {
         textFieldSearchAllStock = new javax.swing.JTextField();
         buttonOrder = new javax.swing.JButton();
         lblPartsOrder = new javax.swing.JLabel();
-        buttonStockLevelReport = new javax.swing.JButton();
         buttonRemove = new javax.swing.JButton();
         buttonAllStockOrder = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -219,9 +225,10 @@ public class StockControl extends javax.swing.JPanel {
         jScrollPane6 = new javax.swing.JScrollPane();
         listPartsOrder = new javax.swing.JList<>();
         buttonSearchAllStock = new javax.swing.JButton();
-        buttonPartSale = new javax.swing.JButton();
         textFieldConfigureThreshold = new javax.swing.JTextField();
         buttonConfigureThreshold = new javax.swing.JButton();
+        buttonStockLevelReport = new javax.swing.JButton();
+        buttonPartSale = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -259,15 +266,6 @@ public class StockControl extends javax.swing.JPanel {
         lblPartsOrder.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         lblPartsOrder.setText("Parts Order:");
         add(lblPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 520, -1, -1));
-
-        buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonStockLevelReport.setText("Stock Level Report");
-        buttonStockLevelReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStockLevelReportActionPerformed(evt);
-            }
-        });
-        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 140, -1, -1));
 
         buttonRemove.setText("Remove");
         buttonRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -310,13 +308,13 @@ public class StockControl extends javax.swing.JPanel {
         add(lblLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -348,21 +346,7 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, -1, -1));
 
-        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        buttonPartSale.setText("Part Sale");
-        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPartSaleActionPerformed(evt);
-            }
-        });
-        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 140, -1, -1));
-
         textFieldConfigureThreshold.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldConfigureThreshold.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldConfigureThresholdActionPerformed(evt);
-            }
-        });
         add(textFieldConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 320, 30, 30));
 
         buttonConfigureThreshold.setText("Configure Threshold");
@@ -372,6 +356,24 @@ public class StockControl extends javax.swing.JPanel {
             }
         });
         add(buttonConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 320, -1, -1));
+
+        buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonStockLevelReport.setText("Stock Level Report");
+        buttonStockLevelReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStockLevelReportActionPerformed(evt);
+            }
+        });
+        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 140, -1, -1));
+
+        buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonPartSale.setText("Part Sale");
+        buttonPartSale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPartSaleActionPerformed(evt);
+            }
+        });
+        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 140, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
@@ -380,40 +382,49 @@ public class StockControl extends javax.swing.JPanel {
 
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();        
+        f.dispose();
         db.closeConnection(connection);
         new PartOrder(username, order);
     }//GEN-LAST:event_buttonOrderActionPerformed
 
-    private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new Report(username);
-    }//GEN-LAST:event_buttonStockLevelReportActionPerformed
-
     private void buttonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemoveActionPerformed
-        RemovePart();
+        String selected = listPartsOrder.getSelectedValue();
+        if (selected != null) {
+            RemovePart();
+        } else {
+            String mess = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAllStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllStockOrderActionPerformed
-        boolean x = IsPartInOrder(listStock.getSelectedValue());
-        if (x == false){
-            AddPartAll();   
+        String selected = listStock.getSelectedValue();
+        if (selected != null) {
+            boolean x = IsPartInOrder(selected);
+            if (x == false) {
+                AddPartAll();
+            }
+        } else {
+            String mess = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonAllStockOrderActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
         String quantity = textFieldQuantity.getText();
         String selected = listPartsOrder.getSelectedValue();
-        
-        if (!quantity.equals("") && !(selected==null)){            
-            int i = order.indexOf(selected);
-            String[] parts = selected.split(", ");
-            selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
-            order.set(i, selected);
+        if (selected != null) {
+            if (!quantity.isEmpty()) {
+                int i = order.indexOf(selected);
+                String[] parts = selected.split(", ");
+                selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+                order.set(i, selected);
+            }
+            UpdateOrder();
+        } else {
+            String mess = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-        UpdateOrder();
     }//GEN-LAST:event_buttonChangeQuantityActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -424,15 +435,88 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonLowStockOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLowStockOrderActionPerformed
-        boolean x = IsPartInOrder(listLowStock.getSelectedValue());
-        if (x == false){
-            AddPartLow();   
+        String selected = listLowStock.getSelectedValue();
+        if (selected != null) {
+            boolean x = IsPartInOrder(selected);
+            if (x == false) {
+                AddPartLow();
+            }
+        } else {
+            String mess = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonLowStockOrderActionPerformed
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
-        // TODO add your handling code here:
+        try {
+            String sql = ("select * from sparepart where partName LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
+                    + textFieldSearchAllStock.getText() + "%'");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowAllParts();
     }//GEN-LAST:event_buttonSearchAllStockActionPerformed
+
+    private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
+        String sql = "";
+        String selected = listStock.getSelectedValue();
+        if (selected != null) {
+
+            String[] parts = selected.split(", ");
+            String partName = parts[0];
+            String vType = parts[1];
+
+            String threshold = textFieldConfigureThreshold.getText();
+            try {
+                if (!threshold.equals("")) {
+                    sql = ("update sparepart set threshold = " + Double.parseDouble(threshold) + " "
+                            + "where partName = '" + partName + "' and vehicleType = '" + vType + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                }
+                textFieldConfigureThreshold.setText("");
+                ShowLowParts();
+                ShowAllParts();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            String mess = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }//GEN-LAST:event_buttonConfigureThresholdActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new LogIn();
+    }//GEN-LAST:event_buttonExitActionPerformed
+
+    private void buttonStockLevelReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReportActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new Report(username);
+    }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -440,48 +524,6 @@ public class StockControl extends javax.swing.JPanel {
         db.closeConnection(connection);
         new PartSale(username);
     }//GEN-LAST:event_buttonPartSaleActionPerformed
-
-    private void textFieldConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldConfigureThresholdActionPerformed
-
-    }//GEN-LAST:event_textFieldConfigureThresholdActionPerformed
-
-    private void buttonConfigureThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfigureThresholdActionPerformed
-        String sql = "";
-        String selected  = listStock.getSelectedValue();
-        
-        String[] parts = selected.split(", ");
-        String partName = parts[0];        
-        String vType = parts[1];
-        
-        String threshold = textFieldConfigureThreshold.getText();
-        if (selected != null){
-            try{
-                if(!threshold.equals("")){
-                    sql = ("update sparepart set threshold = " + Double.parseDouble(threshold) + " "
-                            + "where partName = '" + partName + "' and vehicleType = '" + vType + "'");
-                PreparedStatement ps = null;
-                try {
-                ps = connection.prepareStatement(sql);
-                } 
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
-                }  
-                textFieldConfigureThreshold.setText("");
-                ShowLowParts();
-                ShowAllParts();
-            }
-            catch(SQLException e)
-            {
-              System.err.println(e.getMessage());
-            }     
-        }
-    }//GEN-LAST:event_buttonConfigureThresholdActionPerformed
-
-    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_buttonExitActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

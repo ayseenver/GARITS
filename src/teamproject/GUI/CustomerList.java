@@ -38,11 +38,19 @@ public class CustomerList extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rsC = statement.executeQuery("select * from Customer");
+            this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
+        ShowCustomers();
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+
+    private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
@@ -65,10 +73,6 @@ public class CustomerList extends javax.swing.JPanel {
                 return nameArray[i];
             }
         });
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     private String[] CreateArray(ArrayList<String> customers) {
@@ -79,7 +83,8 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void GetSelectedCustomer() {
         try {
-            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "'";
+            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "' "
+                    + "and deleted = 0";
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -215,13 +220,13 @@ public class CustomerList extends javax.swing.JPanel {
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -277,51 +282,25 @@ public class CustomerList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-      
         try {
-          String sql = ("select name from Customer where name LIKE '%" + textFieldSearchCustomer.getText() + "%'"); 
-        PreparedStatement ps = null;
-       
-                try {
-                    ps = connection.prepareStatement(sql);
-                     
-                } catch (Exception e) {
-                    e.printStackTrace();
-                     
-                }
-                this.rsD = ps.executeQuery();
-           
-       } catch (SQLException e) {
-               System.err.println(e.getMessage());
-              
-            }
-        
-       listCustomers.removeAll();
-       ArrayList<String> names = new ArrayList<>();
+            String sql = ("select * from Customer where name LIKE '%"
+                    + textFieldSearchCustomer.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
 
-        try {
-            while (rsD.next()) {
-                // read the result set
-                String name = rsD.getString("name");
-                names.add(name);
-                
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
             }
+            this.rsC = ps.executeQuery();
+
         } catch (SQLException e) {
-            
+            System.err.println(e.getMessage());
+
         }
-        nameArray = CreateArray(names);
-
-        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return nameArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return nameArray[i];
-            }
-            
-        });
-       
+        ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
@@ -333,7 +312,7 @@ public class CustomerList extends javax.swing.JPanel {
 
             try {
                 String sql = ("select * from vehicle where CustomerID = "
-                        + "(select ID from customer where name = '" + details + "')");
+                        + "(select ID from customer where name = '" + details + "') and deleted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -350,11 +329,11 @@ public class CustomerList extends javax.swing.JPanel {
 
             try {
                 while (rsD.next()) {
-                    String detail = rsD.getString("registrationNumber") + ", " 
-                            + rsD.getString("make") + ", " 
-                            + rsD.getString("model") + ", " 
-                            + rsD.getString("engineSerial") 
-                            + ", " + rsD.getString("chassisNumber") 
+                    String detail = rsD.getString("registrationNumber") + ", "
+                            + rsD.getString("make") + ", "
+                            + rsD.getString("model") + ", "
+                            + rsD.getString("engineSerial")
+                            + ", " + rsD.getString("chassisNumber")
                             + ", " + rsD.getString("colour");
                     vehicle.add(detail);
                 }
@@ -387,8 +366,10 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

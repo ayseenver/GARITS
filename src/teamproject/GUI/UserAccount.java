@@ -60,7 +60,7 @@ public class UserAccount extends javax.swing.JPanel {
 
     private void UpdateUserList() {
         try {
-            this.rs = statement.executeQuery("select * from User");
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -208,7 +208,7 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonSearchActionPerformed(evt);
             }
         });
-        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
+        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, -1, -1));
         add(textFieldFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 540, 130, -1));
 
         buttonEditUser.setText("Edit User");
@@ -267,13 +267,13 @@ public class UserAccount extends javax.swing.JPanel {
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -303,127 +303,136 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewUserActionPerformed
-        User newU = new User();
-        newU.setFirstName(textFieldFirstName.getText());
-        newU.setLastName(textFieldLastName.getText());
-        newU.setPassword(textFieldPassword.getText());
-        newU.setRoleName(comboBoxRole.getSelectedItem().toString());
-        newU.setUsername(textFieldUserID.getText());
+        if (textFieldFirstName.getText().isEmpty() || textFieldLastName.getText().isEmpty()
+                || textFieldPassword.getText().isEmpty() || comboBoxRole.getSelectedItem().toString().isEmpty()
+                || textFieldUserID.getText().isEmpty()) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        } else {
 
-        try {
-            String sql = ("insert into user (username, password, roleName, firstName, surname)"
-                    + "values("
-                    + "'" + newU.getUsername() + "',"
-                    + "'" + newU.getPassword() + "',"
-                    + "'" + newU.getRoleName() + "',"
-                    + "'" + newU.getFirstName() + "',"
-                    + "'" + newU.getLastName() + "')");
-            PreparedStatement ps = null;
+            User newU = new User();
+            newU.setFirstName(textFieldFirstName.getText());
+            newU.setLastName(textFieldLastName.getText());
+            newU.setPassword(textFieldPassword.getText());
+            newU.setRoleName(comboBoxRole.getSelectedItem().toString());
+            newU.setUsername(textFieldUserID.getText());
+
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        UpdateUserList();
-    }//GEN-LAST:event_buttonNewUserActionPerformed
-
-    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-        try{
-           String sql = ("select username from user where username LIKE '%" + textFieldSearch.getText() + "%'"); 
-         PreparedStatement ps = null;
+                String sql = ("insert into user (username, password, roleName, firstName, surname, deleted)"
+                        + "values("
+                        + "'" + newU.getUsername() + "',"
+                        + "'" + newU.getPassword() + "',"
+                        + "'" + newU.getRoleName() + "',"
+                        + "'" + newU.getFirstName() + "',"
+                        + "'" + newU.getLastName() + "', 0)");
+                PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-         listUsers.removeAll();
-         ArrayList<String> users = new ArrayList<>(); 
-
-        try {
-            while (rs.next()) {
-                // read the result set
-                String user = rs.getString("username");
-                users.add(user);
-            }
-        } catch (SQLException e) {
-        }
-
-        userArray = CreateArray(users);
-
-        listUsers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return userArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return userArray[i];
-            }
-        });
-    }//GEN-LAST:event_buttonSearchActionPerformed
-
-    private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
-        SelectUser();
-
-        //update the user object with the details selected
-        try {
-            u.setFirstName(rs.getString("firstName"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setLastName(rs.getString("surname"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setPassword(rs.getString("password"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setRoleName(rs.getString("roleName"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            u.setUsername(rs.getString("username"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //display the user details at the boxes at the botton
-        textFieldUserID.setText(u.getUsername());
-        textFieldFirstName.setText(u.getFirstName());
-        textFieldLastName.setText(u.getLastName());
-        textFieldPassword.setText(u.getPassword());
-        comboBoxRole.setSelectedItem(u.getRoleName());
-
-        //if it's a mechanic or foreperson, get their hourly rate.
-        if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
-            labelHourlyRate.setVisible(true);
-            textFieldHourlyRate.setVisible(true);
-
-            SelectMechanic();
-            try {
-                textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+                ps.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
+            try {
+                this.rs = statement.executeQuery("select * from User");
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
+
+            UpdateUserList();
+        }
+    }//GEN-LAST:event_buttonNewUserActionPerformed
+
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+        try {
+            String sql = ("select * from user where username LIKE '%"
+                    + textFieldSearch.getText() + "%' "
+                    + "or firstName LIKE '%" + textFieldSearch.getText() + "%' "
+                    + "or surname LIKE '%" + textFieldSearch.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        UpdateUserList();
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
+    private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
+        String selected = listUsers.getSelectedValue();
+        if (selected != null) {
+            SelectUser();
+
+            //update the user object with the details selected
+            try {
+                u.setFirstName(rs.getString("firstName"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setLastName(rs.getString("surname"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setPassword(rs.getString("password"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setRoleName(rs.getString("roleName"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                u.setUsername(rs.getString("username"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //display the user details at the boxes at the botton
+            textFieldUserID.setText(u.getUsername());
+            textFieldFirstName.setText(u.getFirstName());
+            textFieldLastName.setText(u.getLastName());
+            textFieldPassword.setText(u.getPassword());
+            comboBoxRole.setSelectedItem(u.getRoleName());
+
+            //if it's a mechanic or foreperson, get their hourly rate.
+            if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
+                labelHourlyRate.setVisible(true);
+                textFieldHourlyRate.setVisible(true);
+
+                SelectMechanic();
+                try {
+                    textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                labelHourlyRate.setVisible(false);
+                textFieldHourlyRate.setVisible(false);
+            }
         } else {
-            labelHourlyRate.setVisible(false);
-            textFieldHourlyRate.setVisible(false);
+            String mess = "Select a user";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonEditUserActionPerformed
 
@@ -470,28 +479,35 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateDetailsActionPerformed
 
     private void buttonDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteUserActionPerformed
-        SelectUser();
-
-        //delete selected user from database.
-        try {
-            String sql = ("delete from user "
-                    + "where username = '" + rs.getString("username") + "'");
-            PreparedStatement ps = null;
+        String selected = listUsers.getSelectedValue();
+        if (selected != null) {
+            SelectUser();
+            //delete selected user from database.
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("update user set deleted = 1 "
+                        + "where username = '" + rs.getString("username") + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            UpdateUserList();
+        } else {
+            String mess = "Select a user";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-        UpdateUserList();
     }//GEN-LAST:event_buttonDeleteUserActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed

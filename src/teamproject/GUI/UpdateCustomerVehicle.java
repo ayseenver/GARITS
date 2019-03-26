@@ -158,13 +158,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         jPanel1.add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        jPanel1.add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
         jPanel1.add(textFieldUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelVehicles.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -272,10 +272,27 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         if (vehicleArray.length > 0) {
+            try {
+                String sql = ("update customer set deleted = 0 where ID in (select max(id) from customer)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
             new MainMenu(username);
+        } else {
+            String mess = "Customer needs at least one vehicle";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonDoneActionPerformed
 
@@ -287,8 +304,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonEditVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditVehicleActionPerformed
@@ -369,7 +388,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehicleActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
-        System.out.println("Make : " + textFieldMake.getText());
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
@@ -380,7 +398,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 String sql = ("INSERT INTO Vehicle (registrationNumber, "
                         + "CustomerID, make, "
                         + "model, engineSerial, chassisNumber, colour, "
-                        + "nextServiceDate, nextMOTDate) "
+                        + "nextServiceDate, nextMOTDate, deleted) "
                         + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
                         + "(select ID from customer where name = '" + c.getName() + "' "
                         + "and address = '" + c.getAddress() + "'), "
@@ -390,7 +408,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                         + "'" + textFieldChassisNo.getText() + "', "
                         + "'" + textFieldColour.getText() + "', "
                         + "'" + textFieldNextServiceDate.getText() + "', "
-                        + "'" + textFieldNextMoTDate.getText() + "')");
+                        + "'" + textFieldNextMoTDate.getText() + "', 0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -445,20 +463,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
             String selected = listVehicles.getSelectedValue();
-            String [] parts = selected.split(", ");
+            String[] parts = selected.split(", ");
             String regNo = parts[0];
-            
-            
-            //turn off foreign key contraints
-            try {
-                statement.executeUpdate("PRAGMA foreign_keys = OFF");
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
 
             //delete this vehicle
             try {
-                String sql = ("delete from vehicle where registrationNumber = " + regNo);
+                String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -466,13 +476,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            
-            //turn on foreign key contraints
-            try {
-                statement.executeUpdate("PRAGMA foreign_keys = OFF");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }

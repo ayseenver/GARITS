@@ -6,7 +6,6 @@
 package teamproject.GUI;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,63 +21,153 @@ public class MainMenu extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    
     private ResultSet rs;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     private String roleName;
     private String username;
-    
+
     public MainMenu(String username) {
         this.username = username;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
-        try{
-            this.rs = statement.executeQuery("select * from User");
-        }
-        catch(SQLException e)
-        {
-          System.err.println(e.getMessage());
-        }
-        
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String user = rs.getString("username");
-            
-            if (username.equals(user)){
-               this.rs = statement.executeQuery("select roleName from User where username='user1'");
-               roleName = rs.getString("roleName");
-            }
-          }        
-        }
-        catch(SQLException e){
-        }
-        
-        /*
-        if (roleName.equals("receptionist")){
-            this.receptionist_menu();
-        }
-        */
-        
+
         frame.setVisible(true);
+        GetRole();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    public void receptionist_menu(){
-        this.buttonAllocateJob.setVisible(false);
-        this.buttonMyJobs.setVisible(false);
+
+    private void GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //Code To check Which roleName is selected 
+        if (roleName.equals("receptionist")) {
+            receptionist_menu();
+        } else if (roleName.equals("mechanic")) {
+            mechanic_menu();
+        } else if (roleName.equals("admin")) {
+            admin_menu();
+        } else if (roleName.equals("franchisee")) {
+            franchise_menu();
+        } else if (roleName.equals("foreperson")) {
+            foreperson_menu();
+        }
     }
-    
+
+    // Receptionist View
+    public void receptionist_menu() {
+
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonReport.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonMyJobs.setVisible(false);
+        this.buttonAllocateJob.setVisible(false);
+
+        this.buttonJobList.setLocation(490, 220);
+        this.buttonInvoices.setLocation(490, 280);
+        this.buttonReminders.setLocation(490, 340);
+        this.buttonStockControl.setLocation(490, 400);
+         
+    }
+
+    // Foreperson View 
+    public void foreperson_menu() {
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+
+        this.buttonCreateJob.setLocation(490, 160);
+        this.buttonAllocateJob.setLocation(490, 220);
+        this.buttonJobList.setLocation(490, 280);
+        this.buttonMyJobs.setLocation(490, 340);
+        this.buttonInvoices.setLocation(490, 400);
+        this.buttonStockControl.setLocation(490, 520);
+        this.buttonReminders.setLocation(490, 460);
+
+    }
+
+    //Franchise View
+    public void franchise_menu() {
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+
+        this.buttonCreateJob.setLocation(490, 160);
+        this.buttonAllocateJob.setLocation(490, 220);
+        this.buttonJobList.setLocation(490, 280);
+        this.buttonMyJobs.setLocation(490, 340);
+        this.buttonInvoices.setLocation(490, 400);
+        this.buttonReminders.setLocation(490, 460);
+        this.buttonStockControl.setLocation(490, 520);
+        this.buttonCustomers.setLocation(490, 580);
+        this.buttonReport.setLocation(490, 640);
+
+    }
+
+    //Mechanic View
+    public void mechanic_menu() {
+
+        this.buttonAllocateJob.setVisible(false);
+        this.buttonInvoices.setVisible(false);
+        this.buttonReminders.setVisible(false);
+        this.buttonDatabase.setVisible(false);
+        this.buttonUserAccount.setVisible(false);
+        this.buttonStockControl.setVisible(false);
+        this.buttonCreateJob.setVisible(false);
+        this.buttonJobList.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+
+        this.buttonMyJobs.setLocation(490, 160);
+
+    }
+
+    //Admin View
+    public void admin_menu() {
+
+        this.buttonAllocateJob.setVisible(false);
+        this.buttonInvoices.setVisible(false);
+        this.buttonReminders.setVisible(false);
+        this.buttonStockControl.setVisible(false);
+        this.buttonCreateJob.setVisible(false);
+        this.buttonJobList.setVisible(false);
+        this.buttonMyJobs.setVisible(false);
+        this.buttonCustomers.setVisible(false);
+        this.buttonReport.setVisible(false);
+
+        this.buttonDatabase.setLocation(490, 160);
+        this.buttonUserAccount.setLocation(490, 220);
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,12 +194,12 @@ public class MainMenu extends javax.swing.JPanel {
         buttonDatabase = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(null);
 
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         lblMainMenu.setText("Main Menu");
-        add(lblMainMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
+        add(lblMainMenu);
+        lblMainMenu.setBounds(410, 40, 374, 92);
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCreateJob.setText("Create Job");
@@ -119,7 +208,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonCreateJobActionPerformed(evt);
             }
         });
-        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 160, 230, -1));
+        add(buttonCreateJob);
+        buttonCreateJob.setBounds(490, 160, 230, 41);
 
         buttonReminders.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReminders.setText("View Reminders");
@@ -128,7 +218,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonRemindersActionPerformed(evt);
             }
         });
-        add(buttonReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 460, 230, -1));
+        add(buttonReminders);
+        buttonReminders.setBounds(490, 460, 230, 41);
 
         buttonStockControl.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonStockControl.setText("Stock Control");
@@ -137,7 +228,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonStockControlActionPerformed(evt);
             }
         });
-        add(buttonStockControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 520, 230, -1));
+        add(buttonStockControl);
+        buttonStockControl.setBounds(490, 520, 230, 41);
 
         buttonInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonInvoices.setText("Invoices");
@@ -146,7 +238,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonInvoicesActionPerformed(evt);
             }
         });
-        add(buttonInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 400, 230, -1));
+        add(buttonInvoices);
+        buttonInvoices.setBounds(490, 400, 230, 41);
 
         buttonMyJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonMyJobs.setText("My Jobs");
@@ -155,7 +248,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonMyJobsActionPerformed(evt);
             }
         });
-        add(buttonMyJobs, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 340, 230, -1));
+        add(buttonMyJobs);
+        buttonMyJobs.setBounds(490, 340, 230, 41);
 
         buttonAllocateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonAllocateJob.setText("Allocate Jobs");
@@ -164,7 +258,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonAllocateJobActionPerformed(evt);
             }
         });
-        add(buttonAllocateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 220, 230, -1));
+        add(buttonAllocateJob);
+        buttonAllocateJob.setBounds(490, 220, 230, 41);
 
         buttonReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReport.setText("All Reports");
@@ -173,7 +268,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonReportActionPerformed(evt);
             }
         });
-        add(buttonReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 640, 230, -1));
+        add(buttonReport);
+        buttonReport.setBounds(490, 640, 230, 41);
 
         buttonJobList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonJobList.setText("Job List");
@@ -182,26 +278,30 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonJobListActionPerformed(evt);
             }
         });
-        add(buttonJobList, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 280, 230, -1));
+        add(buttonJobList);
+        buttonJobList.setBounds(490, 280, 230, 41);
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);
             }
         });
-        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 0, 220, 30));
+        add(textFieldUserDetails);
+        textFieldUserDetails.setBounds(910, 10, 220, 30);
 
         lblLoggedIn.setText("Logged In as:");
-        add(lblLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 10, -1, -1));
+        add(lblLoggedIn);
+        lblLoggedIn.setBounds(820, 20, 66, 14);
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1190, 0, -1, -1));
+        add(buttonExit);
+        buttonExit.setBounds(1140, 10, 120, 33);
 
         buttonUserAccount.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonUserAccount.setText("User Accounts");
@@ -210,7 +310,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonUserAccountActionPerformed(evt);
             }
         });
-        add(buttonUserAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 600, 230, -1));
+        add(buttonUserAccount);
+        buttonUserAccount.setBounds(800, 600, 230, 41);
 
         buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCustomers.setText("View Customers");
@@ -219,7 +320,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonCustomersActionPerformed(evt);
             }
         });
-        add(buttonCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 580, 230, -1));
+        add(buttonCustomers);
+        buttonCustomers.setBounds(490, 580, 230, 41);
 
         buttonDatabase.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonDatabase.setText("Database");
@@ -228,7 +330,8 @@ public class MainMenu extends javax.swing.JPanel {
                 buttonDatabaseActionPerformed(evt);
             }
         });
-        add(buttonDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 550, 230, -1));
+        add(buttonDatabase);
+        buttonDatabase.setBounds(800, 550, 230, 41);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -250,7 +353,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new StockControl(username);
-                
+
     }//GEN-LAST:event_buttonStockControlActionPerformed
 
     private void buttonInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInvoicesActionPerformed
@@ -279,7 +382,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new Report(username);
-        
+
     }//GEN-LAST:event_buttonReportActionPerformed
 
     private void buttonJobListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonJobListActionPerformed
@@ -294,8 +397,10 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonUserAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUserAccountActionPerformed
@@ -303,7 +408,7 @@ public class MainMenu extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         new UserAccount(username);
-       
+
     }//GEN-LAST:event_buttonUserAccountActionPerformed
 
     private void buttonCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCustomersActionPerformed

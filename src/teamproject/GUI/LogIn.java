@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.AlertsReminders.Timer;
 import teamproject.Databases.DB_ImplClass;
 
@@ -41,7 +42,6 @@ public class LogIn extends javax.swing.JPanel {
         statement = db.getStatement();
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,11 +55,9 @@ public class LogIn extends javax.swing.JPanel {
         labelGarits = new javax.swing.JLabel();
         labelPassword = new javax.swing.JLabel();
         textFieldUserName = new javax.swing.JTextField();
-        textFieldPassword = new javax.swing.JTextField();
         buttonSignin = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
-
-        setLocation(new java.awt.Point(50, 0));
+        textFieldPassword = new javax.swing.JPasswordField();
 
         labelUsername.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelUsername.setText("Username:");
@@ -74,13 +72,6 @@ public class LogIn extends javax.swing.JPanel {
         textFieldUserName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserNameActionPerformed(evt);
-            }
-        });
-
-        textFieldPassword.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldPasswordActionPerformed(evt);
             }
         });
 
@@ -104,13 +95,6 @@ public class LogIn extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(labelGarits)
-                        .addGap(107, 107, 107))
-                    .addComponent(buttonExit, javax.swing.GroupLayout.Alignment.TRAILING)))
             .addGroup(layout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -118,11 +102,17 @@ public class LogIn extends javax.swing.JPanel {
                     .addComponent(labelUsername))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSignin)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(textFieldPassword)
-                        .addComponent(textFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(textFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 73, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(labelGarits)
+                        .addGap(107, 107, 107))
+                    .addComponent(buttonExit, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,10 +125,10 @@ public class LogIn extends javax.swing.JPanel {
                     .addComponent(labelUsername)
                     .addComponent(textFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelPassword)
-                    .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(textFieldPassword)
+                    .addComponent(labelPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
                 .addComponent(buttonSignin)
                 .addContainerGap(99, Short.MAX_VALUE))
         );
@@ -148,39 +138,36 @@ public class LogIn extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldUserNameActionPerformed
 
-    private void textFieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldPasswordActionPerformed
-
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
         String username = this.textFieldUserName.getText();
-        String password = this.textFieldPassword.getText();
-        try{
-            this.rs = statement.executeQuery("select * from User");
-        }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          System.err.println(e.getMessage());
+        String password = new String(this.textFieldPassword.getPassword());
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
         }
 
-        try{
-        while(rs.next())
-          {
-            // read the result set
-            String user = rs.getString("username");
-            String pass = rs.getString("password");
-
-            if (username.equals(user) && password.equals(pass)){
-                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-                f.dispose();
-                db.closeConnection(connection);
-                new MainMenu(username);
+        try {
+            String user = "";
+            String pass = "";
+            while (rs.next()) {
+                // read the result set
+                user = rs.getString("username");
+                pass = rs.getString("password");
+                if (username.equals(user) && password.equals(pass)) {
+                    JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                    f.dispose();
+                    db.closeConnection(connection);
+                    new MainMenu(username);
+                }
             }
-          }
-        }
-        catch(SQLException e){
+            String mess = "Incorrect details";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_buttonSigninActionPerformed
 
@@ -195,7 +182,7 @@ public class LogIn extends javax.swing.JPanel {
     private javax.swing.JLabel labelGarits;
     private javax.swing.JLabel labelPassword;
     private javax.swing.JLabel labelUsername;
-    private javax.swing.JTextField textFieldPassword;
+    private javax.swing.JPasswordField textFieldPassword;
     private javax.swing.JTextField textFieldUserName;
     // End of variables declaration//GEN-END:variables
 }

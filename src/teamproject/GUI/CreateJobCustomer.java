@@ -50,13 +50,20 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rsC = statement.executeQuery("select * from Customer");
+            this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
+        
+        ShowCustomers();
 
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
@@ -80,15 +87,63 @@ public class CreateJobCustomer extends javax.swing.JPanel {
                 return nameArray[i];
             }
         });
-
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void CreateCustomerObject(String name) {
+        try {
+            String sql = ("select * from Customer where name = '" + name + "' and deleted = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsC = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setName(rsC.getString("name"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setAddress(rsC.getString("address"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setEmailAddress(rsC.getString("emailAddress"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setPostCode(rsC.getString("postCode"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setFax(rsC.getString("fax"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -125,7 +180,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
         setMinimumSize(new java.awt.Dimension(1280, 720));
         setPreferredSize(new java.awt.Dimension(1280, 720));
-        setSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelCreateJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
@@ -207,13 +261,13 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Exit");
+        buttonExit.setText("Logout");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -247,197 +301,144 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             f.dispose();
             db.closeConnection(connection);
             new CreateJobTask(username, v, c);
+        } else {
+            String mess = "Select a customer and vehicle";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
         String temp = (listVehicle.getSelectedValue());
-        String[] details = temp.split(", ");
 
-        try {
-            String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "'";
-            PreparedStatement ps = null;
+        if (!(temp == null)) {
+            String[] details = temp.split(", ");
+
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rsV = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setMake(rsV.getString("make"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setModel(rsV.getString("model"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setRegistrationNumber(rsV.getString("registrationNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setEngineSerial(rsV.getString("engineSerial"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setChassisNumber(rsV.getString("chassisNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            v.setColour(rsV.getString("colour"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        textFieldVehicleSelected.setText(v.getRegistrationNumber());
-    }//GEN-LAST:event_buttonSelectVehicleActionPerformed
-
-    private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
-         try {
-          String sql = ("select name from Customer where name LIKE '%" + textFieldSearchCustomer.getText() + "%'"); 
-        PreparedStatement ps = null;
+                String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "' and deleted = 0";
+                PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    
                 }
-                this.rsC = ps.executeQuery();
-       } catch (SQLException e) {
+                rsV = ps.executeQuery();
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
-               
             }
-       listCustomers.removeAll();
-       ArrayList<String> names = new ArrayList<>();
 
-        try {
-            while (rsC.next()) {
-                // read the result set
-                String name = rsC.getString("name");
-                names.add(name);
+            try {
+                v.setMake(rsV.getString("make"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-        } catch (SQLException e) {
+
+            try {
+                v.setModel(rsV.getString("model"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setRegistrationNumber(rsV.getString("registrationNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setEngineSerial(rsV.getString("engineSerial"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setChassisNumber(rsV.getString("chassisNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setColour(rsV.getString("colour"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            textFieldVehicleSelected.setText(v.getRegistrationNumber());
+        } else {
+            String mess = "Select a vehicle";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-        nameArray = CreateArray(names);
+    }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
-        listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return nameArray.length;
-            }
+    private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
+        try {
+            String sql = ("select * from Customer where name LIKE '%"
+                    + textFieldSearchCustomer.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
 
-            public String getElementAt(int i) {
-                return nameArray[i];
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
             }
-        });
-       
+            this.rsC = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
     private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
         String temp = (listCustomers.getSelectedValue());
+        if (temp != null) {
+            CreateCustomerObject(temp);
 
-        try {
-            String sql = ("select * from Customer where name = '" + temp + "'");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("select * from Vehicle where CustomerID = "
+                        + "(select ID from customer where name = '" + c.getName() + "' "
+                        + "and address = '" + c.getAddress() + "') and deleted = 0");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                this.rsV = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rsC = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            c.setName(rsC.getString("name"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            listVehicle.removeAll();
+            ArrayList<String> details = new ArrayList<>();
 
-        try {
-            c.setAddress(rsC.getString("address"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            c.setEmailAddress(rsC.getString("emailAddress"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            c.setPostCode(rsC.getString("postCode"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            c.setTelephoneNumber(rsC.getString("telephoneNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            c.setFax(rsC.getString("fax"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try {
-            String sql = ("select * from Vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "')");
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                while (rsV.next()) {
+                    // read the result set
+                    String detail = rsV.getString("make") + ", " + rsV.getString("model")
+                            + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
+                    details.add(detail);
+                }
+            } catch (SQLException e) {
             }
-            this.rsV = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+
+            detailArray = CreateArray(details);
+
+            listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return detailArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return detailArray[i];
+                }
+            });
+        } else {
+            String mess = "Select a customer";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-
-        listVehicle.removeAll();
-        ArrayList<String> details = new ArrayList<>();
-
-        try {
-            while (rsV.next()) {
-                // read the result set
-                String detail = rsV.getString("make") + ", " + rsV.getString("model")
-                        + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
-                details.add(detail);
-            }
-        } catch (SQLException e) {
-        }
-
-        detailArray = CreateArray(details);
-
-        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return detailArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return detailArray[i];
-            }
-        });
-
 
     }//GEN-LAST:event_buttonFindVehicleActionPerformed
 
@@ -446,8 +447,10 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
         db.closeConnection(connection);
-        System.exit(0);
+        new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -458,11 +461,25 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonAddNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewVehicleActionPerformed
-        // TODO add your handling code here:
+        String temp = (listCustomers.getSelectedValue());
+        if (temp != null) {
+            CreateCustomerObject(temp);
+            //create a new vehicle for this customer
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new UpdateCustomerVehicle(username, c);
+        } else {
+            String mess = "Select a customer";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
     }//GEN-LAST:event_buttonAddNewVehicleActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
-        // TODO add your handling code here:
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new UpdateCustomer(username);
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
 
