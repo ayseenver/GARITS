@@ -40,7 +40,7 @@ public class TaskList extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public TaskList(String username, Vehicle v, Customer c) {
+    public TaskList(String username) {
         this.username = username;
         this.jobType = "Service";
         this.v = v;
@@ -63,7 +63,7 @@ public class TaskList extends javax.swing.JPanel {
         }
 
         UpdateTaskList();
-        UpdateBayList();
+       
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +77,7 @@ public class TaskList extends javax.swing.JPanel {
 
 
     private void UpdateTaskList() {
-        listAvailableTasks.removeAll();
+        listAllTasks.removeAll();
         tasks.clear();
 
         //add all tasks to task list
@@ -93,7 +93,7 @@ public class TaskList extends javax.swing.JPanel {
 
         taskArray = CreateArray(tasks);
 
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
                 return taskArray.length;
             }
@@ -117,13 +117,13 @@ public class TaskList extends javax.swing.JPanel {
         labelCreateJob = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
-        buttonExit = new javax.swing.JButton();
+        buttonLogout = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        listRequiredTasks = new javax.swing.JList<>();
+        listDefaultTasks = new javax.swing.JList<>();
         jScrollPane10 = new javax.swing.JScrollPane();
-        listAvailableTasks = new javax.swing.JList<>();
+        listAllTasks = new javax.swing.JList<>();
         labelAvailableTasks = new javax.swing.JLabel();
         textFieldSearchJobs = new javax.swing.JTextField();
         buttonSearchTasks = new javax.swing.JButton();
@@ -159,14 +159,14 @@ public class TaskList extends javax.swing.JPanel {
         labelLoggedIn.setText("Logged In as:");
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
-        buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Logout");
-        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+        buttonLogout.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonLogout.setText("Logout");
+        buttonLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonExitActionPerformed(evt);
+                buttonLogoutActionPerformed(evt);
             }
         });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
+        add(buttonLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -180,13 +180,13 @@ public class TaskList extends javax.swing.JPanel {
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        listRequiredTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane5.setViewportView(listRequiredTasks);
+        listDefaultTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane5.setViewportView(listDefaultTasks);
 
         jPanel6.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, 230, 220));
 
-        listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane10.setViewportView(listAvailableTasks);
+        listAllTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane10.setViewportView(listAllTasks);
 
         jPanel6.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 220));
 
@@ -241,44 +241,31 @@ public class TaskList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
-      /*  if (checkBoxYard.isSelected()) {
-            bayID = "yard";
-        } else {
-            bayID = listAvailableBays.getSelectedValue();
-            if (bayID != null) {
-                String[] bayDetails = bayID.split(": ");
-                bayID = bayDetails[0];
-            }
-        }*/
-
-        if (bayID != null && bayType != null && jobType != null) {
+    
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
 
             f.dispose();
             db.closeConnection(connection);
-            new ConfirmJob(username, v, c, requiredTasks, bayID, jobType);
-        } else {
-            String mess = "Select a job type and bay";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
+            //new ConfirmJob(username, v, c, requiredTasks, bayID, jobType);
+        
     }//GEN-LAST:event_doneButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
-    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+    private void buttonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogoutActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new LogIn();
-    }//GEN-LAST:event_buttonExitActionPerformed
+    }//GEN-LAST:event_buttonLogoutActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CreateJobCustomer(username);
+        new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
@@ -304,7 +291,7 @@ public class TaskList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
-        String selected = listRequiredTasks.getSelectedValue();
+       /*        String selected = listRequiredTasks.getSelectedValue();
 
         if (!(selected == null)) {
             requiredTasks.remove(selected);
@@ -326,24 +313,47 @@ public class TaskList extends javax.swing.JPanel {
         } else {
             String mess = "Select a task to remove";
             JOptionPane.showMessageDialog(new JFrame(), mess);
+        }*/  
+       String selected = listDefaultTasks.getSelectedValue();
+
+        if (!(selected == null)) {
+            defaultTasks.remove(selected);
+
+            defaultTaskArray = CreateArray(defaultTasks);
+
+            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return defaultTaskArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return defaultTaskArray[i];
+                }
+            });
+
+            tasks.add(selected);
+            UpdateTaskList();
+        } else {
+            String mess = "Select a task to remove";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_removeTaskActionPerformed
 
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
-        String selected = listAvailableTasks.getSelectedValue();
+        String selected = listAllTasks.getSelectedValue();
         if (!(selected == null)) {
 
-            requiredTasks.add(selected);
+            defaultTasks.add(selected);
 
-            requiredTaskArray = CreateArray(requiredTasks);
+            defaultTaskArray = CreateArray(defaultTasks);
 
-            listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
                 public int getSize() {
-                    return requiredTaskArray.length;
+                    return defaultTaskArray.length;
                 }
 
                 public String getElementAt(int i) {
-                    return requiredTaskArray[i];
+                    return defaultTaskArray[i];
                 }
             });
 
@@ -363,7 +373,7 @@ public class TaskList extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTask;
     private javax.swing.JButton buttonBack;
-    private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonLogout;
     private javax.swing.JButton buttonSearchTasks;
     private javax.swing.JButton doneButton;
     private javax.swing.JPanel jPanel6;
@@ -375,8 +385,8 @@ public class TaskList extends javax.swing.JPanel {
     private javax.swing.JLabel labelJobType;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelTasksRequired;
-    private javax.swing.JList<String> listAvailableTasks;
-    private javax.swing.JList<String> listRequiredTasks;
+    private javax.swing.JList<String> listAllTasks;
+    private javax.swing.JList<String> listDefaultTasks;
     private javax.swing.JButton removeTask;
     private javax.swing.JTextField textFieldSearchJobs;
     private javax.swing.JTextField textFieldUserDetails;
