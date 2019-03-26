@@ -434,6 +434,9 @@ public class CustomerList extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+        } else {
+            String mess = "Please choose customer record first!";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
 
