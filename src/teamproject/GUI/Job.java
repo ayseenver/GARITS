@@ -134,11 +134,27 @@ public class Job extends javax.swing.JPanel {
         listAvailableParts.removeAll();
         parts.clear();
 
-        //add all parts to part list
+        //get all parts not used on this job
+        String sql;
+        try {
+            sql = ("select * from sparepart where partID not in "
+                    + "(select partpartID from job_part_record where jobjobID = " + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //add all parts to available part list
         try {
             while (rs.next()) {
                 // read the result set
-                String part = rs.getString("partName");
+                String part = rs.getString("partName") + ", Available: " + rs.getString("quantity");
                 parts.add(part);
             }
         } catch (SQLException e) {
@@ -159,6 +175,26 @@ public class Job extends javax.swing.JPanel {
     }
 
     private void ListUsedParts() {
+        listPartsUsed.removeAll();
+        usedParts.clear();
+
+        //get all parts for this job
+        String sql;
+        try {
+            sql = ("select * from job_part_record "
+                    + "inner join sparepart on sparepart.partID = job_part_record.PartpartID "
+                    + "where jobjobID = " + jobID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         //add all parts to used part list
         try {
             while (rs.next()) {
@@ -740,14 +776,13 @@ public class Job extends javax.swing.JPanel {
             int q = Integer.parseInt(quantity);
             String[] selectedParts = selected.split(", ");
             String partName = selectedParts[0];
-            String sql;
 
+            String sql;
             try {
                 sql = ("UPDATE Job_Part_Record "
                         + "SET quantity = " + q + " "
-                        + "WHERE PartpartID = (select partID from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "')"
-                        + "and partName = '" + partName + "')"
-                        + " AND JobjobID = " + jobID);
+                        + "WHERE JobjobID = " + jobID + " "
+                        + "and partpartID = (select partID from sparepart where partName = '" + partName + "')");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -758,10 +793,52 @@ public class Job extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
             textFieldQuantity.setText("");
             usedParts.set(usedParts.indexOf(selected), partName + ", Quantity: " + q);
+
+            //update the quantity of this part in the database
+            try {
+                sql = ("select * from sparepart where partName = '" + partName + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            int newQuantity = 0;
+            try {
+                while (rs.next()) {
+                    int partQuantity = Integer.parseInt(rs.getString("quantity"));
+                    newQuantity = partQuantity - q;
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                sql = ("UPDATE sparePart "
+                        + "SET quantity = " + newQuantity + " "
+                        + "where partName = '" + partName + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
         }
         UpdateUsedParts();
+
+
     }//GEN-LAST:event_buttonUpdateQuantityActionPerformed
 
     private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
@@ -865,158 +942,69 @@ public class Job extends javax.swing.JPanel {
 
     private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
         String selected = listAvailableParts.getSelectedValue();
-        usedParts.add(selected);
-        usedPartArray = CreateArray(usedParts);
+        if (selected != null) {
+            String[] selectedParts = selected.split(", ");
+            String partName = selectedParts[0];
+            String[] quantityParts = selectedParts[1].split(": ");
+            String quantity = quantityParts[1];
 
-        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return usedPartArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return usedPartArray[i];
-            }
-        });
-
-        //parts.remove(selected);
-        ListAllParts();
-
-        //insert part into the parts used for this job
-        String sql;
-        try {
-            sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
-                    + " values ((select partID from sparepart where partName = '" + selected + "'), "
-                    + "" + jobID + ", 1)");
-            PreparedStatement ps = null;
+            //insert part into the parts used for this job
+            String sql;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
+                        + " values ((select partID from sparepart where partName = '" + partName + "'), "
+                        + "" + jobID + ", 1)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
+
+        ListAllParts();
+        ListUsedParts();
     }//GEN-LAST:event_addPartButtonActionPerformed
 
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
         String selected = listPartsUsed.getSelectedValue();
-        usedParts.remove(selected);
-        try {
-            String[] parts = selected.split(", ");
-            selected = parts[0];
-            usedParts.remove(selected);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        if (selected != null) {
+            String[] selectedParts = selected.split(", ");
+            String partName = selectedParts[0];
+            String[] quantityParts = selectedParts[1].split(": ");
+            String quantity = quantityParts[1];
+
+            //delete part from job_part_record
+            String sql;
+            try {
+                sql = ("delete from Job_Part_Record"
+                        + " where JobjobID = " + jobID + " "
+                        + "and PartpartID = (select partID from sparepart where partName = '" + partName + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
-        usedPartArray = CreateArray(usedParts);
-
-        listPartsUsed.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return usedPartArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return usedPartArray[i];
-            }
-        });
-
-        parts.add(selected);
         ListAllParts();
         ListUsedParts();
-
-        //delete part from job_part_record
-        String sql;
-        try {
-            sql = ("delete from Job_Part_Record"
-                    + " where JobjobID = " + jobID + " "
-                    + "and PartpartID = (select partID from sparepart where partName = '" + selected + "')");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
     }//GEN-LAST:event_removePartButtonActionPerformed
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
-        int initialQuantity = 0;
-        int usedQuantity = 0;
-        String[] sArray;
-        String s;
 
         try {
             connection.setAutoCommit(false);
-            for (String x : usedParts) {
-                sArray = x.split(", ");
-                s = sArray[0];
-                //get quantity of inital parts
-                try {
-                    sql = ("select * from sparePart where partName = '" + s + "' "
-                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "')");
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    rs = ps.executeQuery();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-
-                try {
-                    initialQuantity = Integer.parseInt(rs.getString("quantity"));
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-
-                //get quantity of used parts
-                try {
-                    sql = ("select quantity from job_part_record where PartpartID = "
-                            + "(select partID from sparePart where partName = '" + s + "' "
-                            + "and vehicleType = (select model from vehicle where registrationNumber = '" + vehicleReg + "'))");
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    rs = ps.executeQuery();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-
-                try {
-                    usedQuantity = Integer.parseInt(rs.getString("quantity"));
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-
-                //update the quantity in the stock ledger
-                try {
-                    sql = ("UPDATE SparePart "
-                            + "SET quantity = " + (initialQuantity - usedQuantity)
-                            + " WHERE partID = (select partID from sparePart where partName = '" + s
-                            + "' and vehicleType = (select model from vehicle where registrationNumber = '"
-                            + vehicleReg + "'))");
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
 
             //get actual hours and cost of all the tasks
             double totalCost = 0.0d;
