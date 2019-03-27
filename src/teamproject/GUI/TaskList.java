@@ -89,7 +89,7 @@ public class TaskList extends javax.swing.JPanel {
             public String getElementAt(int i) {
                 return taskArray[i];
             }
-        }
+        });
                 }/*
         listAllTasks.removeAll();
         tasks.clear();
