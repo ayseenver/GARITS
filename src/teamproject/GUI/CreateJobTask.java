@@ -67,8 +67,8 @@ public class CreateJobTask extends javax.swing.JPanel {
         }
 
         GetJobType();
-        UpdateRequiredTaskList();
-        UpdateTaskList();
+        ShowRequiredTaskList();
+        ShowTaskList();
         UpdateBayList();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,9 +84,10 @@ public class CreateJobTask extends javax.swing.JPanel {
         jobType = jobTypeCombo.getSelectedItem().toString();
         if (jobType.equalsIgnoreCase("Service")) {
             jobType = "defaultServiceJob";
-        } if (jobType.equalsIgnoreCase("MoT")) {
+        }
+        if (jobType.equalsIgnoreCase("MoT")) {
             jobType = "defaultMoTJob";
-        }else {
+        } else {
             jobType = "Repair";
         }
     }
@@ -133,7 +134,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         });
     }
 
-    private void UpdateTaskList() {
+    private void ShowTaskList() {
         listAvailableTasks.removeAll();
         tasks.clear();
         //add all tasks to task list
@@ -171,7 +172,24 @@ public class CreateJobTask extends javax.swing.JPanel {
         });
     }
 
-    private void UpdateRequiredTaskList() {
+    private void UpdateTaskList() {
+        listAvailableTasks.removeAll();
+        //add all tasks to task list
+
+        taskArray = CreateArray(tasks);
+
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
+    }
+
+    private void ShowRequiredTaskList() {
         try {
             if (!jobType.equalsIgnoreCase("Repair")) {
                 this.rs = statement.executeQuery("select * from Task where " + jobType + " = 1");
@@ -506,8 +524,8 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
         GetJobType();
-        UpdateTaskList();
-        UpdateRequiredTaskList();
+        ShowTaskList();
+        ShowRequiredTaskList();
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
 
