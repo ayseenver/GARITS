@@ -75,7 +75,33 @@ public class TaskList extends javax.swing.JPanel {
         return newArray;
     }
 
+   private void ShowTaskList() {
+        listAllTasks.removeAll();
+        tasks.clear();
 
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
+    }
     private void UpdateTaskList() {
              listAllTasks.removeAll();
 
