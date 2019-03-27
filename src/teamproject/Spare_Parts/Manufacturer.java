@@ -11,7 +11,7 @@ public class Manufacturer {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param name
 	 */
 	public void setName(String name) {
@@ -23,7 +23,7 @@ public class Manufacturer {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param email
 	 */
 	public void setEmail(String email) {
@@ -35,7 +35,7 @@ public class Manufacturer {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param telephone
 	 */
 	public void setTelephone(String telephone) {
@@ -43,7 +43,7 @@ public class Manufacturer {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param name
 	 * @param email
 	 * @param telephone

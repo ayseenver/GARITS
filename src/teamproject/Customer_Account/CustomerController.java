@@ -6,7 +6,7 @@ import java.util.Date;
 public class CustomerController {
 
 	/**
-	 *
+	 * 
 	 * @param name
 	 * @param emailAddress
 	 * @param address
@@ -15,6 +15,6 @@ public class CustomerController {
 	 * @param fax
 	 * @param dateCreated
 	 */
-
+    
 
 }

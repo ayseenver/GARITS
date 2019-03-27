@@ -86,5 +86,5 @@ public class SparePart {
     public static void setMarkup(float markup) {
         SparePart.markup = markup;
     }
-
+    
 }

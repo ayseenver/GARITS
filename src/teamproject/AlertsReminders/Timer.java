@@ -44,7 +44,7 @@ public class Timer {
 
     private void CalculateFlexibleDiscounts(LocalDate date) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
+        
         //if it's the 1st, calculate the flexible discounts for the last month
         if (date.getDayOfMonth() == 1) {
             scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 30, TimeUnit.DAYS);
