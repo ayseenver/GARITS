@@ -300,7 +300,7 @@ public class TaskList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
     private void updateAllTaskLists(String jobType) {
   try {
-            this.rs = statement.executeQuery("select * from Task where "+ jobType +" is not 1 ");
+            rs = statement.executeQuery("select * from Task where "+ jobType +" is not 1 ");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -309,7 +309,7 @@ public class TaskList extends javax.swing.JPanel {
     }
      private void updateDefaultTaskLists(String jobType) {
   try {
-            this.rs = statement.executeQuery("select * from Task where "+ jobType +" is 1 ");
+            rs = statement.executeQuery("select * from Task where "+ jobType +" is 1 ");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
