@@ -135,7 +135,7 @@ public class TaskList extends javax.swing.JPanel {
         listDefaultTasks.removeAll();
         defaultTasks.clear();
 
-        //add all parts to part list
+        //add all tasks to task list
         try {
             while (rs.next()) {
                 // read the result set
@@ -292,13 +292,10 @@ public class TaskList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
-
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-
         f.dispose();
         db.closeConnection(connection);
         new MainMenu(username);
-
     }//GEN-LAST:event_doneButtonActionPerformed
 
     private void buttonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogoutActionPerformed
