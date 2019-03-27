@@ -307,7 +307,7 @@ public class TaskList extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
     }
-     private void updateDefaultTaskLists(String jobType) {
+     private void updateDefaultTaskLists(String jobType) { 
   try {
             rs = statement.executeQuery("select * from Task where "+ jobType +" is 1 ");
         } catch (SQLException e) {
