@@ -291,8 +291,7 @@ public class TaskList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
-      
-       String selected = listDefaultTasks.getSelectedValue();
+  String selected = listDefaultTasks.getSelectedValue();
 
         if (!(selected == null)) {
             defaultTasks.remove(selected);
@@ -315,6 +314,30 @@ public class TaskList extends javax.swing.JPanel {
             String mess = "Select a task to remove";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
+           /*      
+       String selected = listDefaultTasks.getSelectedValue();
+
+        if (!(selected == null)) {
+            defaultTasks.remove(selected);
+
+            defaultTaskArray = CreateArray(defaultTasks);
+
+            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return defaultTaskArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return defaultTaskArray[i];
+                }
+            });
+
+            tasks.add(selected);
+            UpdateTaskList();
+        } else {
+            String mess = "Select a task to remove";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }*/
     }//GEN-LAST:event_removeTaskActionPerformed
 
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
