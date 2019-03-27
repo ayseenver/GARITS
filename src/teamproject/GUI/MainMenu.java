@@ -90,11 +90,13 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setVisible(false);
         this.buttonMyJobs.setVisible(false);
         this.buttonAllocateJob.setVisible(false);
+        this.buttonTaskList.setVisible(false);
 
-        this.buttonJobList.setLocation(490, 220);
-        this.buttonInvoices.setLocation(490, 280);
-        this.buttonReminders.setLocation(490, 340);
-        this.buttonStockControl.setLocation(490, 400);
+        this.buttonCreateJob.setLocation(490, 260);
+        this.buttonJobList.setLocation(490, 320);
+        this.buttonInvoices.setLocation(490, 380);
+        this.buttonReminders.setLocation(490, 440);
+        this.buttonStockControl.setLocation(490, 500);
 
     }
 
@@ -104,14 +106,15 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonUserAccount.setVisible(false);
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
+        this.buttonTaskList.setVisible(false);
 
-        this.buttonCreateJob.setLocation(490, 160);
-        this.buttonAllocateJob.setLocation(490, 220);
-        this.buttonJobList.setLocation(490, 280);
-        this.buttonMyJobs.setLocation(490, 340);
-        this.buttonInvoices.setLocation(490, 400);
+        this.buttonCreateJob.setLocation(490, 220);
+        this.buttonAllocateJob.setLocation(490, 280);
+        this.buttonJobList.setLocation(490, 340);
+        this.buttonMyJobs.setLocation(490, 400);
+        this.buttonInvoices.setLocation(490, 460);
         this.buttonStockControl.setLocation(490, 520);
-        this.buttonReminders.setLocation(490, 460);
+        this.buttonReminders.setLocation(490, 580);
 
     }
 
@@ -119,18 +122,18 @@ public class MainMenu extends javax.swing.JPanel {
     public void franchise_menu() {
         this.buttonDatabase.setVisible(false);
         this.buttonUserAccount.setVisible(false);
+        this.buttonTaskList.setVisible(false);
 
-        this.buttonCreateJob.setLocation(490, 120);
-        this.buttonAllocateJob.setLocation(490, 180);
-        this.buttonJobList.setLocation(490, 240);
-        this.buttonMyJobs.setLocation(490, 300);
+        this.buttonCreateJob.setLocation(490, 140);
+        this.buttonAllocateJob.setLocation(490, 195);
+        this.buttonJobList.setLocation(490, 250);
+        this.buttonMyJobs.setLocation(490, 375);
         this.buttonInvoices.setLocation(490, 360);
-        this.buttonReminders.setLocation(490, 420);
-        this.buttonStockControl.setLocation(490, 480);
-        this.buttonCustomers.setLocation(490, 540);
-        this.buttonReport.setLocation(490, 600);
-        this.buttonTaskList.setLocation(490, 660);
-
+        this.buttonReminders.setLocation(490, 415);
+        this.buttonStockControl.setLocation(490, 470);
+        this.buttonCustomers.setLocation(490, 525);
+        this.buttonReport.setLocation(490, 580);
+        this.buttonTaskList.setLocation(490, 635);
     }
 
     //Mechanic View
@@ -146,8 +149,10 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonJobList.setVisible(false);
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
-
-        this.buttonMyJobs.setLocation(490, 160);
+        this.buttonTaskList.setVisible(false);
+        
+        
+        this.buttonMyJobs.setLocation(490, 375);
 
     }
 
@@ -163,9 +168,10 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonMyJobs.setVisible(false);
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
+        this.buttonTaskList.setVisible(false);
 
-        this.buttonDatabase.setLocation(490, 160);
-        this.buttonUserAccount.setLocation(490, 220);
+        this.buttonDatabase.setLocation(490, 350);
+        this.buttonUserAccount.setLocation(490, 410);
 
     }
 
