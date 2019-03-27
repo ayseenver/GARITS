@@ -127,13 +127,13 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCreateJob.setLocation(490, 140);
         this.buttonAllocateJob.setLocation(490, 195);
         this.buttonJobList.setLocation(490, 250);
-        this.buttonMyJobs.setLocation(490, 375);
+        this.buttonMyJobs.setLocation(490, 305);
         this.buttonInvoices.setLocation(490, 360);
         this.buttonReminders.setLocation(490, 415);
         this.buttonStockControl.setLocation(490, 470);
         this.buttonCustomers.setLocation(490, 525);
         this.buttonReport.setLocation(490, 580);
-        this.buttonTaskList.setLocation(490, 635);
+        this.buttonTaskList.setLocation(490,635);
     }
 
     //Mechanic View
