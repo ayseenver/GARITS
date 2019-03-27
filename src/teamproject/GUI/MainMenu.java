@@ -95,7 +95,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonInvoices.setLocation(490, 280);
         this.buttonReminders.setLocation(490, 340);
         this.buttonStockControl.setLocation(490, 400);
-         
+
     }
 
     // Foreperson View 
@@ -129,7 +129,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonStockControl.setLocation(490, 480);
         this.buttonCustomers.setLocation(490, 540);
         this.buttonReport.setLocation(490, 600);
-        this.buttonTaskList.setLocation(490,660);
+        this.buttonTaskList.setLocation(490, 660);
 
     }
 
@@ -194,6 +194,7 @@ public class MainMenu extends javax.swing.JPanel {
         buttonCustomers = new javax.swing.JButton();
         buttonDatabase = new javax.swing.JButton();
         buttonTaskList = new javax.swing.JButton();
+        buttonSetFrequency = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(null);
@@ -201,7 +202,7 @@ public class MainMenu extends javax.swing.JPanel {
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         lblMainMenu.setText("Main Menu");
         add(lblMainMenu);
-        lblMainMenu.setBounds(410, 40, 402, 86);
+        lblMainMenu.setBounds(410, 40, 374, 92);
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCreateJob.setText("Create Job");
@@ -211,7 +212,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonCreateJob);
-        buttonCreateJob.setBounds(490, 160, 230, 38);
+        buttonCreateJob.setBounds(490, 160, 230, 41);
 
         buttonReminders.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReminders.setText("View Reminders");
@@ -221,7 +222,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonReminders);
-        buttonReminders.setBounds(490, 460, 230, 38);
+        buttonReminders.setBounds(490, 460, 230, 41);
 
         buttonStockControl.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonStockControl.setText("Stock Control");
@@ -231,7 +232,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonStockControl);
-        buttonStockControl.setBounds(490, 520, 230, 38);
+        buttonStockControl.setBounds(490, 520, 230, 41);
 
         buttonInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonInvoices.setText("Invoices");
@@ -241,7 +242,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonInvoices);
-        buttonInvoices.setBounds(490, 400, 230, 38);
+        buttonInvoices.setBounds(490, 400, 230, 41);
 
         buttonMyJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonMyJobs.setText("My Jobs");
@@ -251,7 +252,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonMyJobs);
-        buttonMyJobs.setBounds(490, 340, 230, 38);
+        buttonMyJobs.setBounds(490, 340, 230, 41);
 
         buttonAllocateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonAllocateJob.setText("Allocate Jobs");
@@ -261,7 +262,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonAllocateJob);
-        buttonAllocateJob.setBounds(490, 220, 230, 38);
+        buttonAllocateJob.setBounds(490, 220, 230, 41);
 
         buttonReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReport.setText("All Reports");
@@ -271,7 +272,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonReport);
-        buttonReport.setBounds(490, 640, 230, 38);
+        buttonReport.setBounds(490, 640, 230, 41);
 
         buttonJobList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonJobList.setText("Job List");
@@ -281,7 +282,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonJobList);
-        buttonJobList.setBounds(490, 280, 230, 38);
+        buttonJobList.setBounds(490, 280, 230, 41);
 
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,7 +294,7 @@ public class MainMenu extends javax.swing.JPanel {
 
         lblLoggedIn.setText("Logged In as:");
         add(lblLoggedIn);
-        lblLoggedIn.setBounds(820, 20, 84, 16);
+        lblLoggedIn.setBounds(820, 20, 66, 14);
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Logout");
@@ -303,7 +304,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonExit);
-        buttonExit.setBounds(1140, 10, 120, 30);
+        buttonExit.setBounds(1140, 10, 120, 33);
 
         buttonUserAccount.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonUserAccount.setText("User Accounts");
@@ -313,7 +314,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonUserAccount);
-        buttonUserAccount.setBounds(800, 600, 230, 38);
+        buttonUserAccount.setBounds(800, 600, 230, 41);
 
         buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCustomers.setText("View Customers");
@@ -323,7 +324,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonCustomers);
-        buttonCustomers.setBounds(490, 580, 230, 38);
+        buttonCustomers.setBounds(490, 580, 230, 41);
 
         buttonDatabase.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonDatabase.setText("Database");
@@ -333,7 +334,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonDatabase);
-        buttonDatabase.setBounds(800, 460, 230, 38);
+        buttonDatabase.setBounds(800, 450, 230, 41);
 
         buttonTaskList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonTaskList.setText("Task List");
@@ -343,7 +344,17 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonTaskList);
-        buttonTaskList.setBounds(800, 550, 230, 38);
+        buttonTaskList.setBounds(800, 550, 230, 41);
+
+        buttonSetFrequency.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonSetFrequency.setText("Set Frequency");
+        buttonSetFrequency.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSetFrequencyActionPerformed(evt);
+            }
+        });
+        add(buttonSetFrequency);
+        buttonSetFrequency.setBounds(800, 500, 230, 41);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -438,11 +449,18 @@ public class MainMenu extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDatabaseActionPerformed
 
     private void buttonTaskListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTaskListActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new TaskList(username);
     }//GEN-LAST:event_buttonTaskListActionPerformed
+
+    private void buttonSetFrequencyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSetFrequencyActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new SetFrequency(username);
+    }//GEN-LAST:event_buttonSetFrequencyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -456,6 +474,7 @@ public class MainMenu extends javax.swing.JPanel {
     private javax.swing.JButton buttonMyJobs;
     private javax.swing.JButton buttonReminders;
     private javax.swing.JButton buttonReport;
+    private javax.swing.JButton buttonSetFrequency;
     private javax.swing.JButton buttonStockControl;
     private javax.swing.JButton buttonTaskList;
     private javax.swing.JButton buttonUserAccount;
