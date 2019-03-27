@@ -15,7 +15,7 @@ import java.sql.Statement;
  *
  * @author Ayse
  */
-public class Automation implements Runnable {
+public class AutomaticReminders implements Runnable {
 
     Statement statement;
     ResultSet rs;
@@ -28,19 +28,11 @@ public class Automation implements Runnable {
         checkDueMoT();
         checkDueService();
         checkOverduePayments();
-        backupDatabase();
         closeConnection();
-        System.out.println("done");
     }
 
     private void connect() {
         connection = db.connect();
-    }
-
-    private void backupDatabase() {
-        //backup
-        System.out.println("backed up");
-        db.Backup(connection);
     }
 
     private void checkDueMoT() {
