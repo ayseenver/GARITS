@@ -172,7 +172,7 @@ public class CalculateFlexibleDiscount implements Runnable {
 
             try {
                 //update "order value this month" to the total cost, and the credit
-                String sql = ("update flexiblediscount set ordervaluethismonth = " + totalCost 
+                String sql = ("update flexiblediscount set ordervaluethismonth = " + totalCost
                         + ", credit = " + credit + " where discountID = " + discountID);
                 PreparedStatement ps = null;
 

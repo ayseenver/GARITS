@@ -7,7 +7,7 @@ public class StockController {
 	Collection<PartOrder> creates;
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public PartOrder createPartOrder(String orderNumber) {
@@ -16,7 +16,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public void removePartOrder(String orderNumber) {
@@ -25,7 +25,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public PartOrder getPartOrder(String orderNumber) {
@@ -34,7 +34,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 * @param details
 	 */
@@ -44,7 +44,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 * @param partID
 	 */
@@ -54,7 +54,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public SparePart[] getOrderPart(String orderNumber) {
@@ -63,7 +63,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 * @param isTop
 	 */
@@ -73,7 +73,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 */
 	public SparePart getPart(String partID) {
@@ -82,7 +82,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 * @param quantity
 	 */
@@ -92,7 +92,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 */
 	public Manufacturer getPartManufacturer(String partID) {
@@ -101,7 +101,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 */
 	public int getPartThreshold(String partID) {
@@ -110,7 +110,7 @@ public class StockController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 * @param threshold
 	 */

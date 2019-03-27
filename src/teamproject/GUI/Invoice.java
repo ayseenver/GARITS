@@ -160,7 +160,7 @@ public class Invoice extends javax.swing.JPanel {
                 int quantity = Integer.parseInt(rs.getString("quantity"));
                 double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
                 // read the result set. Get part name description.
-                String part = rs.getString("partName") 
+                String part = rs.getString("partName")
                         + ", £" + sellingPrice + ", quantity: " + quantity;
                 totalPartsCost += (sellingPrice * quantity);
                 result += (part + "\n");
@@ -989,7 +989,7 @@ public class Invoice extends javax.swing.JPanel {
 
             if (accountID.equals("")) {
                 //this customer is not an account holder.
-                //proceed to standard payment (no discount) 
+                //proceed to standard payment (no discount)
                 StandardPayment();
             } else {
                 //check for fixed discount

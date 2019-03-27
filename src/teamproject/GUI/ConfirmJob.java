@@ -32,7 +32,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     ResultSet rs;
     Statement statement;
     Connection connection = null;
-    DB_ImplClass db = new DB_ImplClass();  
+    DB_ImplClass db = new DB_ImplClass();
 
     /**
      * Creates new form NewJPanel
@@ -49,18 +49,18 @@ public class ConfirmJob extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         ShowVehicleDetails();
         ShowTaskDetails();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     private String[] CreateArray(ArrayList<String> tasks){
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
@@ -70,16 +70,16 @@ public class ConfirmJob extends javax.swing.JPanel {
     private void ShowVehicleDetails(){
         textAreaCustomerDetails.setText(v.toString() + "\n\n" + c.toString());
     }
-    
+
     private void ShowTaskDetails(){
         requiredTaskArray = CreateArray(requiredTasks);
-                
+
         listTasksRequired.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return requiredTaskArray.length; }
             public String getElementAt(int i) { return requiredTaskArray[i]; }
         });
     }
-    
+
     private void WriteToDatabase(){
         //insert the job
         String sql;
@@ -103,7 +103,7 @@ public class ConfirmJob extends javax.swing.JPanel {
             PreparedStatement ps = null;
             try {
             ps = connection.prepareStatement(sql);
-            } 
+            }
             catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,7 +113,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         {
           System.err.println(e.getMessage());
         }
-        
+
         //insert the actual tasks for this job
         for (String t : requiredTasks){
             try{
@@ -125,7 +125,7 @@ public class ConfirmJob extends javax.swing.JPanel {
                 PreparedStatement ps = null;
                 try {
                 ps = connection.prepareStatement(sql);
-                } 
+                }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -134,10 +134,10 @@ public class ConfirmJob extends javax.swing.JPanel {
             catch(SQLException e)
             {
               System.err.println(e.getMessage());
-            }      
+            }
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

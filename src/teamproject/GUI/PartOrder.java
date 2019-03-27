@@ -39,17 +39,17 @@ public class PartOrder extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         ShowOrderDetails();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
+
     private void ShowOrderDetails(){
         for (String s : order) {
             textAreaPartsOrder.append(s+"\n");
@@ -134,7 +134,7 @@ public class PartOrder extends javax.swing.JPanel {
         try{
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
             writer.println(textAreaPartsOrder.getText());
-            writer.close();  
+            writer.close();
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -143,7 +143,7 @@ public class PartOrder extends javax.swing.JPanel {
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        
+
         //create a order record in the database.
         String sql;
         try{
@@ -151,7 +151,7 @@ public class PartOrder extends javax.swing.JPanel {
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
-            } 
+            }
             catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,14 +161,14 @@ public class PartOrder extends javax.swing.JPanel {
         {
             System.err.println(e.getMessage());
         }
-        
+
         for (String s : order){
             String[] parts = s.split(", ");
             String partName = parts[0];
             String vType = parts[1];
             String[] qParts = parts[2].split(": ");
             int quantity = Integer.parseInt(qParts[1]);
-            
+
             try{
                 sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber, quantity)"
                         + " values ((select partID from sparepart where partName = '" + partName + "' and "
@@ -178,7 +178,7 @@ public class PartOrder extends javax.swing.JPanel {
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
-                } 
+                }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -187,15 +187,15 @@ public class PartOrder extends javax.swing.JPanel {
             catch(SQLException e)
             {
                 System.err.println(e.getMessage());
-            } 
-            
+            }
+
             //update the stock levels
             try{
                 sql = ("UPDATE SparePart "
                         + "SET quantity = (select quantity from sparePart where partID in "
                         + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
                         + "(select max(partorderordernumber) from sparepart_partorder)) "
-                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity 
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity
                         + " WHERE partID = (select partID from sparePart where partID in "
                         + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
                         + "(select max(ordernumber) from partorder)) "
@@ -203,7 +203,7 @@ public class PartOrder extends javax.swing.JPanel {
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
-                } 
+                }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -212,10 +212,10 @@ public class PartOrder extends javax.swing.JPanel {
             catch(SQLException e)
             {
                 System.err.println(e.getMessage());
-            } 
-            
+            }
+
         }
-        
+
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonConfirmActionPerformed

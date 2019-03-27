@@ -5,7 +5,7 @@ import teamproject.Spare_Parts.SparePart;
 public class SparePartUsed {
 
 	/**
-	 * 
+	 *
 	 * @param sparePart
 	 */
 	public static SparePartUsed SparePartUsed(SparePart sparePart) {

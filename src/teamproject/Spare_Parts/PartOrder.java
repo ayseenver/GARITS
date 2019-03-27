@@ -5,7 +5,7 @@ public class PartOrder {
 	private String orderNumber;
 
 	/**
-	 * 
+	 *
 	 * @param details
 	 */
 	public void addPart(String[] details) {
@@ -14,7 +14,7 @@ public class PartOrder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param partID
 	 */
 	public void removePart(int partID) {
@@ -28,7 +28,7 @@ public class PartOrder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public void setOrderNumber(String orderNumber) {
@@ -45,7 +45,7 @@ public class PartOrder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param orderNumber
 	 */
 	public static PartOrder PartOrder(String orderNumber) {

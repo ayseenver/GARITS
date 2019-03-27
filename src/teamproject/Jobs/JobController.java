@@ -11,7 +11,7 @@ public class JobController {
 	Collection<Invoice> creates;
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public Job getJob(int jobID) {
@@ -20,7 +20,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param dataBookedIn
 	 * @param status
@@ -32,7 +32,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param task
 	 */
@@ -42,7 +42,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param taskID
 	 */
@@ -52,7 +52,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public EstimatedTask[] getEstimatedTask(int jobID) {
@@ -66,7 +66,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param paymentType
 	 * @param invoiceNumber
 	 */
@@ -76,7 +76,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param VAT
 	 * @param invoiceNumber
 	 * @param dateCreated
@@ -88,7 +88,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param VAT
 	 * @param invoiceNumber
 	 * @param dateCreated
@@ -100,7 +100,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param invoiceNumber
 	 */
 	public void printInvoice(int invoiceNumber) {
@@ -109,7 +109,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param vehicle
 	 */
@@ -119,7 +119,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public Vehicle getJobVehicle(int jobID) {
@@ -128,7 +128,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public void removeJobAllocatedVehicle(int jobID) {
@@ -147,7 +147,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param bayNumber
 	 */
@@ -157,7 +157,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param bayNumer
 	 */
@@ -167,7 +167,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public void removeJobMoTInspectionBay(int jobID) {
@@ -176,7 +176,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public void removeJobRepairBay(int jobID) {
@@ -185,7 +185,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public RepairBay getJobRepairbay(int jobID) {
@@ -194,7 +194,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public MoTInspectionBay getJobMoTInspectionBay(int jobID) {
@@ -203,7 +203,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param status
 	 */
@@ -213,7 +213,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public String getStatus(int jobID) {
@@ -222,7 +222,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param taskID
 	 */
@@ -232,7 +232,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param JobID
 	 */
 	public ActualTask[] getActualTask(int JobID) {
@@ -241,7 +241,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param task
 	 * @param actualHour
@@ -253,7 +253,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param JobID
 	 * @param sparePart
 	 */
@@ -263,7 +263,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param JobID
 	 * @param sparePartID
 	 */
@@ -273,7 +273,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 */
 	public SparePartUsed[] getJobSparePartUsed(int jobID) {
@@ -282,7 +282,7 @@ public class JobController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param jobID
 	 * @param mechanic
 	 */

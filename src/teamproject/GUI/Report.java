@@ -352,7 +352,7 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                
+
                 ArrayList<String> jobs = new ArrayList<>();
 
                 try {

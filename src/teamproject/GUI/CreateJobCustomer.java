@@ -56,7 +56,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-        
+
         ShowCustomers();
 
         frame.setVisible(true);
