@@ -46,7 +46,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
         this.bayType = "MoT inspection";
-        this.jobType = "Service";
+        this.jobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
         initComponents();
@@ -66,9 +66,10 @@ public class CreateJobTask extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
+        GetJobType();
+        ShowRequiredTaskList();
         ShowTaskList();
         UpdateBayList();
-
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -77,6 +78,18 @@ public class CreateJobTask extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void GetJobType() {
+        jobType = jobTypeCombo.getSelectedItem().toString();
+        if (jobType.equalsIgnoreCase("Service")) {
+            jobType = "defaultServiceJob";
+        }
+        if (jobType.equalsIgnoreCase("MoT")) {
+            jobType = "defaultMoTJob";
+        } else {
+            jobType = "Repair";
+        }
     }
 
     private void UpdateBayList() {
@@ -124,8 +137,18 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void ShowTaskList() {
         listAvailableTasks.removeAll();
         tasks.clear();
-
         //add all tasks to task list
+
+        try {
+            if (!jobType.equalsIgnoreCase("Repair")) {
+                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 0");
+            } else {
+                this.rs = statement.executeQuery("select * from Task");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         try {
             while (rs.next()) {
                 // read the result set
@@ -148,9 +171,10 @@ public class CreateJobTask extends javax.swing.JPanel {
             }
         });
     }
-    
-        private void UpdateTaskList() {
+
+    private void UpdateTaskList() {
         listAvailableTasks.removeAll();
+        //add all tasks to task list
 
         taskArray = CreateArray(tasks);
 
@@ -163,6 +187,56 @@ public class CreateJobTask extends javax.swing.JPanel {
                 return taskArray[i];
             }
         });
+    }
+
+    private void ShowRequiredTaskList() {
+        try {
+            if (!jobType.equalsIgnoreCase("Repair")) {
+                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 1");
+
+                listRequiredTasks.removeAll();
+                requiredTasks.clear();
+
+                //add all tasks to task list
+                try {
+                    while (rs.next()) {
+                        // read the result set
+                        String task = rs.getString("description");
+                        requiredTasks.add(task);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+
+                requiredTaskArray = CreateArray(requiredTasks);
+
+                listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
+                    public int getSize() {
+                        return requiredTaskArray.length;
+                    }
+
+                    public String getElementAt(int i) {
+                        return requiredTaskArray[i];
+                    }
+                });
+            } else {
+                listRequiredTasks.removeAll();
+                requiredTasks.clear();
+                requiredTaskArray = CreateArray(requiredTasks);
+
+                listRequiredTasks.setModel(new javax.swing.AbstractListModel<String>() {
+                    public int getSize() {
+                        return requiredTaskArray.length;
+                    }
+
+                    public String getElementAt(int i) {
+                        return requiredTaskArray[i];
+                    }
+                });
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -221,7 +295,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelCreateJob.setText("Create Job");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, -1, -1));
 
-        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Repair" }));
+        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Repair", "Service" }));
         bayTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bayTypeComboActionPerformed(evt);
@@ -254,11 +328,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         });
         add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, -1, -1));
 
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -283,11 +353,6 @@ public class CreateJobTask extends javax.swing.JPanel {
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
 
         checkBoxYard.setText("Send to Yard ");
-        checkBoxYard.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkBoxYardActionPerformed(evt);
-            }
-        });
         add(checkBoxYard, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 600, -1, -1));
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
@@ -364,10 +429,6 @@ public class CreateJobTask extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_createJobButtonActionPerformed
 
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
@@ -381,10 +442,6 @@ public class CreateJobTask extends javax.swing.JPanel {
         db.closeConnection(connection);
         new CreateJobCustomer(username);
     }//GEN-LAST:event_buttonBackActionPerformed
-
-    private void checkBoxYardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxYardActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkBoxYardActionPerformed
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
         try {
@@ -466,7 +523,9 @@ public class CreateJobTask extends javax.swing.JPanel {
     }//GEN-LAST:event_bayTypeComboActionPerformed
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
-        jobType = jobTypeCombo.getSelectedItem().toString();
+        GetJobType();
+        ShowTaskList();
+        ShowRequiredTaskList();
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
 
