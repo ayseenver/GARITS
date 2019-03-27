@@ -77,6 +77,20 @@ public class TaskList extends javax.swing.JPanel {
 
 
     private void UpdateTaskList() {
+             listAllTasks.removeAll();
+
+        taskArray = CreateArray(tasks);
+
+        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        }
+                }/*
         listAllTasks.removeAll();
         tasks.clear();
 
@@ -101,8 +115,8 @@ public class TaskList extends javax.swing.JPanel {
             public String getElementAt(int i) {
                 return taskArray[i];
             }
-        });
-    }
+        });*/
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
