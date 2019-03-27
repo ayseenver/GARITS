@@ -133,7 +133,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonStockControl.setLocation(490, 470);
         this.buttonCustomers.setLocation(490, 525);
         this.buttonReport.setLocation(490, 580);
-        this.buttonTaskList.setLocation(490,635);
+        this.buttonTaskList.setLocation(490, 635);
     }
 
     //Mechanic View
@@ -150,8 +150,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
         this.buttonTaskList.setVisible(false);
-        
-        
+
         this.buttonMyJobs.setLocation(490, 375);
 
     }
