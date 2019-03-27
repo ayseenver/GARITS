@@ -42,7 +42,7 @@ public class TaskList extends javax.swing.JPanel {
      */
     public TaskList(String username) {
         this.username = username;
-        this.jobType = "Service";
+        this.jobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
         initComponents();
@@ -54,16 +54,10 @@ public class TaskList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        try {
-            this.rs = statement.executeQuery("select * from Task");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-
-        UpdateTaskList();
-       
+      
+        updateAllTaskLists(jobType);
+        updateDefaultTaskLists(jobType);
+        ShowTaskList();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +69,7 @@ public class TaskList extends javax.swing.JPanel {
         return newArray;
     }
 
-   private void ShowTaskList() {
+    private void ShowTaskList() {
         listAllTasks.removeAll();
         tasks.clear();
 
@@ -102,8 +96,9 @@ public class TaskList extends javax.swing.JPanel {
             }
         });
     }
+
     private void UpdateTaskList() {
-             listAllTasks.removeAll();
+        listAllTasks.removeAll();
 
         taskArray = CreateArray(tasks);
 
@@ -116,33 +111,7 @@ public class TaskList extends javax.swing.JPanel {
                 return taskArray[i];
             }
         });
-                }/*
-        listAllTasks.removeAll();
-        tasks.clear();
-
-        //add all tasks to task list
-        try {
-            while (rs.next()) {
-                // read the result set
-                String task = rs.getString("description");
-                tasks.add(task);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        taskArray = CreateArray(tasks);
-
-        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return taskArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return taskArray[i];
-            }
-        });*/
-    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -281,13 +250,13 @@ public class TaskList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
-    
-            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
 
-            f.dispose();
-            db.closeConnection(connection);
-            new MainMenu(username);
-        
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+
+        f.dispose();
+        db.closeConnection(connection);
+        new MainMenu(username);
+
     }//GEN-LAST:event_doneButtonActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -329,11 +298,40 @@ public class TaskList extends javax.swing.JPanel {
         }
         UpdateTaskList();
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
-
+    private void updateAllTaskLists(String jobType) {
+  try {
+            this.rs = statement.executeQuery("select * from Task where "+ jobType +" is not 1 ");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+    }
+     private void updateDefaultTaskLists(String jobType) {
+  try {
+            this.rs = statement.executeQuery("select * from Task where "+ jobType +" is 1 ");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+    }
+   
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
-  String selected = listDefaultTasks.getSelectedValue();
+        String selected = listDefaultTasks.getSelectedValue();
 
         if (!(selected == null)) {
+            try {
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement("Update task set " + jobType + " = 0 where description = '" + selected + "'");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
             defaultTasks.remove(selected);
 
             defaultTaskArray = CreateArray(defaultTasks);
@@ -354,36 +352,23 @@ public class TaskList extends javax.swing.JPanel {
             String mess = "Select a task to remove";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-           /*      
-       String selected = listDefaultTasks.getSelectedValue();
-
-        if (!(selected == null)) {
-            defaultTasks.remove(selected);
-
-            defaultTaskArray = CreateArray(defaultTasks);
-
-            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return defaultTaskArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return defaultTaskArray[i];
-                }
-            });
-
-            tasks.add(selected);
-            UpdateTaskList();
-        } else {
-            String mess = "Select a task to remove";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }*/
     }//GEN-LAST:event_removeTaskActionPerformed
 
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
         String selected = listAllTasks.getSelectedValue();
         if (!(selected == null)) {
 
+            try {
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement("Update task set " + jobType + " = 1 where description = '" + selected + "'");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
             defaultTasks.add(selected);
 
             defaultTaskArray = CreateArray(defaultTasks);
@@ -408,6 +393,12 @@ public class TaskList extends javax.swing.JPanel {
 
     private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
         jobType = jobTypeCombo.getSelectedItem().toString();
+        if (jobType.equalsIgnoreCase("Service")) {
+            jobType = "defaultServiceJob";
+        } else {
+            jobType = "defaultMoTJob";
+        }
+        UpdateTaskList();
     }//GEN-LAST:event_jobTypeComboActionPerformed
 
 
