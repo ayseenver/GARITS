@@ -54,10 +54,9 @@ public class TaskList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-      
-        updateAllTaskLists(jobType);
-        updateDefaultTaskLists(jobType);
-        ShowTaskList();
+        GetJobType();
+        ShowAllTasks();
+        ShowDefaultTasks();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,11 +68,33 @@ public class TaskList extends javax.swing.JPanel {
         return newArray;
     }
 
-    private void ShowTaskList() {
+    private void GetJobType() {
+        jobType = jobTypeCombo.getSelectedItem().toString();
+        if (jobType.equalsIgnoreCase("Service")) {
+            jobType = "defaultServiceJob";
+        } else {
+            jobType = "defaultMoTJob";
+        }
+    }
+
+    private void ShowAllTasks() {
+        try {
+            String sql = ("select * from task where " + jobType + " = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         listAllTasks.removeAll();
         tasks.clear();
 
-        //add all tasks to task list
+        //add all parts to part list
         try {
             while (rs.next()) {
                 // read the result set
@@ -97,18 +118,43 @@ public class TaskList extends javax.swing.JPanel {
         });
     }
 
-    private void UpdateTaskList() {
-        listAllTasks.removeAll();
+    private void ShowDefaultTasks() {
+        try {
+            String sql = ("select * from task where " + jobType + " = 1");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
 
-        taskArray = CreateArray(tasks);
+        listDefaultTasks.removeAll();
+        defaultTasks.clear();
 
-        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
+        //add all parts to part list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                defaultTasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        defaultTaskArray = CreateArray(defaultTasks);
+
+        listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
-                return taskArray.length;
+                return defaultTaskArray.length;
             }
 
             public String getElementAt(int i) {
-                return taskArray[i];
+                return defaultTaskArray[i];
             }
         });
     }
@@ -158,11 +204,7 @@ public class TaskList extends javax.swing.JPanel {
         labelCreateJob.setText("Task List");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
 
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -223,7 +265,7 @@ public class TaskList extends javax.swing.JPanel {
                 removeTaskActionPerformed(evt);
             }
         });
-        jPanel6.add(removeTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 180, -1, -1));
+        jPanel6.add(removeTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 190, -1, -1));
 
         addTask.setText(">");
         addTask.setActionCommand("addTask");
@@ -232,7 +274,7 @@ public class TaskList extends javax.swing.JPanel {
                 addTaskActionPerformed(evt);
             }
         });
-        jPanel6.add(addTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, -1, -1));
+        jPanel6.add(addTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, -1, -1));
 
         jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT" }));
         jobTypeCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -258,10 +300,6 @@ public class TaskList extends javax.swing.JPanel {
         new MainMenu(username);
 
     }//GEN-LAST:event_doneButtonActionPerformed
-
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogoutActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -296,27 +334,40 @@ public class TaskList extends javax.swing.JPanel {
             System.err.println(e.getMessage());
 
         }
-        UpdateTaskList();
+
+        listAllTasks.removeAll();
+        tasks.clear();
+
+        //add all parts to part list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listAllTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
-    private void updateAllTaskLists(String jobType) {
-  try {
-            rs = statement.executeQuery("select * from Task where "+ jobType +" is not 1 ");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-    }
-     private void updateDefaultTaskLists(String jobType) { 
-  try {
-            rs = statement.executeQuery("select * from Task where "+ jobType +" is 1 ");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        }
-    }
-   
+
+    private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
+        GetJobType();
+        ShowAllTasks();
+        ShowDefaultTasks();
+    }//GEN-LAST:event_jobTypeComboActionPerformed
+
     private void removeTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskActionPerformed
         String selected = listDefaultTasks.getSelectedValue();
 
@@ -332,22 +383,9 @@ public class TaskList extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            defaultTasks.remove(selected);
 
-            defaultTaskArray = CreateArray(defaultTasks);
-
-            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return defaultTaskArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return defaultTaskArray[i];
-                }
-            });
-
-            tasks.add(selected);
-            UpdateTaskList();
+            ShowAllTasks();
+            ShowDefaultTasks();
         } else {
             String mess = "Select a task to remove";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -357,7 +395,6 @@ public class TaskList extends javax.swing.JPanel {
     private void addTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskActionPerformed
         String selected = listAllTasks.getSelectedValue();
         if (!(selected == null)) {
-
             try {
                 PreparedStatement ps = null;
                 try {
@@ -369,37 +406,14 @@ public class TaskList extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            defaultTasks.add(selected);
 
-            defaultTaskArray = CreateArray(defaultTasks);
-
-            listDefaultTasks.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return defaultTaskArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return defaultTaskArray[i];
-                }
-            });
-
-            tasks.remove(selected);
-            UpdateTaskList();
+            ShowAllTasks();
+            ShowDefaultTasks();
         } else {
             String mess = "Select a task to add";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_addTaskActionPerformed
-
-    private void jobTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobTypeComboActionPerformed
-        jobType = jobTypeCombo.getSelectedItem().toString();
-        if (jobType.equalsIgnoreCase("Service")) {
-            jobType = "defaultServiceJob";
-        } else {
-            jobType = "defaultMoTJob";
-        }
-        UpdateTaskList();
-    }//GEN-LAST:event_jobTypeComboActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
