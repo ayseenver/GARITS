@@ -202,7 +202,6 @@ public class MainMenu extends javax.swing.JPanel {
         buttonCustomers = new javax.swing.JButton();
         buttonDatabase = new javax.swing.JButton();
         buttonTaskList = new javax.swing.JButton();
-        buttonSetFrequency = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(null);
@@ -344,7 +343,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonDatabase);
-        buttonDatabase.setBounds(800, 450, 230, 41);
+        buttonDatabase.setBounds(800, 500, 230, 41);
 
         buttonTaskList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonTaskList.setText("Task List");
@@ -355,16 +354,6 @@ public class MainMenu extends javax.swing.JPanel {
         });
         add(buttonTaskList);
         buttonTaskList.setBounds(800, 550, 230, 41);
-
-        buttonSetFrequency.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonSetFrequency.setText("Set Frequency");
-        buttonSetFrequency.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSetFrequencyActionPerformed(evt);
-            }
-        });
-        add(buttonSetFrequency);
-        buttonSetFrequency.setBounds(800, 500, 230, 41);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -465,13 +454,6 @@ public class MainMenu extends javax.swing.JPanel {
         new TaskList(username);
     }//GEN-LAST:event_buttonTaskListActionPerformed
 
-    private void buttonSetFrequencyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSetFrequencyActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new SetFrequency(username);
-    }//GEN-LAST:event_buttonSetFrequencyActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAllocateJob;
@@ -484,7 +466,6 @@ public class MainMenu extends javax.swing.JPanel {
     private javax.swing.JButton buttonMyJobs;
     private javax.swing.JButton buttonReminders;
     private javax.swing.JButton buttonReport;
-    private javax.swing.JButton buttonSetFrequency;
     private javax.swing.JButton buttonStockControl;
     private javax.swing.JButton buttonTaskList;
     private javax.swing.JButton buttonUserAccount;
