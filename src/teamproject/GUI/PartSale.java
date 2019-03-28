@@ -239,6 +239,9 @@ public class PartSale extends javax.swing.JPanel {
             }
         });
         add(buttonChangeQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 560, -1, -1));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");

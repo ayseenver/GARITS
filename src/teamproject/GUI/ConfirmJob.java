@@ -211,6 +211,9 @@ public class ConfirmJob extends javax.swing.JPanel {
         labelAccountHolder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelAccountHolder.setText("Account holder Details: ");
         add(labelAccountHolder, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 520, -1, -1));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");

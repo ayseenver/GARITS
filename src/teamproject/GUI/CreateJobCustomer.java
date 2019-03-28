@@ -250,6 +250,8 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         labelSelectVehicle.setText("Select Vehicle:");
         add(labelSelectVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 400, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);

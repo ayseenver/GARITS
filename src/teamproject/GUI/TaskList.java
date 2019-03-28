@@ -204,6 +204,7 @@ public class TaskList extends javax.swing.JPanel {
         labelCreateJob.setText("Task List");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 

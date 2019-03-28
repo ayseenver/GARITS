@@ -292,6 +292,8 @@ public class MainMenu extends javax.swing.JPanel {
         add(buttonJobList);
         buttonJobList.setBounds(490, 280, 230, 41);
 
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);

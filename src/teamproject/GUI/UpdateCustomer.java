@@ -656,6 +656,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         jPanel1.add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
+
+        textFieldUsername.setEditable(false);
+        textFieldUsername.setFocusable(false);
         jPanel1.add(textFieldUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelTelephone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N

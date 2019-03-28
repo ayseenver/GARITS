@@ -612,6 +612,9 @@ public class Job extends javax.swing.JPanel {
         panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
