@@ -777,11 +777,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         checkBoxDiscountPlan.setBounds(10, 30, 115, 29);
 
         textFieldSearchDiscountDetails.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchDiscountDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchDiscountDetailsActionPerformed(evt);
-            }
-        });
         accountHolderPane.add(textFieldSearchDiscountDetails);
         textFieldSearchDiscountDetails.setBounds(80, 60, 120, 20);
 
@@ -838,10 +833,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void textFieldSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchDiscountDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchDiscountDetailsActionPerformed
 
     private void buttonSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchDiscountDetailsActionPerformed
         // TODO add your handling code here:
