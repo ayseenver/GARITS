@@ -295,6 +295,8 @@ public class UserAccount extends javax.swing.JPanel {
         labelHourlyRate.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelHourlyRate.setText("Hourly Rate:");
         add(labelHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 580, -1, -1));
+
+        textFieldHourlyRate.setText("105");
         add(textFieldHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 580, 130, -1));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -309,6 +311,10 @@ public class UserAccount extends javax.swing.JPanel {
         if (textFieldFirstName.getText().isEmpty() || textFieldLastName.getText().isEmpty()
                 || textFieldPassword.getText().isEmpty() || comboBoxRole.getSelectedItem().toString().isEmpty()
                 || textFieldUserID.getText().isEmpty()) {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+        if (textFieldHourlyRate.isVisible() && textFieldHourlyRate.getText().isEmpty()) {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
@@ -339,16 +345,33 @@ public class UserAccount extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
 
-            try {
-                this.rs = statement.executeQuery("select * from User");
-            } catch (SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.getMessage());
+            if (comboBoxRole.getSelectedItem().toString().equals("mechanic") || comboBoxRole.getSelectedItem().toString().equals("foreperson")) {
+                try {
+                    String sql = ("insert into mechanic (hourlyRate, userusername)"
+                            + "values(" + textFieldHourlyRate.getText() + ", (select username from user where "
+                            + "username = '" + newU.getUsername() + "'))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
             }
-
-            UpdateUserList();
         }
+
+        try {
+            this.rs = statement.executeQuery("select * from User");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        }
+
+        UpdateUserList();
     }//GEN-LAST:event_buttonNewUserActionPerformed
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -459,7 +482,7 @@ public class UserAccount extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        if (textFieldHourlyRate.isVisible()) {
+        if (textFieldHourlyRate.isVisible() && (!(textFieldHourlyRate.getText().isEmpty()))) {
             try {
                 String sql = ("Update mechanic "
                         + "set hourlyRate = '" + textFieldHourlyRate.getText() + "',"
@@ -475,6 +498,9 @@ public class UserAccount extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+        } else {
+            String mess = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
 
         String mess = "Update complete";
