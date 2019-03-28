@@ -97,7 +97,8 @@ public class Job extends javax.swing.JPanel {
 
     private void GetParts() {
         try {
-            String sql = ("select * from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "') "
+            String sql = ("select * from sparepart where vehicleType = "
+                    + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "') or vehicleType = 'all' "
                     + "and partID not in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
             PreparedStatement ps = null;
             try {
