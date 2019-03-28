@@ -617,6 +617,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldPercentage = new javax.swing.JTextField();
         buttonSetDiscountPlan = new javax.swing.JButton();
         labelPercentage = new javax.swing.JLabel();
+        labelMobile = new javax.swing.JLabel();
+        textFieldMobile = new javax.swing.JTextField();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -664,7 +666,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelTelephone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelTelephone.setText("*Telephone:");
         jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 440, -1, -1));
-        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
+        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 500, 260, -1));
         jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
         jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
         jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 260, -1));
@@ -696,7 +698,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         labelFax1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelFax1.setText("Fax:");
-        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
+        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 500, -1, -1));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonNewCustomer.setText("New customer");
@@ -705,7 +707,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 500, -1, -1));
+        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 530, -1, -1));
         jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, 260, -1));
 
         buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -791,6 +793,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 290, 420, 230));
 
+        labelMobile.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelMobile.setText("Mobile:");
+        jPanel1.add(labelMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
+        jPanel1.add(textFieldMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -831,12 +838,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
-                        + "postCode, telephoneNumber, fax, dateCreated, deleted) "
+                        + "postCode, telephoneNumber, mobileNumber, fax, dateCreated, deleted) "
                         + "VALUES ('" + textFieldFullName.getText() + "', "
                         + "'" + textFieldAddress.getText() + "', "
                         + "'" + textFieldEmail.getText() + "', "
                         + "'" + textFieldPostCode.getText() + "', "
                         + "'" + textFieldTelephone.getText() + "', "
+                        + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
                         + "1)");
@@ -1162,6 +1170,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JLabel labelFax1;
     private javax.swing.JLabel labelFullName;
     private javax.swing.JLabel labelLoggedIn;
+    private javax.swing.JLabel labelMobile;
     private javax.swing.JLabel labelPercentage;
     private javax.swing.JLabel labelPostCode;
     private javax.swing.JLabel labelTelephone;
@@ -1171,6 +1180,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldEmail;
     private javax.swing.JTextField textFieldFax;
     private javax.swing.JTextField textFieldFullName;
+    private javax.swing.JTextField textFieldMobile;
     private javax.swing.JTextField textFieldPercentage;
     private javax.swing.JTextField textFieldPostCode;
     private javax.swing.JTextField textFieldSearchDiscountDetails;

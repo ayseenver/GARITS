@@ -88,7 +88,6 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonDatabase.setVisible(false);
         this.buttonUserAccount.setVisible(false);
         this.buttonReport.setVisible(false);
-        this.buttonCustomers.setVisible(false);
         this.buttonMyJobs.setVisible(false);
         this.buttonAllocateJob.setVisible(false);
         this.buttonTaskList.setVisible(false);

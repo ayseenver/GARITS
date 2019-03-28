@@ -1,97 +1,105 @@
 package teamproject.Customer_Account;
 
-
 public class Customer {
 
-	private String name;
-	private String emailAddress;
-	private String address;
-	private String postCode;
-	private String telephoneNumber;
-	private String fax;
-        
-	public Customer() {
-	}
+    private String name;
+    private String emailAddress;
+    private String address;
+    private String postCode;
+    private String telephoneNumber;
+    private String mobileNumber;
+    private String fax;
 
-	public String getName() {
-		return this.name;
-	}
+    public Customer() {
+    }
 
-	/**
-	 * 
-	 * @param name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getEmailAddress() {
-		return this.emailAddress;
-	}
+    /**
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * 
-	 * @param emailAddress
-	 */
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
+    public String getEmailAddress() {
+        return this.emailAddress;
+    }
 
-	public String getAddress() {
-		return this.address;
-	}
+    /**
+     *
+     * @param emailAddress
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
-	/**
-	 * 
-	 * @param address
-	 */
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getAddress() {
+        return this.address;
+    }
 
-	public String getPostCode() {
-		return this.postCode;
-	}
+    /**
+     *
+     * @param address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	/**
-	 * 
-	 * @param postCode
-	 */
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
-	}
+    public String getPostCode() {
+        return this.postCode;
+    }
 
-	public String getTelephoneNumber() {
-		return this.telephoneNumber;
-	}
+    /**
+     *
+     * @param postCode
+     */
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
 
-	/**
-	 * 
-	 * @param telephoneNumber
-	 */
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
+    public String getTelephoneNumber() {
+        return this.telephoneNumber;
+    }
 
-	public String getFax() {
-		return this.fax;
-	}
+    /**
+     *
+     * @param telephoneNumber
+     */
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
 
-	/**
-	 * 
-	 * @param fax
-	 */
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
+    public String getFax() {
+        return this.fax;
+    }
+
+    /**
+     *
+     * @param fax
+     */
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 
     @Override
     public String toString() {
-        return "Customer:\n" + "name=" + name 
-                + ",\n emailAddress=" + emailAddress 
-                + ",\n address=" + address 
-                + ",\n postCode=" + postCode 
-                + ",\n telephoneNumber=" + telephoneNumber 
+        return "Customer:\n" + "name=" + name
+                + ",\n emailAddress=" + emailAddress
+                + ",\n address=" + address
+                + ",\n postCode=" + postCode
+                + ",\n telephoneNumber=" + telephoneNumber
                 + ",\n fax=" + fax;
-    }  
+    }
 }
