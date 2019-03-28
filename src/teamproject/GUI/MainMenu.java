@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
+import teamproject.AlertsReminders.AlertTimer;
 
 /**
  *
@@ -134,6 +135,8 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setLocation(490, 525);
         this.buttonReport.setLocation(490, 580);
         this.buttonTaskList.setLocation(490, 635);
+        
+        AlertTimer at = new AlertTimer();
     }
 
     //Mechanic View
