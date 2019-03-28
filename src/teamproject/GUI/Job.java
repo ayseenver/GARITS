@@ -99,6 +99,7 @@ public class Job extends javax.swing.JPanel {
         try {
             String sql = ("select * from sparepart where vehicleType = "
                     + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "') or vehicleType = 'all' "
+                    + "or vehicleType = (select make from Vehicle where registrationNumber = '" + vehicleReg + "')"
                     + "and partID not in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
             PreparedStatement ps = null;
             try {
