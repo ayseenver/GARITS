@@ -373,7 +373,6 @@ public class Job extends javax.swing.JPanel {
         });
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -792,6 +791,7 @@ public class Job extends javax.swing.JPanel {
             int q = Integer.parseInt(quantity);
             String[] selectedParts = selected.split(", Quantity: ");
             String partName = selectedParts[0];
+            int initialQuantity = Integer.parseInt(selectedParts[1]);
 
             String sql;
             try {
@@ -831,7 +831,7 @@ public class Job extends javax.swing.JPanel {
             try {
                 while (rs.next()) {
                     int partQuantity = Integer.parseInt(rs.getString("quantity"));
-                    newQuantity = partQuantity - q;
+                    newQuantity = partQuantity - q + initialQuantity;
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -937,7 +937,6 @@ public class Job extends javax.swing.JPanel {
         if (selected != null) {
             String[] selectedParts = selected.split(", Available: ");
             String partName = selectedParts[0];
-            int quantity = Integer.parseInt(selectedParts[1]);
 
             //insert part into the parts used for this job
             String sql;
@@ -974,7 +973,7 @@ public class Job extends javax.swing.JPanel {
             try {
                 while (rs.next()) {
                     int partQuantity = Integer.parseInt(rs.getString("quantity"));
-                    newQuantity = partQuantity - quantity;
+                    newQuantity = partQuantity - 1;
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -1003,7 +1002,7 @@ public class Job extends javax.swing.JPanel {
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
         String selected = listPartsUsed.getSelectedValue();
         if (selected != null) {
-            String[] selectedParts = selected.split(", Available: ");
+            String[] selectedParts = selected.split(", Quantity: ");
             String partName = selectedParts[0];
             int quantity = Integer.parseInt(selectedParts[1]);
 
