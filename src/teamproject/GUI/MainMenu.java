@@ -76,7 +76,7 @@ public class MainMenu extends javax.swing.JPanel {
         } else if (roleName.equals("admin")) {
             admin_menu();
         } else if (roleName.equals("franchisee")) {
-            franchise_menu();
+            franchisee_menu();
         } else if (roleName.equals("foreperson")) {
             foreperson_menu();
         }
@@ -120,10 +120,9 @@ public class MainMenu extends javax.swing.JPanel {
     }
 
     //Franchise View
-    public void franchise_menu() {
+    public void franchisee_menu() {
         this.buttonDatabase.setVisible(false);
         this.buttonUserAccount.setVisible(false);
-        this.buttonTaskList.setVisible(false);
 
         this.buttonCreateJob.setLocation(490, 140);
         this.buttonAllocateJob.setLocation(490, 195);
