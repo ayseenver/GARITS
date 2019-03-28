@@ -1027,11 +1027,9 @@ public class Job extends javax.swing.JPanel {
 
         try {
             connection.setAutoCommit(false);
-
             //get actual hours and cost of all the tasks
             double totalCost = 0.0d;
             double totalHours = 0.0d;
-
             try {
                 sql = ("select * from Actual_Task where jobJobID = " + jobID);
                 PreparedStatement ps = null;
@@ -1173,6 +1171,62 @@ public class Job extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
+            //update the vehicle so if it's a service or MoT, move the due date 1 year back.
+            try {
+                sql = ("select type from job where jobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            String jobType = "";
+            try {
+                while (rs.next()) {
+                    jobType = rs.getString("type");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            if (jobType.equals("MoT")) {
+                //next MoT date 1 year from now
+                try {
+                    sql = ("update vehicle set nextMOTDate = DATE('now', '+1 years') "
+                            + "where registrationNumber = '" + vehicleReg + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else if (jobType.equals("Service")) {
+                //next service date 1 year from now
+                try {
+                    sql = ("update vehicle set nextServiceDate = DATE('now', '+1 years') "
+                            + "where registrationNumber = '" + vehicleReg + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
