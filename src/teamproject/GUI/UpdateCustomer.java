@@ -22,6 +22,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     ResultSet rc;
     ResultSet rs;
     Customer c = new Customer();
+    String roleName;
     String discount;
     String[] discountArray;
     String[] taskArray;
@@ -40,10 +41,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
         accountHolderPane.setVisible(false);
-
+        
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
+
+        GetRole();
+
     }
 
     public UpdateCustomer(String username, Customer c) { //existing custmer
@@ -574,6 +578,40 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 }
             }
         }
+    }
+
+    private void GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //Code To check Which roleName is selected 
+        if (roleName.equals("receptionist")) {
+            receptionist_menu();
+        }
+    }
+
+    public void receptionist_menu() {
+        System.out.println("receptionist");
+        checkBoxAccountHolder.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")

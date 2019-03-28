@@ -97,6 +97,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonInvoices.setLocation(490, 380);
         this.buttonReminders.setLocation(490, 440);
         this.buttonStockControl.setLocation(490, 500);
+        this.buttonCustomers.setLocation(490, 560);
 
     }
 
