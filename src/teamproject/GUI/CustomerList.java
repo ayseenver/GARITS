@@ -209,6 +209,8 @@ public class CustomerList extends javax.swing.JPanel {
         labelVariableCustomer.setText("*only customer that have flexible discount ");
         add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 650, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);

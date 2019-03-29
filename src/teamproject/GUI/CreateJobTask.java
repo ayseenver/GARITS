@@ -328,6 +328,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         });
         add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 

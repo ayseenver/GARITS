@@ -96,6 +96,9 @@ public class PartOrder extends javax.swing.JPanel {
             }
         });
         add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 570, -1, -1));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");

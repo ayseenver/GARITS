@@ -175,6 +175,8 @@ public class MyJob extends javax.swing.JPanel {
         });
         add(buttonViewJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 590, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);

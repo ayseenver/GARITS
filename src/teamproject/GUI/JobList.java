@@ -146,6 +146,9 @@ public class JobList extends javax.swing.JPanel {
         jScrollPane2.setViewportView(listJobList);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 400));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         lblLoggedIn.setText("Logged In as:");

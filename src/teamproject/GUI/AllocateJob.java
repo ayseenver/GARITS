@@ -188,6 +188,8 @@ public class AllocateJob extends javax.swing.JPanel {
         });
         add(buttonAllocateToMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 630, -1, -1));
 
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldUserDetailsActionPerformed(evt);

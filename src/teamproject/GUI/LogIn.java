@@ -37,6 +37,7 @@ public class LogIn extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Timer t = new Timer();
 
         connection = db.connect();
         statement = db.getStatement();

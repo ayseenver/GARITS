@@ -54,10 +54,8 @@ public class Job extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        GetTasks();
-        ListAllTasks();
-        GetActualTasks();
         ListActualTasks();
+        ListAllTasks();
         GetParts();
         ListAllParts();
         GetActualParts();
@@ -68,36 +66,11 @@ public class Job extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void GetTasks() {
-        try {
-            this.rs = statement.executeQuery("select * from Task where description not in "
-                    + "(select description from Task where taskID = "
-                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + "))");
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    private void GetActualTasks() {
-        //get all actual tasks descriptions for this job
-        try {
-            String sql = ("select description from Task where taskID = "
-                    + "(select TasktaskID from Actual_Task where jobJobID = " + jobID + ")");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
     private void GetParts() {
         try {
-            String sql = ("select * from sparepart where vehicleType = (select model from Vehicle where registrationNumber = '" + vehicleReg + "') "
+            String sql = ("select * from sparepart where vehicleType = "
+                    + "(select model from Vehicle where registrationNumber = '" + vehicleReg + "') or vehicleType = 'all' "
+                    + "or vehicleType = (select make from Vehicle where registrationNumber = '" + vehicleReg + "')"
                     + "and partID not in (select PartpartID from Job_Part_Record where JobjobID = '" + jobID + "')");
             PreparedStatement ps = null;
             try {
@@ -232,59 +205,6 @@ public class Job extends javax.swing.JPanel {
         });
     }
 
-    private void ListAllTasks() {
-        listAvailableTasks.removeAll();
-
-        //add all tasks to task list
-        try {
-            while (rs.next()) {
-                // read the result set
-                String task = rs.getString("description");
-                tasks.add(task);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        taskArray = CreateArray(tasks);
-
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return taskArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return taskArray[i];
-            }
-        });
-    }
-
-    private void ListActualTasks() {
-        listTasksCarriedOut.removeAll();
-
-        //add all actual task descriptions to task list
-        try {
-            while (rs.next()) {
-                // read the result set
-                String actualTask = rs.getString("description");
-                actualTasks.add(actualTask);
-            }
-        } catch (SQLException e) {
-        }
-
-        actualTaskArray = CreateArray(actualTasks);
-
-        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return actualTaskArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return actualTaskArray[i];
-            }
-        });
-    }
-
     private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
@@ -375,9 +295,16 @@ public class Job extends javax.swing.JPanel {
         );
     }
 
-    private void UpdateTaskList() {
+    private void ListAllTasks() {
         listAvailableTasks.removeAll();
         tasks.clear();
+
+        try {
+            this.rs = statement.executeQuery("select * from Task where taskID not in "
+                    + "(select tasktaskID from actual_task where jobjobid = " + jobID + ")");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
 
         //add all tasks to task list
         try {
@@ -399,6 +326,49 @@ public class Job extends javax.swing.JPanel {
 
             public String getElementAt(int i) {
                 return taskArray[i];
+            }
+        });
+    }
+
+    private void ListActualTasks() {
+        listTasksCarriedOut.removeAll();
+        actualTasks.clear();
+
+        //get all actual tasks descriptions for this job
+        try {
+            String sql = ("select * from actual_task inner join task on task.taskID = actual_task.TasktaskID "
+                    + "where jobjobId = " + jobID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //add all actual task descriptions to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String actualTask = rs.getString("description");
+                actualTasks.add(actualTask);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        actualTaskArray = CreateArray(actualTasks);
+
+        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return actualTaskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return actualTaskArray[i];
             }
         });
     }
@@ -612,6 +582,9 @@ public class Job extends javax.swing.JPanel {
         panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
 
         add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -688,7 +661,30 @@ public class Job extends javax.swing.JPanel {
             System.err.println(e.getMessage());
 
         }
-        UpdateTaskList();
+
+        tasks.clear();
+        //add all tasks to task list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String task = rs.getString("description");
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        taskArray = CreateArray(tasks);
+
+        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return taskArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return taskArray[i];
+            }
+        });
     }//GEN-LAST:event_buttonSearchTasksActionPerformed
 
     private void buttonSearchPartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchPartsActionPerformed
@@ -793,8 +789,9 @@ public class Job extends javax.swing.JPanel {
         String quantity = textFieldQuantity.getText();
         if (!(selected == null) && !(quantity.equals(""))) {
             int q = Integer.parseInt(quantity);
-            String[] selectedParts = selected.split(", ");
+            String[] selectedParts = selected.split(", Quantity: ");
             String partName = selectedParts[0];
+            int initialQuantity = Integer.parseInt(selectedParts[1]);
 
             String sql;
             try {
@@ -834,7 +831,7 @@ public class Job extends javax.swing.JPanel {
             try {
                 while (rs.next()) {
                     int partQuantity = Integer.parseInt(rs.getString("quantity"));
-                    newQuantity = partQuantity - q;
+                    newQuantity = partQuantity - q + initialQuantity;
                 }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
@@ -884,88 +881,62 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_sendYardButtonActionPerformed
 
     private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
-
         String selected = listAvailableTasks.getSelectedValue();
-        actualTasks.add(selected);
-        actualTaskArray = CreateArray(actualTasks);
 
-        listTasksCarriedOut.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return actualTaskArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return actualTaskArray[i];
-            }
-        });
-
-        tasks.remove(selected);
-        ListAllTasks();
-
-        //insert the actual tasks for this job
-        String sql;
-        try {
-            sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
-                    + " values ((" + jobID + "), "
-                    + "(select taskID from Task where description = '" + selected + "'), "
-                    + "(select defaultHours from Task where description = '" + selected + "'), "
-                    + "(select defaultCost from Task where description = '" + selected + "'))");
-            PreparedStatement ps = null;
+        if (selected != null) {
+            //insert the actual tasks for this job
+            String sql;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("insert into Actual_Task(JobjobID, TasktaskID, actualHours, actualCost)"
+                        + " values ((" + jobID + "), "
+                        + "(select taskID from Task where description = '" + selected + "'), "
+                        + "(select defaultHours from Task where description = '" + selected + "'), "
+                        + "(select defaultCost from Task where description = '" + selected + "'))");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            ListAllTasks();
+            ListActualTasks();
         }
     }//GEN-LAST:event_addTaskButtonActionPerformed
 
     private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
         String selected = listTasksCarriedOut.getSelectedValue();
-        actualTasks.remove(selected);
-        actualTaskArray = CreateArray(actualTasks);
 
-        listAvailableTasks.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() {
-                return actualTaskArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return actualTaskArray[i];
-            }
-        });
-
-        tasks.add(selected);
-        ListAllTasks();
-        ListActualTasks();
-
-        //delete this task from the list of actal tasks
-        String sql;
-        try {
-            sql = ("delete from Actual_Task"
-                    + " where JobjobID = " + jobID + " "
-                    + "and TasktaskID = (select taskID from Task where description = '" + selected + "')");
-            PreparedStatement ps = null;
+        //delete this task from the list of actual tasks
+        if (selected != null) {
+            String sql;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                sql = ("delete from Actual_Task"
+                        + " where JobjobID = " + jobID + " "
+                        + "and TasktaskID = (select taskID from Task where description = '" + selected + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            ListAllTasks();
+            ListActualTasks();
         }
     }//GEN-LAST:event_removeTaskButtonActionPerformed
 
     private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
         String selected = listAvailableParts.getSelectedValue();
         if (selected != null) {
-            String[] selectedParts = selected.split(", ");
+            String[] selectedParts = selected.split(", Available: ");
             String partName = selectedParts[0];
-            String[] quantityParts = selectedParts[1].split(": ");
-            String quantity = quantityParts[1];
 
             //insert part into the parts used for this job
             String sql;
@@ -973,6 +944,45 @@ public class Job extends javax.swing.JPanel {
                 sql = ("insert into Job_Part_Record(PartpartID, JobjobID, quantity)"
                         + " values ((select partID from sparepart where partName = '" + partName + "'), "
                         + "" + jobID + ", 1)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //update the quantity of this part in the database
+            try {
+                sql = ("select * from sparepart where partName = '" + partName + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            int newQuantity = 0;
+            try {
+                while (rs.next()) {
+                    int partQuantity = Integer.parseInt(rs.getString("quantity"));
+                    newQuantity = partQuantity - 1;
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                sql = ("UPDATE sparePart "
+                        + "SET quantity = " + newQuantity + " "
+                        + "where partName = '" + partName + "'");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -992,10 +1002,9 @@ public class Job extends javax.swing.JPanel {
     private void removePartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePartButtonActionPerformed
         String selected = listPartsUsed.getSelectedValue();
         if (selected != null) {
-            String[] selectedParts = selected.split(", ");
+            String[] selectedParts = selected.split(", Quantity: ");
             String partName = selectedParts[0];
-            String[] quantityParts = selectedParts[1].split(": ");
-            String quantity = quantityParts[1];
+            int quantity = Integer.parseInt(selectedParts[1]);
 
             //delete part from job_part_record
             String sql;
@@ -1003,6 +1012,45 @@ public class Job extends javax.swing.JPanel {
                 sql = ("delete from Job_Part_Record"
                         + " where JobjobID = " + jobID + " "
                         + "and PartpartID = (select partID from sparepart where partName = '" + partName + "')");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //update the quantity of this part in the database
+            try {
+                sql = ("select * from sparepart where partName = '" + partName + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            int newQuantity = 0;
+            try {
+                while (rs.next()) {
+                    int partQuantity = Integer.parseInt(rs.getString("quantity"));
+                    newQuantity = partQuantity + quantity;
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                sql = ("UPDATE sparePart "
+                        + "SET quantity = " + newQuantity + " "
+                        + "where partName = '" + partName + "'");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -1024,11 +1072,9 @@ public class Job extends javax.swing.JPanel {
 
         try {
             connection.setAutoCommit(false);
-
             //get actual hours and cost of all the tasks
             double totalCost = 0.0d;
             double totalHours = 0.0d;
-
             try {
                 sql = ("select * from Actual_Task where jobJobID = " + jobID);
                 PreparedStatement ps = null;
@@ -1170,6 +1216,62 @@ public class Job extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
+            //update the vehicle so if it's a service or MoT, move the due date 1 year back.
+            try {
+                sql = ("select type from job where jobID = " + jobID);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            String jobType = "";
+            try {
+                while (rs.next()) {
+                    jobType = rs.getString("type");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            if (jobType.equals("MoT")) {
+                //next MoT date 1 year from now
+                try {
+                    sql = ("update vehicle set nextMOTDate = DATE('now', '+1 years') "
+                            + "where registrationNumber = '" + vehicleReg + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else if (jobType.equals("Service")) {
+                //next service date 1 year from now
+                try {
+                    sql = ("update vehicle set nextServiceDate = DATE('now', '+1 years') "
+                            + "where registrationNumber = '" + vehicleReg + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {

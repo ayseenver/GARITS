@@ -23,7 +23,6 @@ public class Timer {
         DailyReminders();
         CheckBackupFrequency();
         CalculateFlexibleDiscounts(LocalDate.now());
-        //Alert();
     }
 
     private void CheckBackupFrequency() {
@@ -176,11 +175,4 @@ public class Timer {
         }
     }
 
-    /*
-    private void Alert() {
-        //call the alert class every 15 minutes
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-        exec.scheduleAtFixedRate(new Alert(), 0, 15, TimeUnit.MINUTES);
-    }
-     */
 }

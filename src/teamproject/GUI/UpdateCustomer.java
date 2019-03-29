@@ -22,6 +22,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     ResultSet rc;
     ResultSet rs;
     Customer c = new Customer();
+    String roleName;
     String discount;
     String[] discountArray;
     String[] taskArray;
@@ -40,10 +41,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
         accountHolderPane.setVisible(false);
-
+        
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
+
+        GetRole();
+
     }
 
     public UpdateCustomer(String username, Customer c) { //existing custmer
@@ -576,6 +580,40 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
     }
 
+    private void GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //Code To check Which roleName is selected 
+        if (roleName.equals("receptionist")) {
+            receptionist_menu();
+        }
+    }
+
+    public void receptionist_menu() {
+        System.out.println("receptionist");
+        checkBoxAccountHolder.setVisible(false);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -617,6 +655,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldPercentage = new javax.swing.JTextField();
         buttonSetDiscountPlan = new javax.swing.JButton();
         labelPercentage = new javax.swing.JLabel();
+        labelMobile = new javax.swing.JLabel();
+        textFieldMobile = new javax.swing.JTextField();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -656,12 +696,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         jPanel1.add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
+
+        textFieldUsername.setEditable(false);
+        textFieldUsername.setFocusable(false);
         jPanel1.add(textFieldUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelTelephone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelTelephone.setText("*Telephone:");
         jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 440, -1, -1));
-        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
+        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 500, 260, -1));
         jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
         jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
         jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 260, -1));
@@ -693,7 +736,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         labelFax1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelFax1.setText("Fax:");
-        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
+        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 500, -1, -1));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonNewCustomer.setText("New customer");
@@ -702,7 +745,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 500, -1, -1));
+        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 530, -1, -1));
         jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, 260, -1));
 
         buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -734,11 +777,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         checkBoxDiscountPlan.setBounds(10, 30, 115, 29);
 
         textFieldSearchDiscountDetails.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchDiscountDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchDiscountDetailsActionPerformed(evt);
-            }
-        });
         accountHolderPane.add(textFieldSearchDiscountDetails);
         textFieldSearchDiscountDetails.setBounds(80, 60, 120, 20);
 
@@ -788,12 +826,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 290, 420, 230));
 
+        labelMobile.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelMobile.setText("Mobile:");
+        jPanel1.add(labelMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
+        jPanel1.add(textFieldMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void textFieldSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchDiscountDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchDiscountDetailsActionPerformed
 
     private void buttonSearchDiscountDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchDiscountDetailsActionPerformed
         // TODO add your handling code here:
@@ -828,12 +867,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
-                        + "postCode, telephoneNumber, fax, dateCreated, deleted) "
+                        + "postCode, telephoneNumber, mobileNumber, fax, dateCreated, deleted) "
                         + "VALUES ('" + textFieldFullName.getText() + "', "
                         + "'" + textFieldAddress.getText() + "', "
                         + "'" + textFieldEmail.getText() + "', "
                         + "'" + textFieldPostCode.getText() + "', "
                         + "'" + textFieldTelephone.getText() + "', "
+                        + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
                         + "1)");
@@ -1159,6 +1199,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JLabel labelFax1;
     private javax.swing.JLabel labelFullName;
     private javax.swing.JLabel labelLoggedIn;
+    private javax.swing.JLabel labelMobile;
     private javax.swing.JLabel labelPercentage;
     private javax.swing.JLabel labelPostCode;
     private javax.swing.JLabel labelTelephone;
@@ -1168,6 +1209,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldEmail;
     private javax.swing.JTextField textFieldFax;
     private javax.swing.JTextField textFieldFullName;
+    private javax.swing.JTextField textFieldMobile;
     private javax.swing.JTextField textFieldPercentage;
     private javax.swing.JTextField textFieldPostCode;
     private javax.swing.JTextField textFieldSearchDiscountDetails;

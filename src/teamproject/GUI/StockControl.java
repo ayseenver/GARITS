@@ -302,6 +302,9 @@ public class StockControl extends javax.swing.JPanel {
         labelLowStock.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelLowStock.setText("Low/Missing Stock:");
         add(labelLowStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, -1, -1));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         lblLoggedIn.setText("Logged In as:");
