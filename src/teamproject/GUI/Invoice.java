@@ -169,7 +169,7 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        result += ("Total parts cost: £" + totalPartsCost + "\n");
+        result += ("Total parts cost: £" + String.format("%.2f",totalPartsCost) + "\n");
 
         //get hourly rate for this mechanic
         try {
@@ -195,9 +195,9 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
-        result += ("\nTotal labour cost: £" + (hourlyRate * totalHours) + "\n");
-        result += ("\nVAT: £" + totalCost * 0.2);
-        result += ("\nGrand total: £" + totalCost * 1.2 + "\n");
+        result += ("\nTotal labour cost: £" + String.format("%.2f", (hourlyRate * totalHours)) + "\n");
+        result += ("\nVAT: £" + String.format("%.2f",totalCost * 0.2));
+        result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2));
         return result;
     }
 
@@ -258,7 +258,7 @@ public class Invoice extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set. Get part name description.
                 sellingPrice = Double.parseDouble(rs.getString("sum(sellingPrice * quantity)"));
-                result += ("Total cost: £" + sellingPrice + "\n");
+                result += ("Total cost: £" + String.format("%.2f", sellingPrice) + "\n");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());

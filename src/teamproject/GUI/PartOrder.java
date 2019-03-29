@@ -21,6 +21,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class PartOrder extends javax.swing.JPanel {
+
     private String username;
     String vehicleReg;
     Statement statement;
@@ -39,20 +40,20 @@ public class PartOrder extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         ShowOrderDetails();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    private void ShowOrderDetails(){
+
+    private void ShowOrderDetails() {
         for (String s : order) {
-            textAreaPartsOrder.append(s+"\n");
+            textAreaPartsOrder.append(s + "\n");
         }
     }
 
@@ -133,12 +134,12 @@ public class PartOrder extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        String fileName = "order-by-"+username+".txt";
-        try{
+        String fileName = "order-by-" + username + ".txt";
+        try {
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
             writer.println(textAreaPartsOrder.getText());
-            writer.close();  
-        }catch (IOException e){
+            writer.close();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
@@ -146,59 +147,63 @@ public class PartOrder extends javax.swing.JPanel {
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-        
+
         //create a order record in the database.
         String sql;
-        try{
+        try {
             sql = ("insert into partOrder(orderNumber, date) values (null, date('now'))");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        
-        for (String s : order){
-            String[] parts = s.split(", ");
-            String partName = parts[0];
-            String vType = parts[1];
-            String[] qParts = parts[2].split(": ");
-            int quantity = Integer.parseInt(qParts[1]);
+
+        for (String s : order) {
+            String[] parts = s.split(", Quantity: ");
+            String partName = parts[0]; //Exhaust, complete box, Estate
+            String[] nameParts = partName.split(", ");
+            String vType;
+
+            if (nameParts.length == 2) {
+                partName = nameParts[0];
+                vType = nameParts[1];
+            } else {
+                partName = nameParts[0] + ", " + nameParts[1];
+                vType = nameParts[2];
+            }
+
+            String[] qParts = parts[1].split(", ");
+            int quantity = Integer.parseInt(qParts[0]);
             
-            try{
+            try {
                 sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber, quantity)"
                         + " values ((select partID from sparepart where partName = '" + partName + "' and "
                         + "vehicleType = '" + vType + "'), "
                         + "(select orderNumber from partOrder where orderNumber = (select max(orderNumber) from partOrder))"
-                        + ", "+ quantity + ")");
+                        + ", " + quantity + ")");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
-            } 
-            
+            }
+
             //update the stock levels
-            try{
+            try {
                 sql = ("UPDATE SparePart "
                         + "SET quantity = (select quantity from sparePart where partID in "
                         + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
                         + "(select max(partorderordernumber) from sparepart_partorder)) "
-                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity 
+                        + "and partName = '" + partName + "' and vehicleType = '" + vType + "') + " + quantity
                         + " WHERE partID = (select partID from sparePart where partID in "
                         + "(select sparepartpartid from sparepart_partOrder where partorderordernumber = "
                         + "(select max(ordernumber) from partorder)) "
@@ -206,19 +211,16 @@ public class PartOrder extends javax.swing.JPanel {
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
-            } 
-            
+            }
+
         }
-        
+
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_buttonConfirmActionPerformed

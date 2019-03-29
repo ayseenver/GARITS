@@ -149,10 +149,19 @@ public class StockControl extends javax.swing.JPanel {
     private void AddPartLow() {
         String selected = listLowStock.getSelectedValue();
 
-        String[] parts = selected.split(", ");
 
-        String partName = parts[0];
-        String vType = parts[1];
+        String[] parts = selected.split(", Quantity: ");
+        String partName = parts[0]; //Exhaust, complete box, Estate
+        String[] nameParts = partName.split(", ");
+        String vType;
+
+        if (nameParts.length == 2) {
+            partName = nameParts[0];
+            vType = nameParts[1];
+        } else {
+            partName = nameParts[0] + ", " + nameParts[1];
+            vType = nameParts[2];
+        }
 
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
 
