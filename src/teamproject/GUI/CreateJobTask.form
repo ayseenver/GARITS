@@ -157,8 +157,8 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="Service"/>
-            <StringItem index="1" value="MoT"/>
+            <StringItem index="0" value="MoT"/>
+            <StringItem index="1" value="Service"/>
             <StringItem index="2" value="Repair"/>
           </StringArray>
         </Property>

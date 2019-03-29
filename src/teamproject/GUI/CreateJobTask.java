@@ -82,14 +82,16 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void GetJobType() {
         jobType = jobTypeCombo.getSelectedItem().toString();
+        System.out.println(jobType);
         if (jobType.equalsIgnoreCase("Service")) {
             jobType = "defaultServiceJob";
         }
-        if (jobType.equalsIgnoreCase("MoT")) {
+        else if (jobType.equalsIgnoreCase("MoT")) {
             jobType = "defaultMoTJob";
         } else {
             jobType = "Repair";
         }
+        System.out.println(jobType);
     }
 
     private void UpdateBayList() {
@@ -320,7 +322,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelJobType.setText("Job Type:");
         add(labelJobType, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 520, -1, -1));
 
-        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT", "Repair" }));
+        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Repair" }));
         jobTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jobTypeComboActionPerformed(evt);
