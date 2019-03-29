@@ -134,8 +134,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setLocation(490, 525);
         this.buttonReport.setLocation(490, 580);
         this.buttonTaskList.setLocation(490, 635);
-        
-        AlertTimer at = new AlertTimer();
+       
     }
 
     //Mechanic View
