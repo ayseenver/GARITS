@@ -107,7 +107,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 1 month
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted > date('now', '-1 month') "
+                    + "(select jobID from job where dateCompleted <= date('now', '-1 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -137,7 +137,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 2 months
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted > date('now', '-2 month') "
+                    + "(select jobID from job where dateCompleted <= date('now', '-2 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -167,7 +167,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 3 months
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted > date('now', '-3 month') "
+                    + "(select jobID from job where dateCompleted <= date('now', '-3 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
