@@ -33,6 +33,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     String bayType;
     String bayID;
     String jobType;
+    String defaultJobType;
     Job job;
     Vehicle v;
     Customer c;
@@ -46,7 +47,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
         this.bayType = "MoT inspection";
-        this.jobType = "defaultServiceJob";
+        this.defaultJobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
         initComponents();
@@ -82,16 +83,14 @@ public class CreateJobTask extends javax.swing.JPanel {
 
     private void GetJobType() {
         jobType = jobTypeCombo.getSelectedItem().toString();
-        System.out.println(jobType);
         if (jobType.equalsIgnoreCase("Service")) {
-            jobType = "defaultServiceJob";
+            defaultJobType = "defaultServiceJob";
         }
         else if (jobType.equalsIgnoreCase("MoT")) {
-            jobType = "defaultMoTJob";
+            defaultJobType = "defaultMoTJob";
         } else {
-            jobType = "Repair";
+            defaultJobType = "Repair";
         }
-        System.out.println(jobType);
     }
 
     private void UpdateBayList() {
@@ -143,7 +142,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
         try {
             if (!jobType.equalsIgnoreCase("Repair")) {
-                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 0");
+                this.rs = statement.executeQuery("select * from Task where " + defaultJobType + " = 0");
             } else {
                 this.rs = statement.executeQuery("select * from Task");
             }
@@ -194,7 +193,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void ShowRequiredTaskList() {
         try {
             if (!jobType.equalsIgnoreCase("Repair")) {
-                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 1");
+                this.rs = statement.executeQuery("select * from Task where " + defaultJobType + " = 1");
 
                 listRequiredTasks.removeAll();
                 requiredTasks.clear();
