@@ -90,9 +90,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
 
         ArrayList<String> tasks = new ArrayList<>();
-        tasks.add("MoT");
-        tasks.add("Service");
-        tasks.add("Repair");
         tasks.add("Parts");
 
         //add all tasks to task list
@@ -189,17 +186,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
         } else if (type.equals("Variable")) {
-            double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
-            double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
             double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
-            double repairPercentage = Double.parseDouble(discountDetail.get("Repair"));
 
             //create a variable discount
             try {
-                String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
-                        + "sparePartPercentage, repairPercentage) "
-                        + "values (" + motPercentage + ", " + servicePercentage + ", "
-                        + partPercentage + ", " + repairPercentage + ")";
+                String sql = "INSERT into variablediscount (sparePartPercentage) "
+                        + "values (" + partPercentage + ")";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -425,17 +417,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
                     System.err.println(e.getMessage());
                 }
             } else if (type.equals("Variable")) {
-                double motPercentage = Double.parseDouble(discountDetail.get("MoT"));
-                double servicePercentage = Double.parseDouble(discountDetail.get("Service"));
                 double partPercentage = Double.parseDouble(discountDetail.get("Parts"));
-                double repairPercentage = Double.parseDouble(discountDetail.get("Repair"));
 
                 //create a variable discount
                 try {
-                    String sql = "INSERT into variablediscount (MoTPercentage, servicePercentage, "
-                            + "sparePartPercentage, repairPercentage) "
-                            + "values (" + motPercentage + ", " + servicePercentage + ", "
-                            + partPercentage + ", " + repairPercentage + ")";
+                    String sql = "INSERT into variablediscount (sparePartPercentage) "
+                            + "values (" + partPercentage + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);

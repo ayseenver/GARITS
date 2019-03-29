@@ -413,33 +413,6 @@ public class Invoice extends javax.swing.JPanel {
     }
 
     private void VariableDiscount(String variableID) {
-        //get the job type
-        try {
-            String sql = ("select type from job where jobID = " + jobNumber);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String jobType = "";
-        try {
-            while (rs.next()) {
-                jobType = rs.getString("type");
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //put "percentage" on the end to get the column we need to look for.
-        //e.g; Servicepercentage
-        jobType += "percentage";
-
         try {
             String sql = ("select * from variableDiscount where discountID = " + variableID);
             PreparedStatement ps = null;
@@ -453,12 +426,10 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        //get the percentage discount for this type of job, and the part percentage
-        double jobPercentage = 0.0;
+        //get the percentage discount for parts
         double partPercentage = 0.0;
         try {
             while (rs.next()) {
-                jobPercentage = Double.parseDouble(rs.getString(jobType));
                 partPercentage = Double.parseDouble(rs.getString("SparePartpercentage"));
             }
         } catch (SQLException e) {
@@ -545,7 +516,7 @@ public class Invoice extends javax.swing.JPanel {
             }
         }
 
-        //now we have all of the tasks and their percentages, and the overall discount
+        //now we have all of the tasks and their percentages
         //get all of the parts associated with this job
         try {
             String sql = ("select * from job_part_record where jobjobID = " + jobNumber);
@@ -597,7 +568,7 @@ public class Invoice extends javax.swing.JPanel {
             }
         }
 
-        //now has: total part cost, tasks and their percentages, overall job percentage
+        //now has: total part cost, tasks and their percentages
         //get the total cost for this job
         try {
             String sql = ("select * from job where jobID = " + jobNumber);
@@ -665,9 +636,6 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         totalCost += newTaskPrice;
-
-        //finally, apply overall discount
-        totalCost = totalCost * (1 - (jobPercentage / 100));
 
         //update the total cost of the job, taking into account the discounted price
         try {
