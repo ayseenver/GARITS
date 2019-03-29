@@ -28,7 +28,6 @@ public class AutomaticBackups implements Runnable {
         connect();
         backupDatabase();
         closeConnection();
-        System.out.println("done");
     }
 
     private void connect() {

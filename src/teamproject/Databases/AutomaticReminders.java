@@ -107,7 +107,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 1 month
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted = date('now', '-1 month') \n"
+                    + "(select jobID from job where dateCompleted > date('now', '-1 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -137,7 +137,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 2 months
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted = date('now', '-2 month') \n"
+                    + "(select jobID from job where dateCompleted > date('now', '-2 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -167,7 +167,7 @@ public class AutomaticReminders implements Runnable {
         //get all invoices overdue payment by 3 months
         try {
             this.rs = connection.createStatement().executeQuery("select * from invoice where JobjobID in "
-                    + "(select jobID from job where dateCompleted = date('now', '-3 month') \n"
+                    + "(select jobID from job where dateCompleted > date('now', '-3 month') "
                     + "and jobID not in (select jobjobID from payment))");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -178,7 +178,7 @@ public class AutomaticReminders implements Runnable {
                 //insert this job into the reminder table with reminder number 3
                 try {
                     String sql = ("INSERT INTO paymentReminder(Invoiceinvoicenumber, reminderNumber, deleted) "
-                            + "VALUES (" + rs.getString("invoiceNumber") + ", 3, 0)");
+                            + "VALUES (" + rs.getString("invoiceNumber") + ", 3, 0) ");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -193,6 +193,7 @@ public class AutomaticReminders implements Runnable {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        System.out.println("done");
     }
 
     private void closeConnection() {

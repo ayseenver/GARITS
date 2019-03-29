@@ -37,7 +37,6 @@ public class LogIn extends javax.swing.JPanel {
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Timer t = new Timer();
 
         connection = db.connect();
         statement = db.getStatement();
@@ -70,11 +69,6 @@ public class LogIn extends javax.swing.JPanel {
         labelPassword.setText("Password:");
 
         textFieldUserName.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldUserName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserNameActionPerformed(evt);
-            }
-        });
 
         buttonSignin.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonSignin.setText("Sign In");
@@ -135,10 +129,6 @@ public class LogIn extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void textFieldUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserNameActionPerformed
-
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
         String username = this.textFieldUserName.getText();
         String password = new String(this.textFieldPassword.getPassword());
@@ -161,6 +151,7 @@ public class LogIn extends javax.swing.JPanel {
                     JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                     f.dispose();
                     db.closeConnection(connection);
+                    Timer t = new Timer();
                     new MainMenu(username);
                 }
             }
