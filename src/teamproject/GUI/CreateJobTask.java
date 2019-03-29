@@ -33,6 +33,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     String bayType;
     String bayID;
     String jobType;
+    String defaultJobType;
     Job job;
     Vehicle v;
     Customer c;
@@ -46,7 +47,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
         this.bayType = "MoT inspection";
-        this.jobType = "defaultServiceJob";
+        this.defaultJobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
         initComponents();
@@ -83,12 +84,12 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void GetJobType() {
         jobType = jobTypeCombo.getSelectedItem().toString();
         if (jobType.equalsIgnoreCase("Service")) {
-            jobType = "defaultServiceJob";
+            defaultJobType = "defaultServiceJob";
         }
-        if (jobType.equalsIgnoreCase("MoT")) {
-            jobType = "defaultMoTJob";
+        else if (jobType.equalsIgnoreCase("MoT")) {
+            defaultJobType = "defaultMoTJob";
         } else {
-            jobType = "Repair";
+            defaultJobType = "Repair";
         }
     }
 
@@ -141,7 +142,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
         try {
             if (!jobType.equalsIgnoreCase("Repair")) {
-                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 0");
+                this.rs = statement.executeQuery("select * from Task where " + defaultJobType + " = 0");
             } else {
                 this.rs = statement.executeQuery("select * from Task");
             }
@@ -192,7 +193,7 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void ShowRequiredTaskList() {
         try {
             if (!jobType.equalsIgnoreCase("Repair")) {
-                this.rs = statement.executeQuery("select * from Task where " + jobType + " = 1");
+                this.rs = statement.executeQuery("select * from Task where " + defaultJobType + " = 1");
 
                 listRequiredTasks.removeAll();
                 requiredTasks.clear();
@@ -320,7 +321,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelJobType.setText("Job Type:");
         add(labelJobType, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 520, -1, -1));
 
-        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT", "Repair" }));
+        jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Repair" }));
         jobTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jobTypeComboActionPerformed(evt);

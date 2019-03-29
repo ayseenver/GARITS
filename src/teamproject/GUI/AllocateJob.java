@@ -190,11 +190,6 @@ public class AllocateJob extends javax.swing.JPanel {
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -248,20 +243,26 @@ public class AllocateJob extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
 
-            //go to main menu
-            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-            f.dispose();
-            db.closeConnection(connection);
-            new MainMenu(username);
+            ShowUnallocatedJobs();
+
+            ArrayList<String> mechs = new ArrayList<>();
+            mechArray = CreateArray(mechs);
+
+            listMechanics.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() {
+                    return mechArray.length;
+                }
+
+                public String getElementAt(int i) {
+                    return mechArray[i];
+                }
+            });
+            
         } else {
             String mess = "Select a mechanic";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
-
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -284,7 +285,6 @@ public class AllocateJob extends javax.swing.JPanel {
             String[] jobParts = job.split(", ");
             String[] idParts = jobParts[0].split(": ");
             jobID = Integer.parseInt(idParts[1]);
-            System.out.println("ID: " + jobID);
 
             ShowMechanics();
         } else {
