@@ -19,7 +19,7 @@ public class CustomerList extends javax.swing.JPanel {
     private ResultSet rsC;
     private ResultSet rsD;
     private ResultSet rs;
-     private ResultSet rsP;
+    private ResultSet rsP;
     private Statement statement;
     String[] nameArray;
     String[] detailArray;
@@ -76,14 +76,22 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
     }
+
+    private void ShowSelectedCustomersOverview() {
+        GetSelectedCustomer();
+        textAreaCustomerOverview.setText("Date: " + c.getDateCreated() + '\n' + "Name: " + c.getName() + '\n'
+                + "Address: " + c.getAddress() + '\n' + "Post Code: " + c.getPostCode() + '\n' + "Tel.: " + c.getTelephoneNumber()
+                + '\n' + "Mobile: " + c.getMobileNumber() + '\n' + "Email: " + c.getEmailAddress());
+    }
+
     private void ShowPayCustomer() {
         try {
             this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
                     + "(select ID from Customer where name = '" + listCustomers.getSelectedValue() + "')");
-            
+
             String configuredPayLater = rsP.getString("ConfiguredPayLater");
             System.out.println(configuredPayLater);
-            
+
             if (configuredPayLater.equals("1")) {
                 buttonConfirmPayment.setVisible(true);
                 labelPayCustomer.setVisible(true);
@@ -97,6 +105,7 @@ public class CustomerList extends javax.swing.JPanel {
 
         }
     }
+
     private String[] CreateArray(ArrayList<String> customers) {
         String[] newArray = new String[customers.size()];
         newArray = customers.toArray(newArray);
@@ -153,6 +162,11 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        try {
+            c.setDateCreated(rsC.getString("dateCreated"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -178,9 +192,12 @@ public class CustomerList extends javax.swing.JPanel {
         labelPayCustomer = new javax.swing.JLabel();
         labelSelectCustomer = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
-        listDetails = new javax.swing.JList<>();
+        listVehicleDetails = new javax.swing.JList<>();
         buttonDone = new javax.swing.JButton();
         buttonEditVehicles = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textAreaCustomerOverview = new javax.swing.JTextArea();
+        labelCustomerDetail1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -193,7 +210,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
 
         labelCustomerDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelCustomerDetail.setText("Vehicle Details: ");
+        labelCustomerDetail.setText("Customer Overview:");
         add(labelCustomerDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 190, -1, -1));
 
         buttonSearchCustomer.setText("Search");
@@ -228,7 +245,7 @@ public class CustomerList extends javax.swing.JPanel {
 
         labelVariableCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelVariableCustomer.setText("*only customer that have flexible discount ");
-        add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 650, -1, -1));
+        add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -284,10 +301,10 @@ public class CustomerList extends javax.swing.JPanel {
         labelSelectCustomer.setText("Select Customer:");
         add(labelSelectCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
 
-        listDetails.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane11.setViewportView(listDetails);
+        listVehicleDetails.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane11.setViewportView(listVehicleDetails);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 220, 560, 390));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, 560, 190));
 
         buttonDone.setText("Done");
         buttonDone.addActionListener(new java.awt.event.ActionListener() {
@@ -304,6 +321,17 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
         add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 620, -1, -1));
+
+        textAreaCustomerOverview.setColumns(20);
+        textAreaCustomerOverview.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        textAreaCustomerOverview.setRows(5);
+        jScrollPane1.setViewportView(textAreaCustomerOverview);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 220, 560, 180));
+
+        labelCustomerDetail1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelCustomerDetail1.setText("Vehicle Details: ");
+        add(labelCustomerDetail1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -348,8 +376,8 @@ public class CustomerList extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-
-            listDetails.removeAll();
+            ShowSelectedCustomersOverview();
+            listVehicleDetails.removeAll();
             ArrayList<String> vehicle = new ArrayList<>();
 
             try {
@@ -367,7 +395,7 @@ public class CustomerList extends javax.swing.JPanel {
             }
             detailArray = CreateArray(vehicle);
 
-            listDetails.setModel(new javax.swing.AbstractListModel<String>() {
+            listVehicleDetails.setModel(new javax.swing.AbstractListModel<String>() {
                 public int getSize() {
                     return detailArray.length;
                 }
@@ -475,16 +503,19 @@ public class CustomerList extends javax.swing.JPanel {
     private javax.swing.JButton buttonSearchCustomer;
     private javax.swing.JButton buttonView;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JLabel labelCustomerDetail;
+    private javax.swing.JLabel labelCustomerDetail1;
     private javax.swing.JLabel labelCustomers;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelPayCustomer;
     private javax.swing.JLabel labelSelectCustomer;
     private javax.swing.JLabel labelVariableCustomer;
     private javax.swing.JList<String> listCustomers;
-    private javax.swing.JList<String> listDetails;
+    private javax.swing.JList<String> listVehicleDetails;
+    private javax.swing.JTextArea textAreaCustomerOverview;
     private javax.swing.JTextField textFieldSearchCustomer;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
