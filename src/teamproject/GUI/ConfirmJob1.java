@@ -20,7 +20,7 @@ import teamproject.Databases.DB_ImplClass;
  *
  * @author ahmetsesli
  */
-public class ConfirmJob extends javax.swing.JPanel {
+public class ConfirmJob1 extends javax.swing.JPanel {
 
     private String username;
     Vehicle v;
@@ -38,7 +38,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public ConfirmJob(String username, Vehicle v, Customer c, ArrayList<String> tasks, String bayID, String jobType) {
+    public ConfirmJob1(String username, Vehicle v, Customer c, ArrayList<String> tasks, String bayID, String jobType) {
         this.username = username;
         this.v = v;
         this.c = c;
@@ -316,6 +316,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonCreateJob;
+    private javax.swing.JButton buttonCreateJob1;
     private javax.swing.JButton buttonExit;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
