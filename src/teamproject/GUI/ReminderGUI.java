@@ -343,7 +343,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         textFieldSearchReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
-        listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(listReminders);
 
@@ -393,6 +393,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 180, -1, -1));
 
         textAreaDescription.setColumns(20);
+        textAreaDescription.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         textAreaDescription.setLineWrap(true);
         textAreaDescription.setRows(5);
         jScrollPane1.setViewportView(textAreaDescription);

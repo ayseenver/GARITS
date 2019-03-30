@@ -31,6 +31,7 @@ public class Invoice extends javax.swing.JPanel {
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
+    private ResultSet rsP;
     String[] invoiceArray;
     String jobNumber;
     String invoiceNumber;
@@ -59,7 +60,7 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         ShowAllInvoices();
-
+        buttonPayLater.setVisible(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -161,7 +162,7 @@ public class Invoice extends javax.swing.JPanel {
                 int quantity = Integer.parseInt(rs.getString("quantity"));
                 double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
                 // read the result set. Get part name description.
-                String part = rs.getString("partName") 
+                String part = rs.getString("partName")
                         + ", £" + sellingPrice + ", quantity: " + quantity;
                 totalPartsCost += (sellingPrice * quantity);
                 result += (part + "\n");
@@ -170,7 +171,7 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        result += ("Total parts cost: £" + String.format("%.2f",totalPartsCost) + "\n");
+        result += ("Total parts cost: £" + String.format("%.2f", totalPartsCost) + "\n");
 
         //get hourly rate for this mechanic
         try {
@@ -197,7 +198,7 @@ public class Invoice extends javax.swing.JPanel {
 
         double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
         result += ("\nTotal labour cost: £" + String.format("%.2f", (hourlyRate * totalHours)) + "\n");
-        result += ("\nVAT: £" + String.format("%.2f",totalCost * 0.2));
+        result += ("\nVAT: £" + String.format("%.2f", totalCost * 0.2));
         result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2));
         return result;
     }
@@ -1008,6 +1009,7 @@ public class Invoice extends javax.swing.JPanel {
             GetJobAndInvoiceNumber();
             if (!jobNumber.equals("null")) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+                ShowPayCustomer();
             } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
@@ -1016,7 +1018,28 @@ public class Invoice extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
+    private void ShowPayCustomer() {
+        try {
+            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber="
+                    + "(select VehicleRegistrationNumber from Job where jobID=" + jobNumber + ")))");
 
+            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+            System.out.println(configuredPayLater);
+
+            if (configuredPayLater.equals("1")) {
+                buttonPayLater.setVisible(true);
+
+            } else {
+                buttonPayLater.setVisible(false);
+
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {

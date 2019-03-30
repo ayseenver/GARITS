@@ -113,6 +113,13 @@ public class JobList extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         buttonSelectJob = new javax.swing.JButton();
         comboStatus = new javax.swing.JComboBox<>();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        listAvailableBays = new javax.swing.JList<>();
+        labelAvailableBay = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -145,7 +152,7 @@ public class JobList extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(listJobList);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 400));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 230));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -173,13 +180,13 @@ public class JobList extends javax.swing.JPanel {
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
 
         buttonSelectJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonSelectJob.setText("Select Job");
+        buttonSelectJob.setText("Show Detail");
         buttonSelectJob.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSelectJobActionPerformed(evt);
             }
         });
-        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 630, -1, -1));
+        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 450, -1, -1));
 
         comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Created", "Allocated", "Completed" }));
         comboStatus.addActionListener(new java.awt.event.ActionListener() {
@@ -188,6 +195,28 @@ public class JobList extends javax.swing.JPanel {
             }
         });
         add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 190, -1, -1));
+
+        listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane11.setViewportView(listAvailableBays);
+
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 510, 130, 100));
+
+        labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelAvailableBay.setText("Bay Available:");
+        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 490, -1, -1));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 510, 1010, 130));
+
+        jButton1.setText("Allocate to Bay");
+        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 610, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        jLabel1.setText("Job Overview:");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -273,9 +302,16 @@ public class JobList extends javax.swing.JPanel {
     private javax.swing.JButton buttonSearch;
     private javax.swing.JButton buttonSelectJob;
     private javax.swing.JComboBox<String> comboStatus;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel labelAvailableBay;
     private javax.swing.JLabel labelJobList;
     private javax.swing.JLabel lblLoggedIn;
+    private javax.swing.JList<String> listAvailableBays;
     private javax.swing.JList<String> listJobList;
     private javax.swing.JTextField textFieldSearch;
     private javax.swing.JTextField textFieldUserDetails;
