@@ -76,6 +76,7 @@ public class Invoice extends javax.swing.JPanel {
                 jobNumber = jobParts[1];
             } catch (Exception e) {
                 System.err.println(e.getMessage());
+                jobNumber = "";
             }
         } else {
             String mess = "Select an invoice";
@@ -161,7 +162,7 @@ public class Invoice extends javax.swing.JPanel {
                 int quantity = Integer.parseInt(rs.getString("quantity"));
                 double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
                 // read the result set. Get part name description.
-                String part = rs.getString("partName") 
+                String part = rs.getString("partName")
                         + ", £" + sellingPrice + ", quantity: " + quantity;
                 totalPartsCost += (sellingPrice * quantity);
                 result += (part + "\n");
@@ -170,7 +171,7 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        result += ("Total parts cost: £" + String.format("%.2f",totalPartsCost) + "\n");
+        result += ("Total parts cost: £" + String.format("%.2f", totalPartsCost) + "\n");
 
         //get hourly rate for this mechanic
         try {
@@ -197,7 +198,7 @@ public class Invoice extends javax.swing.JPanel {
 
         double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
         result += ("\nTotal labour cost: £" + String.format("%.2f", (hourlyRate * totalHours)) + "\n");
-        result += ("\nVAT: £" + String.format("%.2f",totalCost * 0.2));
+        result += ("\nVAT: £" + String.format("%.2f", totalCost * 0.2));
         result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2));
         return result;
     }
@@ -283,11 +284,10 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-        invoices.add("\n");
-
         //get all invoices for part sales
         try {
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID is null");
+            this.rs = statement.executeQuery("select * from Invoice where invoicenumber in (select invoiceinvoicenumber from "
+                    + "invoice_sparepart)");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -1006,10 +1006,10 @@ public class Invoice extends javax.swing.JPanel {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
             GetJobAndInvoiceNumber();
-            if (!jobNumber.equals("null")) {
-                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
-            } else {
+            if (jobNumber.isEmpty()) {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
+            } else {
+                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
             }
         } else {
             String mess = "Select an invoice";
