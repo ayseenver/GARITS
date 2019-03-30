@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -764,6 +765,9 @@ public class Job extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
+                textFieldTime.setText("");
+                String mess = "Modified successfully!";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -1305,6 +1309,9 @@ public class Job extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
+                textFieldCost.setText("");
+                String mess = "Modified successfully!";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());

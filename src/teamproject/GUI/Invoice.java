@@ -110,6 +110,7 @@ public class Invoice extends javax.swing.JPanel {
                 // read the result set. Get task description.
                 String task = i + ") " + rs.getString("description");
                 result += (task + "\n");
+                ++i;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
