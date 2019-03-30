@@ -274,6 +274,9 @@
                   <Font name="Lucida Grande" size="18" style="0"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listTasksCarriedOutMouseClicked"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
@@ -307,7 +310,7 @@
         <Component class="javax.swing.JTextField" name="textFieldTime">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="390" y="280" width="33" height="-1"/>
+              <AbsoluteConstraints x="390" y="280" width="50" height="20"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -422,7 +425,7 @@
         <Component class="javax.swing.JTextField" name="textFieldCost">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="390" y="300" width="33" height="-1"/>
+              <AbsoluteConstraints x="390" y="300" width="50" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>

@@ -516,6 +516,11 @@ public class Job extends javax.swing.JPanel {
         panelTask.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listTasksCarriedOut.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listTasksCarriedOutMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(listTasksCarriedOut);
 
         panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 200));
@@ -524,7 +529,7 @@ public class Job extends javax.swing.JPanel {
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
-        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 33, -1));
+        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 50, 20));
 
         labelTime.setText("Update Time:");
         panelTask.add(labelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, -1, -1));
@@ -577,7 +582,7 @@ public class Job extends javax.swing.JPanel {
             }
         });
         panelTask.add(buttonUpdateTaskCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, -1, 20));
-        panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 300, 33, -1));
+        panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 300, 50, -1));
 
         labelTime1.setText("Update Cost:");
         panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
@@ -751,26 +756,37 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_updateJobButtonActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
+        String selected = listTasksCarriedOut.getSelectedValue();
         String sql = "";
         String hours = textFieldTime.getText();
-        try {
-            if (!hours.equals("")) {
-                sql = ("update actual_task set actualHours = " + Double.parseDouble(hours) + " "
-                        + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '"
-                        + listTasksCarriedOut.getSelectedValue() + "')");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        String message = "Task hour updated";
+        if (selected != null) {
+            try {
+                if (!hours.equals("")) {
+                    sql = ("update actual_task set actualHours = " + Double.parseDouble(hours) + " "
+                            + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '"
+                            + selected + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+
+                } else {
+                    message = "Select a task and input the hour(s)";
                 }
-                ps.executeUpdate();
-                textFieldTime.setText("");
-                String mess = "Modified successfully!";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
+                JOptionPane.showMessageDialog(new JFrame(), message);
+                ListAllTasks();
+                ListActualTasks();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+        } else {
+            message = "Select a task";
+            JOptionPane.showMessageDialog(new JFrame(), message);
         }
     }//GEN-LAST:event_buttonUpdateTaskTimeActionPerformed
 
@@ -909,6 +925,8 @@ public class Job extends javax.swing.JPanel {
             ListAllTasks();
             ListActualTasks();
         }
+        textFieldTime.setText("");
+        textFieldCost.setText("");
     }//GEN-LAST:event_addTaskButtonActionPerformed
 
     private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
@@ -934,6 +952,8 @@ public class Job extends javax.swing.JPanel {
             ListAllTasks();
             ListActualTasks();
         }
+        textFieldTime.setText("");
+        textFieldCost.setText("");
     }//GEN-LAST:event_removeTaskButtonActionPerformed
 
     private void addPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPartButtonActionPerformed
@@ -1295,28 +1315,73 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_jobCompletedButtonActionPerformed
 
     private void buttonUpdateTaskCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskCostActionPerformed
+        String selected = listTasksCarriedOut.getSelectedValue();
         String sql = "";
         String cost = textFieldCost.getText();
-        try {
-            if (!cost.equals("")) {
-                sql = ("update actual_task set actualCost = " + Double.parseDouble(cost) + " "
-                        + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '"
-                        + listTasksCarriedOut.getSelectedValue() + "')");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        String message = "Task Cost Updated";
+        if (selected != null) {
+            try {
+                if (!cost.equals("")) {
+                    sql = ("update actual_task set actualCost = " + Double.parseDouble(cost) + " "
+                            + "where JobjobID = " + jobID + " and TasktaskID = (select taskID from task where description = '"
+                            + selected + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } else {
+                    message = "Select a task and input the cost";
                 }
-                ps.executeUpdate();
-                textFieldCost.setText("");
-                String mess = "Modified successfully!";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
+                JOptionPane.showMessageDialog(new JFrame(), message);
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            message = "Select a task";
+            JOptionPane.showMessageDialog(new JFrame(), message);
+        }
+    }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
+
+    private void listTasksCarriedOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTasksCarriedOutMouseClicked
+
+        String sql = "";
+
+        try {
+            sql = ("select * from Actual_Task where JobjobID = " + jobID
+                    + " and TasktaskID = (select taskID from task where description is '"
+                    + listTasksCarriedOut.getSelectedValue() + "')");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rs = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        try {
+            while (rs.next()) {
+                // read the result set
+                String actual = rs.getString("actualHours") + ":" + rs.getString("actualCost");
+                String actualHours = actual.substring(0, actual.indexOf(":"));
+                String actualCost = actual.substring(actual.lastIndexOf(":") + 1, actual.length());
+                textFieldCost.setText(actualCost);
+                textFieldTime.setText(actualHours);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-    }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
+
+    }//GEN-LAST:event_listTasksCarriedOutMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
