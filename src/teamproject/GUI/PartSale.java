@@ -399,9 +399,22 @@ public class PartSale extends javax.swing.JPanel {
 
         if (selected != null) {
             if (!(quantity.isEmpty())) {
+
+                String[] parts = selected.split(", Quantity: ");
+                String partName = parts[0]; //Exhaust, complete box, Estate
+                String[] nameParts = partName.split(", ");
+                String vType;
+
+                if (nameParts.length == 2) {
+                    partName = nameParts[0];
+                    vType = nameParts[1];
+                } else {
+                    partName = nameParts[0] + ", " + nameParts[1];
+                    vType = nameParts[2];
+                }
+
                 int i = order.indexOf(selected);
-                String[] parts = selected.split(", ");
-                selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+                selected = partName + ", " + vType + ", Quantity: " + quantity;
                 order.set(i, selected);
             }
             UpdateOrder();
