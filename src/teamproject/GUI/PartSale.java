@@ -89,9 +89,18 @@ public class PartSale extends javax.swing.JPanel {
     private void AddPart() {
         String selected = listStock.getSelectedValue();
 
-        String[] parts = selected.split(", ");
-        String partName = parts[0];
-        String vType = parts[1];
+        String[] parts = selected.split(", Quantity: ");
+        String partName = parts[0]; //Exhaust, complete box, Estate
+        String[] nameParts = partName.split(", ");
+        String vType;
+
+        if (nameParts.length == 2) {
+            partName = nameParts[0];
+            vType = nameParts[1];
+        } else {
+            partName = nameParts[0] + ", " + nameParts[1];
+            vType = nameParts[2];
+        }
 
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
 
@@ -290,7 +299,7 @@ public class PartSale extends javax.swing.JPanel {
 
         //create a new invoice
         try {
-            sql = ("INSERT INTO Invoice (dateProduced) VALUES (date('now'))");
+            sql = ("INSERT INTO Invoice (dateProduced, paylater) VALUES (date('now'), 0)");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -303,11 +312,19 @@ public class PartSale extends javax.swing.JPanel {
         }
 
         for (String s : order) {
-            String[] parts = s.split(", ");
-            String partName = parts[0];
-            String vType = parts[1];
-            String[] qParts = parts[2].split(": ");
-            int quantity = Integer.parseInt(qParts[1]);
+            String[] parts = s.split(", Quantity: ");
+            String partName = parts[0]; //Exhaust, complete box, Estate
+            String[] nameParts = partName.split(", ");
+            String vType;
+
+            if (nameParts.length == 2) {
+                partName = nameParts[0];
+                vType = nameParts[1];
+            } else {
+                partName = nameParts[0] + ", " + nameParts[1];
+                vType = nameParts[2];
+            }
+            quantity = Integer.parseInt(parts[1]);
 
             //create a new part invoice for this part
             try {
