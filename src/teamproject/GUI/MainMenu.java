@@ -92,12 +92,13 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonAllocateJob.setVisible(false);
         this.buttonTaskList.setVisible(false);
 
+        // changes made in this section
         this.buttonCreateJob.setLocation(490, 260);
-        this.buttonJobList.setLocation(490, 320);
-        this.buttonInvoices.setLocation(490, 380);
-        this.buttonReminders.setLocation(490, 440);
-        this.buttonStockControl.setLocation(490, 500);
-        this.buttonCustomers.setLocation(490, 560);
+        this.buttonCustomers.setLocation(490, 320);
+        this.buttonJobList.setLocation(490, 380);
+        this.buttonInvoices.setLocation(490, 440);
+        this.buttonReminders.setLocation(490, 500);
+        this.buttonStockControl.setLocation(490, 560);
 
     }
 
@@ -105,7 +106,6 @@ public class MainMenu extends javax.swing.JPanel {
     public void foreperson_menu() {
         this.buttonDatabase.setVisible(false);
         this.buttonUserAccount.setVisible(false);
-        this.buttonCustomers.setVisible(false);
         this.buttonReport.setVisible(false);
         this.buttonTaskList.setVisible(false);
 
@@ -113,9 +113,10 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonAllocateJob.setLocation(490, 280);
         this.buttonJobList.setLocation(490, 340);
         this.buttonMyJobs.setLocation(490, 400);
-        this.buttonInvoices.setLocation(490, 460);
-        this.buttonStockControl.setLocation(490, 520);
-        this.buttonReminders.setLocation(490, 580);
+        this.buttonCustomers.setLocation(490, 460); // added 
+        this.buttonInvoices.setLocation(490, 520);
+        this.buttonStockControl.setLocation(490, 580);
+        this.buttonReminders.setLocation(490, 630);
 
     }
 
@@ -134,7 +135,7 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonCustomers.setLocation(490, 525);
         this.buttonReport.setLocation(490, 580);
         this.buttonTaskList.setLocation(490, 635);
-       
+
     }
 
     //Mechanic View
