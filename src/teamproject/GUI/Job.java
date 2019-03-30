@@ -67,6 +67,7 @@ public class Job extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
     private void showJobDetails() {
         try {
             String sql = ("select v.RegistrationNumber, v.make, v.model,  c.name, j.datebookedIn , c.telephoneNumber "
@@ -87,6 +88,7 @@ public class Job extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
     }
+
     private void GetParts() {
         try {
             String sql = ("select * from sparepart where vehicleType = "
@@ -731,9 +733,35 @@ public class Job extends javax.swing.JPanel {
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
         }
-        ListAllParts();
+        
+        
+        
+        listAvailableParts.removeAll();
+        parts.clear();
+
+        //add all parts to available part list
+        try {
+            while (rs.next()) {
+                // read the result set
+                String part = rs.getString("partName") + ", Available: " + rs.getString("quantity");
+                parts.add(part);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        partArray = CreateArray(parts);
+
+        listAvailableParts.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return partArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return partArray[i];
+            }
+        });
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
