@@ -207,7 +207,7 @@ public class MainMenu extends javax.swing.JPanel {
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         lblMainMenu.setText("Main Menu");
         add(lblMainMenu);
-        lblMainMenu.setBounds(410, 40, 374, 92);
+        lblMainMenu.setBounds(410, 40, 410, 92);
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCreateJob.setText("Create Job");
@@ -297,11 +297,11 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(textFieldUserDetails);
-        textFieldUserDetails.setBounds(910, 10, 220, 30);
+        textFieldUserDetails.setBounds(940, 10, 190, 30);
 
         lblLoggedIn.setText("Logged In as:");
         add(lblLoggedIn);
-        lblLoggedIn.setBounds(820, 20, 66, 14);
+        lblLoggedIn.setBounds(820, 20, 90, 14);
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Logout");
