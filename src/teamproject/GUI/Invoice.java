@@ -60,6 +60,7 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         ShowAllInvoices();
+        showFlexibleDiscount();
         buttonPayLater.setVisible(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -946,23 +947,21 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
     private void showFlexibleDiscount() {
+        checkBoxPayWithCredit.setVisible(false);
+                labelFlexibleDiscountBrief.setVisible(false);
+                labelPayWithCredit.setVisible(false);
         CheckAccountHolder();
         String flexibleDiscount;
         try {
 
             flexibleDiscount = rs.getString("FlexibleDiscountdiscountID");
 
-            if (flexibleDiscount == null) {
+            if (flexibleDiscount != null) {
                 checkBoxPayWithCredit.setVisible(true);
                 labelFlexibleDiscountBrief.setVisible(true);
                 labelPayWithCredit.setVisible(true);
 
-            } else {
-                checkBoxPayWithCredit.setVisible(false);
-                labelFlexibleDiscountBrief.setVisible(false);
-                labelPayWithCredit.setVisible(false);
-
-            }
+            } 
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
