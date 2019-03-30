@@ -62,11 +62,31 @@ public class Job extends javax.swing.JPanel {
         GetActualParts();
         ListUsedParts();
         UpdateBayList();
+        showJobDetails();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
+    private void showJobDetails() {
+        try {
+            String sql = ("select v.RegistrationNumber, v.make, v.model,  c.name, j.datebookedIn , c.telephoneNumber "
+                    + "from customer c, job j, Vehicle v where  v.registrationNumber is (select VehicleRegistrationNumber from Job where jobId = " + jobID
+                    + ") and c.id = v.customerid and datebookedin is (select datebookedin from Job where jobID= " + jobID + ")");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rs = ps.executeQuery();
+            String details = "Vehicle Registraion No: " + rs.getString("registrationNumber") + '\t' + "Date Booked In: " + rs.getString("datebookedin")
+                    + '\n' + "Make: " + rs.getString("make") + "\t\t\t" + "Model: " + rs.getString("model") + '\n'
+                    + "Customer Name: " + rs.getString("name") + '\t' + "Tel.: " + rs.getString("telephoneNumber");
+            textAreaJobDetails.append(details);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
     private void GetParts() {
         try {
             String sql = ("select * from sparepart where vehicleType = "

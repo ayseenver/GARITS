@@ -66,7 +66,7 @@ public class AllocateJob extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set
                 String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Booked on: " + rs.getString("dateBookedIn");
+                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn");
                 jobs.add(job);
             }
         } catch (SQLException e) {
@@ -257,7 +257,7 @@ public class AllocateJob extends javax.swing.JPanel {
                     return mechArray[i];
                 }
             });
-            
+
         } else {
             String mess = "Select a mechanic";
             JOptionPane.showMessageDialog(new JFrame(), mess);

@@ -67,7 +67,7 @@ public class JobList extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set
                 String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Booked on: " + rs.getString("dateBookedIn");
+                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn");
                 jobs.add(job);
             }
         } catch (SQLException e) {
@@ -187,7 +187,7 @@ public class JobList extends javax.swing.JPanel {
                 comboStatusActionPerformed(evt);
             }
         });
-        add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 190, -1, -1));
+        add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 190, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
