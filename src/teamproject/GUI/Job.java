@@ -31,8 +31,6 @@ public class Job extends javax.swing.JPanel {
     String[] actualTaskArray;
     String[] partArray;
     String[] usedPartArray;
-    String bayID = "";
-    String[] bayArray;
     int jobID;
     String vehicleReg;
     Statement statement;
@@ -61,12 +59,12 @@ public class Job extends javax.swing.JPanel {
         ListAllParts();
         GetActualParts();
         ListUsedParts();
-        UpdateBayList();
         showJobDetails();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
     private void showJobDetails() {
         try {
             String sql = ("select v.RegistrationNumber, v.make, v.model,  c.name, j.datebookedIn , c.telephoneNumber "
@@ -80,13 +78,14 @@ public class Job extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
             String details = "Vehicle Registraion No: " + rs.getString("registrationNumber") + '\t' + "Date Booked In: " + rs.getString("datebookedin")
-                    + '\n' + "Make: " + rs.getString("make") + "\t\t\t" + "Model: " + rs.getString("model") + '\n'
+                    + '\n' + "Make: " + rs.getString("make") + "\t\t" + "Model: " + rs.getString("model") + '\n'
                     + "Customer Name: " + rs.getString("name") + '\t' + "Tel.: " + rs.getString("telephoneNumber");
             textAreaJobDetails.append(details);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
+
     private void GetParts() {
         try {
             String sql = ("select * from sparepart where vehicleType = "
@@ -232,89 +231,6 @@ public class Job extends javax.swing.JPanel {
         return newArray;
     }
 
-    private void UpdateBayList() {
-        try {
-            String sql = "select type from job where jobID = " + jobID;
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String jobType = "";
-        try {
-            while (rs.next()) {
-                jobType = rs.getString("type");
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        ArrayList<String> bays = new ArrayList<>();
-
-        if (jobType.equals("MoT")) {
-            //get all bays for this job type
-            try {
-                String sql = ("select * from Bay where type = 'MoT' and booked = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rs = ps.executeQuery();
-            } catch (SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.getMessage());
-            }
-        } else {
-            //get all bays for this job type
-            try {
-                String sql = ("select * from Bay where type = 'Repair' and booked = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rs = ps.executeQuery();
-            } catch (SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.getMessage());
-            }
-        }
-
-        //add bays to bay list
-        try {
-            while (rs.next()) {
-                // read the result set
-                String bay = rs.getString("bayID") + ": " + rs.getString("type");
-                bays.add(bay);
-            }
-        } catch (SQLException e) {
-        }
-
-        bayArray = CreateArray(bays);
-
-        listAvailableBays.setModel(new javax.swing.AbstractListModel<String>() {
-
-            public int getSize() {
-                return bayArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return bayArray[i];
-            }
-        }
-        );
-    }
 
     private void ListAllTasks() {
         listAvailableTasks.removeAll();
@@ -446,9 +362,6 @@ public class Job extends javax.swing.JPanel {
         sendYardButton = new javax.swing.JButton();
         yardCheckBox = new javax.swing.JCheckBox();
         jobCompletedButton = new javax.swing.JButton();
-        jScrollPane11 = new javax.swing.JScrollPane();
-        listAvailableBays = new javax.swing.JList<>();
-        labelAvailableBay = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -657,15 +570,6 @@ public class Job extends javax.swing.JPanel {
             }
         });
         add(jobCompletedButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
-
-        listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane11.setViewportView(listAvailableBays);
-
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 590, 220, 100));
-
-        labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelAvailableBay.setText("Bay Available:");
-        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 570, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed
@@ -739,38 +643,6 @@ public class Job extends javax.swing.JPanel {
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-
-        //insert the new bayID
-        bayID = listAvailableBays.getSelectedValue();
-        try {
-            if (!(bayID == null)) {
-                String[] bayParts = bayID.split(": ");
-                bayID = bayParts[0];
-                int bayIDInt = Integer.parseInt(bayID);
-                String sql = ("update job set baybayID = (select bayID from bay where bayID = " + bayIDInt + ") "
-                        + "where jobID = " + jobID);
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
-
-                //set the bay to booked
-                sql = ("update bay set booked = 1 where bayID = " + bayIDInt);
-                ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_updateJobButtonActionPerformed
@@ -1415,13 +1287,11 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JButton buttonUpdateTaskCost;
     private javax.swing.JButton buttonUpdateTaskTime;
     private javax.swing.JScrollPane jScrollPane10;
-    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JButton jobCompletedButton;
-    private javax.swing.JLabel labelAvailableBay;
     private javax.swing.JLabel labelAvailableParts;
     private javax.swing.JLabel labelAvailableTasks;
     private javax.swing.JLabel labelJob;
@@ -1432,7 +1302,6 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JLabel labelTime;
     private javax.swing.JLabel labelTime1;
     private javax.swing.JLabel lblAvailableParts1;
-    private javax.swing.JList<String> listAvailableBays;
     private javax.swing.JList<String> listAvailableParts;
     private javax.swing.JList<String> listAvailableTasks;
     private javax.swing.JList<String> listPartsUsed;
