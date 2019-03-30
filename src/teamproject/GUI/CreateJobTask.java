@@ -424,7 +424,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
             f.dispose();
             db.closeConnection(connection);
-            new ConfirmJob1(username, v, c, requiredTasks, bayID, jobType);
+            new ConfirmJob(username, v, c, requiredTasks, bayID, jobType);
         } else {
             String mess = "Select a job type and bay";
             JOptionPane.showMessageDialog(new JFrame(), mess);

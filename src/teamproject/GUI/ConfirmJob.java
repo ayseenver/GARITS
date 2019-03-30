@@ -45,7 +45,6 @@ public class ConfirmJob extends javax.swing.JPanel {
         this.requiredTasks = tasks;
         this.bayID = bayID;
         this.jobType = jobType;
-
         status = "Created";
         initComponents();
         JFrame frame = new JFrame();
@@ -56,6 +55,7 @@ public class ConfirmJob extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
+
         ShowTaskDetails();
         showJobDetails();
 
@@ -63,18 +63,17 @@ public class ConfirmJob extends javax.swing.JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void showJobDetails() {
-        String details = "Vehicle Registraion No: " + v.getRegistrationNumber() + '\t'
-                + '\n' + "Make: " + v.getMake() + "\t\t\t" + "Model: " + v.getModel() + '\n'
-                + "Customer Name: " + c.getName() + '\t' + "Tel.: " + c.getTelephoneNumber();
-        textAreaJobDetail.append(details);
-
-    }
-
     private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+ private void showJobDetails() {
+        String details = "Vehicle Registraion No: " + v.getRegistrationNumber() + '\n'
+                + "Make: " + v.getMake() + "\n" + "Model: " + v.getModel() + '\n'
+                + "Customer Name: " + c.getName() + '\n' + "Tel.: " + c.getTelephoneNumber();
+        textAreaJobDetail.append(details);
+
     }
 
     private void ShowTaskDetails() {
@@ -139,7 +138,7 @@ public class ConfirmJob extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
         }
-
+        
         //insert the estimated tasks into the actual task list
         AddEstimatedTasks();
     }
@@ -204,13 +203,13 @@ public class ConfirmJob extends javax.swing.JPanel {
         buttonCreateJob = new javax.swing.JButton();
         jScrollPane11 = new javax.swing.JScrollPane();
         listTasksRequired = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        textAreaJobDetail = new javax.swing.JTextArea();
         labelTasksRequired = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        textAreaJobDetail = new javax.swing.JTextArea();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -231,11 +230,18 @@ public class ConfirmJob extends javax.swing.JPanel {
         listTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listTasksRequired);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 330, 1180, 220));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, 1180, 220));
+
+        textAreaJobDetail.setColumns(20);
+        textAreaJobDetail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        textAreaJobDetail.setRows(5);
+        jScrollPane3.setViewportView(textAreaJobDetail);
+
+        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 1180, 190));
 
         labelTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelTasksRequired.setText("Tasks Required:");
-        add(labelTasksRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, -1, -1));
+        add(labelTasksRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -261,13 +267,6 @@ public class ConfirmJob extends javax.swing.JPanel {
             }
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
-
-        textAreaJobDetail.setColumns(20);
-        textAreaJobDetail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textAreaJobDetail.setRows(5);
-        jScrollPane4.setViewportView(textAreaJobDetail);
-
-        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, 1180, 90));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -298,7 +297,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     private javax.swing.JButton buttonCreateJob;
     private javax.swing.JButton buttonExit;
     private javax.swing.JScrollPane jScrollPane11;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelConfirmDetails;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelTasksRequired;
