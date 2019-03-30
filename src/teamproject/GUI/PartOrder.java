@@ -140,7 +140,7 @@ public class PartOrder extends javax.swing.JPanel {
             writer.println(textAreaPartsOrder.getText());
             writer.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }//GEN-LAST:event_buttonPrintActionPerformed
 
@@ -165,6 +165,7 @@ public class PartOrder extends javax.swing.JPanel {
 
         for (String s : order) {
             String[] parts = s.split(", Quantity: ");
+
             String partName = parts[0]; //Exhaust, complete box, Estate
             String[] nameParts = partName.split(", ");
             String vType;
@@ -179,7 +180,7 @@ public class PartOrder extends javax.swing.JPanel {
 
             String[] qParts = parts[1].split(", ");
             int quantity = Integer.parseInt(qParts[0]);
-            
+
             try {
                 sql = ("insert into sparePart_partOrder(SparePartpartID, PartOrderorderNumber, quantity)"
                         + " values ((select partID from sparepart where partName = '" + partName + "' and "

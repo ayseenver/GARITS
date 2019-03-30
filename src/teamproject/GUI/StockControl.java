@@ -135,10 +135,19 @@ public class StockControl extends javax.swing.JPanel {
 
     private void AddPartAll() {
         String selected = listStock.getSelectedValue();
-        String[] parts = selected.split(", ");
 
-        String partName = parts[0];
-        String vType = parts[1];
+        String[] parts = selected.split(", Quantity: ");
+        String partName = parts[0]; //Exhaust, complete box, Estate
+        String[] nameParts = partName.split(", ");
+        String vType;
+
+        if (nameParts.length == 2) {
+            partName = nameParts[0];
+            vType = nameParts[1];
+        } else {
+            partName = nameParts[0] + ", " + nameParts[1];
+            vType = nameParts[2];
+        }
 
         String partToOrder = partName + ", " + vType + ", Quantity: " + 1;
 
@@ -148,7 +157,6 @@ public class StockControl extends javax.swing.JPanel {
 
     private void AddPartLow() {
         String selected = listLowStock.getSelectedValue();
-
 
         String[] parts = selected.split(", Quantity: ");
         String partName = parts[0]; //Exhaust, complete box, Estate
@@ -425,11 +433,25 @@ public class StockControl extends javax.swing.JPanel {
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
         String quantity = textFieldQuantity.getText();
         String selected = listPartsOrder.getSelectedValue();
+
         if (selected != null) {
             if (!quantity.isEmpty()) {
                 int i = order.indexOf(selected);
-                String[] parts = selected.split(", ");
-                selected = parts[0] + ", " + parts[1] + ", Quantity: " + quantity;
+                String[] parts = selected.split(", Quantity: ");
+                String partName = parts[0]; //Exhaust, complete box, Estate
+                String[] nameParts = partName.split(", ");
+                String vType;
+
+                if (nameParts.length == 2) {
+                    partName = nameParts[0];
+                    vType = nameParts[1];
+                } else {
+                    partName = nameParts[0] + ", " + nameParts[1];
+                    vType = nameParts[2];
+                }
+                
+                selected = partName + ", " + vType + ", Quantity: " + quantity;
+
                 order.set(i, selected);
             }
             UpdateOrder();
