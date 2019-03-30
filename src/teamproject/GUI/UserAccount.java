@@ -167,14 +167,14 @@ public class UserAccount extends javax.swing.JPanel {
 
         labelUserAccounts.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelUserAccounts.setText("User Accounts");
-        add(labelUserAccounts, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, -1, -1));
+        add(labelUserAccounts, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
 
         labelFirstName.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelFirstName.setText("First Name:");
-        add(labelFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 540, -1, -1));
+        add(labelFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 510, -1, -1));
 
         buttonDone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDone.setText("Done");
@@ -183,16 +183,16 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonDoneActionPerformed(evt);
             }
         });
-        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 660, -1, -1));
+        add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 650, -1, -1));
 
         listUsers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane9.setViewportView(listUsers);
 
-        add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 1140, 240));
+        add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 1140, 240));
 
         labelSelectUser.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectUser.setText("Select User:");
-        add(labelSelectUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
+        add(labelSelectUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, -1, -1));
 
         buttonNewUser.setText("Create New User");
         buttonNewUser.addActionListener(new java.awt.event.ActionListener() {
@@ -200,7 +200,7 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonNewUserActionPerformed(evt);
             }
         });
-        add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 610, 130, 30));
+        add(buttonNewUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 580, 130, 30));
 
         buttonSearch.setText("Search");
         buttonSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -208,8 +208,8 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonSearchActionPerformed(evt);
             }
         });
-        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 190, -1, -1));
-        add(textFieldFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 540, 130, -1));
+        add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, -1, -1));
+        add(textFieldFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 130, -1));
 
         buttonEditUser.setText("Edit User");
         buttonEditUser.addActionListener(new java.awt.event.ActionListener() {
@@ -217,22 +217,22 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonEditUserActionPerformed(evt);
             }
         });
-        add(buttonEditUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 460, 200, -1));
+        add(buttonEditUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 420, 200, -1));
 
         labelUserDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelUserDetail.setText("User Details:");
-        add(labelUserDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 510, -1, -1));
-        add(textFieldSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 150, -1));
+        add(labelUserDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 470, -1, -1));
+        add(textFieldSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 150, -1));
 
         labelRole.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelRole.setText("Role:");
-        add(labelRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 580, -1, -1));
-        add(textFieldUserID, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 540, 130, -1));
-        add(textFieldLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 540, 130, -1));
+        add(labelRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 550, -1, -1));
+        add(textFieldUserID, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 510, 130, -1));
+        add(textFieldLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 510, 130, -1));
 
         labelLastName.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelLastName.setText("Last Name:");
-        add(labelLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 540, -1, -1));
+        add(labelLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 510, -1, -1));
 
         buttonUpdateDetails.setText("Update Details");
         buttonUpdateDetails.addActionListener(new java.awt.event.ActionListener() {
@@ -240,7 +240,7 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonUpdateDetailsActionPerformed(evt);
             }
         });
-        add(buttonUpdateDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 610, 130, 30));
+        add(buttonUpdateDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 580, 130, 30));
 
         buttonDeleteUser.setText("Delete User");
         buttonDeleteUser.addActionListener(new java.awt.event.ActionListener() {
@@ -248,7 +248,7 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonDeleteUserActionPerformed(evt);
             }
         });
-        add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 460, 130, 30));
+        add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 420, 130, 30));
 
         comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic", "foreperson", "franchisee", "admin" }));
         comboBoxRole.addActionListener(new java.awt.event.ActionListener() {
@@ -256,11 +256,11 @@ public class UserAccount extends javax.swing.JPanel {
                 comboBoxRoleActionPerformed(evt);
             }
         });
-        add(comboBoxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 580, 130, -1));
+        add(comboBoxRole, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 550, 130, -1));
 
         labelUserID.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelUserID.setText("Username:");
-        add(labelUserID, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
+        add(labelUserID, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 510, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -289,15 +289,15 @@ public class UserAccount extends javax.swing.JPanel {
 
         labelPassword.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelPassword.setText("Password:");
-        add(labelPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 580, -1, -1));
-        add(textFieldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 580, 130, -1));
+        add(labelPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 550, -1, -1));
+        add(textFieldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 130, -1));
 
         labelHourlyRate.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         labelHourlyRate.setText("Hourly Rate:");
-        add(labelHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 580, -1, -1));
+        add(labelHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 550, -1, -1));
 
         textFieldHourlyRate.setText("105");
-        add(textFieldHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 580, 130, -1));
+        add(textFieldHourlyRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 550, 130, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed

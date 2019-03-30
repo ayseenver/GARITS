@@ -202,7 +202,7 @@ public class TaskList extends javax.swing.JPanel {
 
         labelCreateJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCreateJob.setText("Task List");
-        add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
+        add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 30, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -266,7 +266,7 @@ public class TaskList extends javax.swing.JPanel {
                 removeTaskActionPerformed(evt);
             }
         });
-        jPanel6.add(removeTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 190, -1, -1));
+        jPanel6.add(removeTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 190, -1, -1));
 
         addTask.setText(">");
         addTask.setActionCommand("addTask");
@@ -275,7 +275,7 @@ public class TaskList extends javax.swing.JPanel {
                 addTaskActionPerformed(evt);
             }
         });
-        jPanel6.add(addTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 150, -1, -1));
+        jPanel6.add(addTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, -1, -1));
 
         jobTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Service", "MoT" }));
         jobTypeCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -289,7 +289,7 @@ public class TaskList extends javax.swing.JPanel {
         labelJobType.setText("Job Type:");
         jPanel6.add(labelJobType, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 50, -1, -1));
 
-        add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 190, 580, 320));
+        add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 210, 580, 320));
     }// </editor-fold>//GEN-END:initComponents
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed

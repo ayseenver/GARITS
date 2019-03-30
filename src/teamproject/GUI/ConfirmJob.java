@@ -205,18 +205,19 @@ public class ConfirmJob extends javax.swing.JPanel {
         listTasksRequired = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         textAreaJobDetail = new javax.swing.JTextArea();
-        labelTasksRequired = new javax.swing.JLabel();
+        labelOverview = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
+        labelTasksRequired = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelConfirmDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelConfirmDetails.setText("Are the details correct?");
-        add(labelConfirmDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 30, -1, -1));
+        add(labelConfirmDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, -1, -1));
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonCreateJob.setText("Confirm Job");
@@ -225,23 +226,23 @@ public class ConfirmJob extends javax.swing.JPanel {
                 buttonCreateJobActionPerformed(evt);
             }
         });
-        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 640, -1, -1));
+        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 650, -1, -1));
 
         listTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listTasksRequired);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, 1180, 280));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 370, 1180, 280));
 
         textAreaJobDetail.setColumns(20);
         textAreaJobDetail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textAreaJobDetail.setRows(5);
         jScrollPane3.setViewportView(textAreaJobDetail);
 
-        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 1180, 190));
+        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 1180, 180));
 
-        labelTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelTasksRequired.setText("Tasks Required:");
-        add(labelTasksRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, -1, -1));
+        labelOverview.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelOverview.setText("Overview:");
+        add(labelOverview, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -267,6 +268,10 @@ public class ConfirmJob extends javax.swing.JPanel {
             }
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
+
+        labelTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelTasksRequired.setText("Tasks Required:");
+        add(labelTasksRequired, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 340, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -300,6 +305,7 @@ public class ConfirmJob extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelConfirmDetails;
     private javax.swing.JLabel labelLoggedIn;
+    private javax.swing.JLabel labelOverview;
     private javax.swing.JLabel labelTasksRequired;
     private javax.swing.JList<String> listTasksRequired;
     private javax.swing.JTextArea textAreaJobDetail;

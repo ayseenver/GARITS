@@ -148,7 +148,7 @@ public class MyJob extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(listAssignedJobs);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 1160, 380));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 1160, 430));
 
         labelMyJobs.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelMyJobs.setText("My Jobs");
@@ -173,7 +173,7 @@ public class MyJob extends javax.swing.JPanel {
                 buttonViewJobActionPerformed(evt);
             }
         });
-        add(buttonViewJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 590, -1, -1));
+        add(buttonViewJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 640, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);

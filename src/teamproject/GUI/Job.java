@@ -404,10 +404,8 @@ public class Job extends javax.swing.JPanel {
     private void initComponents() {
 
         labelJob = new javax.swing.JLabel();
-        labelAvailableParts = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaJobDetails = new javax.swing.JTextArea();
-        labelPartsUsed = new javax.swing.JLabel();
         updateJobButton = new javax.swing.JButton();
         panelPart = new javax.swing.JPanel();
         jScrollPane9 = new javax.swing.JScrollPane();
@@ -421,6 +419,8 @@ public class Job extends javax.swing.JPanel {
         buttonUpdateQuantity = new javax.swing.JButton();
         addPartButton = new javax.swing.JButton();
         removePartButton = new javax.swing.JButton();
+        labelPartsUsed = new javax.swing.JLabel();
+        labelAvailableParts = new javax.swing.JLabel();
         panelTask = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         listTasksCarriedOut = new javax.swing.JList<>();
@@ -455,21 +455,13 @@ public class Job extends javax.swing.JPanel {
 
         labelJob.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelJob.setText("Job");
-        add(labelJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 0, -1, -1));
-
-        labelAvailableParts.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelAvailableParts.setText("Available Parts:");
-        add(labelAvailableParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
+        add(labelJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 30, -1, -1));
 
         textAreaJobDetails.setColumns(20);
         textAreaJobDetails.setRows(5);
         jScrollPane2.setViewportView(textAreaJobDetails);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 1180, 100));
-
-        labelPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelPartsUsed.setText("Parts Used:");
-        add(labelPartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 260, -1, -1));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 130, 1180, 100));
 
         updateJobButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         updateJobButton.setText("Update Job");
@@ -486,7 +478,7 @@ public class Job extends javax.swing.JPanel {
         listAvailableParts.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane9.setViewportView(listAvailableParts);
 
-        panelPart.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 75, 226, 204));
+        panelPart.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 75, 226, 200));
         panelPart.add(textFieldSearchParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 150, -1));
 
         buttonSearchParts.setText("Search");
@@ -500,11 +492,11 @@ public class Job extends javax.swing.JPanel {
         listPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane8.setViewportView(listPartsUsed);
 
-        panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 79, 230, 200));
-        panelPart.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 285, 33, -1));
+        panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, 230, 200));
+        panelPart.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 33, -1));
 
         labelPartsUsedQuantity.setText("Update Quantity:");
-        panelPart.add(labelPartsUsedQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, -1, -1));
+        panelPart.add(labelPartsUsedQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 290, -1, -1));
 
         buttonUpdateQuantity.setText("Update");
         buttonUpdateQuantity.addActionListener(new java.awt.event.ActionListener() {
@@ -512,7 +504,7 @@ public class Job extends javax.swing.JPanel {
                 buttonUpdateQuantityActionPerformed(evt);
             }
         });
-        panelPart.add(buttonUpdateQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(451, 285, -1, -1));
+        panelPart.add(buttonUpdateQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 280, -1, -1));
 
         addPartButton.setText(">");
         addPartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -530,7 +522,15 @@ public class Job extends javax.swing.JPanel {
         });
         panelPart.add(removePartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, -1, -1));
 
-        add(panelPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 240, 550, 320));
+        labelPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelPartsUsed.setText("Parts Used:");
+        panelPart.add(labelPartsUsed, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, -1, -1));
+
+        labelAvailableParts.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelAvailableParts.setText("Available Parts:");
+        panelPart.add(labelAvailableParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        add(panelPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, 580, 320));
 
         panelTask.setBackground(new java.awt.Color(204, 204, 204));
         panelTask.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -543,16 +543,16 @@ public class Job extends javax.swing.JPanel {
         });
         jScrollPane5.setViewportView(listTasksCarriedOut);
 
-        panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 76, 230, 200));
+        panelTask.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, 230, 200));
 
         listAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane10.setViewportView(listAvailableTasks);
 
         panelTask.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 79, 230, 200));
-        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 50, 20));
+        panelTask.add(textFieldTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 280, 50, 20));
 
         labelTime.setText("Update Time:");
-        panelTask.add(labelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 280, -1, -1));
+        panelTask.add(labelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, -1, -1));
 
         buttonUpdateTaskTime.setText("Update");
         buttonUpdateTaskTime.addActionListener(new java.awt.event.ActionListener() {
@@ -560,11 +560,11 @@ public class Job extends javax.swing.JPanel {
                 buttonUpdateTaskTimeActionPerformed(evt);
             }
         });
-        panelTask.add(buttonUpdateTaskTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, -1, 20));
+        panelTask.add(buttonUpdateTaskTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 280, 80, 20));
 
         labelTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelTasksCarriedOut.setText("Tasks carried out:");
-        panelTask.add(labelTasksCarriedOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(298, 23, -1, -1));
+        panelTask.add(labelTasksCarriedOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, -1, -1));
 
         labelAvailableTasks.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelAvailableTasks.setText("Available Tasks:");
@@ -601,13 +601,13 @@ public class Job extends javax.swing.JPanel {
                 buttonUpdateTaskCostActionPerformed(evt);
             }
         });
-        panelTask.add(buttonUpdateTaskCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, -1, 20));
-        panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 300, 50, -1));
+        panelTask.add(buttonUpdateTaskCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 300, 80, 20));
+        panelTask.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 300, 50, -1));
 
         labelTime1.setText("Update Cost:");
-        panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 300, -1, -1));
+        panelTask.add(labelTime1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, -1, -1));
 
-        add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 550, 320));
+        add(panelTask, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 580, 320));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -647,7 +647,7 @@ public class Job extends javax.swing.JPanel {
         add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
 
         yardCheckBox.setText("Confirm Send Vehicle to Yard");
-        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
+        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 570, -1, -1));
 
         jobCompletedButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jobCompletedButton.setText("Job Completed");
@@ -661,11 +661,11 @@ public class Job extends javax.swing.JPanel {
         listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listAvailableBays);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 610, 220, 80));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 590, 220, 100));
 
         labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelAvailableBay.setText("Bay Available:");
-        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 580, -1, -1));
+        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 570, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchTasksActionPerformed

@@ -19,6 +19,7 @@ public class CustomerList extends javax.swing.JPanel {
     private ResultSet rsC;
     private ResultSet rsD;
     private ResultSet rs;
+     private ResultSet rsP;
     private Statement statement;
     String[] nameArray;
     String[] detailArray;
@@ -75,7 +76,27 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
     }
+    private void ShowPayCustomer() {
+        try {
+            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where name = '" + listCustomers.getSelectedValue() + "')");
+            
+            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+            System.out.println(configuredPayLater);
+            
+            if (configuredPayLater.equals("1")) {
+                buttonConfirmPayment.setVisible(true);
+                labelPayCustomer.setVisible(true);
+            } else {
+                buttonConfirmPayment.setVisible(false);
+                labelPayCustomer.setVisible(false);
+            }
 
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
     private String[] CreateArray(ArrayList<String> customers) {
         String[] newArray = new String[customers.size()];
         newArray = customers.toArray(newArray);
@@ -166,7 +187,7 @@ public class CustomerList extends javax.swing.JPanel {
 
         labelCustomers.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomers.setText("Customer/Vehicle Record");
-        add(labelCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, -1, -1));
+        add(labelCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));

@@ -148,11 +148,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonDoneActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 660, -1, -1));
+        jPanel1.add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 640, -1, -1));
 
         labelColour.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelColour.setText("*Colour:");
-        jPanel1.add(labelColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, -1, -1));
+        jPanel1.add(labelColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 500, -1, -1));
 
         labelLoggedIn.setText("Logged In as:");
         jPanel1.add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
@@ -172,41 +172,41 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
         labelVehicles.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelVehicles.setText("Vehicles:");
-        jPanel1.add(labelVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 150, -1, -1));
+        jPanel1.add(labelVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, -1, -1));
 
         labelRegistrationNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelRegistrationNo.setText("*Registration No:");
-        jPanel1.add(labelRegistrationNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
+        jPanel1.add(labelRegistrationNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, -1, -1));
 
         labelMake.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelMake.setText("*Make:");
-        jPanel1.add(labelMake, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 390, -1, -1));
+        jPanel1.add(labelMake, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 380, -1, -1));
 
         labelModel.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelModel.setText("*Model:");
-        jPanel1.add(labelModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, -1, -1));
+        jPanel1.add(labelModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 410, -1, -1));
 
         labelChassisNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelChassisNo.setText("*Chassis No:");
-        jPanel1.add(labelChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, -1, -1));
+        jPanel1.add(labelChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 470, -1, -1));
 
         labelLastMoTDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelLastMoTDate.setText("Next MoT Date: ");
-        jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 570, 140, -1));
+        jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 560, 140, -1));
 
         labelEngineSerialNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelEngineSerialNo.setText("*Engine Serial No:");
-        jPanel1.add(labelEngineSerialNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 450, -1, -1));
+        jPanel1.add(labelEngineSerialNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 440, -1, -1));
 
         labelMoTDateFormat.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelMoTDateFormat.setText("(yyyy-mm-dd)");
-        jPanel1.add(labelMoTDateFormat, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 580, -1, -1));
-        jPanel1.add(textFieldEngineSerial, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 450, 250, -1));
-        jPanel1.add(textFieldModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 420, 250, -1));
-        jPanel1.add(textFieldMake, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 390, 250, -1));
-        jPanel1.add(textFieldRegistrationNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 360, 250, -1));
-        jPanel1.add(textFieldChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 480, 250, -1));
-        jPanel1.add(textFieldColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 510, 250, -1));
+        jPanel1.add(labelMoTDateFormat, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 570, -1, -1));
+        jPanel1.add(textFieldEngineSerial, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 440, 250, -1));
+        jPanel1.add(textFieldModel, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 410, 250, -1));
+        jPanel1.add(textFieldMake, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 380, 250, -1));
+        jPanel1.add(textFieldRegistrationNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 250, -1));
+        jPanel1.add(textFieldChassisNo, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 470, 250, -1));
+        jPanel1.add(textFieldColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 500, 250, -1));
 
         buttonNewVehicle.setText("New Vehicle");
         buttonNewVehicle.addActionListener(new java.awt.event.ActionListener() {
@@ -214,11 +214,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonNewVehicleActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 610, 130, -1));
+        jPanel1.add(buttonNewVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 600, 130, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomerDetails.setText("Customer Vehicles");
-        jPanel1.add(labelCustomerDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
+        jPanel1.add(labelCustomerDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 30, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -231,20 +231,20 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
         jScrollPane5.setViewportView(listVehicles);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, 700, 120));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
-        jPanel1.add(textFieldNextServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 540, 110, 30));
-        jPanel1.add(textFieldNextMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 570, 110, 30));
+        jPanel1.add(textFieldNextServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 530, 110, 30));
+        jPanel1.add(textFieldNextMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 560, 110, 30));
 
         labelLastServiceDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelLastServiceDate.setText("Next Service Date: ");
-        jPanel1.add(labelLastServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 540, -1, -1));
+        jPanel1.add(labelLastServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 530, -1, -1));
 
         labelServiceDateFormat.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelServiceDateFormat.setText("(yyyy-mm-dd)");
-        jPanel1.add(labelServiceDateFormat, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 550, -1, -1));
+        jPanel1.add(labelServiceDateFormat, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 540, -1, -1));
 
         buttonEditVehicle.setText("Edit");
         buttonEditVehicle.addActionListener(new java.awt.event.ActionListener() {
@@ -252,7 +252,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonEditVehicleActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonEditVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 320, 100, -1));
+        jPanel1.add(buttonEditVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 290, 100, -1));
 
         buttonSaveVehicleChanges.setText("Save Changes");
         buttonSaveVehicleChanges.addActionListener(new java.awt.event.ActionListener() {
@@ -260,7 +260,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonSaveVehicleChangesActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 610, 130, -1));
+        jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 600, 130, -1));
 
         buttonDeleteVehicle.setText("Delete");
         buttonDeleteVehicle.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +268,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonDeleteVehicleActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 320, 100, -1));
+        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 100, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
