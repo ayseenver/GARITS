@@ -225,12 +225,12 @@ public class ConfirmJob extends javax.swing.JPanel {
                 buttonCreateJobActionPerformed(evt);
             }
         });
-        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 650, -1, -1));
+        add(buttonCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 640, -1, -1));
 
         listTasksRequired.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listTasksRequired);
 
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, 1180, 220));
+        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 350, 1180, 280));
 
         textAreaJobDetail.setColumns(20);
         textAreaJobDetail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
