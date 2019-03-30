@@ -309,9 +309,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonSearchReminders = new javax.swing.JButton();
         labelReminders = new javax.swing.JLabel();
-        textFieldSearchReminders = new javax.swing.JTextField();
         buttonPrintAll = new javax.swing.JButton();
         buttonPrint = new javax.swing.JButton();
         buttonPrintType = new javax.swing.JButton();
@@ -332,20 +330,9 @@ public class ReminderGUI extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        buttonSearchReminders.setText("Search");
-        buttonSearchReminders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSearchRemindersActionPerformed(evt);
-            }
-        });
-        add(buttonSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 170, -1, -1));
-
         labelReminders.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelReminders.setText("Reminders");
         add(labelReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
-
-        textFieldSearchReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
 
         buttonPrintAll.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintAll.setText("Print All");
@@ -445,10 +432,6 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 570, 420));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void buttonSearchRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchRemindersActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonSearchRemindersActionPerformed
 
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
         for (int i = 0; i < listReminders.getModel().getSize(); i++) {
@@ -570,7 +553,6 @@ public class ReminderGUI extends javax.swing.JPanel {
     private javax.swing.JButton buttonPrint;
     private javax.swing.JButton buttonPrintAll;
     private javax.swing.JButton buttonPrintType;
-    private javax.swing.JButton buttonSearchReminders;
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboBoxType;
     private javax.swing.JScrollPane jScrollPane1;
@@ -581,7 +563,6 @@ public class ReminderGUI extends javax.swing.JPanel {
     private javax.swing.JLabel labelType;
     private javax.swing.JList<String> listReminders;
     private javax.swing.JTextArea textAreaDescription;
-    private javax.swing.JTextField textFieldSearchReminders;
     private javax.swing.JTextField textFieldUserDetails;
     // End of variables declaration//GEN-END:variables
 }
