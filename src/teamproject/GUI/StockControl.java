@@ -26,6 +26,7 @@ public class StockControl extends javax.swing.JPanel {
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
+    ResultSet rsU;
     String[] partArray;
     String[] lowPartArray;
     String[] partOrder;
@@ -55,6 +56,7 @@ public class StockControl extends javax.swing.JPanel {
 
         ShowAllParts();
         ShowLowParts();
+        ShowThreshold();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +66,26 @@ public class StockControl extends javax.swing.JPanel {
         this(username);
         this.order = order;
         UpdateOrder();
+    }
+
+    private void ShowThreshold() {
+        try {
+            this.rsU = statement.executeQuery("select roleName from user where username = '" + username + "'");
+
+            String roleName = rsU.getString("roleName");
+
+            if (!roleName.equals("receptionist")) {
+                buttonConfigureThreshold.setVisible(true);
+                textFieldConfigureThreshold.setVisible(true);
+            } else {
+                buttonConfigureThreshold.setVisible(false);
+                textFieldConfigureThreshold.setVisible(false);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
     }
 
     private void ShowAllParts() {
@@ -449,7 +471,7 @@ public class StockControl extends javax.swing.JPanel {
                     partName = nameParts[0] + ", " + nameParts[1];
                     vType = nameParts[2];
                 }
-                
+
                 selected = partName + ", " + vType + ", Quantity: " + quantity;
 
                 order.set(i, selected);

@@ -911,6 +911,11 @@ public class Invoice extends javax.swing.JPanel {
 
         payWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         payWithCredit.setText("Pay with discount");
+        payWithCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payWithCreditActionPerformed(evt);
+            }
+        });
         add(payWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
@@ -939,6 +944,29 @@ public class Invoice extends javax.swing.JPanel {
         }
         ShowAllInvoices();
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
+    /* I did not implement this yet
+    private void showFlexibleDiscount(){
+     try {
+            this.rsF = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber="
+                    + "(select VehicleRegistrationNumber from Job where jobID=" + jobNumber + ")))");
+
+            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+
+            if (configuredPayLater.equals("1")) {
+                buttonPayLater.setVisible(true);
+
+            } else {
+                buttonPayLater.setVisible(false);
+
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+}*/
+
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
@@ -1009,7 +1037,7 @@ public class Invoice extends javax.swing.JPanel {
             GetJobAndInvoiceNumber();
             if (!jobNumber.equals("null")) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
-                ShowPayCustomer();
+                ShowPayLaterCustomer();
             } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
@@ -1018,17 +1046,17 @@ public class Invoice extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
-    private void ShowPayCustomer() {
+    private void ShowPayLaterCustomer() {
         try {
             this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
                     + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber="
                     + "(select VehicleRegistrationNumber from Job where jobID=" + jobNumber + ")))");
 
             String configuredPayLater = rsP.getString("ConfiguredPayLater");
-            System.out.println(configuredPayLater);
 
             if (configuredPayLater.equals("1")) {
                 buttonPayLater.setVisible(true);
+                textfield
 
             } else {
                 buttonPayLater.setVisible(false);
@@ -1153,6 +1181,10 @@ public class Invoice extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
+
+    private void payWithCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payWithCreditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_payWithCreditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
