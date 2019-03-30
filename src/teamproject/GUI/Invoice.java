@@ -110,6 +110,7 @@ public class Invoice extends javax.swing.JPanel {
                 // read the result set. Get task description.
                 String task = i + ") " + rs.getString("description");
                 result += (task + "\n");
+                ++i;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -788,9 +789,9 @@ public class Invoice extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         buttonPrintInvoice = new javax.swing.JButton();
-        labelCustomerInfomation = new javax.swing.JLabel();
         labelPaymentType1 = new javax.swing.JLabel();
         payWithCredit = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -810,7 +811,7 @@ public class Invoice extends javax.swing.JPanel {
                 buttonPayActionPerformed(evt);
             }
         });
-        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 637, -1, -1));
+        add(buttonPay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 630, -1, -1));
 
         labelInvoice.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelInvoice.setText("Invoices");
@@ -841,19 +842,19 @@ public class Invoice extends javax.swing.JPanel {
                 buttonPayLaterActionPerformed(evt);
             }
         });
-        add(buttonPayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 630, -1, -1));
+        add(buttonPayLater, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 630, -1, -1));
 
         comboxBoxPaymentType.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         comboxBoxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cash", "card" }));
-        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 640, -1, -1));
+        add(comboxBoxPaymentType, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 630, -1, 30));
 
         labelInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelInvoices.setText("Invoices:");
         add(labelInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
 
-        labelPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelPayWithCredit.setText("For flexible discount holders:");
-        add(labelPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 680, -1, -1));
+        add(labelPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 660, -1, -1));
 
         textFieldSearchInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchInvoices.addActionListener(new java.awt.event.ActionListener() {
@@ -903,16 +904,17 @@ public class Invoice extends javax.swing.JPanel {
         });
         add(buttonPrintInvoice, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 630, -1, -1));
 
-        labelCustomerInfomation.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        labelCustomerInfomation.setText("*Pay Later option needs to be configured");
-        add(labelCustomerInfomation, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 640, -1, -1));
-
-        labelPaymentType1.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        labelPaymentType1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelPaymentType1.setText("Payment Type:");
-        add(labelPaymentType1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 640, -1, -1));
+        add(labelPaymentType1, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 630, -1, 30));
 
-        payWithCredit.setText("pay with discount");
-        add(payWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 680, -1, -1));
+        payWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        payWithCredit.setText("Pay with discount");
+        add(payWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        jLabel1.setText("*this will reduce from their credit");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 680, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInvoicesActionPerformed
@@ -1139,9 +1141,9 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JButton buttonSearchInvoices;
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel labelCustomerInfomation;
     private javax.swing.JLabel labelDetail;
     private javax.swing.JLabel labelInvoice;
     private javax.swing.JLabel labelInvoices;

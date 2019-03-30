@@ -294,7 +294,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 190, -1, -1));
+        add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 190, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed

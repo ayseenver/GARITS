@@ -53,28 +53,23 @@ public class Database extends javax.swing.JPanel {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        labelDatabase = new javax.swing.JLabel();
         buttonBack = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
-        buttonExit = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         buttonBack1 = new javax.swing.JButton();
         textFieldUserDetails1 = new javax.swing.JTextField();
         labelLoggedIn1 = new javax.swing.JLabel();
-        buttonExit1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         comboBoxBackup = new javax.swing.JComboBox<>();
         buttonDoneBackup = new javax.swing.JButton();
         buttonBackup = new javax.swing.JButton();
         buttonRestore = new javax.swing.JButton();
+        buttonExit = new javax.swing.JButton();
+        labelDatabase = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labelDatabase.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
-        labelDatabase.setText("Database");
-        add(labelDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 20, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -91,15 +86,6 @@ public class Database extends javax.swing.JPanel {
 
         labelLoggedIn.setText("Logged In as:");
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
-
-        buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit.setText("Logout");
-        buttonExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonExitActionPerformed(evt);
-            }
-        });
-        add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(1280, 720));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -123,38 +109,31 @@ public class Database extends javax.swing.JPanel {
         labelLoggedIn1.setText("Logged In as:");
         jPanel1.add(labelLoggedIn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
-        buttonExit1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonExit1.setText("Exit");
-        buttonExit1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonExit1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(buttonExit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Automatic Backup Frequency:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 320, -1, 40));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Backups");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 280, -1, -1));
-
+        comboBoxBackup.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         comboBoxBackup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "daily", "weekly", "monthly" }));
-        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 310, -1, -1));
+        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 330, -1, 30));
 
-        buttonDoneBackup.setText("Done");
+        buttonDoneBackup.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonDoneBackup.setText("Update");
         buttonDoneBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDoneBackupActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDoneBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, -1, -1));
+        jPanel1.add(buttonDoneBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 330, -1, -1));
 
         buttonBackup.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonBackup.setText("Backup");
+        buttonBackup.setText("Backup Now");
         buttonBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBackupActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 290, 200, -1));
+        jPanel1.add(buttonBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, 200, -1));
 
         buttonRestore.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonRestore.setText("Restore");
@@ -163,7 +142,20 @@ public class Database extends javax.swing.JPanel {
                 buttonRestoreActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 360, 200, -1));
+        jPanel1.add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 200, -1));
+
+        buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonExit.setText("Logout");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 0, -1, -1));
+
+        labelDatabase.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
+        labelDatabase.setText("Database");
+        jPanel1.add(labelDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, -1, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -201,11 +193,6 @@ public class Database extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldUserDetails1ActionPerformed
 
-    private void buttonExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExit1ActionPerformed
-        db.closeConnection(connection);
-        System.exit(0);
-    }//GEN-LAST:event_buttonExit1ActionPerformed
-
     private void buttonDoneBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneBackupActionPerformed
         LocalDate today = LocalDate.now();
         String fileName = "backupFrequency.txt";
@@ -227,7 +214,6 @@ public class Database extends javax.swing.JPanel {
     private javax.swing.JButton buttonBackup;
     private javax.swing.JButton buttonDoneBackup;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonExit1;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JButton buttonRestore;

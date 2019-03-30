@@ -1,6 +1,0 @@
-For jobs completed in this date range
-
-Average hours: null
-Average cost (not including VAT): null
-Mechanic name: mech anic
-

@@ -9,8 +9,17 @@ public class Customer {
     private String telephoneNumber;
     private String mobileNumber;
     private String fax;
+    private String dateCreated;
 
     public Customer() {
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getName() {

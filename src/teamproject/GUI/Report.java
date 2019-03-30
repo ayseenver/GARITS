@@ -205,20 +205,20 @@ public class Report extends javax.swing.JPanel {
 
         labelLoggedIn1.setText("Logged In as:");
         add(labelLoggedIn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
-        add(textFieldTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 190, 100, 30));
+        add(textFieldTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 190, 100, 30));
 
         labelTill.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelTill.setText("Till");
-        add(labelTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 200, -1, -1));
-        add(textFieldFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 190, 100, 30));
+        add(labelTill, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 200, -1, -1));
+        add(textFieldFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 190, 100, 30));
 
         labelFrom.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelFrom.setText("From");
-        add(labelFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 200, -1, -1));
+        add(labelFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 200, -1, -1));
 
         labelPeriod.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelPeriod.setText("Period(yyyy-mm-dd):");
-        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 160, -1, -1));
+        add(labelPeriod, new org.netbeans.lib.awtextra.AbsoluteConstraints(980, 160, -1, -1));
 
         labelSelectType.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectType.setText("Select Type of Report:");

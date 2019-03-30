@@ -347,7 +347,7 @@ public class ReminderGUI extends javax.swing.JPanel {
         listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(listReminders);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 590, 350));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 210, 570, 430));
 
         buttonPrintAll.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintAll.setText("Print All");
@@ -356,7 +356,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonPrintAllActionPerformed(evt);
             }
         });
-        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 550, -1, -1));
+        add(buttonPrintAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 640, -1, -1));
 
         buttonPrint.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrint.setText("Print");
@@ -365,7 +365,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonPrintActionPerformed(evt);
             }
         });
-        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 550, -1, -1));
+        add(buttonPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 640, -1, -1));
 
         buttonPrintType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintType.setText("Print Selected Type ");
@@ -374,7 +374,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonPrintTypeActionPerformed(evt);
             }
         });
-        add(buttonPrintType, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 550, -1, -1));
+        add(buttonPrintType, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 640, -1, -1));
 
         buttonDismiss.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDismiss.setText("Dismiss");
@@ -383,25 +383,25 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonDismissActionPerformed(evt);
             }
         });
-        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, -1, -1));
+        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 640, -1, -1));
 
         comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Payment" }));
-        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 560, -1, -1));
+        add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 640, -1, -1));
 
         labelDescription.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelDescription.setText("Description:");
-        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 170, -1, -1));
+        add(labelDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 180, -1, -1));
 
         textAreaDescription.setColumns(20);
         textAreaDescription.setLineWrap(true);
         textAreaDescription.setRows(5);
         jScrollPane1.setViewportView(textAreaDescription);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 200, 520, 350));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 570, 430));
 
         labelType.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelType.setText("Type:");
-        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 560, -1, -1));
+        add(labelType, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 640, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -435,7 +435,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonViewActionPerformed(evt);
             }
         });
-        add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 550, -1, -1));
+        add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchRemindersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchRemindersActionPerformed

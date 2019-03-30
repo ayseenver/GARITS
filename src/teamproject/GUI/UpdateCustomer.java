@@ -654,23 +654,23 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         jLabel9.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 260, -1, -1));
-        jPanel1.add(textFieldPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 410, 260, -1));
+        jPanel1.add(textFieldPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 360, 260, -1));
 
         labelPostCode.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelPostCode.setText("*Post Code:");
-        jPanel1.add(labelPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 410, -1, -1));
+        jPanel1.add(labelPostCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 360, -1, -1));
 
         labelAddress.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelAddress.setText("*Address:");
-        jPanel1.add(labelAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 320, -1, -1));
+        jPanel1.add(labelAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 270, -1, -1));
 
         labelEmail.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelEmail.setText("*Email:");
-        jPanel1.add(labelEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 290, -1, -1));
+        jPanel1.add(labelEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, -1, -1));
 
         labelFullName.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelFullName.setText("*Full Name:");
-        jPanel1.add(labelFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, -1, -1));
+        jPanel1.add(labelFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 210, -1, -1));
 
         labelLoggedIn.setText("Logged In as:");
         jPanel1.add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
@@ -690,15 +690,15 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         labelTelephone.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelTelephone.setText("*Telephone:");
-        jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 440, -1, -1));
-        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 500, 260, -1));
-        jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 260, -1));
-        jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 260, 70));
-        jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 440, 260, -1));
+        jPanel1.add(labelTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 390, -1, -1));
+        jPanel1.add(textFieldFax, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 450, 260, -1));
+        jPanel1.add(textFieldFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 260, -1));
+        jPanel1.add(textFieldAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 270, 260, 70));
+        jPanel1.add(textFieldTelephone, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 390, 260, -1));
 
         labelCustomerDetails.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelCustomerDetails.setText("Customer Details");
-        jPanel1.add(labelCustomerDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
+        jPanel1.add(labelCustomerDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 30, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");
@@ -716,14 +716,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 checkBoxAccountHolderActionPerformed(evt);
             }
         });
-        jPanel1.add(checkBoxAccountHolder, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 260, -1, -1));
+        jPanel1.add(checkBoxAccountHolder, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 210, -1, -1));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
 
         labelFax1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelFax1.setText("Fax:");
-        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 500, -1, -1));
+        jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 450, -1, -1));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonNewCustomer.setText("New customer");
@@ -732,8 +732,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 530, -1, -1));
-        jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 290, 260, -1));
+        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 480, -1, -1));
+        jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 240, 260, -1));
 
         buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonUpdateCustomer.setText("Update customer details");
@@ -742,7 +742,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonUpdateCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 670, -1, -1));
+        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 650, -1, -1));
 
         buttonDeleteCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDeleteCustomer.setText("Delete Customer");
@@ -751,17 +751,17 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonDeleteCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 670, -1, -1));
+        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
 
         checkBoxConfigurePayLater.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         checkBoxConfigurePayLater.setText("Pay Later Option");
         accountHolderPane.add(checkBoxConfigurePayLater);
-        checkBoxConfigurePayLater.setBounds(10, 0, 133, 27);
+        checkBoxConfigurePayLater.setBounds(10, 0, 144, 23);
 
         checkBoxDiscountPlan.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         checkBoxDiscountPlan.setText("Discount plan");
         accountHolderPane.add(checkBoxDiscountPlan);
-        checkBoxDiscountPlan.setBounds(10, 30, 115, 29);
+        checkBoxDiscountPlan.setBounds(10, 30, 131, 24);
 
         textFieldSearchDiscountDetails.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         accountHolderPane.add(textFieldSearchDiscountDetails);
@@ -770,7 +770,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelDiscountDetail.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelDiscountDetail.setText("Details:");
         accountHolderPane.add(labelDiscountDetail);
-        labelDiscountDetail.setBounds(30, 60, 47, 20);
+        labelDiscountDetail.setBounds(30, 60, 50, 20);
 
         comboBoxDiscountPlan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Fixed", "Variable", "Flexible" }));
         comboBoxDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -779,7 +779,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         accountHolderPane.add(comboBoxDiscountPlan);
-        comboBoxDiscountPlan.setBounds(140, 30, 63, 20);
+        comboBoxDiscountPlan.setBounds(140, 30, 106, 27);
 
         buttonSearchDiscountDetails.setText("Search");
         buttonSearchDiscountDetails.addActionListener(new java.awt.event.ActionListener() {
@@ -795,7 +795,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         accountHolderPane.add(jScrollPane7);
         jScrollPane7.setBounds(80, 80, 200, 120);
         accountHolderPane.add(textFieldPercentage);
-        textFieldPercentage.setBounds(280, 170, 40, 20);
+        textFieldPercentage.setBounds(280, 170, 40, 26);
 
         buttonSetDiscountPlan.setText("Set");
         buttonSetDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -809,14 +809,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelPercentage.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelPercentage.setText("%");
         accountHolderPane.add(labelPercentage);
-        labelPercentage.setBounds(320, 170, 12, 20);
+        labelPercentage.setBounds(320, 170, 9, 20);
 
-        jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 290, 420, 230));
+        jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, 420, 230));
 
         labelMobile.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelMobile.setText("Mobile:");
-        jPanel1.add(labelMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 470, -1, -1));
-        jPanel1.add(textFieldMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 470, 260, -1));
+        jPanel1.add(labelMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 420, -1, -1));
+        jPanel1.add(textFieldMobile, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 420, 260, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents

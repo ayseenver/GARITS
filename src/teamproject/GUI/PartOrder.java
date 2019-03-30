@@ -81,7 +81,7 @@ public class PartOrder extends javax.swing.JPanel {
 
         labelPartsOrder.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelPartsOrder.setText("Parts Order");
-        add(labelPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, -1, -1));
+        add(labelPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 40, -1, -1));
 
         textAreaPartsOrder.setColumns(20);
         textAreaPartsOrder.setRows(5);
@@ -121,7 +121,7 @@ public class PartOrder extends javax.swing.JPanel {
                 buttonConfirmActionPerformed(evt);
             }
         });
-        add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 640, -1, -1));
+        add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 640, -1, -1));
 
         buttonBack.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonBack.setText("Back");

@@ -66,7 +66,7 @@ public class AllocateJob extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set
                 String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Booked on: " + rs.getString("dateBookedIn");
+                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn");
                 jobs.add(job);
             }
         } catch (SQLException e) {
@@ -159,7 +159,7 @@ public class AllocateJob extends javax.swing.JPanel {
 
         labelSelectMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectMechanic.setText("Select Mechanic:");
-        add(labelSelectMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 400, -1, -1));
+        add(labelSelectMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, -1, -1));
 
         labelNotAllocatedJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelNotAllocatedJobs.setText("Unallocated Jobs:");
@@ -168,7 +168,7 @@ public class AllocateJob extends javax.swing.JPanel {
         listMechanics.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane4.setViewportView(listMechanics);
 
-        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 430, 1160, 190));
+        add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 440, 1160, 210));
 
         buttonSelectJob.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         buttonSelectJob.setText("Select Job");
@@ -177,7 +177,7 @@ public class AllocateJob extends javax.swing.JPanel {
                 buttonSelectJobActionPerformed(evt);
             }
         });
-        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 400, -1, -1));
+        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 390, -1, -1));
 
         buttonAllocateToMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         buttonAllocateToMechanic.setText("Allocate To Mechanic");
@@ -186,7 +186,7 @@ public class AllocateJob extends javax.swing.JPanel {
                 buttonAllocateToMechanicActionPerformed(evt);
             }
         });
-        add(buttonAllocateToMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 630, -1, -1));
+        add(buttonAllocateToMechanic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 650, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -257,7 +257,7 @@ public class AllocateJob extends javax.swing.JPanel {
                     return mechArray[i];
                 }
             });
-            
+
         } else {
             String mess = "Select a mechanic";
             JOptionPane.showMessageDialog(new JFrame(), mess);

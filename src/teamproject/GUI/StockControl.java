@@ -384,7 +384,7 @@ public class StockControl extends javax.swing.JPanel {
                 buttonStockLevelReportActionPerformed(evt);
             }
         });
-        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 140, -1, -1));
+        add(buttonStockLevelReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 140, -1, -1));
 
         buttonPartSale.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonPartSale.setText("Part Sale");
@@ -393,7 +393,7 @@ public class StockControl extends javax.swing.JPanel {
                 buttonPartSaleActionPerformed(evt);
             }
         });
-        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 140, -1, -1));
+        add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 140, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
