@@ -970,7 +970,6 @@ public class Invoice extends javax.swing.JPanel {
         }
     }
 
-
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
