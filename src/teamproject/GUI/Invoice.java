@@ -1041,9 +1041,7 @@ public class Invoice extends javax.swing.JPanel {
             if (!jobNumber.equals("null")) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
                 ShowPayLaterCustomer();
-            } else {
-                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
-            } else {
+            }else {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
             }
             showFlexibleDiscount();

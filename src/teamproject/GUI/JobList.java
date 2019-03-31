@@ -54,7 +54,6 @@ public class JobList extends javax.swing.JPanel {
         }
 
         ShowAllJobs();
-        buttonAllocateBay.setVisible(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -88,96 +87,6 @@ public class JobList extends javax.swing.JPanel {
         });
     }
 
-    private void ShowBayList() {
-
-        if (comboStatus.getSelectedItem().toString().equalsIgnoreCase("Completed")) {
-
-            buttonAllocateBay.setVisible(false);
-        } else {
-            buttonAllocateBay.setVisible(true);
-        }
-        try {
-            String sql = "select type from job where jobID = " + jobID;
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String jobType = "";
-        try {
-            while (rs.next()) {
-                jobType = rs.getString("type");
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        ArrayList<String> bays = new ArrayList<>();
-
-        if (jobType.equals("MoT")) {
-            //get all bays for this job type
-            try {
-                String sql = ("select * from Bay where type = 'MoT' and booked = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rs = ps.executeQuery();
-            } catch (SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.getMessage());
-            }
-        } else {
-            //get all bays for this job type
-            try {
-                String sql = ("select * from Bay where type = 'Repair' and booked = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rs = ps.executeQuery();
-            } catch (SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.getMessage());
-            }
-        }
-        //add bays to bay list
-        try {
-            while (rs.next()) {
-                // read the result set
-                String bay = rs.getString("bayID") + ": " + rs.getString("type");
-                bays.add(bay);
-            }
-        } catch (SQLException e) {
-        }
-
-        bayArray = CreateArray(bays);
-
-        listAvailableBays.setModel(new javax.swing.AbstractListModel<String>() {
-
-            public int getSize() {
-                return bayArray.length;
-            }
-
-            public String getElementAt(int i) {
-                return bayArray[i];
-            }
-        }
-        );
-    }
-
     private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
@@ -204,13 +113,10 @@ public class JobList extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         buttonSelectJob = new javax.swing.JButton();
         comboStatus = new javax.swing.JComboBox<>();
-        jScrollPane11 = new javax.swing.JScrollPane();
-        listAvailableBays = new javax.swing.JList<>();
-        labelAvailableBay = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaJobOverview = new javax.swing.JTextArea();
-        buttonAllocateBay = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        buttonEditJob = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -277,7 +183,7 @@ public class JobList extends javax.swing.JPanel {
                 buttonSelectJobActionPerformed(evt);
             }
         });
-        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 450, -1, -1));
+        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
 
         comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Created", "Allocated", "Completed" }));
         comboStatus.addActionListener(new java.awt.event.ActionListener() {
@@ -287,32 +193,24 @@ public class JobList extends javax.swing.JPanel {
         });
         add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 190, -1, -1));
 
-        listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane11.setViewportView(listAvailableBays);
-
-        add(jScrollPane11, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 510, 130, 130));
-
-        labelAvailableBay.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelAvailableBay.setText("Bay Available:");
-        add(labelAvailableBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 490, -1, -1));
-
         textAreaJobOverview.setColumns(20);
         textAreaJobOverview.setRows(5);
         jScrollPane1.setViewportView(textAreaJobOverview);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 510, 1010, 130));
-
-        buttonAllocateBay.setText("Allocate to Bay");
-        buttonAllocateBay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAllocateBayActionPerformed(evt);
-            }
-        });
-        add(buttonAllocateBay, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 640, -1, -1));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 510, 1160, 130));
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Job Overview:");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, -1, -1));
+
+        buttonEditJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonEditJob.setText("Edit Job");
+        buttonEditJob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditJobActionPerformed(evt);
+            }
+        });
+        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 450, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -400,7 +298,6 @@ public class JobList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSelectJobActionPerformed
 
     private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
-        buttonAllocateBay.setVisible(false);
         try {
             this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
         } catch (SQLException e) {
@@ -412,59 +309,40 @@ public class JobList extends javax.swing.JPanel {
         ShowAllJobs();
     }//GEN-LAST:event_comboStatusActionPerformed
 
-    private void buttonAllocateBayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateBayActionPerformed
-        //insert the new bayID
-        bayID = listAvailableBays.getSelectedValue();
-        String message = "Please Select a Job and Bay";
-        try {
-            if (!(bayID == null)) {
-                String[] bayParts = bayID.split(": ");
-                bayID = bayParts[0];
-                int bayIDInt = Integer.parseInt(bayID);
-                String sql = ("update job set baybayID = (select bayID from bay where bayID = " + bayIDInt + ") "
-                        + "where jobID = " + jobID);
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
+    private void buttonEditJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditJobActionPerformed
+        String jobDetails = listJobList.getSelectedValue();
+        if (jobDetails != null) {
+            String[] details = jobDetails.split(", ");
 
-                //set the bay to booked
-                sql = ("update bay set booked = 1 where bayID = " + bayIDInt);
-                ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
-                message = "Bay Allocated to Job";
-            }
-            JOptionPane.showMessageDialog(new JFrame(), message);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            String[] idParts = details[0].split(": ");
+            jobID = Integer.parseInt(idParts[1]);
+
+            String[] regParts = details[1].split(": ");
+            vehicleReg = regParts[1];
+
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new Job(username, jobID, vehicleReg);
+        } else {
+            String mess = "Select a job";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
-
-    }//GEN-LAST:event_buttonAllocateBayActionPerformed
+    }//GEN-LAST:event_buttonEditJobActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAllocateBay;
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonEditJob;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonSearch;
     private javax.swing.JButton buttonSelectJob;
     private javax.swing.JComboBox<String> comboStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel labelAvailableBay;
     private javax.swing.JLabel labelJobList;
     private javax.swing.JLabel lblLoggedIn;
-    private javax.swing.JList<String> listAvailableBays;
     private javax.swing.JList<String> listJobList;
     private javax.swing.JTextArea textAreaJobOverview;
     private javax.swing.JTextField textFieldSearch;

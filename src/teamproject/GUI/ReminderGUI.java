@@ -310,6 +310,8 @@ public class ReminderGUI extends javax.swing.JPanel {
     private void initComponents() {
 
         labelReminders = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listReminders = new javax.swing.JList<>();
         buttonPrintAll = new javax.swing.JButton();
         buttonPrint = new javax.swing.JButton();
         buttonPrintType = new javax.swing.JButton();
@@ -324,8 +326,6 @@ public class ReminderGUI extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         buttonView = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        listReminders = new javax.swing.JList<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -334,14 +334,11 @@ public class ReminderGUI extends javax.swing.JPanel {
         labelReminders.setText("Reminders");
         add(labelReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 40, -1, -1));
 
-        textFieldSearchReminders.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        add(textFieldSearchReminders, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 227, 30));
-
         listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(listReminders);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 210, 570, 430));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 570, 420));
 
         buttonPrintAll.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPrintAll.setText("Print All");
@@ -431,16 +428,6 @@ public class ReminderGUI extends javax.swing.JPanel {
             }
         });
         add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
-
-        listReminders.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        listReminders.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(listReminders);
-
-        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 570, 420));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
@@ -566,7 +553,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboBoxType;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelDescription;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelReminders;
