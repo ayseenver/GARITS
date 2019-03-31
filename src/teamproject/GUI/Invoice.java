@@ -1038,11 +1038,11 @@ public class Invoice extends javax.swing.JPanel {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
             GetJobAndInvoiceNumber();
-            if (!jobNumber.equals("null")) {
+            if (!jobNumber.isEmpty()) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
                 ShowPayLaterCustomer();
             }else {
-                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
             showFlexibleDiscount();
         } else {
@@ -1155,7 +1155,7 @@ public class Invoice extends javax.swing.JPanel {
         if (selected != null) {
             GetJobAndInvoiceNumber();
             String details;
-            if (!jobNumber.equals("null")) {
+            if (!jobNumber.isEmpty()) {
                 details = GetJobInvoiceDetails();
             } else {
                 details = GetPartInvoiceDetails();
