@@ -38,7 +38,9 @@ public class CustomerList extends javax.swing.JPanel {
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-
+        buttonConfirmPayment.setVisible(false);
+        labelPayCustomer.setVisible(false);
+        labelPayCustomerExplained.setVisible(false);
         try {
             this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
         } catch (SQLException e) {
@@ -85,19 +87,23 @@ public class CustomerList extends javax.swing.JPanel {
     }
 
     private void ShowPayCustomer() {
+        buttonConfirmPayment.setVisible(false);
+        labelPayCustomer.setVisible(false);
+        labelPayCustomerExplained.setVisible(false);
+
+        String flexibleDiscount = null;
         try {
-            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
-                    + "(select ID from Customer where name = '" + listCustomers.getSelectedValue() + "')");
 
-            String configuredPayLater = rsP.getString("ConfiguredPayLater");
-            System.out.println(configuredPayLater);
+            this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
+                    + "(select ID from customer where name = '" + details + "'))");
 
-            if (configuredPayLater.equals("1")) {
+            while (rsP.next()) {
+                flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
+            }
+            if (flexibleDiscount != null) {
                 buttonConfirmPayment.setVisible(true);
                 labelPayCustomer.setVisible(true);
-            } else {
-                buttonConfirmPayment.setVisible(false);
-                labelPayCustomer.setVisible(false);
+                labelPayCustomerExplained.setVisible(true);
             }
 
         } catch (SQLException e) {
@@ -182,7 +188,7 @@ public class CustomerList extends javax.swing.JPanel {
         jScrollPane10 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
         buttonNewCustomer = new javax.swing.JButton();
-        labelVariableCustomer = new javax.swing.JLabel();
+        labelPayCustomerExplained = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
@@ -243,9 +249,9 @@ public class CustomerList extends javax.swing.JPanel {
         });
         add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 190, -1, -1));
 
-        labelVariableCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        labelVariableCustomer.setText("*only customer that have flexible discount ");
-        add(labelVariableCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
+        labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        labelPayCustomerExplained.setText("*only customer that have flexible discount ");
+        add(labelPayCustomerExplained, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -373,10 +379,12 @@ public class CustomerList extends javax.swing.JPanel {
                     e.printStackTrace();
                 }
                 this.rsD = ps.executeQuery();
+                ShowPayCustomer();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
             ShowSelectedCustomersOverview();
+
             listVehicleDetails.removeAll();
             ArrayList<String> vehicle = new ArrayList<>();
 
@@ -511,8 +519,8 @@ public class CustomerList extends javax.swing.JPanel {
     private javax.swing.JLabel labelCustomers;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelPayCustomer;
+    private javax.swing.JLabel labelPayCustomerExplained;
     private javax.swing.JLabel labelSelectCustomer;
-    private javax.swing.JLabel labelVariableCustomer;
     private javax.swing.JList<String> listCustomers;
     private javax.swing.JList<String> listVehicleDetails;
     private javax.swing.JTextArea textAreaCustomerOverview;
