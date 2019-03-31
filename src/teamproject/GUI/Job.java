@@ -135,11 +135,19 @@ public class Job extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
             String details = "Vehicle Registraion No: " + rs.getString("registrationNumber") + '\t' + "Date Booked In: " + rs.getString("datebookedin")
-                    + '\n' + "Make: " + rs.getString("make") + "\t\t" + "Model: " + rs.getString("model") + '\n'
+                    + '\n' + "Make: " + rs.getString("make") + getTabLength(rs.getString("make")) + "Model: " + rs.getString("model") + '\n'
                     + "Customer Name: " + rs.getString("name") + '\t' + "Tel.: " + rs.getString("telephoneNumber");
             textAreaJobDetails.append(details);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    private String getTabLength(String word) {
+        if (word.length() > 10) {
+            return "\t\t";
+        } else {
+            return "\t\t\t";
         }
     }
 

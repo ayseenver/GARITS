@@ -20,7 +20,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class JobList extends javax.swing.JPanel {
-
+    
     private int jobID;
     private String vehicleReg;
     private String username;
@@ -41,7 +41,7 @@ public class JobList extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-
+        
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -52,41 +52,41 @@ public class JobList extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-
+        
         ShowAllJobs();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
+    
     private void ShowAllJobs() {
-
+        
         listJobList.removeAll();
         ArrayList<String> jobs = new ArrayList<>();
-
+        
         try {
             while (rs.next()) {
                 // read the result set
                 String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn")+ ", Status: "+ rs.getString("status");
+                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn") + ", Status: " + rs.getString("status");
                 jobs.add(job);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         jobArray = CreateArray(jobs);
-
+        
         listJobList.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
                 return jobArray.length;
             }
-
+            
             public String getElementAt(int i) {
                 return jobArray[i];
             }
         });
     }
-
+    
     private String[] CreateArray(ArrayList<String> tasks) {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
@@ -215,7 +215,7 @@ public class JobList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
-
+        
         try {
             String sql = ("select job.*, vehicle.*, customer.* from job "
                     + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
@@ -224,19 +224,19 @@ public class JobList extends javax.swing.JPanel {
                     + "or name like '%" + textFieldSearch.getText() + "%') and "
                     + "status like '%" + checkStatusType() + "%' order by status desc, jobID");
             PreparedStatement ps = null;
-
+            
             try {
                 ps = connection.prepareStatement(sql);
-
+                
             } catch (Exception e) {
                 e.printStackTrace();
-
+                
             }
             this.rs = ps.executeQuery();
-
+            
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
+            
         }
         ShowAllJobs();
     }//GEN-LAST:event_buttonSearchActionPerformed
@@ -270,13 +270,13 @@ public class JobList extends javax.swing.JPanel {
         String jobOverview;
         if (jobDetails != null) {
             String[] details = jobDetails.split(", ");
-
+            
             String[] idParts = details[0].split(": ");
             jobID = Integer.parseInt(idParts[1]);
-
+            
             String[] regParts = details[1].split(": ");
             vehicleReg = regParts[1];
-
+            
             try {
                 String sql = ("select v.RegistrationNumber, v.make, v.model,  c.name, j.datebookedIn , c.telephoneNumber "
                         + "from customer c, job j, Vehicle v where  v.registrationNumber is (select VehicleRegistrationNumber from Job where jobId = " + jobID
@@ -290,7 +290,7 @@ public class JobList extends javax.swing.JPanel {
                 this.rs = ps.executeQuery();
                 while (rs.next()) {
                     jobOverview = "Vehicle Registraion No: " + rs.getString("registrationNumber") + '\t' + "Date Booked In: " + rs.getString("datebookedin")
-                            + '\n' + "Make: " + rs.getString("make") + "\t\t" + "Model: " + rs.getString("model") + '\n'
+                            + '\n' + "Make: " + rs.getString("make") + getTabLength(rs.getString("make")) + "Model: " + rs.getString("model") + '\n'
                             + "Customer Name: " + rs.getString("name") + '\t' + "Tel.: " + rs.getString("telephoneNumber");
                     textAreaJobOverview.setText(jobOverview);
                 }
@@ -303,7 +303,13 @@ public class JobList extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_buttonSelectJobActionPerformed
-
+    private String getTabLength(String word) {
+        if (word.length() > 10) {
+            return "\t\t";
+        } else {
+            return "\t\t\t";
+        }
+    }
     private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
         if (comboStatus.getSelectedItem().equals("All")) {
             try {
@@ -329,13 +335,13 @@ public class JobList extends javax.swing.JPanel {
         String jobDetails = listJobList.getSelectedValue();
         if (jobDetails != null) {
             String[] details = jobDetails.split(", ");
-
+            
             String[] idParts = details[0].split(": ");
             jobID = Integer.parseInt(idParts[1]);
-
+            
             String[] regParts = details[1].split(": ");
             vehicleReg = regParts[1];
-
+            
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
