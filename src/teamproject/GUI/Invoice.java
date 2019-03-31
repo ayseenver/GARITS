@@ -970,7 +970,6 @@ public class Invoice extends javax.swing.JPanel {
         }
     }
 
-
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -1044,11 +1043,13 @@ public class Invoice extends javax.swing.JPanel {
             }else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
+            ShowPayLaterCustomer();
             showFlexibleDiscount();
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
+
     }//GEN-LAST:event_buttonViewActionPerformed
     private void ShowPayLaterCustomer() {
         buttonPayLater.setVisible(false);
