@@ -1416,7 +1416,11 @@ public class Job extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("JobList")) {
+            new JobList(username);
+        } else {
+            new MyJob(username);
+        }
     }//GEN-LAST:event_jobCompletedButtonActionPerformed
 
     private void buttonUpdateTaskCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskCostActionPerformed
