@@ -28,6 +28,7 @@ public class Report extends javax.swing.JPanel {
     private String username;
     private ResultSet rs;
     private ResultSet rsU;
+    private String previousPage;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
@@ -40,8 +41,9 @@ public class Report extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public Report(String username) {
+    public Report(String username, String previousPage) {
         this.username = username;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -651,7 +653,11 @@ public class Report extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("StockControl")) {
+            new StockControl(username);
+        } else {
+            new MainMenu(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void comboBoxReportTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReportTypeActionPerformed

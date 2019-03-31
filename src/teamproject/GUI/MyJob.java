@@ -232,7 +232,7 @@ public class MyJob extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             db.closeConnection(connection);
-            new Job(username, jobID, vehicleReg);
+            new Job(username, jobID, vehicleReg, "MyJob");
         } else {
             String mess = "Select a job";
             JOptionPane.showMessageDialog(new JFrame(), mess);

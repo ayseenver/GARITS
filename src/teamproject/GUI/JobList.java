@@ -322,7 +322,7 @@ public class JobList extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new Job(username, jobID, vehicleReg);
+            new Job(username, jobID, vehicleReg,"JobList");
         } else {
             String mess = "Select a job";
             JOptionPane.showMessageDialog(new JFrame(), mess);

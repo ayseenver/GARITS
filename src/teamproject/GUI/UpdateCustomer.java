@@ -32,7 +32,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     public UpdateCustomer(String username, String previousPage) {
         this.username = username;
-        this.previousPage=previousPage;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -53,8 +53,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }
 
     public UpdateCustomer(String username, Customer c, String previousPage) { //existing custmer
-        this.username = username;
-        this.previousPage = previousPage;
+        this(username, previousPage);
         this.c = c;
         buttonUpdateCustomer.setVisible(true);
         buttonDeleteCustomer.setVisible(true);
@@ -600,7 +599,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }
 
     public void receptionist_menu() {
-        System.out.println("receptionist");
         checkBoxAccountHolder.setVisible(false);
     }
 
@@ -1142,7 +1140,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);
+        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+            new CreateJobCustomer(username);
+        } else {
+            new CustomerList(username);
+        }
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed

@@ -22,6 +22,7 @@ import teamproject.Databases.DB_ImplClass;
 public class Job extends javax.swing.JPanel {
 
     private final String username;
+    private String previousPage;
     ResultSet rs;
     ArrayList<String> tasks = new ArrayList<>();
     ArrayList<String> actualTasks = new ArrayList<>();
@@ -43,10 +44,11 @@ public class Job extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public Job(String username, int jobID, String vehicleReg) {
+    public Job(String username, int jobID, String vehicleReg, String previousPage) {
         this.username = username;
         this.jobID = jobID;
         this.vehicleReg = vehicleReg;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -817,7 +819,8 @@ public class Job extends javax.swing.JPanel {
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
-
+        String message = "Job Updated";
+        JOptionPane.showMessageDialog(new JFrame(), message);
         //insert the new bayID
         bayID = listAvailableBays.getSelectedValue();
         try {
@@ -899,7 +902,11 @@ public class Job extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("JobList")) {
+            new JobList(username);
+        } else {
+            new MyJob(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonUpdateQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateQuantityActionPerformed
@@ -1191,7 +1198,7 @@ public class Job extends javax.swing.JPanel {
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
-
+        String message = "Job Completed";
         try {
             connection.setAutoCommit(false);
             //get actual hours and cost of all the tasks
@@ -1405,7 +1412,7 @@ public class Job extends javax.swing.JPanel {
                 System.err.println(a.getMessage());
             }
         }
-
+        JOptionPane.showMessageDialog(new JFrame(), message);
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);

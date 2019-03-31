@@ -381,7 +381,7 @@ public class MainMenu extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Invoice(username);
+        new Invoice(username, "MainMenu");
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
@@ -402,7 +402,7 @@ public class MainMenu extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Report(username);
+        new Report(username, "MainMenu");
 
     }//GEN-LAST:event_buttonReportActionPerformed
 
