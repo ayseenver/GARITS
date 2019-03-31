@@ -1085,65 +1085,70 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
     private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
-        try {
-            String sql = ("select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "'");
-            PreparedStatement ps = null;
+        String message = "Deleting Customer";
+        int reply = JOptionPane.showConfirmDialog(null, message, "Are you Sure?", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String customerID = "";
-
-        try {
-            while (rs.next()) {
-                customerID = rs.getString("ID");
+                String sql = ("select ID from customer where name = '" + c.getName() + "' "
+                        + "and address = '" + c.getAddress() + "'");
+                PreparedStatement ps = null;
                 try {
-                    String sql = ("update customer set deleted = 1 where ID = " + customerID);
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                //delete all vehciles with this CustomerID
-                try {
-                    String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
 
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            String customerID = "";
 
-        //go back to customer list
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
-            new CreateJobCustomer(username);
+            try {
+                while (rs.next()) {
+                    customerID = rs.getString("ID");
+                    try {
+                        String sql = ("update customer set deleted = 1 where ID = " + customerID);
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+
+                    //delete all vehciles with this CustomerID
+                    try {
+                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            //go back to customer list
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new CustomerList(username);
+            }
         } else {
-            new CustomerList(username);
         }
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 

@@ -1198,8 +1198,8 @@ public class Job extends javax.swing.JPanel {
 
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
-        String message = "Is the job completed?";
-        int reply = JOptionPane.showConfirmDialog(null, message, "Proceed?", JOptionPane.YES_NO_OPTION);
+        String message = "Is the Job Completed?";
+        int reply = JOptionPane.showConfirmDialog(null, message, "Are You Sure?", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             try {
                 connection.setAutoCommit(false);
