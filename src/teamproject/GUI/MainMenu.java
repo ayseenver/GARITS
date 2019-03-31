@@ -59,7 +59,8 @@ public class MainMenu extends javax.swing.JPanel {
 
                 //Code to get Role name from Databse
                 if (username.equals(user)) {
-                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+                    //  this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
+                    //it get the role name if the username equals anyway plus gets ride of the error message
 
                     roleName = rs.getString("roleName");
                 }
