@@ -26,7 +26,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
     ArrayList<String> customers = new ArrayList<>();
     String reg;
 
-    public UpdateSparePart(String username, Customer c) {
+    public UpdateSparePart(String username) {
         this.username = username;
         this.c = c;
         initComponents();
