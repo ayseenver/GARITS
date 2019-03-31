@@ -308,15 +308,15 @@ public class UserAccount extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewUserActionPerformed
+        String message = "New User Created";
         if (textFieldFirstName.getText().isEmpty() || textFieldLastName.getText().isEmpty()
                 || textFieldPassword.getText().isEmpty() || comboBoxRole.getSelectedItem().toString().isEmpty()
                 || textFieldUserID.getText().isEmpty()) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
+
         }
         if (textFieldHourlyRate.isVisible() && textFieldHourlyRate.getText().isEmpty()) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
         } else {
 
             User newU = new User();
@@ -362,7 +362,7 @@ public class UserAccount extends javax.swing.JPanel {
                 }
             }
         }
-
+        JOptionPane.showMessageDialog(new JFrame(), message);
         try {
             this.rs = statement.executeQuery("select * from User");
         } catch (SQLException e) {
@@ -511,21 +511,24 @@ public class UserAccount extends javax.swing.JPanel {
         String selected = listUsers.getSelectedValue();
         if (selected != null) {
             SelectUser();
-            //delete selected user from database.
-            try {
-                String sql = ("update user set deleted = 1 "
-                        + "where username = '" + rs.getString("username") + "'");
-                PreparedStatement ps = null;
+            int reply = JOptionPane.showConfirmDialog(null, "Are you Sure you want to delete the user?", "Delete User", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                //delete selected user from database.
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    String sql = ("update user set deleted = 1 "
+                            + "where username = '" + rs.getString("username") + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                UpdateUserList();
             }
-            UpdateUserList();
         } else {
             String mess = "Select a user";
             JOptionPane.showMessageDialog(new JFrame(), mess);

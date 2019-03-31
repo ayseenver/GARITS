@@ -832,11 +832,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
+        String message = "New Customer Added";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
                 || textFieldTelephone.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
+
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
@@ -861,9 +862,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             UpdateCustomer();
-
             CreateAccountHolder();
-
+            JOptionPane.showMessageDialog(new JFrame(), message);
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
@@ -904,12 +904,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
         String originalName = c.getName();
         String originalAddress = c.getAddress();
-
+        String message = "Customer Details Updated";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
                 || textFieldTelephone.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
+
         } else {
             //customer exists, update customer details
             try {
@@ -1071,8 +1071,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                     }
                 }
             }
-
-            //go back to customer list
+            JOptionPane.showMessageDialog(new JFrame(), message);
+            //go back to Previous page
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
@@ -1082,11 +1082,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 new CustomerList(username);
             }
         }
+
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
     private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
-        String message = "Deleting Customer";
-        int reply = JOptionPane.showConfirmDialog(null, message, "Are you Sure?", JOptionPane.YES_NO_OPTION);
+        String message = "Are you sure you want to delete Customer?";
+        int reply = JOptionPane.showConfirmDialog(null, message, "Delete Customer", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             try {
                 String sql = ("select ID from customer where name = '" + c.getName() + "' "
@@ -1148,8 +1149,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } else {
                 new CustomerList(username);
             }
-        } else {
-        }
+        } 
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed

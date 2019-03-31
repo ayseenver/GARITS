@@ -518,7 +518,6 @@ public class CustomerList extends javax.swing.JPanel {
             }
         } else {
             message = "Please choose customer record first!";
-
         }
         JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed

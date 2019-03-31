@@ -260,10 +260,9 @@ public class AllocateJob extends javax.swing.JPanel {
             });
 
         } else {
-            String mess = "Select a mechanic";
-
+           message = "Select a mechanic";
         }
-        JOptionPane.showMessageDialog(new JFrame(), mess);
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

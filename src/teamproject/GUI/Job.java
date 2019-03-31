@@ -500,7 +500,6 @@ public class Job extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         lblAvailableParts1 = new javax.swing.JLabel();
         sendYardButton = new javax.swing.JButton();
-        yardCheckBox = new javax.swing.JCheckBox();
         jobCompletedButton = new javax.swing.JButton();
         labelAvailableBay = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
@@ -702,9 +701,6 @@ public class Job extends javax.swing.JPanel {
         });
         add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 650, 170, -1));
 
-        yardCheckBox.setText("Confirm Send Vehicle to Yard");
-        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 610, -1, -1));
-
         jobCompletedButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jobCompletedButton.setText("Job Completed");
         jobCompletedButton.addActionListener(new java.awt.event.ActionListener() {
@@ -847,11 +843,11 @@ public class Job extends javax.swing.JPanel {
                 }
                 ps.executeUpdate();
             }
-            JOptionPane.showMessageDialog(new JFrame(), message);
+
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        JOptionPane.showMessageDialog(new JFrame(), message);
         db.closeConnection(connection);
         new MainMenu(username);
     }//GEN-LAST:event_updateJobButtonActionPerformed
@@ -983,10 +979,11 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateQuantityActionPerformed
 
     private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed
-        if (yardCheckBox.isSelected()) {
+        String message = "Do you want to send the vehicle to the yard?";
+        int reply = JOptionPane.showConfirmDialog(null, message, "Send to Yard", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
             try {
                 String sql = ("update job set BaybayID = null where jobID = " + jobID);
-
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -1199,7 +1196,7 @@ public class Job extends javax.swing.JPanel {
     private void jobCompletedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jobCompletedButtonActionPerformed
         String sql;
         String message = "Is the Job Completed?";
-        int reply = JOptionPane.showConfirmDialog(null, message, "Are You Sure?", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(null, message, "Job Completed", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             try {
                 connection.setAutoCommit(false);
@@ -1542,7 +1539,6 @@ public class Job extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldTime;
     private javax.swing.JTextField textFieldUserDetails;
     private javax.swing.JButton updateJobButton;
-    private javax.swing.JCheckBox yardCheckBox;
     // End of variables declaration//GEN-END:variables
 
 }

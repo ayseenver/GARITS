@@ -438,11 +438,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
+        String message = "Vehicle Details Updated";
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
         } else {
             try {
                 String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
@@ -469,31 +469,41 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             }
             ShowVehicles();
         }
+
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
     private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
+        String message = "Vehicle Deleted";
+        String warningMessage = "Are you Sure you want to delete a vehicle?";
         if (listVehicles.getSelectedValue() == null) {
-            String mess = "Please choose vehicle record first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
-            String selected = listVehicles.getSelectedValue();
-            String[] parts = selected.split(", ");
-            String regNo = parts[0];
+            message = "Please choose vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), message);
 
-            //delete this vehicle
-            try {
-                String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
-                PreparedStatement ps = null;
+        } else {
+            int reply = JOptionPane.showConfirmDialog(null, message, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String selected = listVehicles.getSelectedValue();
+                String[] parts = selected.split(", ");
+                String regNo = parts[0];
+
+                //delete this vehicle
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
         }
+
         ShowVehicles();
     }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
 
