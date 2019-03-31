@@ -102,13 +102,12 @@ public class Report extends javax.swing.JPanel {
             this.rsU = statement.executeQuery("select roleName from user where username = '" + username + "'");
 
             String roleName = rsU.getString("roleName");
-
+            comboBoxReportType.setSelectedItem("Stock control");
             if (!roleName.equals("receptionist")) {
                 comboBoxReportType.setEnabled(true);
-                comboBoxReportType.setSelectedItem("Stock control");
+
             } else {
                 comboBoxReportType.setEnabled(false);
-                comboBoxReportType.setSelectedItem("Stock control");
             }
 
         } catch (SQLException e) {
