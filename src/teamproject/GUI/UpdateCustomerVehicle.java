@@ -15,6 +15,7 @@ import teamproject.Databases.DB_ImplClass;
 public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private String username;
+    String previousPage;
     Statement statement;
     Connection connection = null;
     Customer c;
@@ -26,9 +27,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     ArrayList<String> customers = new ArrayList<>();
     String reg;
 
-    public UpdateCustomerVehicle(String username, Customer c) {
+    public UpdateCustomerVehicle(String username, Customer c, String previousPage) {
         this.username = username;
         this.c = c;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -292,7 +294,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new MainMenu(username);
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new MainMenu(username);
+            }
         } else {
             String mess = "Customer needs at least one vehicle";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -300,10 +306,15 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);
+        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+            new CreateJobCustomer(username);
+        } else {
+            new CustomerList(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

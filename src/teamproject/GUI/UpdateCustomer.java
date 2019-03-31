@@ -16,6 +16,7 @@ import teamproject.Databases.DB_ImplClass;
 public class UpdateCustomer extends javax.swing.JPanel {
 
     private String username;
+    private String previousPage;
     Statement statement;
     Connection connection;
     DB_ImplClass db = new DB_ImplClass();
@@ -29,8 +30,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
     String[] bandArray;
     Map<String, String> discountDetail = new HashMap<>();
 
-    public UpdateCustomer(String username) {
+    public UpdateCustomer(String username, String previousPage) {
         this.username = username;
+        this.previousPage=previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -41,7 +43,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
         accountHolderPane.setVisible(false);
-        
+
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -50,8 +52,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     }
 
-    public UpdateCustomer(String username, Customer c) { //existing custmer
-        this(username);
+    public UpdateCustomer(String username, Customer c, String previousPage) { //existing custmer
+        this.username = username;
+        this.previousPage = previousPage;
         this.c = c;
         buttonUpdateCustomer.setVisible(true);
         buttonDeleteCustomer.setVisible(true);
@@ -823,7 +826,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);
+        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+            new CreateJobCustomer(username);
+        } else {
+            new CustomerList(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
@@ -862,7 +869,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c);
+            new UpdateCustomerVehicle(username, c, "UpdateCustomer");
         }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
@@ -1071,7 +1078,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new CustomerList(username);
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new CustomerList(username);
+            }
         }
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 

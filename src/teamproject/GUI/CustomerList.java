@@ -442,7 +442,7 @@ public class CustomerList extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new UpdateCustomer(username);
+        new UpdateCustomer(username, "CustomerList");
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
     private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
@@ -472,7 +472,7 @@ public class CustomerList extends javax.swing.JPanel {
             f.dispose();
             GetSelectedCustomer();
             db.closeConnection(connection);
-            new UpdateCustomer(username, c);
+            new UpdateCustomer(username, c, "CustomerList");
         }
     }//GEN-LAST:event_buttonEditCustomerActionPerformed
 
@@ -492,7 +492,7 @@ public class CustomerList extends javax.swing.JPanel {
             f.dispose();
             GetSelectedCustomer();
             db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c);
+            new UpdateCustomerVehicle(username, c, "CustomerList");
         }
     }//GEN-LAST:event_buttonEditVehiclesActionPerformed
 
