@@ -210,7 +210,7 @@ public class JobList extends javax.swing.JPanel {
                 buttonEditJobActionPerformed(evt);
             }
         });
-        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 450, -1, -1));
+        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 450, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -258,7 +258,6 @@ public class JobList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonSelectJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectJobActionPerformed
-        ShowBayList();
         String jobDetails = listJobList.getSelectedValue();
         String jobOverview;
         if (jobDetails != null) {
