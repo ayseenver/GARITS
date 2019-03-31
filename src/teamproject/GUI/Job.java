@@ -38,6 +38,7 @@ public class Job extends javax.swing.JPanel {
     String[] bayArray;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
+    String roleName;
 
     /**
      * Creates new form NewJPanel
@@ -63,9 +64,60 @@ public class Job extends javax.swing.JPanel {
         ListUsedParts();
         showJobDetails();
         UpdateBayList();
+        GetRole();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //Code To check Which roleName is selected 
+        if (roleName.equals("receptionist")) {
+            receptionist_menu();
+        }
+    }
+
+    private void receptionist_menu() {
+        addTaskButton.setEnabled(false);
+        removeTaskButton.setEnabled(false);
+        addPartButton.setEnabled(false);
+        removePartButton.setEnabled(false);
+        listAvailableTasks.setEnabled(false);
+        listTasksCarriedOut.setEnabled(false);
+        textFieldTime.setFocusable(false);
+        textFieldCost.setFocusable(false);
+        buttonUpdateTaskTime.setEnabled(false);
+        buttonUpdateTaskCost.setEnabled(false);
+        textFieldSearchTasks.setFocusable(false);
+        buttonSearchTasks.setEnabled(false);
+        textFieldSearchParts.setFocusable(false);
+        buttonSearchParts.setEnabled(false);
+        listAvailableParts.setEnabled(false);
+        listPartsUsed.setEnabled(false);
+        textFieldQuantity.setFocusable(false);
+        buttonUpdateQuantity.setEnabled(false);
     }
 
     private void showJobDetails() {
@@ -495,7 +547,7 @@ public class Job extends javax.swing.JPanel {
         jScrollPane8.setViewportView(listPartsUsed);
 
         panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, 230, 200));
-        panelPart.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 33, -1));
+        panelPart.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 290, 33, -1));
 
         labelPartsUsedQuantity.setText("Update Quantity:");
         panelPart.add(labelPartsUsedQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 290, -1, -1));
@@ -506,7 +558,7 @@ public class Job extends javax.swing.JPanel {
                 buttonUpdateQuantityActionPerformed(evt);
             }
         });
-        panelPart.add(buttonUpdateQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 280, -1, -1));
+        panelPart.add(buttonUpdateQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 290, -1, -1));
 
         addPartButton.setText(">");
         addPartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -514,7 +566,7 @@ public class Job extends javax.swing.JPanel {
                 addPartButtonActionPerformed(evt);
             }
         });
-        panelPart.add(addPartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
+        panelPart.add(addPartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
 
         removePartButton.setText("<");
         removePartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -522,7 +574,7 @@ public class Job extends javax.swing.JPanel {
                 removePartButtonActionPerformed(evt);
             }
         });
-        panelPart.add(removePartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, -1, -1));
+        panelPart.add(removePartButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
 
         labelPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelPartsUsed.setText("Parts Used:");
@@ -587,7 +639,7 @@ public class Job extends javax.swing.JPanel {
                 addTaskButtonActionPerformed(evt);
             }
         });
-        panelTask.add(addTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, -1, -1));
+        panelTask.add(addTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 130, -1, -1));
 
         removeTaskButton.setText("<");
         removeTaskButton.addActionListener(new java.awt.event.ActionListener() {
@@ -595,7 +647,7 @@ public class Job extends javax.swing.JPanel {
                 removeTaskButtonActionPerformed(evt);
             }
         });
-        panelTask.add(removeTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
+        panelTask.add(removeTaskButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 170, -1, -1));
 
         buttonUpdateTaskCost.setText("Update");
         buttonUpdateTaskCost.addActionListener(new java.awt.event.ActionListener() {
@@ -646,10 +698,10 @@ public class Job extends javax.swing.JPanel {
                 sendYardButtonActionPerformed(evt);
             }
         });
-        add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 170, -1));
+        add(sendYardButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 650, 170, -1));
 
         yardCheckBox.setText("Confirm Send Vehicle to Yard");
-        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 570, -1, -1));
+        add(yardCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 610, -1, -1));
 
         jobCompletedButton.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jobCompletedButton.setText("Job Completed");
