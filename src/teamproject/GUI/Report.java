@@ -597,7 +597,6 @@ public class Report extends javax.swing.JPanel {
                                 + "Part ID: " + rs.getString("partID") + "\n"
                                 + "Manufacturer: " + rs.getString("Manufacturername") + "\n"
                                 + "Vehicle type: " + rs.getString("vehicleType") + "\n"
-                                + "Year(s): " + rs.getString("year") + "\n"
                                 + "Price: £" + rs.getString("costPrice") + "\n"
                                 + "Initial stock level: " + initialQuantity + "\n"
                                 + "Initial cost: " + (initialQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"

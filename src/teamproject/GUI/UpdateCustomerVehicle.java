@@ -57,7 +57,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         //get all vehicles belonging to this owner
         try {
             String sql = ("select * from Vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "')");
+                    + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "') and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
