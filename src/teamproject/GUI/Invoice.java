@@ -1151,7 +1151,7 @@ public class Invoice extends javax.swing.JPanel {
         f.dispose();
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("PartSale")) {
-            new StockControl(username);
+            new PartSale(username);
         } else {
             new MainMenu(username);
         }
