@@ -12,7 +12,7 @@ import teamproject.Customer_Account.Customer;
 import teamproject.Databases.DB_ImplClass;
 
 public class CustomerList extends javax.swing.JPanel {
-
+    
     private String username;
     String payment;
     String details;
@@ -20,13 +20,14 @@ public class CustomerList extends javax.swing.JPanel {
     private ResultSet rsD;
     private ResultSet rs;
     private ResultSet rsP;
+    private ResultSet rsCr;
     private Statement statement;
     String[] nameArray;
     String[] detailArray;
     Customer c = new Customer();
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
-
+    
     public CustomerList(String username) {
         this.username = username;
         this.payment = "invoice";
@@ -34,7 +35,7 @@ public class CustomerList extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-
+        
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -46,18 +47,18 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         ShowCustomers();
-
+        
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        
     }
-
+    
     private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
-
+        
         try {
             while (rsC.next()) {
                 // read the result set
@@ -67,36 +68,57 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
         }
         nameArray = CreateArray(names);
-
+        
         listCustomers.setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
                 return nameArray.length;
             }
-
+            
             public String getElementAt(int i) {
                 return nameArray[i];
             }
         });
     }
-
+    
     private void ShowSelectedCustomersOverview() {
         GetSelectedCustomer();
         textAreaCustomerOverview.setText("Date: " + c.getDateCreated() + '\n' + "Name: " + c.getName() + '\n'
                 + "Address: " + c.getAddress() + '\n' + "Post Code: " + c.getPostCode() + '\n' + "Tel.: " + c.getTelephoneNumber()
                 + '\n' + "Mobile: " + c.getMobileNumber() + '\n' + "Email: " + c.getEmailAddress());
     }
-
+    
+    private void showCustomerCredit() {
+        String credit = "-1";
+        try {
+            this.rsCr = statement.executeQuery("Select credit from flexiblediscount where discountID = "
+                    + "(select discountID from flexiblediscount where discountID = "
+                    + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
+                    + "(select accountID from customeraccount where customerID = "
+                    + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+            while (rsCr.next()) {
+                credit = rsCr.getString("credit");
+                System.out.println(credit);
+            }
+            if (!credit.equals("-1")) {
+                textAreaCustomerOverview.append("\nCredit: £" + credit);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            
+        }
+        
+    }
+    
     private void ShowPayCustomer() {
         buttonConfirmPayment.setVisible(false);
         labelPayCustomer.setVisible(false);
         labelPayCustomerExplained.setVisible(false);
-
+        
         String flexibleDiscount = null;
         try {
-
             this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
                     + "(select ID from customer where name = '" + details + "'))");
-
+            
             while (rsP.next()) {
                 flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
             }
@@ -105,19 +127,19 @@ public class CustomerList extends javax.swing.JPanel {
                 labelPayCustomer.setVisible(true);
                 labelPayCustomerExplained.setVisible(true);
             }
-
+            
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
+            
         }
     }
-
+    
     private String[] CreateArray(ArrayList<String> customers) {
         String[] newArray = new String[customers.size()];
         newArray = customers.toArray(newArray);
         return newArray;
     }
-
+    
     private void GetSelectedCustomer() {
         try {
             String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "' "
@@ -132,37 +154,37 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setName(rsC.getString("name"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setEmailAddress(rsC.getString("emailAddress"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setAddress(rsC.getString("address"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setPostCode(rsC.getString("postCode"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setTelephoneNumber(rsC.getString("telephoneNumber"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        
         try {
             c.setFax(rsC.getString("fax"));
         } catch (SQLException e) {
@@ -174,7 +196,7 @@ public class CustomerList extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -345,19 +367,19 @@ public class CustomerList extends javax.swing.JPanel {
             String sql = ("select * from Customer where name LIKE '%"
                     + textFieldSearchCustomer.getText() + "%' and deleted = 0");
             PreparedStatement ps = null;
-
+            
             try {
                 ps = connection.prepareStatement(sql);
-
+                
             } catch (Exception e) {
                 e.printStackTrace();
-
+                
             }
             this.rsC = ps.executeQuery();
-
+            
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-
+            
         }
         ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
@@ -368,7 +390,7 @@ public class CustomerList extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
             details = (listCustomers.getSelectedValue());
-
+            
             try {
                 String sql = ("select * from vehicle where CustomerID = "
                         + "(select ID from customer where name = '" + details + "') and deleted = 0");
@@ -380,14 +402,15 @@ public class CustomerList extends javax.swing.JPanel {
                 }
                 this.rsD = ps.executeQuery();
                 ShowPayCustomer();
+                
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
             ShowSelectedCustomersOverview();
-
+            showCustomerCredit();
             listVehicleDetails.removeAll();
             ArrayList<String> vehicle = new ArrayList<>();
-
+            
             try {
                 while (rsD.next()) {
                     String detail = rsD.getString("registrationNumber") + ", "
@@ -402,12 +425,12 @@ public class CustomerList extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             detailArray = CreateArray(vehicle);
-
+            
             listVehicleDetails.setModel(new javax.swing.AbstractListModel<String>() {
                 public int getSize() {
                     return detailArray.length;
                 }
-
+                
                 public String getElementAt(int i) {
                     return detailArray[i];
                 }
@@ -474,6 +497,7 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehiclesActionPerformed
 
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
+        String message = "Customer Paid";
         if (listCustomers.getSelectedValue() != null) {
 
             //set this customer's credit to 0
@@ -494,9 +518,10 @@ public class CustomerList extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
         } else {
-            String mess = "Please choose customer record first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please choose customer record first!";
+            
         }
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
 
 
