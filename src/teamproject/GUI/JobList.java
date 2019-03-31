@@ -46,7 +46,7 @@ public class JobList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
         try {
-            this.rs = statement.executeQuery("select * from Job where status like '%" + checkStatusType() + "%'");
+            this.rs = statement.executeQuery("select * from Job where status like '%" + checkStatusType() + "%' order by status desc, jobID");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -67,7 +67,7 @@ public class JobList extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set
                 String job = "ID: " + rs.getString("jobID") + ", Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn");
+                        + ", Job Type: " + rs.getString("type") + ", Booked on: " + rs.getString("dateBookedIn")+ ", Status: "+ rs.getString("status");
                 jobs.add(job);
             }
         } catch (SQLException e) {
@@ -149,7 +149,7 @@ public class JobList extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(listJobList);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 230));
+        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 1160, 240));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -183,7 +183,7 @@ public class JobList extends javax.swing.JPanel {
                 buttonSelectJobActionPerformed(evt);
             }
         });
-        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
+        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, -1, -1));
 
         comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Created", "Allocated", "Completed" }));
         comboStatus.addActionListener(new java.awt.event.ActionListener() {
@@ -194,14 +194,15 @@ public class JobList extends javax.swing.JPanel {
         add(comboStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 190, -1, -1));
 
         textAreaJobOverview.setColumns(20);
+        textAreaJobOverview.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textAreaJobOverview.setRows(5);
         jScrollPane1.setViewportView(textAreaJobOverview);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 510, 1160, 130));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 520, 1160, 120));
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Job Overview:");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 490, -1, -1));
 
         buttonEditJob.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonEditJob.setText("Edit Job");
@@ -210,7 +211,7 @@ public class JobList extends javax.swing.JPanel {
                 buttonEditJobActionPerformed(evt);
             }
         });
-        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 450, -1, -1));
+        add(buttonEditJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 460, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
@@ -221,7 +222,7 @@ public class JobList extends javax.swing.JPanel {
                     + "inner join customer on customer.ID = vehicle.CustomerID "
                     + "where (registrationNumber like '%" + textFieldSearch.getText() + "%' "
                     + "or name like '%" + textFieldSearch.getText() + "%') and "
-                    + "status like '%" + checkStatusType() + "%'");
+                    + "status like '%" + checkStatusType() + "%' order by status desc, jobID");
             PreparedStatement ps = null;
 
             try {
@@ -306,7 +307,7 @@ public class JobList extends javax.swing.JPanel {
     private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
         if (comboStatus.getSelectedItem().equals("All")) {
             try {
-                this.rs = statement.executeQuery("select * from Job");
+                this.rs = statement.executeQuery("select * from Job order by status desc, jobID");
             } catch (SQLException e) {
                 // if the error message is "out of memory",
                 // it probably means no database file is found
@@ -314,7 +315,7 @@ public class JobList extends javax.swing.JPanel {
             }
         } else {
             try {
-                this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
+                this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'order by jobID");
             } catch (SQLException e) {
                 // if the error message is "out of memory",
                 // it probably means no database file is found
