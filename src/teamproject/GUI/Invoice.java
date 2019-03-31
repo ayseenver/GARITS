@@ -31,6 +31,7 @@ public class Invoice extends javax.swing.JPanel {
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
+    private ResultSet rsP;
     String[] invoiceArray;
     String jobNumber;
     String invoiceNumber;
@@ -59,7 +60,10 @@ public class Invoice extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         ShowAllInvoices();
-
+        checkBoxPayWithCredit.setVisible(false);
+        labelFlexibleDiscountBrief.setVisible(false);
+        labelPayWithCredit.setVisible(false);
+        buttonPayLater.setVisible(false);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -790,8 +794,8 @@ public class Invoice extends javax.swing.JPanel {
         buttonBack = new javax.swing.JButton();
         buttonPrintInvoice = new javax.swing.JButton();
         labelPaymentType1 = new javax.swing.JLabel();
-        payWithCredit = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
+        checkBoxPayWithCredit = new javax.swing.JCheckBox();
+        labelFlexibleDiscountBrief = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -908,13 +912,18 @@ public class Invoice extends javax.swing.JPanel {
         labelPaymentType1.setText("Payment Type:");
         add(labelPaymentType1, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 630, -1, 30));
 
-        payWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        payWithCredit.setText("Pay with discount");
-        add(payWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
+        checkBoxPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        checkBoxPayWithCredit.setText("Pay with discount");
+        checkBoxPayWithCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxPayWithCreditActionPerformed(evt);
+            }
+        });
+        add(checkBoxPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
 
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        jLabel1.setText("*this will reduce from their credit");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 680, -1, -1));
+        labelFlexibleDiscountBrief.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        labelFlexibleDiscountBrief.setText("*this will reduce from their credit");
+        add(labelFlexibleDiscountBrief, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 680, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchInvoicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInvoicesActionPerformed
@@ -939,6 +948,29 @@ public class Invoice extends javax.swing.JPanel {
         ShowAllInvoices();
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
 
+    private void showFlexibleDiscount() {
+        checkBoxPayWithCredit.setVisible(false);
+        labelFlexibleDiscountBrief.setVisible(false);
+        labelPayWithCredit.setVisible(false);
+        CheckAccountHolder();
+        String flexibleDiscount = null;
+        try {
+            while (rs.next()) {
+                flexibleDiscount = rs.getString("FlexibleDiscountdiscountID");
+            }
+            if (flexibleDiscount != null) {
+                checkBoxPayWithCredit.setVisible(true);
+                labelFlexibleDiscountBrief.setVisible(true);
+                labelPayWithCredit.setVisible(true);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
+
+
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -962,7 +994,7 @@ public class Invoice extends javax.swing.JPanel {
 
             if (accountID.equals("")) {
                 //this customer is not an account holder.
-                //proceed to standard payment (no discount) 
+                //proceed to standard payment (no discount)
                 StandardPayment();
             } else {
                 //check for fixed discount
@@ -985,7 +1017,7 @@ public class Invoice extends javax.swing.JPanel {
                 if (flexibleID == null) {
                     //no flexible discount
                 } else {
-                    if (payWithCredit.isSelected()) {
+                    if (checkBoxPayWithCredit.isSelected()) {
                         //flexible discount
                         FlexibleDiscount(flexibleID, accountID);
                     } else {
@@ -1006,17 +1038,38 @@ public class Invoice extends javax.swing.JPanel {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
             GetJobAndInvoiceNumber();
-            if (jobNumber.isEmpty()) {
+            if (!jobNumber.equals("null")) {
+                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+                ShowPayLaterCustomer();
+            } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             } else {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
             }
+            showFlexibleDiscount();
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonViewActionPerformed
+    private void ShowPayLaterCustomer() {
+        buttonPayLater.setVisible(false);
+        try {
+            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber="
+                    + "(select VehicleRegistrationNumber from Job where jobID=" + jobNumber + ")))");
 
+            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+            if (configuredPayLater.equals("1")) {
+                buttonPayLater.setVisible(true);
+
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+    }
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -1131,6 +1184,10 @@ public class Invoice extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
+    private void checkBoxPayWithCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxPayWithCreditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBoxPayWithCreditActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
@@ -1140,18 +1197,18 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JButton buttonPrintInvoice;
     private javax.swing.JButton buttonSearchInvoices;
     private javax.swing.JButton buttonView;
+    private javax.swing.JCheckBox checkBoxPayWithCredit;
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelDetail;
+    private javax.swing.JLabel labelFlexibleDiscountBrief;
     private javax.swing.JLabel labelInvoice;
     private javax.swing.JLabel labelInvoices;
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelPayWithCredit;
     private javax.swing.JLabel labelPaymentType1;
     private javax.swing.JList<String> listInvoices;
-    private javax.swing.JCheckBox payWithCredit;
     private javax.swing.JTextArea textAreaInvoiceDetail;
     private javax.swing.JTextField textFieldSearchInvoices;
     private javax.swing.JTextField textFieldUserDetails;
