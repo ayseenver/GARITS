@@ -27,6 +27,7 @@ public class Report extends javax.swing.JPanel {
 
     private String username;
     private ResultSet rs;
+    private ResultSet rsU;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
@@ -51,6 +52,7 @@ public class Report extends javax.swing.JPanel {
         statement = db.getStatement();
 
         SetPanel();
+        ShowReportOption();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,6 +93,25 @@ public class Report extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void ShowReportOption() {
+        try {
+            this.rsU = statement.executeQuery("select roleName from user where username = '" + username + "'");
+
+            String roleName = rsU.getString("roleName");
+
+            if (!roleName.equals("receptionist")) {
+                comboBoxReportType.setEnabled(true);
+            } else {
+                comboBoxReportType.setEnabled(false);
+                comboBoxReportType.setSelectedItem("Stock control");
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
     }
 
     private void SetPanel() {
@@ -355,7 +376,7 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                
+
                 ArrayList<String> jobs = new ArrayList<>();
 
                 try {
