@@ -601,14 +601,14 @@ public class StockControl extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
     private void buttonStockLevelReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReport1ActionPerformed
-         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new UpdateSparePart(username);
     }//GEN-LAST:event_buttonStockLevelReport1ActionPerformed
 
     private void buttonEditSelectPartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditSelectPartActionPerformed
-       JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new UpdateSparePart(username);

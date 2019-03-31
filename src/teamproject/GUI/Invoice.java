@@ -1040,15 +1040,17 @@ public class Invoice extends javax.swing.JPanel {
             GetJobAndInvoiceNumber();
             if (!jobNumber.equals("null")) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
-                ShowPayLaterCustomer();
-            }else {
-                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+
+            } else {
+                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
+            ShowPayLaterCustomer();
             showFlexibleDiscount();
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
+
     }//GEN-LAST:event_buttonViewActionPerformed
     private void ShowPayLaterCustomer() {
         buttonPayLater.setVisible(false);
