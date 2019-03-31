@@ -68,7 +68,9 @@ public class MyJob extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             this.rs = ps.executeQuery();
-            id = rs.getString("ID");
+            while (rs.next()) {
+                id = rs.getString("ID");
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
