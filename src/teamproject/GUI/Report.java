@@ -105,6 +105,7 @@ public class Report extends javax.swing.JPanel {
 
             if (!roleName.equals("receptionist")) {
                 comboBoxReportType.setEnabled(true);
+                comboBoxReportType.setSelectedItem("Stock control");
             } else {
                 comboBoxReportType.setEnabled(false);
                 comboBoxReportType.setSelectedItem("Stock control");
