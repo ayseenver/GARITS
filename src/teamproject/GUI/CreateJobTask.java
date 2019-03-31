@@ -303,7 +303,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 bayTypeComboActionPerformed(evt);
             }
         });
-        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 590, -1, -1));
+        add(bayTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 600, -1, -1));
 
         listAvailableBays.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane11.setViewportView(listAvailableBays);
@@ -328,7 +328,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 jobTypeComboActionPerformed(evt);
             }
         });
-        add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 540, -1, -1));
+        add(jobTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 550, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -362,7 +362,7 @@ public class CreateJobTask extends javax.swing.JPanel {
                 checkBoxYardActionPerformed(evt);
             }
         });
-        add(checkBoxYard, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 620, -1, -1));
+        add(checkBoxYard, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 550, -1, -1));
 
         jPanel6.setBackground(new java.awt.Color(204, 204, 204));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -416,7 +416,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         jLabel1.setText("*a bay will NOT be allocated");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 640, -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 580, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void createJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createJobButtonActionPerformed
