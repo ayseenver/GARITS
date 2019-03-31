@@ -46,7 +46,7 @@ public class JobList extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
         try {
-            this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
+            this.rs = statement.executeQuery("select * from Job where status like '%" + checkStatusType() + "%'");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -185,7 +185,7 @@ public class JobList extends javax.swing.JPanel {
         });
         add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
 
-        comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Created", "Allocated", "Completed" }));
+        comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Created", "Allocated", "Completed" }));
         comboStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboStatusActionPerformed(evt);
@@ -214,13 +214,14 @@ public class JobList extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+
         try {
             String sql = ("select job.*, vehicle.*, customer.* from job "
                     + "inner join vehicle on vehicle.registrationNumber = job.VehicleregistrationNumber "
                     + "inner join customer on customer.ID = vehicle.CustomerID "
-                    + "where registrationNumber like '%" + textFieldSearch.getText() + "%' "
-                    + "or name like '%" + textFieldSearch.getText() + "%' and "
-                    + "status = '" + comboStatus.getSelectedItem().toString() + "'");
+                    + "where (registrationNumber like '%" + textFieldSearch.getText() + "%' "
+                    + "or name like '%" + textFieldSearch.getText() + "%') and "
+                    + "status like '%" + checkStatusType() + "%'");
             PreparedStatement ps = null;
 
             try {
@@ -238,7 +239,13 @@ public class JobList extends javax.swing.JPanel {
         }
         ShowAllJobs();
     }//GEN-LAST:event_buttonSearchActionPerformed
-
+    private String checkStatusType() {
+        if (comboStatus.getSelectedItem().equals("All")) {
+            return "";
+        } else {
+            return comboStatus.getSelectedItem().toString();
+        }
+    }
     private void textFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldSearchActionPerformed
@@ -297,14 +304,23 @@ public class JobList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSelectJobActionPerformed
 
     private void comboStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStatusActionPerformed
-        try {
-            this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
+        if (comboStatus.getSelectedItem().equals("All")) {
+            try {
+                this.rs = statement.executeQuery("select * from Job");
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
+        } else {
+            try {
+                this.rs = statement.executeQuery("select * from Job where status = '" + comboStatus.getSelectedItem().toString() + "'");
+            } catch (SQLException e) {
+                // if the error message is "out of memory",
+                // it probably means no database file is found
+                System.err.println(e.getMessage());
+            }
         }
-
         ShowAllJobs();
     }//GEN-LAST:event_comboStatusActionPerformed
 
@@ -322,7 +338,7 @@ public class JobList extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new Job(username, jobID, vehicleReg,"JobList");
+            new Job(username, jobID, vehicleReg, "JobList");
         } else {
             String mess = "Select a job";
             JOptionPane.showMessageDialog(new JFrame(), mess);
