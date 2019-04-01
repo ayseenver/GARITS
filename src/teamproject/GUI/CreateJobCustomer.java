@@ -470,7 +470,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c);
+            new UpdateCustomerVehicle(username, c,"createJobCustomer");
         } else {
             String mess = "Select a customer";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -481,7 +481,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new UpdateCustomer(username);
+        new UpdateCustomer(username, "CreateJobCustomer");
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
 

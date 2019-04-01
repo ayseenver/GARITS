@@ -27,6 +27,7 @@ import teamproject.Databases.DB_ImplClass;
 public class Invoice extends javax.swing.JPanel {
 
     private String username;
+    private String previousPage;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
@@ -39,8 +40,9 @@ public class Invoice extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public Invoice(String username) {
+    public Invoice(String username, String previousPage) {
         this.username = username;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -233,7 +235,7 @@ public class Invoice extends javax.swing.JPanel {
         try {
             while (rs.next()) {
                 // read the result set. Get part name and quantity
-                result += rs.getString("partName") + ", Quantity: " + rs.getString("quantity");
+                result += rs.getString("partName") + ", Quantity: " + rs.getString("quantity") + "\n";
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -271,7 +273,7 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         double totalCost = sellingPrice;
-        result += ("\nGrand total: £" + totalCost * 1.2 + "\n");
+        result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2) + "\n");
         return result;
     }
 
@@ -741,7 +743,7 @@ public class Invoice extends javax.swing.JPanel {
 
     private void CheckAccountHolder() {
         String sql;
-        //see if customer is account holder
+        //see if customer is account holder for a normal job (not a part sale)
         try {
             sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
                     + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
@@ -762,7 +764,45 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+    }
 
+    private void ShowPayLaterCustomer() {
+        buttonPayLater.setVisible(false);
+        try {
+            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber = "
+                    + "(select VehicleRegistrationNumber from Job where jobID = " + jobNumber + " )))");
+
+            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+            if (configuredPayLater.equals("1")) {
+                buttonPayLater.setVisible(true);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void showFlexibleDiscount() {
+        checkBoxPayWithCredit.setVisible(false);
+        labelFlexibleDiscountBrief.setVisible(false);
+        labelPayWithCredit.setVisible(false);
+        CheckAccountHolder();
+        String flexibleDiscount = null;
+        try {
+            while (rs.next()) {
+                flexibleDiscount = rs.getString("FlexibleDiscountdiscountID");
+            }
+            if (flexibleDiscount != null) {
+                checkBoxPayWithCredit.setVisible(true);
+                labelFlexibleDiscountBrief.setVisible(true);
+                labelPayWithCredit.setVisible(true);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
     }
 
     /**
@@ -914,11 +954,6 @@ public class Invoice extends javax.swing.JPanel {
 
         checkBoxPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         checkBoxPayWithCredit.setText("Pay with discount");
-        checkBoxPayWithCredit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkBoxPayWithCreditActionPerformed(evt);
-            }
-        });
         add(checkBoxPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
 
         labelFlexibleDiscountBrief.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
@@ -947,29 +982,6 @@ public class Invoice extends javax.swing.JPanel {
         }
         ShowAllInvoices();
     }//GEN-LAST:event_buttonSearchInvoicesActionPerformed
-
-    private void showFlexibleDiscount() {
-        checkBoxPayWithCredit.setVisible(false);
-        labelFlexibleDiscountBrief.setVisible(false);
-        labelPayWithCredit.setVisible(false);
-        CheckAccountHolder();
-        String flexibleDiscount = null;
-        try {
-            while (rs.next()) {
-                flexibleDiscount = rs.getString("FlexibleDiscountdiscountID");
-            }
-            if (flexibleDiscount != null) {
-                checkBoxPayWithCredit.setVisible(true);
-                labelFlexibleDiscountBrief.setVisible(true);
-                labelPayWithCredit.setVisible(true);
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-
-        }
-    }
-
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
@@ -1041,7 +1053,7 @@ public class Invoice extends javax.swing.JPanel {
             if (!jobNumber.isEmpty()) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
                 ShowPayLaterCustomer();
-            }else {
+            } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
             showFlexibleDiscount();
@@ -1049,25 +1061,9 @@ public class Invoice extends javax.swing.JPanel {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
+
     }//GEN-LAST:event_buttonViewActionPerformed
-    private void ShowPayLaterCustomer() {
-        buttonPayLater.setVisible(false);
-        try {
-            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
-                    + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber="
-                    + "(select VehicleRegistrationNumber from Job where jobID=" + jobNumber + ")))");
 
-            String configuredPayLater = rsP.getString("ConfiguredPayLater");
-            if (configuredPayLater.equals("1")) {
-                buttonPayLater.setVisible(true);
-
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-
-        }
-    }
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -1147,7 +1143,11 @@ public class Invoice extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("PartSale")) {
+            new PartSale(username);
+        } else {
+            new MainMenu(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
@@ -1171,20 +1171,14 @@ public class Invoice extends javax.swing.JPanel {
                     System.out.println(e.getMessage());
                 }
 
-                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-                f.dispose();
-                db.closeConnection(connection);
-                new MainMenu(username);
+                String mess = "Printed successfully";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
-
-    private void checkBoxPayWithCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxPayWithCreditActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkBoxPayWithCreditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -19,6 +19,7 @@ import teamproject.Databases.DB_ImplClass;
  * @author ahmetsesli
  */
 public class Database extends javax.swing.JPanel {
+
     private String username;
     Statement statement;
     Connection connection = null;
@@ -33,11 +34,11 @@ public class Database extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
-        
+
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
-        
+
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -180,6 +181,9 @@ public class Database extends javax.swing.JPanel {
 
     private void buttonBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackupActionPerformed
         db.Backup(connection);
+        String message = "Database Updated";
+        JOptionPane.showMessageDialog(new JFrame(), message);
+
     }//GEN-LAST:event_buttonBackupActionPerformed
 
     private void buttonBack1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBack1ActionPerformed
@@ -204,7 +208,7 @@ public class Database extends javax.swing.JPanel {
             System.out.println(e.getMessage());
         }
 
-        JOptionPane.showMessageDialog(new JFrame(), "Done!");
+        JOptionPane.showMessageDialog(new JFrame(), "Frequency Updated!");
     }//GEN-LAST:event_buttonDoneBackupActionPerformed
 
 

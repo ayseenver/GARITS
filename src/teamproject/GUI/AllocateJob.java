@@ -222,6 +222,7 @@ public class AllocateJob extends javax.swing.JPanel {
     private void buttonAllocateToMechanicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAllocateToMechanicActionPerformed
         //get the selected mechanic's first and last name
         String selected = listMechanics.getSelectedValue();
+        String message = "Mechanic Allocated";
         if (selected != null) {
             String[] parts = selected.split(" ");
             String firstName = parts[0];
@@ -259,9 +260,9 @@ public class AllocateJob extends javax.swing.JPanel {
             });
 
         } else {
-            String mess = "Select a mechanic";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+           message = "Select a mechanic";
         }
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

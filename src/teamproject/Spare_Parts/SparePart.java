@@ -2,25 +2,15 @@ package teamproject.Spare_Parts;
 
 public class SparePart {
 
-    private String partID;
     private String partName;
     private String vehicleType;
-    private int year;
     private double costPrice;
-    private double sellingPrice = costPrice * markup;
+    private double sellingPrice;
     private int quantity;
     private int threshold = 10;
-    private static float markup = (float) 1.3;
+    private String manufacturerName;
 
     public SparePart() {
-    }
-
-    public String getPartID() {
-        return partID;
-    }
-
-    public void setPartID(String partID) {
-        this.partID = partID;
     }
 
     public String getPartName() {
@@ -37,14 +27,6 @@ public class SparePart {
 
     public void setVehicleType(String vehicleType) {
         this.vehicleType = vehicleType;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     public double getCostPrice() {
@@ -79,12 +61,14 @@ public class SparePart {
         this.threshold = threshold;
     }
 
-    public static float getMarkup() {
-        return markup;
+    public String getManufacturerName() {
+        return manufacturerName;
     }
 
-    public static void setMarkup(float markup) {
-        SparePart.markup = markup;
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
     }
     
+    
+
 }

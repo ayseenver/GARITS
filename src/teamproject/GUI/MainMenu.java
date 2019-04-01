@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
-import teamproject.AlertsReminders.AlertTimer;
+import teamproject.AlertsReminders.StockAlertTimer;
 
 /**
  *
@@ -59,7 +59,8 @@ public class MainMenu extends javax.swing.JPanel {
 
                 //Code to get Role name from Databse
                 if (username.equals(user)) {
-                    this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+                     // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
+                    //it get the role name if the username equals anyway plus gets ride of the error message
 
                     roleName = rs.getString("roleName");
                 }
@@ -93,12 +94,12 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonTaskList.setVisible(false);
 
         // changes made in this section
-        this.buttonCreateJob.setLocation(490, 260);
-        this.buttonCustomers.setLocation(490, 320);
-        this.buttonJobList.setLocation(490, 380);
-        this.buttonInvoices.setLocation(490, 440);
-        this.buttonReminders.setLocation(490, 500);
-        this.buttonStockControl.setLocation(490, 560);
+        this.buttonCreateJob.setLocation(490, 230);
+        this.buttonCustomers.setLocation(490, 290);
+        this.buttonJobList.setLocation(490, 350);
+        this.buttonInvoices.setLocation(490, 410);
+        this.buttonReminders.setLocation(490, 470);
+        this.buttonStockControl.setLocation(490, 530);
 
     }
 
@@ -109,14 +110,14 @@ public class MainMenu extends javax.swing.JPanel {
         this.buttonReport.setVisible(false);
         this.buttonTaskList.setVisible(false);
 
-        this.buttonCreateJob.setLocation(490, 220);
-        this.buttonAllocateJob.setLocation(490, 280);
-        this.buttonJobList.setLocation(490, 340);
-        this.buttonMyJobs.setLocation(490, 400);
-        this.buttonCustomers.setLocation(490, 460); // added 
-        this.buttonInvoices.setLocation(490, 520);
-        this.buttonStockControl.setLocation(490, 580);
-        this.buttonReminders.setLocation(490, 630);
+        this.buttonCreateJob.setLocation(490, 180);
+        this.buttonAllocateJob.setLocation(490, 240);
+        this.buttonJobList.setLocation(490, 300);
+        this.buttonMyJobs.setLocation(490, 360);
+        this.buttonCustomers.setLocation(490, 420);  
+        this.buttonInvoices.setLocation(490, 480);
+        this.buttonStockControl.setLocation(490, 540);
+        this.buttonReminders.setLocation(490, 600);
 
     }
 
@@ -208,7 +209,7 @@ public class MainMenu extends javax.swing.JPanel {
         lblMainMenu.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         lblMainMenu.setText("Main Menu");
         add(lblMainMenu);
-        lblMainMenu.setBounds(410, 40, 410, 92);
+        lblMainMenu.setBounds(410, 40, 410, 86);
 
         buttonCreateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCreateJob.setText("Create Job");
@@ -218,7 +219,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonCreateJob);
-        buttonCreateJob.setBounds(490, 160, 230, 41);
+        buttonCreateJob.setBounds(490, 160, 230, 38);
 
         buttonReminders.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReminders.setText("View Reminders");
@@ -228,7 +229,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonReminders);
-        buttonReminders.setBounds(490, 460, 230, 41);
+        buttonReminders.setBounds(490, 460, 230, 38);
 
         buttonStockControl.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonStockControl.setText("Stock Control");
@@ -238,7 +239,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonStockControl);
-        buttonStockControl.setBounds(490, 520, 230, 41);
+        buttonStockControl.setBounds(490, 520, 230, 38);
 
         buttonInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonInvoices.setText("Invoices");
@@ -248,7 +249,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonInvoices);
-        buttonInvoices.setBounds(490, 400, 230, 41);
+        buttonInvoices.setBounds(490, 400, 230, 38);
 
         buttonMyJobs.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonMyJobs.setText("My Jobs");
@@ -258,7 +259,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonMyJobs);
-        buttonMyJobs.setBounds(490, 340, 230, 41);
+        buttonMyJobs.setBounds(490, 340, 230, 38);
 
         buttonAllocateJob.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonAllocateJob.setText("Allocate Jobs");
@@ -268,7 +269,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonAllocateJob);
-        buttonAllocateJob.setBounds(490, 220, 230, 41);
+        buttonAllocateJob.setBounds(490, 220, 230, 38);
 
         buttonReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonReport.setText("All Reports");
@@ -278,7 +279,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonReport);
-        buttonReport.setBounds(490, 640, 230, 41);
+        buttonReport.setBounds(490, 640, 230, 38);
 
         buttonJobList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonJobList.setText("Job List");
@@ -288,7 +289,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonJobList);
-        buttonJobList.setBounds(490, 280, 230, 41);
+        buttonJobList.setBounds(490, 280, 230, 38);
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -302,7 +303,7 @@ public class MainMenu extends javax.swing.JPanel {
 
         lblLoggedIn.setText("Logged In as:");
         add(lblLoggedIn);
-        lblLoggedIn.setBounds(820, 20, 90, 14);
+        lblLoggedIn.setBounds(850, 20, 90, 16);
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Logout");
@@ -312,7 +313,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonExit);
-        buttonExit.setBounds(1140, 10, 120, 33);
+        buttonExit.setBounds(1140, 10, 120, 30);
 
         buttonUserAccount.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonUserAccount.setText("User Accounts");
@@ -322,7 +323,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonUserAccount);
-        buttonUserAccount.setBounds(800, 600, 230, 41);
+        buttonUserAccount.setBounds(800, 600, 230, 38);
 
         buttonCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonCustomers.setText("View Customers");
@@ -332,7 +333,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonCustomers);
-        buttonCustomers.setBounds(490, 580, 230, 41);
+        buttonCustomers.setBounds(490, 580, 230, 38);
 
         buttonDatabase.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonDatabase.setText("Database");
@@ -342,7 +343,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonDatabase);
-        buttonDatabase.setBounds(800, 500, 230, 41);
+        buttonDatabase.setBounds(800, 500, 230, 38);
 
         buttonTaskList.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonTaskList.setText("Task List");
@@ -352,7 +353,7 @@ public class MainMenu extends javax.swing.JPanel {
             }
         });
         add(buttonTaskList);
-        buttonTaskList.setBounds(800, 550, 230, 41);
+        buttonTaskList.setBounds(800, 550, 230, 38);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonCreateJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateJobActionPerformed
@@ -381,7 +382,7 @@ public class MainMenu extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Invoice(username);
+        new Invoice(username, "MainMenu");
     }//GEN-LAST:event_buttonInvoicesActionPerformed
 
     private void buttonMyJobsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMyJobsActionPerformed
@@ -402,7 +403,7 @@ public class MainMenu extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Report(username);
+        new Report(username, "MainMenu");
 
     }//GEN-LAST:event_buttonReportActionPerformed
 

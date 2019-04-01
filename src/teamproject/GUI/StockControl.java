@@ -268,6 +268,8 @@ public class StockControl extends javax.swing.JPanel {
         buttonConfigureThreshold = new javax.swing.JButton();
         buttonStockLevelReport = new javax.swing.JButton();
         buttonPartSale = new javax.swing.JButton();
+        buttonStockLevelReport1 = new javax.swing.JButton();
+        buttonEditSelectPart = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -389,7 +391,7 @@ public class StockControl extends javax.swing.JPanel {
         add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, -1, -1));
 
         textFieldConfigureThreshold.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        add(textFieldConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 320, 30, 30));
+        add(textFieldConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 320, 30, 30));
 
         buttonConfigureThreshold.setText("Configure Threshold");
         buttonConfigureThreshold.addActionListener(new java.awt.event.ActionListener() {
@@ -397,7 +399,7 @@ public class StockControl extends javax.swing.JPanel {
                 buttonConfigureThresholdActionPerformed(evt);
             }
         });
-        add(buttonConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 320, -1, -1));
+        add(buttonConfigureThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 320, -1, -1));
 
         buttonStockLevelReport.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonStockLevelReport.setText("Stock Level Report");
@@ -416,6 +418,23 @@ public class StockControl extends javax.swing.JPanel {
             }
         });
         add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 140, -1, -1));
+
+        buttonStockLevelReport1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonStockLevelReport1.setText("Edit Spare Parts");
+        buttonStockLevelReport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStockLevelReport1ActionPerformed(evt);
+            }
+        });
+        add(buttonStockLevelReport1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 140, -1, -1));
+
+        buttonEditSelectPart.setText("Edit Selected Part");
+        buttonEditSelectPart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditSelectPartActionPerformed(evt);
+            }
+        });
+        add(buttonEditSelectPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 320, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
@@ -571,7 +590,7 @@ public class StockControl extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Report(username);
+        new Report(username, "StockControl");
     }//GEN-LAST:event_buttonStockLevelReportActionPerformed
 
     private void buttonPartSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPartSaleActionPerformed
@@ -581,12 +600,27 @@ public class StockControl extends javax.swing.JPanel {
         new PartSale(username);
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
+    private void buttonStockLevelReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReport1ActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new UpdateSparePart(username);
+    }//GEN-LAST:event_buttonStockLevelReport1ActionPerformed
+
+    private void buttonEditSelectPartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditSelectPartActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new UpdateSparePart(username);
+    }//GEN-LAST:event_buttonEditSelectPartActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAllStockOrder;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonChangeQuantity;
     private javax.swing.JButton buttonConfigureThreshold;
+    private javax.swing.JButton buttonEditSelectPart;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonLowStockOrder;
     private javax.swing.JButton buttonOrder;
@@ -594,6 +628,7 @@ public class StockControl extends javax.swing.JPanel {
     private javax.swing.JButton buttonRemove;
     private javax.swing.JButton buttonSearchAllStock;
     private javax.swing.JButton buttonStockLevelReport;
+    private javax.swing.JButton buttonStockLevelReport1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;
