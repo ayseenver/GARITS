@@ -59,7 +59,7 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         ShowAllInvoices();
         checkBoxPayWithCredit.setVisible(false);
@@ -81,7 +81,6 @@ public class Invoice extends javax.swing.JPanel {
                 String[] jobParts = parts[1].split(": ");
                 jobNumber = jobParts[1];
             } catch (Exception e) {
-                System.err.println(e.getMessage());
                 jobNumber = "";
             }
         } else {
@@ -108,7 +107,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         int i = 1;
@@ -120,7 +119,7 @@ public class Invoice extends javax.swing.JPanel {
                 ++i;
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //get all actual task hours for this job
@@ -134,15 +133,17 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalHours = 0;
         try {
-            // read the result set. Get task hours
-            totalHours += Double.parseDouble(rs.getString("totalHours"));
+            while (rs.next()) {
+                // read the result set. Get task hours
+                totalHours += Double.parseDouble(rs.getString("totalHours"));
+            }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         result += ("\nParts used: \n");
@@ -159,7 +160,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalPartsCost = 0;
@@ -174,7 +175,7 @@ public class Invoice extends javax.swing.JPanel {
                 result += (part + "\n");
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         result += ("Total parts cost: £" + String.format("%.2f", totalPartsCost) + "\n");
@@ -190,7 +191,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double hourlyRate = 0;
@@ -199,7 +200,7 @@ public class Invoice extends javax.swing.JPanel {
                 hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
@@ -229,7 +230,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         try {
@@ -238,7 +239,7 @@ public class Invoice extends javax.swing.JPanel {
                 result += rs.getString("partName") + ", Quantity: " + rs.getString("quantity") + "\n";
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         result += "\n";
@@ -258,7 +259,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             this.rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         Double sellingPrice = 0.00;
@@ -269,7 +270,7 @@ public class Invoice extends javax.swing.JPanel {
                 result += ("Total cost: £" + String.format("%.2f", sellingPrice) + "\n");
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalCost = sellingPrice;
@@ -287,7 +288,7 @@ public class Invoice extends javax.swing.JPanel {
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //get all invoices for part sales
@@ -295,7 +296,7 @@ public class Invoice extends javax.swing.JPanel {
             this.rs = statement.executeQuery("select * from Invoice where invoicenumber in (select invoiceinvoicenumber from "
                     + "invoice_sparepart)");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         try {
@@ -305,7 +306,7 @@ public class Invoice extends javax.swing.JPanel {
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         invoiceArray = CreateArray(invoices);
@@ -341,7 +342,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -361,7 +362,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double percentage = 0.0;
@@ -370,7 +371,7 @@ public class Invoice extends javax.swing.JPanel {
                 percentage = Double.parseDouble(rs.getString("percentage"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //reduce the total cost of the job by this amount
@@ -385,7 +386,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalCost = 0.0;
@@ -394,7 +395,7 @@ public class Invoice extends javax.swing.JPanel {
                 totalCost = Double.parseDouble(rs.getString("totalCost"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //calculate the new cost
@@ -411,7 +412,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //make a standard payment
@@ -430,7 +431,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //get the percentage discount for parts
@@ -440,7 +441,7 @@ public class Invoice extends javax.swing.JPanel {
                 partPercentage = Double.parseDouble(rs.getString("SparePartpercentage"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //a map storing the taskID and discount percentage
@@ -457,7 +458,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //put all IDs in an array list
@@ -468,7 +469,7 @@ public class Invoice extends javax.swing.JPanel {
                 taskIDs.add(ID);
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //get the price for each task. Add it to total
@@ -484,7 +485,7 @@ public class Invoice extends javax.swing.JPanel {
                 }
                 rs = ps.executeQuery();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             try {
@@ -493,7 +494,7 @@ public class Invoice extends javax.swing.JPanel {
                     totalTaskPrice += price;
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -510,7 +511,7 @@ public class Invoice extends javax.swing.JPanel {
                 }
                 rs = ps.executeQuery();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             try {
@@ -519,7 +520,7 @@ public class Invoice extends javax.swing.JPanel {
                     taskDiscount.put(s, percentage); //taskID, percentage
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -535,7 +536,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //put all part IDs in an array lit
@@ -546,7 +547,7 @@ public class Invoice extends javax.swing.JPanel {
                 partIDs.add(ID);
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //loop through the part IDs, get the price for each one and add to total
@@ -562,7 +563,7 @@ public class Invoice extends javax.swing.JPanel {
                 }
                 rs = ps.executeQuery();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             try {
@@ -571,7 +572,7 @@ public class Invoice extends javax.swing.JPanel {
                     totalPartCost += sellingPrice;
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -587,7 +588,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         double totalCost = 0.0;
@@ -596,7 +597,7 @@ public class Invoice extends javax.swing.JPanel {
                 totalCost = Double.parseDouble(rs.getString("totalCost"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //take away the cost of parts
@@ -628,7 +629,7 @@ public class Invoice extends javax.swing.JPanel {
                 }
                 rs = ps.executeQuery();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             try {
@@ -638,7 +639,7 @@ public class Invoice extends javax.swing.JPanel {
                     newTaskPrice += originalPrice * (1 - (percentage / 100));
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -655,7 +656,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         StandardPayment();
@@ -673,7 +674,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         Double totalCost = 0.0;
@@ -682,7 +683,7 @@ public class Invoice extends javax.swing.JPanel {
                 totalCost = Double.parseDouble(rs.getString("totalCost"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //get the credit for this customer
@@ -696,7 +697,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         Double credit = 0.0;
@@ -705,7 +706,7 @@ public class Invoice extends javax.swing.JPanel {
                 credit = Double.parseDouble(rs.getString("credit"));
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         totalCost -= credit;
@@ -721,7 +722,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //update the total cost of the job, taking into account the credit.
@@ -735,7 +736,7 @@ public class Invoice extends javax.swing.JPanel {
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         StandardPayment();
@@ -762,24 +763,31 @@ public class Invoice extends javax.swing.JPanel {
             }
             rs = ps.executeQuery();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void ShowPayLaterCustomer() {
         buttonPayLater.setVisible(false);
         try {
-            this.rsP = statement.executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+            this.rsP = connection.createStatement().executeQuery("select configuredPayLater from CustomerAccount where customerID = "
                     + "(select ID from Customer where ID = (select customerID from vehicle where registrationNumber = "
                     + "(select VehicleRegistrationNumber from Job where jobID = " + jobNumber + " )))");
 
-            String configuredPayLater = rsP.getString("ConfiguredPayLater");
+            String configuredPayLater = "";
+            try {
+                while (rs.next()) {
+                    configuredPayLater = rsP.getString("ConfiguredPayLater");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (configuredPayLater.equals("1")) {
                 buttonPayLater.setVisible(true);
             }
 
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -800,9 +808,15 @@ public class Invoice extends javax.swing.JPanel {
             }
 
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
 
         }
+    }
+
+    private void hideFlexibleDiscount() {
+        checkBoxPayWithCredit.setVisible(false);
+        labelFlexibleDiscountBrief.setVisible(false);
+        labelPayWithCredit.setVisible(false);
     }
 
     /**
@@ -820,7 +834,6 @@ public class Invoice extends javax.swing.JPanel {
         labelDetail = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listInvoices = new javax.swing.JList<>();
-        buttonView = new javax.swing.JButton();
         buttonPayLater = new javax.swing.JButton();
         comboxBoxPaymentType = new javax.swing.JComboBox<>();
         labelInvoices = new javax.swing.JLabel();
@@ -866,18 +879,14 @@ public class Invoice extends javax.swing.JPanel {
         add(labelDetail, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 360, -1, -1));
 
         listInvoices.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listInvoices.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listInvoicesValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(listInvoices);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 1160, 140));
-
-        buttonView.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonView.setText("View");
-        buttonView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonViewActionPerformed(evt);
-            }
-        });
-        add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(1140, 340, -1, -1));
 
         buttonPayLater.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonPayLater.setText("Pay Later");
@@ -972,12 +981,11 @@ public class Invoice extends javax.swing.JPanel {
 
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
             this.rs = ps.executeQuery();
 
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
 
         }
         ShowAllInvoices();
@@ -1001,7 +1009,7 @@ public class Invoice extends javax.swing.JPanel {
                     variableID = rs.getString("VariableDiscountdiscountID");
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             if (accountID.equals("")) {
@@ -1044,26 +1052,6 @@ public class Invoice extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonPayActionPerformed
 
-    private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        textAreaInvoiceDetail.setText("");
-
-        String selected = listInvoices.getSelectedValue();
-        if (selected != null) {
-            GetJobAndInvoiceNumber();
-            if (!jobNumber.isEmpty()) {
-                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
-                ShowPayLaterCustomer();
-            } else {
-                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
-            }
-            showFlexibleDiscount();
-        } else {
-            String mess = "Select an invoice";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
-
-    }//GEN-LAST:event_buttonViewActionPerformed
-
     private void buttonPayLaterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayLaterActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -1087,7 +1075,7 @@ public class Invoice extends javax.swing.JPanel {
                 }
                 rs = ps.executeQuery();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             boolean done = false;
@@ -1107,14 +1095,14 @@ public class Invoice extends javax.swing.JPanel {
                             ps.executeUpdate();
                             done = true;
                         } catch (SQLException e) {
-                            System.err.println(e.getMessage());
+                            e.printStackTrace();
                         }
 
                         ShowAllInvoices();
                     }
                 }
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
 
             if (done == false) {
@@ -1168,7 +1156,7 @@ public class Invoice extends javax.swing.JPanel {
                     writer.println(details);
                     writer.close();
                 } catch (IOException e) {
-                    System.out.println(e.getMessage());
+                    e.printStackTrace();
                 }
 
                 String mess = "Printed successfully";
@@ -1180,6 +1168,26 @@ public class Invoice extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
+    private void listInvoicesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listInvoicesValueChanged
+        textAreaInvoiceDetail.setText("");
+
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            GetJobAndInvoiceNumber();
+            if (!jobNumber.isEmpty()) {
+                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+                ShowPayLaterCustomer();
+                showFlexibleDiscount();
+            } else {
+                textAreaInvoiceDetail.append(GetPartInvoiceDetails());
+                hideFlexibleDiscount();
+            }
+        } else {
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }//GEN-LAST:event_listInvoicesValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
@@ -1188,7 +1196,6 @@ public class Invoice extends javax.swing.JPanel {
     private javax.swing.JButton buttonPayLater;
     private javax.swing.JButton buttonPrintInvoice;
     private javax.swing.JButton buttonSearchInvoices;
-    private javax.swing.JButton buttonView;
     private javax.swing.JCheckBox checkBoxPayWithCredit;
     private javax.swing.JComboBox<String> comboxBoxPaymentType;
     private javax.swing.JScrollPane jScrollPane2;

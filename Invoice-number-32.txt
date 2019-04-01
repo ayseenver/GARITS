@@ -1,0 +1,10 @@
+Invoice number : 32
+
+Parts sold: 
+Tyre, heavy tread, Quantity: 1
+Exhaust, complete box, Quantity: 2
+
+Total cost: £578.50
+
+Grand total: £694.20
+
