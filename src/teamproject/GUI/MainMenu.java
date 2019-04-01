@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
 import teamproject.Databases.DB_ImplClass;
-import teamproject.AlertsReminders.AlertTimer;
+import teamproject.AlertsReminders.StockAlertTimer;
 
 /**
  *

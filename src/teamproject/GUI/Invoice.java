@@ -954,11 +954,6 @@ public class Invoice extends javax.swing.JPanel {
 
         checkBoxPayWithCredit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         checkBoxPayWithCredit.setText("Pay with discount");
-        checkBoxPayWithCredit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkBoxPayWithCreditActionPerformed(evt);
-            }
-        });
         add(checkBoxPayWithCredit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 660, -1, -1));
 
         labelFlexibleDiscountBrief.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
@@ -1184,10 +1179,6 @@ public class Invoice extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
-
-    private void checkBoxPayWithCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxPayWithCreditActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkBoxPayWithCreditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

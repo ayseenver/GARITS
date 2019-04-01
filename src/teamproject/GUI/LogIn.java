@@ -13,7 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import teamproject.AlertsReminders.AlertTimer;
+import teamproject.AlertsReminders.PaymentAlertTimer;
+import teamproject.AlertsReminders.StockAlertTimer;
 import teamproject.AlertsReminders.Timer;
 import teamproject.Databases.DB_ImplClass;
 
@@ -150,7 +151,10 @@ public class LogIn extends javax.swing.JPanel {
                 pass = rs.getString("password");
                 if (username.equals(user) && password.equals(pass)) {
                     if (rs.getString("roleName").equals("franchisee")) {
-                        AlertTimer at = new AlertTimer();
+                        StockAlertTimer at = new StockAlertTimer();
+                        PaymentAlertTimer pt = new PaymentAlertTimer();
+                    }else if (rs.getString("roleName").equals("receptionist")) {
+                        StockAlertTimer at = new StockAlertTimer();
                     }
                     JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                     f.dispose();
