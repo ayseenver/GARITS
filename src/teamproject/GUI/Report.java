@@ -27,6 +27,8 @@ public class Report extends javax.swing.JPanel {
 
     private String username;
     private ResultSet rs;
+    private ResultSet rsU;
+    private String previousPage;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
@@ -39,8 +41,9 @@ public class Report extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public Report(String username) {
+    public Report(String username, String previousPage) {
         this.username = username;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -51,6 +54,7 @@ public class Report extends javax.swing.JPanel {
         statement = db.getStatement();
 
         SetPanel();
+        ShowReportOption();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,6 +95,25 @@ public class Report extends javax.swing.JPanel {
         String[] newArray = new String[tasks.size()];
         newArray = tasks.toArray(newArray);
         return newArray;
+    }
+
+    private void ShowReportOption() {
+        try {
+            this.rsU = statement.executeQuery("select roleName from user where username = '" + username + "'");
+
+            String roleName = rsU.getString("roleName");
+            comboBoxReportType.setSelectedItem("Stock control");
+            if (!roleName.equals("receptionist")) {
+                comboBoxReportType.setEnabled(true);
+
+            } else {
+                comboBoxReportType.setEnabled(false);
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
     }
 
     private void SetPanel() {
@@ -355,7 +378,7 @@ public class Report extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                
+
                 ArrayList<String> jobs = new ArrayList<>();
 
                 try {
@@ -629,7 +652,11 @@ public class Report extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("StockControl")) {
+            new StockControl(username);
+        } else {
+            new MainMenu(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void comboBoxReportTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReportTypeActionPerformed

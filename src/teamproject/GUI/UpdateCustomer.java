@@ -16,6 +16,7 @@ import teamproject.Databases.DB_ImplClass;
 public class UpdateCustomer extends javax.swing.JPanel {
 
     private String username;
+    private String previousPage;
     Statement statement;
     Connection connection;
     DB_ImplClass db = new DB_ImplClass();
@@ -29,8 +30,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
     String[] bandArray;
     Map<String, String> discountDetail = new HashMap<>();
 
-    public UpdateCustomer(String username) {
+    public UpdateCustomer(String username, String previousPage) {
         this.username = username;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -41,7 +43,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
         accountHolderPane.setVisible(false);
-        
+
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -50,8 +52,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     }
 
-    public UpdateCustomer(String username, Customer c) { //existing custmer
-        this(username);
+    public UpdateCustomer(String username, Customer c, String previousPage) { //existing custmer
+        this(username, previousPage);
         this.c = c;
         buttonUpdateCustomer.setVisible(true);
         buttonDeleteCustomer.setVisible(true);
@@ -597,7 +599,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }
 
     public void receptionist_menu() {
-        System.out.println("receptionist");
         checkBoxAccountHolder.setVisible(false);
     }
 
@@ -823,15 +824,20 @@ public class UpdateCustomer extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);
+        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+            new CreateJobCustomer(username);
+        } else {
+            new CustomerList(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
+        String message = "New Customer Added";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
                 || textFieldTelephone.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
+
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
@@ -856,13 +862,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             UpdateCustomer();
-
             CreateAccountHolder();
-
+            JOptionPane.showMessageDialog(new JFrame(), message);
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c);
+            new UpdateCustomerVehicle(username, c, "UpdateCustomer");
         }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
@@ -899,12 +904,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
     private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
         String originalName = c.getName();
         String originalAddress = c.getAddress();
-
+        String message = "Customer Details Updated";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
                 || textFieldTelephone.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
+
         } else {
             //customer exists, update customer details
             try {
@@ -1066,72 +1071,85 @@ public class UpdateCustomer extends javax.swing.JPanel {
                     }
                 }
             }
+            JOptionPane.showMessageDialog(new JFrame(), message);
+            //go back to Previous page
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new CustomerList(username);
+            }
+        }
+
+    }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
+
+    private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
+        String message = "Are you sure you want to delete Customer?";
+        int reply = JOptionPane.showConfirmDialog(null, message, "Delete Customer", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            try {
+                String sql = ("select ID from customer where name = '" + c.getName() + "' "
+                        + "and address = '" + c.getAddress() + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            String customerID = "";
+
+            try {
+                while (rs.next()) {
+                    customerID = rs.getString("ID");
+                    try {
+                        String sql = ("update customer set deleted = 1 where ID = " + customerID);
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+
+                    //delete all vehciles with this CustomerID
+                    try {
+                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
+                        PreparedStatement ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
             //go back to customer list
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new CustomerList(username);
-        }
-    }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
-
-    private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
-        try {
-            String sql = ("select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "'");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new CustomerList(username);
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        String customerID = "";
-
-        try {
-            while (rs.next()) {
-                customerID = rs.getString("ID");
-                try {
-                    String sql = ("update customer set deleted = 1 where ID = " + customerID);
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-
-                //delete all vehciles with this CustomerID
-                try {
-                    String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        //go back to customer list
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new CustomerList(username);
+        } 
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed

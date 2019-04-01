@@ -27,6 +27,7 @@ import teamproject.Databases.DB_ImplClass;
 public class Invoice extends javax.swing.JPanel {
 
     private String username;
+    private String previousPage;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
@@ -39,8 +40,9 @@ public class Invoice extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public Invoice(String username) {
+    public Invoice(String username, String previousPage) {
         this.username = username;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -1148,7 +1150,11 @@ public class Invoice extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        if (previousPage.equalsIgnoreCase("PartSale")) {
+            new PartSale(username);
+        } else {
+            new MainMenu(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed

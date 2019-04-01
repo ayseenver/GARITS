@@ -68,7 +68,9 @@ public class MyJob extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             this.rs = ps.executeQuery();
-            id = rs.getString("ID");
+            while (rs.next()) {
+                id = rs.getString("ID");
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -232,7 +234,7 @@ public class MyJob extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             db.closeConnection(connection);
-            new Job(username, jobID, vehicleReg);
+            new Job(username, jobID, vehicleReg, "MyJob");
         } else {
             String mess = "Select a job";
             JOptionPane.showMessageDialog(new JFrame(), mess);

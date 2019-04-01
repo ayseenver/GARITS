@@ -15,6 +15,7 @@ import teamproject.Databases.DB_ImplClass;
 public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private String username;
+    String previousPage;
     Statement statement;
     Connection connection = null;
     Customer c;
@@ -26,9 +27,10 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     ArrayList<String> customers = new ArrayList<>();
     String reg;
 
-    public UpdateCustomerVehicle(String username, Customer c) {
+    public UpdateCustomerVehicle(String username, Customer c, String previousPage) {
         this.username = username;
         this.c = c;
+        this.previousPage = previousPage;
         initComponents();
         JFrame frame = new JFrame();
         frame.add(this);
@@ -270,7 +272,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 100, -1));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1280, 720));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
@@ -292,7 +294,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new MainMenu(username);
+            if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+                new CreateJobCustomer(username);
+            } else {
+                new MainMenu(username);
+            }
         } else {
             String mess = "Customer needs at least one vehicle";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -300,10 +306,15 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
+
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new CustomerList(username);
+        if (previousPage.equalsIgnoreCase("createJobCustomer")) {
+            new CreateJobCustomer(username);
+        } else {
+            new CustomerList(username);
+        }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
@@ -427,11 +438,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
+        String message = "Vehicle Details Updated";
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
-            String mess = "Please fill in all the boxes";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
+            message = "Please fill in all the boxes";
         } else {
             try {
                 String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
@@ -458,31 +469,41 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             }
             ShowVehicles();
         }
+
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
     private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
+        String message = "Vehicle Deleted";
+        String warningMessage = "Are you Sure you want to delete a vehicle?";
         if (listVehicles.getSelectedValue() == null) {
-            String mess = "Please choose vehicle record first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
-            String selected = listVehicles.getSelectedValue();
-            String[] parts = selected.split(", ");
-            String regNo = parts[0];
+            message = "Please choose vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), message);
 
-            //delete this vehicle
-            try {
-                String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
-                PreparedStatement ps = null;
+        } else {
+            int reply = JOptionPane.showConfirmDialog(null, message, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String selected = listVehicles.getSelectedValue();
+                String[] parts = selected.split(", ");
+                String regNo = parts[0];
+
+                //delete this vehicle
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
         }
+
         ShowVehicles();
     }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
 
