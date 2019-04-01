@@ -49,7 +49,7 @@ public class MainMenu extends javax.swing.JPanel {
         try {
             this.rs = statement.executeQuery("select * from User where deleted = 0");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         try {
@@ -66,7 +66,7 @@ public class MainMenu extends javax.swing.JPanel {
                 }
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         //Code To check Which roleName is selected 
