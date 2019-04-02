@@ -156,7 +156,7 @@ public class LogIn extends javax.swing.JPanel {
                     if (rs.getString("roleName").equals("franchisee")) {
                         StockAlertTimer at = new StockAlertTimer();
                         PaymentAlertTimer pt = new PaymentAlertTimer();
-                    } else if (rs.getString("roleName").equals("receptionist")) {
+                    } else if (rs.getString("roleName").equals("receptionist")||rs.getString("roleName").equals("foreperson")) {
                         StockAlertTimer at = new StockAlertTimer();
                     }
                     JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
