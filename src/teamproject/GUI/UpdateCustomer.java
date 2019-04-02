@@ -22,6 +22,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rc;
     ResultSet rs;
+    ResultSet rsA;
     Customer c = new Customer();
     String roleName;
     String discount;
@@ -62,6 +63,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonNewCustomer.setVisible(false);
 
         ShowCustomerDetails();
+        checkPretickedBoxes();
     }
 
     private void ShowCustomerDetails() {
@@ -851,7 +853,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldEmail.getText() + "', "
                         + "'" + textFieldPostCode.getText() + "', "
                         + "'" + textFieldTelephone.getText() + "', "
-                         + "'" + textFieldMobile.getText() + "', "
+                        + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
                         + "1)");
@@ -1156,6 +1158,69 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
+    private void checkPretickedBoxes() {
+        checkAccountHolder();
+        checkPayLater();
+        checkDiscount();
+    }
+
+    private void checkAccountHolder() {
+        checkBoxAccountHolder.setSelected(false);
+        String accountHolder = "";
+
+        try {
+            this.rsA = connection.createStatement().executeQuery("select * from CustomerAccount where customerID = "
+                    + "(select ID from Customer where name = '" + c.getName() + "')");
+
+            try {
+                while (rsA.next()) {
+
+                    checkBoxAccountHolder.setSelected(true);
+                    accountHolderPane.setVisible(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+        }
+    }
+
+    private void checkDiscount() {
+        //need to get from discountPlan table, they might be an easier way
+        String flexibleID;
+        String fixedID;
+        String variableID;
+        try {
+            while (rsA.next()) {
+                flexibleID = rsA.getString("FlexibleDiscountDiscountID");
+                System.out.println(flexibleID);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkPayLater() {
+        checkBoxConfigurePayLater.setSelected(false);
+        try {
+            this.rsA = connection.createStatement().executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + "(select ID from Customer where name = '" + c.getName() + "')");
+
+            String configuredPayLater = "";
+            try {
+                while (rsA.next()) {
+                    configuredPayLater = rsA.getString("ConfiguredPayLater");
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (configuredPayLater.equals("1")) {
+                checkBoxConfigurePayLater.setSelected(true);
+            }
+        } catch (SQLException e) {
+        }
+    }
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed
         if (checkBoxAccountHolder.isSelected()) {
