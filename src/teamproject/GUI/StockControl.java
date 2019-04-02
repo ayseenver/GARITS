@@ -57,6 +57,7 @@ public class StockControl extends javax.swing.JPanel {
         ShowAllParts();
         ShowLowParts();
         ShowThreshold();
+        GetRole();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,6 +67,37 @@ public class StockControl extends javax.swing.JPanel {
         this(username);
         this.order = order;
         UpdateOrder();
+    }
+
+    private void GetRole() {
+        String roleName = "";
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
+                    //it get the role name if the username equals anyway plus gets ride of the error message
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Only these 3 roles can edit parts
+        if (!(roleName.equals("receptionist") || roleName.equals("foreperson") || roleName.equals("franchisee"))) {
+            buttonEditSpareParts.setVisible(false);
+        }
     }
 
     private void ShowThreshold() {
@@ -268,7 +300,7 @@ public class StockControl extends javax.swing.JPanel {
         buttonConfigureThreshold = new javax.swing.JButton();
         buttonStockLevelReport = new javax.swing.JButton();
         buttonPartSale = new javax.swing.JButton();
-        buttonStockLevelReport1 = new javax.swing.JButton();
+        buttonEditSpareParts = new javax.swing.JButton();
         buttonEditSelectPart = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
@@ -419,14 +451,14 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 140, -1, -1));
 
-        buttonStockLevelReport1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        buttonStockLevelReport1.setText("Edit Spare Parts");
-        buttonStockLevelReport1.addActionListener(new java.awt.event.ActionListener() {
+        buttonEditSpareParts.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        buttonEditSpareParts.setText("Edit Spare Parts");
+        buttonEditSpareParts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStockLevelReport1ActionPerformed(evt);
+                buttonEditSparePartsActionPerformed(evt);
             }
         });
-        add(buttonStockLevelReport1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 140, -1, -1));
+        add(buttonEditSpareParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 140, -1, -1));
 
         buttonEditSelectPart.setText("Edit Selected Part");
         buttonEditSelectPart.addActionListener(new java.awt.event.ActionListener() {
@@ -600,12 +632,12 @@ public class StockControl extends javax.swing.JPanel {
         new PartSale(username);
     }//GEN-LAST:event_buttonPartSaleActionPerformed
 
-    private void buttonStockLevelReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStockLevelReport1ActionPerformed
+    private void buttonEditSparePartsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditSparePartsActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new UpdateSparePart(username);
-    }//GEN-LAST:event_buttonStockLevelReport1ActionPerformed
+    }//GEN-LAST:event_buttonEditSparePartsActionPerformed
 
     private void buttonEditSelectPartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditSelectPartActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -621,6 +653,7 @@ public class StockControl extends javax.swing.JPanel {
     private javax.swing.JButton buttonChangeQuantity;
     private javax.swing.JButton buttonConfigureThreshold;
     private javax.swing.JButton buttonEditSelectPart;
+    private javax.swing.JButton buttonEditSpareParts;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonLowStockOrder;
     private javax.swing.JButton buttonOrder;
@@ -628,7 +661,6 @@ public class StockControl extends javax.swing.JPanel {
     private javax.swing.JButton buttonRemove;
     private javax.swing.JButton buttonSearchAllStock;
     private javax.swing.JButton buttonStockLevelReport;
-    private javax.swing.JButton buttonStockLevelReport1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;

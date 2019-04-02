@@ -132,7 +132,7 @@ public class LogIn extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSigninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSigninActionPerformed
-        String username = this.textFieldUserName.getText();
+        String username = this.textFieldUserName.getText().trim();
         String password = new String(this.textFieldPassword.getPassword());
         try {
             this.rs = statement.executeQuery("select * from User where deleted = 0");
