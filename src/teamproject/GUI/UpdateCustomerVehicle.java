@@ -195,7 +195,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
         labelLastMoTDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelLastMoTDate.setText("Next MoT Date: ");
-        jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 560, 140, -1));
+        jPanel1.add(labelLastMoTDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 560, 150, -1));
 
         labelEngineSerialNo.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         labelEngineSerialNo.setText("*Engine Serial No:");
@@ -348,10 +348,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
+                    String mess = "Sorry, Vehicle exists with that registration number";
+                    JOptionPane.showMessageDialog(new JFrame(), mess);
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
             } catch (SQLException e) {
+                String mess = "Sorry, Vehicle exists with that registration number";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
                 System.err.println(e.getMessage());
             }
             ShowVehicles();
@@ -382,10 +386,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
+                    String mess = "Sorry, Vehicle exists with that registration number";
+                    JOptionPane.showMessageDialog(new JFrame(), mess);
                     e.printStackTrace();
                 }
                 ps.executeUpdate();
             } catch (SQLException e) {
+                String mess = "Sorry, Vehicle exists with that registration number";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
                 System.err.println(e.getMessage());
             }
             ShowVehicles();
