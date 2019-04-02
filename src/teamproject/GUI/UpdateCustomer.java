@@ -599,7 +599,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
 
         //Code To check Which roleName is selected 
-        if (roleName.equals("receptionist")) {
+        if (!roleName.equalsIgnoreCase("franchisee")) {
             receptionist_menu();
         }
     }
