@@ -25,6 +25,7 @@ import teamproject.Databases.DB_ImplClass;
 public class CreateJobCustomer extends javax.swing.JPanel {
 
     private final String username;
+    private String id;
     private ResultSet rsC;
     private ResultSet rsV;
     String[] nameArray;
@@ -72,7 +73,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         try {
             while (rsC.next()) {
                 // read the result set
-                String name = rsC.getString("name");
+                String name = "ID: " + rsC.getString("ID") + ", " + rsC.getString("name");
                 names.add(name);
             }
         } catch (SQLException e) {
@@ -98,8 +99,11 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     }
 
     private void CreateCustomerObject(String name) {
+        String selected = listCustomers.getSelectedValue();
+        id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
+
         try {
-            String sql = ("select * from Customer where name = '" + name + "' and deleted = 0");
+            String sql = ("select * from Customer where id= "+id + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -143,6 +147,11 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
         try {
             c.setFax(rsC.getString("fax"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            c.setID(rsC.getString("ID"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -426,8 +435,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         CreateCustomerObject(listCustomers.getSelectedValue());
         try {
             String sql = ("select * from Vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + c.getName() + "' "
-                    + "and address = '" + c.getAddress() + "') and deleted = 0");
+                    + c.getID() + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
