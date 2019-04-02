@@ -61,7 +61,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         //get all vehicles belonging to this owner
         try {
             String sql = ("select * from Vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + c.getName() + "' and address = '" + c.getAddress() + "') and deleted = 0");
+                    + c.getID() + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -337,8 +337,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                         + "model, engineSerial, chassisNumber, colour, "
                         + "nextServiceDate, nextMOTDate, deleted) "
                         + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
-                        + "(select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "'), "
+                        + c.getID()+", "
                         + "'" + textFieldMake.getText() + "', "
                         + "'" + textFieldModel.getText() + "', "
                         + "'" + textFieldEngineSerial.getText() + "', "
@@ -371,7 +370,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
             String message = "Please fill in all the boxes";
-             JOptionPane.showMessageDialog(new JFrame(), message);
+            JOptionPane.showMessageDialog(new JFrame(), message);
 
         } else {
             if (!listVehicles.isSelectionEmpty()) {
@@ -385,8 +384,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                             + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
                             + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
                             + "WHERE registrationNumber = '" + reg + "' "
-                            + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
-                            + "and address = '" + c.getAddress() + "')");
+                            + "AND CustomerID = "+c.getID());
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -461,7 +459,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             rs = ps.executeQuery();
-             buttonSaveVehicleChanges.setEnabled(true);
+            buttonSaveVehicleChanges.setEnabled(true);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
