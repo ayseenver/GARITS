@@ -434,7 +434,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
                         + "quantity = 'quantity'");
 
                 PreparedStatement ps = null;
-                 String mess = "Spare Part Updated";
+                String mess = "Spare Part Updated";
                 JOptionPane.showMessageDialog(new JFrame(), mess);
                 try {
                     ps = connection.prepareStatement(sql);
