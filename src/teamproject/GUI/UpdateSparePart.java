@@ -282,7 +282,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        new StockControl(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -405,6 +405,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
                     System.err.println(e.getMessage());
                 }
                 ShowParts();
+                String mess = "New Spare Part Added";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
     }//GEN-LAST:event_buttonNewSparePartActionPerformed
@@ -432,6 +434,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
                         + "quantity = 'quantity'");
 
                 PreparedStatement ps = null;
+                 String mess = "Spare Part Updated";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
