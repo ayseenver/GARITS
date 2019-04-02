@@ -176,7 +176,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         labelSelectCustomer = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
         listVehicle = new javax.swing.JList<>();
-        buttonSelectVehicle = new javax.swing.JButton();
         buttonSearchCustomer = new javax.swing.JButton();
         textFieldSearchCustomer = new javax.swing.JTextField();
         textFieldVehicleSelected = new javax.swing.JTextField();
@@ -231,17 +230,14 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         add(labelSelectCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
 
         listVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listVehicle.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listVehicleValueChanged(evt);
+            }
+        });
         jScrollPane8.setViewportView(listVehicle);
 
         add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, 1140, 130));
-
-        buttonSelectVehicle.setText("Select Vehicle");
-        buttonSelectVehicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSelectVehicleActionPerformed(evt);
-            }
-        });
-        add(buttonSelectVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 560, 200, -1));
 
         buttonSearchCustomer.setText("Search");
         buttonSearchCustomer.addActionListener(new java.awt.event.ActionListener() {
@@ -310,68 +306,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonNextActionPerformed
-
-    private void buttonSelectVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectVehicleActionPerformed
-        String temp = (listVehicle.getSelectedValue());
-
-        if (!(temp == null)) {
-            String[] details = temp.split(", ");
-
-            try {
-                String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "' and deleted = 0";
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rsV = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setMake(rsV.getString("make"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setModel(rsV.getString("model"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setRegistrationNumber(rsV.getString("registrationNumber"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setEngineSerial(rsV.getString("engineSerial"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setChassisNumber(rsV.getString("chassisNumber"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                v.setColour(rsV.getString("colour"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            textFieldVehicleSelected.setText(v.getRegistrationNumber());
-        } else {
-            String mess = "Select a vehicle";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
-    }//GEN-LAST:event_buttonSelectVehicleActionPerformed
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
         try {
@@ -474,6 +408,65 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
     }//GEN-LAST:event_listCustomersValueChanged
 
+    private void listVehicleValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listVehicleValueChanged
+         String temp = (listVehicle.getSelectedValue());
+
+        if (!(temp == null)) {
+            String[] details = temp.split(", ");
+
+            try {
+                String sql = ("select * from Vehicle where registrationNumber = '" + details[3]) + "' and deleted = 0";
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rsV = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setMake(rsV.getString("make"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setModel(rsV.getString("model"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setRegistrationNumber(rsV.getString("registrationNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setEngineSerial(rsV.getString("engineSerial"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setChassisNumber(rsV.getString("chassisNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            try {
+                v.setColour(rsV.getString("colour"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            textFieldVehicleSelected.setText(v.getRegistrationNumber());
+        } 
+    }//GEN-LAST:event_listVehicleValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddNewVehicle;
@@ -482,7 +475,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonNext;
     private javax.swing.JButton buttonSearchCustomer;
-    private javax.swing.JButton buttonSelectVehicle;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
