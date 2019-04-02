@@ -38,6 +38,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
+        GetRole();
+
         ShowParts();
 
     }
@@ -46,6 +48,38 @@ public class UpdateSparePart extends javax.swing.JPanel {
         String[] newArray = new String[vehicles.size()];
         newArray = vehicles.toArray(newArray);
         return newArray;
+    }
+
+    private void GetRole() {
+        String roleName = "";
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
+                    //it get the role name if the username equals anyway plus gets ride of the error message
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Only frachisee can edit threshold
+        if (!(roleName.equals("franchisee"))) {
+            textFieldThreshold.setVisible(false);
+            labelThreshold.setVisible(false);
+        }
     }
 
     private void ShowParts() {
@@ -97,7 +131,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         buttonDone = new javax.swing.JButton();
-        labelColour = new javax.swing.JLabel();
+        labelThreshold = new javax.swing.JLabel();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         textFieldUsername = new javax.swing.JTextField();
@@ -142,9 +176,9 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jPanel1.add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 640, -1, -1));
 
-        labelColour.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelColour.setText("*Threshold:");
-        jPanel1.add(labelColour, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 470, -1, -1));
+        labelThreshold.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelThreshold.setText("*Threshold:");
+        jPanel1.add(labelThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 470, -1, -1));
 
         labelLoggedIn.setText("Logged In as:");
         jPanel1.add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
@@ -185,6 +219,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
         jPanel1.add(textFieldVehicleType, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 380, 250, -1));
         jPanel1.add(textFieldPartName, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 250, -1));
         jPanel1.add(textFieldCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 440, 250, -1));
+
+        textFieldThreshold.setText("10");
         jPanel1.add(textFieldThreshold, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 470, 250, -1));
 
         buttonNewSparePart.setText("New Spart Part");
@@ -276,17 +312,21 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String selected = listSpareParts.getSelectedValue();
             String name = "";
             String model = "";
+            String quantity = "";
             String[] parts = selected.split(", ");
             if (parts.length == 3) {
                 name = parts[0];
                 model = parts[1];
+                quantity = parts[2];
             } else if (parts.length == 4) {
                 name = parts[0] + ", " + parts[1];
                 model = parts[2];
+                quantity = parts[3];
             }
 
             try {
-                String sql = ("Select * from sparepart where partName = '" + name + "' and vehicleType = '" + model + "'");
+                String sql = ("Select * from sparepart where partName = '" + name + "' and vehicleType = '" + model + "' "
+                        + "and quantity = " + quantity + " and deleted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -352,29 +392,94 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-            ArrayList<String> mans = new ArrayList<>();
-            try {
-                //get all the manufacturs to see if this one exists
-                String sql = "select * from manufacturer";
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            Boolean error = false;
+            Boolean qError = false;
+            //check if quantity is an integer
+            char[] chars = textFieldQuantity.getText().toCharArray();
+            for (char c : chars) {
+                if (!(Character.isDigit(c))) {
+                    error = true;
+                    qError = true;
                 }
-                rs = ps.executeQuery();
+            }
 
+            if (qError == true) {
+                String mess = "Quantity must be a number";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            }
+
+            Boolean pError = false;
+            //check if price is an integer
+            chars = textFieldCost.getText().toCharArray();
+            for (char c : chars) {
+                if (!(Character.isDigit(c))) {
+                    error = true;
+                    pError = true;
+                }
+            }
+
+            if (pError == true) {
+                String mess = "Cost must be a number";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            }
+
+            Boolean tError = false;
+            //check if threshold is an integer
+            chars = textFieldThreshold.getText().toCharArray();
+            for (char c : chars) {
+                if (!(Character.isDigit(c))) {
+                    error = true;
+                    tError = true;
+                }
+            }
+
+            if (tError == true) {
+                String mess = "Threshold must be a number";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            }
+
+            if (error == false) {
+                ArrayList<String> mans = new ArrayList<>();
                 try {
-                    while (rs.next()) {
-                        mans.add(rs.getString("name"));
+                    //get all the manufacturs to see if this one exists
+                    String sql = "select * from manufacturer";
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
+                    rs = ps.executeQuery();
 
-                //create a new manufacturer if one does not exist
-                if (!mans.contains(textFieldManufactureName.getText())) {
-                    sql = ("INSERT INTO manufacturer (name) values ('" + textFieldManufactureName.getText() + "')");
+                    try {
+                        while (rs.next()) {
+                            mans.add(rs.getString("name"));
+                        }
+                    } catch (SQLException e) {
+                        System.err.println(e.getMessage());
+                    }
+
+                    //create a new manufacturer if one does not exist
+                    if (!mans.contains(textFieldManufactureName.getText())) {
+                        sql = ("INSERT INTO manufacturer (name) values ('" + textFieldManufactureName.getText() + "')");
+                        ps = null;
+                        try {
+                            ps = connection.prepareStatement(sql);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ps.executeUpdate();
+                    }
+
+                    sql = ("INSERT INTO SparePart (partName, vehicleType, quantity, "
+                            + "costPrice, sellingPrice, threshold, Manufacturername, deleted) "
+                            + "VALUES ('" + textFieldPartName.getText() + "', "
+                            + "'" + textFieldVehicleType.getText() + "', "
+                            + "'" + textFieldQuantity.getText() + "', "
+                            + "'" + textFieldCost.getText() + "', "
+                            + "'" + (Double.parseDouble(textFieldCost.getText()) * 1.3) + "', "
+                            + "'" + textFieldThreshold.getText() + "', "
+                            + "(select name from manufacturer where name = '" + textFieldManufactureName.getText() + "'), 0)");
                     ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -382,28 +487,11 @@ public class UpdateSparePart extends javax.swing.JPanel {
                         e.printStackTrace();
                     }
                     ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-
-                sql = ("INSERT INTO SparePart (partName, vehicleType, quantity, "
-                        + "costPrice, sellingPrice, threshold, Manufacturername, deleted) "
-                        + "VALUES ('" + textFieldPartName.getText() + "', "
-                        + "'" + textFieldVehicleType.getText() + "', "
-                        + "'" + textFieldQuantity.getText() + "', "
-                        + "'" + textFieldCost.getText() + "', "
-                        + "'" + (Double.parseDouble(textFieldCost.getText()) * 1.3) + "', "
-                        + "'" + textFieldThreshold.getText() + "', "
-                        + "(select name from manufacturer where name = '" + textFieldManufactureName.getText() + "'), 0)");
-                ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                ShowParts();
             }
-            ShowParts();
         }
     }//GEN-LAST:event_buttonNewSparePartActionPerformed
 
@@ -491,7 +579,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JLabel labelChassisNo;
-    private javax.swing.JLabel labelColour;
     private javax.swing.JLabel labelCustomerDetails;
     private javax.swing.JLabel labelEngineSerialNo;
     private javax.swing.JLabel labelLastServiceDate;
@@ -499,6 +586,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
     private javax.swing.JLabel labelMake;
     private javax.swing.JLabel labelRegistrationNo;
     private javax.swing.JLabel labelSpareParts;
+    private javax.swing.JLabel labelThreshold;
     private javax.swing.JLabel labelVariableDiscount;
     private javax.swing.JList<String> listSpareParts;
     private javax.swing.JTextField textFieldCost;
