@@ -363,43 +363,49 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
-        String message = "Vehicle Details Updated";
+        String message = "Please Select a Vehicle First";
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
             message = "Please fill in all the boxes";
-        } else {
-            try {
-                String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
-                        + "make = '" + textFieldMake.getText() + "', "
-                        + "model = '" + textFieldModel.getText() + "', "
-                        + "engineSerial = '" + textFieldEngineSerial.getText() + "', "
-                        + "chassisNumber = '" + textFieldChassisNo.getText() + "', "
-                        + "colour = '" + textFieldColour.getText() + "', "
-                        + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
-                        + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
-                        + "WHERE registrationNumber = '" + reg + "' "
-                        + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "')");
 
-                PreparedStatement ps = null;
+        } else {
+            if (!listVehicles.isSelectionEmpty()) {
+                message = "Vehicle Details Updated";
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
+                    String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
+                            + "make = '" + textFieldMake.getText() + "', "
+                            + "model = '" + textFieldModel.getText() + "', "
+                            + "engineSerial = '" + textFieldEngineSerial.getText() + "', "
+                            + "chassisNumber = '" + textFieldChassisNo.getText() + "', "
+                            + "colour = '" + textFieldColour.getText() + "', "
+                            + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
+                            + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
+                            + "WHERE registrationNumber = '" + reg + "' "
+                            + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
+                            + "and address = '" + c.getAddress() + "')");
+
+                    PreparedStatement ps = null;
+
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        String mess = "Sorry, Vehicle exists with that registration number";
+                        JOptionPane.showMessageDialog(new JFrame(), mess);
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
                     String mess = "Sorry, Vehicle exists with that registration number";
                     JOptionPane.showMessageDialog(new JFrame(), mess);
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                String mess = "Sorry, Vehicle exists with that registration number";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
-                System.err.println(e.getMessage());
             }
             ShowVehicles();
         }
-
         JOptionPane.showMessageDialog(new JFrame(), message);
+
+
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
     private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
