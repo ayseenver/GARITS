@@ -56,7 +56,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-        
+
         ShowCustomers();
 
         frame.setVisible(true);
@@ -168,7 +168,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         buttonSelectVehicle = new javax.swing.JButton();
         buttonSearchCustomer = new javax.swing.JButton();
         textFieldSearchCustomer = new javax.swing.JTextField();
-        buttonFindVehicle = new javax.swing.JButton();
         textFieldVehicleSelected = new javax.swing.JTextField();
         labelSelectVehicle = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
@@ -207,6 +206,11 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         add(labelPickCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, -1, -1));
 
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listCustomers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listCustomersValueChanged(evt);
+            }
+        });
         jScrollPane9.setViewportView(listCustomers);
 
         add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 1140, 150));
@@ -236,14 +240,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         });
         add(buttonSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, -1, -1));
         add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 150, -1));
-
-        buttonFindVehicle.setText("Find Vehicles");
-        buttonFindVehicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonFindVehicleActionPerformed(evt);
-            }
-        });
-        add(buttonFindVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 370, 190, -1));
         add(textFieldVehicleSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 630, 220, -1));
 
         labelSelectVehicle.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -252,11 +248,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -393,61 +384,6 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
 
-    private void buttonFindVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindVehicleActionPerformed
-        String temp = (listCustomers.getSelectedValue());
-        if (temp != null) {
-            CreateCustomerObject(temp);
-
-            try {
-                String sql = ("select * from Vehicle where CustomerID = "
-                        + "(select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "') and deleted = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rsV = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            listVehicle.removeAll();
-            ArrayList<String> details = new ArrayList<>();
-
-            try {
-                while (rsV.next()) {
-                    // read the result set
-                    String detail = rsV.getString("make") + ", " + rsV.getString("model")
-                            + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
-                    details.add(detail);
-                }
-            } catch (SQLException e) {
-            }
-
-            detailArray = CreateArray(details);
-
-            listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return detailArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return detailArray[i];
-                }
-            });
-        } else {
-            String mess = "Select a customer";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
-
-    }//GEN-LAST:event_buttonFindVehicleActionPerformed
-
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
@@ -470,7 +406,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c,"createJobCustomer");
+            new UpdateCustomerVehicle(username, c, "createJobCustomer");
         } else {
             String mess = "Select a customer";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -484,12 +420,55 @@ public class CreateJobCustomer extends javax.swing.JPanel {
         new UpdateCustomer(username, "CreateJobCustomer");
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
+    private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
+        CreateCustomerObject(listCustomers.getSelectedValue());
+        try {
+            String sql = ("select * from Vehicle where CustomerID = "
+                    + "(select ID from customer where name = '" + c.getName() + "' "
+                    + "and address = '" + c.getAddress() + "') and deleted = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rsV = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        listVehicle.removeAll();
+        ArrayList<String> details = new ArrayList<>();
+
+        try {
+            while (rsV.next()) {
+                // read the result set
+                String detail = rsV.getString("make") + ", " + rsV.getString("model")
+                        + ", " + rsV.getString("colour") + ", " + rsV.getString("registrationNumber");
+                details.add(detail);
+            }
+        } catch (SQLException e) {
+        }
+
+        detailArray = CreateArray(details);
+
+        listVehicle.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return detailArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return detailArray[i];
+            }
+        });
+
+    }//GEN-LAST:event_listCustomersValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddNewVehicle;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonFindVehicle;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonNext;
     private javax.swing.JButton buttonSearchCustomer;

@@ -205,7 +205,6 @@ public class CustomerList extends javax.swing.JPanel {
         labelCustomerDetail = new javax.swing.JLabel();
         buttonSearchCustomer = new javax.swing.JButton();
         textFieldSearchCustomer = new javax.swing.JTextField();
-        buttonView = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
         buttonNewCustomer = new javax.swing.JButton();
@@ -249,15 +248,12 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
         add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, -1));
 
-        buttonView.setText("View");
-        buttonView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonViewActionPerformed(evt);
+        listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listCustomers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listCustomersValueChanged(evt);
             }
         });
-        add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 620, 100, -1));
-
-        listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane10.setViewportView(listCustomers);
 
         add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 560, 400));
@@ -310,7 +306,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 620, 170, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 620, 170, -1));
 
         buttonConfirmPayment.setText("Confirm");
         buttonConfirmPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -347,7 +343,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditVehiclesActionPerformed(evt);
             }
         });
-        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 620, -1, -1));
+        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 620, -1, -1));
 
         textAreaCustomerOverview.setColumns(20);
         textAreaCustomerOverview.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -382,60 +378,6 @@ public class CustomerList extends javax.swing.JPanel {
         }
         ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomerActionPerformed
-
-    private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
-        if (listCustomers.getSelectedValue() == null) {
-            String mess = "Please choose customer first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
-            details = (listCustomers.getSelectedValue());
-
-            try {
-                String sql = ("select * from vehicle where CustomerID = "
-                        + "(select ID from customer where name = '" + details + "') and deleted = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                this.rsD = ps.executeQuery();
-                ShowPayCustomer();
-
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            ShowSelectedCustomersOverview();
-            showCustomerCredit();
-            listVehicleDetails.removeAll();
-            ArrayList<String> vehicle = new ArrayList<>();
-
-            try {
-                while (rsD.next()) {
-                    String detail = rsD.getString("registrationNumber") + ", "
-                            + rsD.getString("make") + ", "
-                            + rsD.getString("model") + ", "
-                            + rsD.getString("engineSerial")
-                            + ", " + rsD.getString("chassisNumber")
-                            + ", " + rsD.getString("colour");
-                    vehicle.add(detail);
-                }
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            detailArray = CreateArray(vehicle);
-
-            listVehicleDetails.setModel(new javax.swing.AbstractListModel<String>() {
-                public int getSize() {
-                    return detailArray.length;
-                }
-
-                public String getElementAt(int i) {
-                    return detailArray[i];
-                }
-            });
-        }
-    }//GEN-LAST:event_buttonViewActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
@@ -522,6 +464,54 @@ public class CustomerList extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
 
+    private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
+        details = (listCustomers.getSelectedValue());
+        try {
+            String sql = ("select * from vehicle where CustomerID = "
+                    + "(select ID from customer where name = '" + details + "') and deleted = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rsD = ps.executeQuery();
+            ShowPayCustomer();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        ShowSelectedCustomersOverview();
+        showCustomerCredit();
+        listVehicleDetails.removeAll();
+        ArrayList<String> vehicle = new ArrayList<>();
+
+        try {
+            while (rsD.next()) {
+                String detail = rsD.getString("registrationNumber") + ", "
+                        + rsD.getString("make") + ", "
+                        + rsD.getString("model") + ", "
+                        + rsD.getString("engineSerial")
+                        + ", " + rsD.getString("chassisNumber")
+                        + ", " + rsD.getString("colour");
+                vehicle.add(detail);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        detailArray = CreateArray(vehicle);
+
+        listVehicleDetails.setModel(new javax.swing.AbstractListModel<String>() {
+            public int getSize() {
+                return detailArray.length;
+            }
+
+            public String getElementAt(int i) {
+                return detailArray[i];
+            }
+        });
+    }//GEN-LAST:event_listCustomersValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
@@ -532,7 +522,6 @@ public class CustomerList extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchCustomer;
-    private javax.swing.JButton buttonView;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;

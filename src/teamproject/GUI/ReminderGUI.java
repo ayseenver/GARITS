@@ -217,8 +217,6 @@ public class ReminderGUI extends javax.swing.JPanel {
     }
 
     private String CreatePaymentReminder() {
-        System.out.println(listReminders.getSelectedValue());
-
         try {
             this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
                     + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
@@ -296,7 +294,28 @@ public class ReminderGUI extends javax.swing.JPanel {
             String mess = "Printed sucessfully";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void PrintWithoutPopup() {
+        String fileName = "reminder-" + type + "-" + vehicle + ".txt";
+
+        String details = "";
+        if (type.equals("MoT")) {
+            details = CreateMoTReminder();
+        } else if (type.equals("Service")) {
+            details = CreateServiceReminder();
+        } else if (type.equals("Payment")) {
+            details = CreatePaymentReminder();
+        }
+
+        try {
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.println(details);
+            writer.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -325,7 +344,6 @@ public class ReminderGUI extends javax.swing.JPanel {
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
-        buttonView = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -336,6 +354,11 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         listReminders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         listReminders.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        listReminders.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listRemindersValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(listReminders);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 570, 420));
@@ -374,7 +397,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 buttonDismissActionPerformed(evt);
             }
         });
-        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 640, -1, -1));
+        add(buttonDismiss, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
 
         comboBoxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Service", "Payment" }));
         add(comboBoxType, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 640, -1, -1));
@@ -419,15 +442,6 @@ public class ReminderGUI extends javax.swing.JPanel {
             }
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
-
-        buttonView.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonView.setText("View");
-        buttonView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonViewActionPerformed(evt);
-            }
-        });
-        add(buttonView, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintAllActionPerformed
@@ -435,9 +449,11 @@ public class ReminderGUI extends javax.swing.JPanel {
             String current = listReminders.getModel().getElementAt(i);
             if (current != null && (!(current.equals("\n")))) {
                 SplitString(current);
-                Print();
+                PrintWithoutPopup();
             }
         }
+        String mess = "Printed sucessfully";
+        JOptionPane.showMessageDialog(new JFrame(), mess);
     }//GEN-LAST:event_buttonPrintAllActionPerformed
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
@@ -456,10 +472,12 @@ public class ReminderGUI extends javax.swing.JPanel {
             if (current != null && (!(current.equals("\n")))) {
                 SplitString(current);
                 if (type.equals(comboBoxType.getSelectedItem().toString())) {
-                    Print();
+                    PrintWithoutPopup();
                 }
             }
         }
+        String mess = "Printed sucessfully";
+        JOptionPane.showMessageDialog(new JFrame(), mess);
     }//GEN-LAST:event_buttonPrintTypeActionPerformed
 
     private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed
@@ -522,7 +540,14 @@ public class ReminderGUI extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonViewActionPerformed
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new LogIn();
+    }//GEN-LAST:event_buttonExitActionPerformed
+
+    private void listRemindersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRemindersValueChanged
         SplitSelected();
         if (listReminders.getSelectedValue() != null) {
             if (type.equals("MoT")) {
@@ -533,14 +558,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                 textAreaDescription.setText(CreatePaymentReminder());
             }
         }
-    }//GEN-LAST:event_buttonViewActionPerformed
-
-    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new LogIn();
-    }//GEN-LAST:event_buttonExitActionPerformed
+    }//GEN-LAST:event_listRemindersValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -550,7 +568,6 @@ public class ReminderGUI extends javax.swing.JPanel {
     private javax.swing.JButton buttonPrint;
     private javax.swing.JButton buttonPrintAll;
     private javax.swing.JButton buttonPrintType;
-    private javax.swing.JButton buttonView;
     private javax.swing.JComboBox<String> comboBoxType;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
