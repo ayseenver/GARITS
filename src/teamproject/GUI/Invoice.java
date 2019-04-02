@@ -347,7 +347,7 @@ public class Invoice extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        new Invoice(username,"Invoice");
     }
 
     private void FixedDiscount(String fixedID) {
@@ -685,9 +685,9 @@ public class Invoice extends javax.swing.JPanel {
             e.printStackTrace();
         }
 
-        //get the credit for this customer
+        //get the amount to be deducted for orders for this customer
         try {
-            String sql = ("select credit from flexiblediscount where discountID = " + flexibleID);
+            String sql = ("select toBeDeducted from flexibleDiscount where discountID = " + flexibleID);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -702,17 +702,22 @@ public class Invoice extends javax.swing.JPanel {
         Double credit = 0.0;
         try {
             while (rs.next()) {
-                credit = Double.parseDouble(rs.getString("credit"));
+                credit = Double.parseDouble(rs.getString("toBeDeducted"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        totalCost -= credit;
+        if (credit <= totalCost) {
+            totalCost -= credit;
+            credit = 0.0;
+        } else {
+            credit = credit - totalCost;
+            totalCost = 0.0;
+        }
 
         //set the customer's credit to 0
         try {
-            String sql = ("update flexiblediscount set credit = 0 where discountID = " + flexibleID);
+            String sql = ("update flexibleDiscount set toBeDeducted = " + credit + " where discountID = " + flexibleID);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
