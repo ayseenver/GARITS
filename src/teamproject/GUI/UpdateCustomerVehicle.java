@@ -39,7 +39,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        buttonSaveVehicleChanges.setEnabled(false);
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -323,12 +323,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
+        buttonSaveVehicleChanges.setEnabled(false);
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+
             try {
                 String sql = ("INSERT INTO Vehicle (registrationNumber, "
                         + "CustomerID, make, "
@@ -363,15 +365,16 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonNewVehicleActionPerformed
 
     private void buttonSaveVehicleChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveVehicleChangesActionPerformed
-        String message = "Please Select a Vehicle First";
+
+        buttonSaveVehicleChanges.setEnabled(false);
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
-            message = "Please fill in all the boxes";
+            String message = "Please fill in all the boxes";
+             JOptionPane.showMessageDialog(new JFrame(), message);
 
         } else {
             if (!listVehicles.isSelectionEmpty()) {
-                message = "Vehicle Details Updated";
                 try {
                     String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
                             + "make = '" + textFieldMake.getText() + "', "
@@ -384,9 +387,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                             + "WHERE registrationNumber = '" + reg + "' "
                             + "AND CustomerID = (select ID from customer where name = '" + c.getName() + "' "
                             + "and address = '" + c.getAddress() + "')");
-
                     PreparedStatement ps = null;
-
                     try {
                         ps = connection.prepareStatement(sql);
                     } catch (Exception e) {
@@ -400,9 +401,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(new JFrame(), mess);
                     System.err.println(e.getMessage());
                 }
+                String message = "Vehicle Details Updated";
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
             ShowVehicles();
         }
+        String message = "Please Select a Vehicle First";
         JOptionPane.showMessageDialog(new JFrame(), message);
 
 
@@ -417,6 +421,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } else {
             int reply = JOptionPane.showConfirmDialog(null, message, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
+                buttonSaveVehicleChanges.setEnabled(false);
                 String selected = listVehicles.getSelectedValue();
                 String[] parts = selected.split(", ");
                 String regNo = parts[0];
@@ -456,6 +461,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 e.printStackTrace();
             }
             rs = ps.executeQuery();
+             buttonSaveVehicleChanges.setEnabled(true);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
