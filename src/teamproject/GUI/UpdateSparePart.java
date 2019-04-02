@@ -65,9 +65,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
 
                 //Code to get Role name from Databse
                 if (username.equals(user)) {
-                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
-                    //it get the role name if the username equals anyway plus gets ride of the error message
-
                     roleName = rs.getString("roleName");
                 }
             }
@@ -103,7 +100,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         try {
             while (rs.next()) {
                 // read the result set
-                String p = rs.getString("partName") + ", " + rs.getString("vehicleType") + ", " + rs.getString("quantity");
+                String p = rs.getString("partID") + ", " + rs.getString("partName") + ", " + rs.getString("vehicleType") + ", " + rs.getString("quantity");
                 parts.add(p);
             }
         } catch (SQLException e) {
@@ -428,9 +425,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
                         + "threshold = 'threshold', "
                         + "Manufacturername = 'Manufacturername', "
                         + "deleted = 'deleted' "
-                        + "WHERE partName = 'partName' AND "
-                        + "vehicleType = 'vehicleType' AND "
-                        + "quantity = 'quantity'");
+                        + "WHERE partID = ");
 
                 PreparedStatement ps = null;
                 try {
@@ -452,20 +447,12 @@ public class UpdateSparePart extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
             String selected = listSpareParts.getSelectedValue();
-            String name = "";
-            String model = "";
-            String[] parts = selected.split(", ");
-            if (parts.length == 3) {
-                name = parts[0];
-                model = parts[1];
-            } else if (parts.length == 4) {
-                name = parts[0] + ", " + parts[1];
-                model = parts[2];
-            }
+            String[] parts = selected.split(", ");            
 
             //delete this part
             try {
-                String sql = ("update sparepart set deleted = 1 where partName = '" + name + "' and vehicleType = '" + model + "'");
+                String sql = ("update sparepart set deleted = 1 "
+                        + "where partID = " + parts[0]);
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -482,23 +469,10 @@ public class UpdateSparePart extends javax.swing.JPanel {
 
     private void listSparePartsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listSparePartsValueChanged
         String selected = listSpareParts.getSelectedValue();
-        String name = "";
-        String model = "";
-        String quantity = "";
         String[] parts = selected.split(", ");
-        if (parts.length == 3) {
-            name = parts[0];
-            model = parts[1];
-            quantity = parts[2];
-        } else if (parts.length == 4) {
-            name = parts[0] + ", " + parts[1];
-            model = parts[2];
-            quantity = parts[3];
-        }
 
         try {
-            String sql = ("Select * from sparepart where partName = '" + name + "' and vehicleType = '" + model + "' "
-                    + "and quantity = " + quantity + " and deleted = 0");
+            String sql = ("Select * from sparepart where partID = " + parts[0]);
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);

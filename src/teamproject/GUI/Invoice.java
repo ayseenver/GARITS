@@ -344,6 +344,9 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        //print the invoice
+        PrintInvoice();
 
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
@@ -819,6 +822,36 @@ public class Invoice extends javax.swing.JPanel {
         labelPayWithCredit.setVisible(false);
     }
 
+    private void PrintInvoice() {
+        String selected = listInvoices.getSelectedValue();
+        if (selected != null) {
+            GetJobAndInvoiceNumber();
+            String details;
+            if (!jobNumber.isEmpty()) {
+                details = GetJobInvoiceDetails();
+            } else {
+                details = GetPartInvoiceDetails();
+            }
+
+            String fileName = "Invoice-number-" + invoiceNumber + ".txt";
+            if (listInvoices.getSelectedValue() != null) {
+                try {
+                    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                    writer.println(details);
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String mess = "Printed successfully";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
+            }
+        } else {
+            String mess = "Select an invoice";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -996,55 +1029,58 @@ public class Invoice extends javax.swing.JPanel {
         if (selected != null) {
             GetJobAndInvoiceNumber();
             CheckAccountHolder();
-
-            String accountID = "";
-            String fixedID = "";
-            String flexibleID = "";
-            String variableID = "";
-            try {
-                while (rs.next()) {
-                    accountID = rs.getString("CustomerAccountaccountID");
-                    fixedID = rs.getString("FixedDiscountdiscountID");
-                    flexibleID = rs.getString("FlexibleDiscountdiscountID");
-                    variableID = rs.getString("VariableDiscountdiscountID");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            if (accountID.equals("")) {
-                //this customer is not an account holder.
-                //proceed to standard payment (no discount)
-                StandardPayment();
-            } else {
-                //check for fixed discount
-                if (fixedID == null) {
-                    //no fixed discount
-                } else {
-                    //fixed discount
-                    FixedDiscount(fixedID);
+            if (!jobNumber.isEmpty()) { //is a job, not a part sale
+                String accountID = "";
+                String fixedID = "";
+                String flexibleID = "";
+                String variableID = "";
+                try {
+                    while (rs.next()) {
+                        accountID = rs.getString("CustomerAccountaccountID");
+                        fixedID = rs.getString("FixedDiscountdiscountID");
+                        flexibleID = rs.getString("FlexibleDiscountdiscountID");
+                        variableID = rs.getString("VariableDiscountdiscountID");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
 
-                //check for variable discount
-                if (variableID == null) {
-                    //no variable discount
+                if (accountID.equals("")) {
+                    //this customer is not an account holder.
+                    //proceed to standard payment (no discount)
+                    StandardPayment();
                 } else {
-                    //variable discount
-                    VariableDiscount(variableID);
-                }
-
-                //check for flexible discount
-                if (flexibleID == null) {
-                    //no flexible discount
-                } else {
-                    if (checkBoxPayWithCredit.isSelected()) {
-                        //flexible discount
-                        FlexibleDiscount(flexibleID, accountID);
+                    //check for fixed discount
+                    if (fixedID == null) {
+                        //no fixed discount
                     } else {
-                        //standard payment - ignore their discount
-                        StandardPayment();
+                        //fixed discount
+                        FixedDiscount(fixedID);
+                    }
+
+                    //check for variable discount
+                    if (variableID == null) {
+                        //no variable discount
+                    } else {
+                        //variable discount
+                        VariableDiscount(variableID);
+                    }
+
+                    //check for flexible discount
+                    if (flexibleID == null) {
+                        //no flexible discount
+                    } else {
+                        if (checkBoxPayWithCredit.isSelected()) {
+                            //flexible discount
+                            FlexibleDiscount(flexibleID, accountID);
+                        } else {
+                            //standard payment - ignore their discount
+                            StandardPayment();
+                        }
                     }
                 }
+            } else {//is a part sale, not a job
+                StandardPayment();
             }
         } else {
             String mess = "Select an invoice";
@@ -1139,33 +1175,7 @@ public class Invoice extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonPrintInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintInvoiceActionPerformed
-        String selected = listInvoices.getSelectedValue();
-        if (selected != null) {
-            GetJobAndInvoiceNumber();
-            String details;
-            if (!jobNumber.isEmpty()) {
-                details = GetJobInvoiceDetails();
-            } else {
-                details = GetPartInvoiceDetails();
-            }
-
-            String fileName = "Invoice-number-" + invoiceNumber + ".txt";
-            if (listInvoices.getSelectedValue() != null) {
-                try {
-                    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-                    writer.println(details);
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String mess = "Printed successfully";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
-            }
-        } else {
-            String mess = "Select an invoice";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
+        PrintInvoice();
     }//GEN-LAST:event_buttonPrintInvoiceActionPerformed
 
     private void listInvoicesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listInvoicesValueChanged

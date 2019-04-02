@@ -133,11 +133,6 @@ public class JobList extends javax.swing.JPanel {
         add(labelJobList, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 40, -1, -1));
 
         textFieldSearch.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchActionPerformed(evt);
-            }
-        });
         add(textFieldSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 227, 30));
 
         listJobList.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -242,10 +237,6 @@ public class JobList extends javax.swing.JPanel {
             return comboStatus.getSelectedItem().toString();
         }
     }
-    private void textFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();

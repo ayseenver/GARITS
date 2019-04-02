@@ -277,11 +277,13 @@ public class AllocateJob extends javax.swing.JPanel {
 
     private void listUnallocatedJobsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listUnallocatedJobsValueChanged
         String job = listUnallocatedJobs.getSelectedValue();
-        String[] jobParts = job.split(", ");
-        String[] idParts = jobParts[0].split(": ");
-        jobID = Integer.parseInt(idParts[1]);
+        if (job != null) {
+            String[] jobParts = job.split(", ");
+            String[] idParts = jobParts[0].split(": ");
+            jobID = Integer.parseInt(idParts[1]);
 
-        ShowMechanics();
+            ShowMechanics();
+        }
     }//GEN-LAST:event_listUnallocatedJobsValueChanged
 
 

@@ -62,10 +62,11 @@ public class CustomerList extends javax.swing.JPanel {
         try {
             while (rsC.next()) {
                 // read the result set
-                String name = rsC.getString("name");
+                String name = rsC.getString("ID") + ", " + rsC.getString("name");
                 names.add(name);
             }
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         nameArray = CreateArray(names);
 
@@ -89,12 +90,13 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void showCustomerCredit() {
         String credit = "-1";
+        String[] parts = listCustomers.getSelectedValue().split(", ");
         try {
             this.rsCr = statement.executeQuery("Select credit from flexiblediscount where discountID = "
                     + "(select discountID from flexiblediscount where discountID = "
                     + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                     + "(select accountID from customeraccount where customerID = "
-                    + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                    + "(select ID from customer where ID = " + parts[0] + "))))");
             while (rsCr.next()) {
                 credit = rsCr.getString("credit");
             }
@@ -112,11 +114,12 @@ public class CustomerList extends javax.swing.JPanel {
         buttonConfirmPayment.setVisible(false);
         labelPayCustomer.setVisible(false);
         labelPayCustomerExplained.setVisible(false);
+        String[] parts = listCustomers.getSelectedValue().split(", ");
 
         String flexibleDiscount = null;
         try {
             this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
-                    + "(select ID from customer where name = '" + details + "'))");
+                    + "(select ID from customer where ID = " + parts[0] + "))");
 
             while (rsP.next()) {
                 flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
@@ -140,9 +143,10 @@ public class CustomerList extends javax.swing.JPanel {
     }
 
     private void GetSelectedCustomer() {
+        String selected = listCustomers.getSelectedValue();
+        String[] parts = selected.split(", ");
         try {
-            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "' "
-                    + "and deleted = 0";
+            String sql = ("select * from Customer where ID = " + parts[0] + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -272,11 +276,6 @@ public class CustomerList extends javax.swing.JPanel {
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
-        textFieldUserDetails.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetailsActionPerformed(evt);
-            }
-        });
         add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
@@ -386,10 +385,6 @@ public class CustomerList extends javax.swing.JPanel {
         new UpdateCustomer(username, "CustomerList");
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
-    private void textFieldUserDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetailsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetailsActionPerformed
-
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
@@ -440,6 +435,7 @@ public class CustomerList extends javax.swing.JPanel {
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
         String message = "Customer Paid";
         if (listCustomers.getSelectedValue() != null) {
+            String[] parts = listCustomers.getSelectedValue().split(", ");
 
             //set this customer's credit to 0
             try {
@@ -447,7 +443,7 @@ public class CustomerList extends javax.swing.JPanel {
                         + "(select discountID from flexiblediscount where discountID = "
                         + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                         + "(select accountID from customeraccount where customerID = "
-                        + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                        + "(select ID from customer where ID = " + parts[0] + "))))");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -466,9 +462,10 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
         details = (listCustomers.getSelectedValue());
+        String[] parts = details.split(", ");
         try {
             String sql = ("select * from vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + details + "') and deleted = 0");
+                    + "(select ID from customer where ID = " + parts[0] + ") and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);

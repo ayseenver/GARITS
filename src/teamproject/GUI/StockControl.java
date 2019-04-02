@@ -83,9 +83,6 @@ public class StockControl extends javax.swing.JPanel {
 
                 //Code to get Role name from Databse
                 if (username.equals(user)) {
-                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'"); // I dont see the point of this line
-                    //it get the role name if the username equals anyway plus gets ride of the error message
-
                     roleName = rs.getString("roleName");
                 }
             }
@@ -296,11 +293,6 @@ public class StockControl extends javax.swing.JPanel {
         add(labelAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
 
         textFieldSearchAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchAllStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchAllStockActionPerformed(evt);
-            }
-        });
         add(textFieldSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 227, 30));
 
         buttonOrder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -425,10 +417,6 @@ public class StockControl extends javax.swing.JPanel {
         });
         add(buttonEditSpareParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 140, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldSearchAllStockActionPerformed
 
     private void buttonOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrderActionPerformed
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
