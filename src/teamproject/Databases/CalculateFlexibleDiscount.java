@@ -5,11 +5,18 @@
  */
 package teamproject.Databases;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,12 +34,20 @@ public class CalculateFlexibleDiscount implements Runnable {
     @Override
     public void run() {
         connect();
-        CalculateFlexibleDiscount();
+        GetLastCalculation();
         closeConnection();
     }
 
     private void connect() {
         connection = db.connect();
+    }
+
+    private void GetLastCalculation() {
+        LocalDate date = LocalDate.now();
+        if (date.getDayOfMonth() == 1) {
+            //do this on the 1st of every month
+            CalculateFlexibleDiscount();
+        }
     }
 
     private void CalculateFlexibleDiscount() {
@@ -172,7 +187,7 @@ public class CalculateFlexibleDiscount implements Runnable {
 
             try {
                 //update "order value this month" to the total cost, and the credit
-                String sql = ("update flexiblediscount set ordervaluethismonth = " + totalCost 
+                String sql = ("update flexiblediscount set ordervaluethismonth = " + totalCost
                         + ", credit = " + credit + " where discountID = " + discountID);
                 PreparedStatement ps = null;
 

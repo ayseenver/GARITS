@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MONTHS;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -24,7 +23,7 @@ public class Timer {
         DailyReminders();
         CheckBackupFrequency();
         MonthlyReports();
-        CalculateFlexibleDiscounts(LocalDate.now());
+        CalculateFlexibleDiscounts();
     }
 
     private void CheckBackupFrequency() {
@@ -172,13 +171,11 @@ public class Timer {
         scheduler.scheduleAtFixedRate(new AutomaticReminders(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
     }
 
-    private void CalculateFlexibleDiscounts(LocalDate date) {
+    private void CalculateFlexibleDiscounts() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         //if it's the 1st, calculate the flexible discounts for the last month
-        if (date.getDayOfMonth() == 1) {
-            scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 30, TimeUnit.DAYS);
-        }
+        scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 1, TimeUnit.DAYS);
     }
 
 }
