@@ -55,19 +55,17 @@ public class Database extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonBack = new javax.swing.JButton();
-        textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         buttonBack1 = new javax.swing.JButton();
-        textFieldUserDetails1 = new javax.swing.JTextField();
         labelLoggedIn1 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         comboBoxBackup = new javax.swing.JComboBox<>();
-        buttonDoneBackup = new javax.swing.JButton();
         buttonBackup = new javax.swing.JButton();
         buttonRestore = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
         labelDatabase = new javax.swing.JLabel();
+        textFieldUserDetails = new javax.swing.JTextField();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -80,10 +78,6 @@ public class Database extends javax.swing.JPanel {
             }
         });
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, -1, -1));
-
-        textFieldUserDetails.setEditable(false);
-        textFieldUserDetails.setFocusable(false);
-        add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         labelLoggedIn.setText("Logged In as:");
         add(labelLoggedIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
@@ -100,32 +94,21 @@ public class Database extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, -1, -1));
 
-        textFieldUserDetails1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldUserDetails1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(textFieldUserDetails1, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
-
         labelLoggedIn1.setText("Logged In as:");
         jPanel1.add(labelLoggedIn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Automatic Backup Frequency:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 320, -1, 40));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 500, -1, 40));
 
         comboBoxBackup.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         comboBoxBackup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "daily", "weekly", "monthly" }));
-        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 330, -1, 30));
-
-        buttonDoneBackup.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonDoneBackup.setText("Update");
-        buttonDoneBackup.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDoneBackupActionPerformed(evt);
+                comboBoxBackupActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDoneBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 330, -1, -1));
+        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 510, -1, 30));
 
         buttonBackup.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonBackup.setText("Backup Now");
@@ -157,6 +140,10 @@ public class Database extends javax.swing.JPanel {
         labelDatabase.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelDatabase.setText("Database");
         jPanel1.add(labelDatabase, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, -1, -1));
+
+        textFieldUserDetails.setEditable(false);
+        textFieldUserDetails.setFocusable(false);
+        jPanel1.add(textFieldUserDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -193,11 +180,7 @@ public class Database extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBack1ActionPerformed
 
-    private void textFieldUserDetails1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldUserDetails1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textFieldUserDetails1ActionPerformed
-
-    private void buttonDoneBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneBackupActionPerformed
+    private void comboBoxBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxBackupActionPerformed
         LocalDate today = LocalDate.now();
         String fileName = "backupFrequency.txt";
         try {
@@ -209,14 +192,13 @@ public class Database extends javax.swing.JPanel {
         }
 
         JOptionPane.showMessageDialog(new JFrame(), "Frequency Updated!");
-    }//GEN-LAST:event_buttonDoneBackupActionPerformed
+    }//GEN-LAST:event_comboBoxBackupActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonBack1;
     private javax.swing.JButton buttonBackup;
-    private javax.swing.JButton buttonDoneBackup;
     private javax.swing.JButton buttonExit;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
@@ -228,6 +210,5 @@ public class Database extends javax.swing.JPanel {
     private javax.swing.JLabel labelLoggedIn;
     private javax.swing.JLabel labelLoggedIn1;
     private javax.swing.JTextField textFieldUserDetails;
-    private javax.swing.JTextField textFieldUserDetails1;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,0 +1,196 @@
+Part name: Tyre, heavy tread
+Part ID: 1
+Manufacturer: Fjord Supplies
+Vehicle type: Transit
+Price: £45
+Initial stock level: 6
+Initial cost: 270.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 6
+Stock cost: £270.0
+Low stock threshold: 6
+
+Part name: Exhaust, complete box
+Part ID: 2
+Manufacturer: Fjord Supplies
+Vehicle type: Estate
+Price: £200
+Initial stock level: 0
+Initial cost: 0.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 0
+Stock cost: £0.0
+Low stock threshold: 2
+
+Part name: Engine mount, set
+Part ID: 3
+Manufacturer: Halfords
+Vehicle type: all
+Price: £15
+Initial stock level: 4
+Initial cost: 60.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 4
+Stock cost: £60.0
+Low stock threshold: 4
+
+Part name: Spark plug, single
+Part ID: 4
+Manufacturer: Halfords
+Vehicle type: all
+Price: £1.5
+Initial stock level: 21
+Initial cost: 31.5
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 21
+Stock cost: £31.5
+Low stock threshold: 20
+
+Part name: Spark lead, set
+Part ID: 5
+Manufacturer: Halfords
+Vehicle type: all
+Price: £12.5
+Initial stock level: 15
+Initial cost: 187.5
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 15
+Stock cost: £187.5
+Low stock threshold: 10
+
+Part name: Distributor cap
+Part ID: 6
+Manufacturer: Halfords
+Vehicle type: Fjord
+Price: £35
+Initial stock level: 9
+Initial cost: 315.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 9
+Stock cost: £315.0
+Low stock threshold: 5
+
+Part name: Paint, Arrogant Red
+Part ID: 7
+Manufacturer: Halfords
+Vehicle type: all
+Price: £60
+Initial stock level: 2
+Initial cost: 120.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 2
+Stock cost: £120.0
+Low stock threshold: 2
+
+Part name: Interior bulb
+Part ID: 8
+Manufacturer: Halfords
+Vehicle type: Rolls Royce
+Price: £118
+Initial stock level: 0
+Initial cost: 0.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 0
+Stock cost: £0.0
+Low stock threshold: 1
+
+Part name: Motor Oil
+Part ID: 9
+Manufacturer: Halfords
+Vehicle type: all
+Price: £25
+Initial stock level: 25
+Initial cost: 625.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 25
+Stock cost: £625.0
+Low stock threshold: 25
+
+Part name: Oil filter
+Part ID: 10
+Manufacturer: Halfords
+Vehicle type: all
+Price: £10
+Initial stock level: 15
+Initial cost: 150.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 15
+Stock cost: £150.0
+Low stock threshold: 15
+
+Part name: Air filter
+Part ID: 11
+Manufacturer: Halfords
+Vehicle type: all
+Price: £15
+Initial stock level: 13
+Initial cost: 195.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 13
+Stock cost: £195.0
+Low stock threshold: 10
+
+Part name: Engine
+Part ID: 12
+Manufacturer: Aston Martin
+Vehicle type: Aston Martin
+Price: £2500
+Initial stock level: 1
+Initial cost: 2500.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 1
+Stock cost: £2500.0
+Low stock threshold: 10
+
+Part name: Seat
+Part ID: 13
+Manufacturer: Aston Martin
+Vehicle type: Aston Martin
+Price: £500
+Initial stock level: 1
+Initial cost: 500.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 1
+Stock cost: £500.0
+Low stock threshold: 10
+
+Part name: Wheel
+Part ID: 14
+Manufacturer: Aston Martin
+Vehicle type: Aston Martin
+Price: £175
+Initial stock level: 2
+Initial cost: 350.0
+Used: 0
+Sold: 0
+Delivery: 0
+New stock level: 2
+Stock cost: £350.0
+Low stock threshold: 10
+
