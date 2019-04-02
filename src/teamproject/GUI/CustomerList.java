@@ -451,12 +451,27 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehiclesActionPerformed
 
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
-        String message = "Customer Paid";
-        String paymentMethod=comboBoxPayCustomer.getSelectedItem().toString();
+        String message = "Customer Paid by Cheque";
+        String paymentMethod = comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
-            if (paymentMethod.equals("Cheque")){
-            }
-            else{
+            if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
+                try {
+                    String sql = ("update flexiblediscount set amountToBeDeducted = amountToBeDecuted+(select credit from flexiblediscount)"
+                            + " from where discountID =(select discountID from flexiblediscount where discountID = "
+                            + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
+                            + "(select accountID from customeraccount where customerID = "
+                            + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+                message= "Amount will be deducted from next invoice";
             }
             //set this customer's credit to 0
             try {
