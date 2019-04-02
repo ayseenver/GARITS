@@ -71,9 +71,9 @@ public class CustomerList extends javax.swing.JPanel {
                 // read the result set
                 String user = rs.getString("username");
 
-                //Code to get Role name from Databse
+                //Code to get Role name from Database
                 if (username.equals(user)) {
-              //      this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+              // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
 
                     roleName = rs.getString("roleName");
                 }
