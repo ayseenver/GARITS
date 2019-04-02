@@ -16,6 +16,7 @@ public class CustomerList extends javax.swing.JPanel {
     private String username;
     String payment;
     String details;
+    String roleName;
     private ResultSet rsC;
     private ResultSet rsD;
     private ResultSet rs;
@@ -56,6 +57,31 @@ public class CustomerList extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    }
+
+    private String GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+              //      this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return roleName;
     }
 
     private void ShowCustomers() {
@@ -118,23 +144,25 @@ public class CustomerList extends javax.swing.JPanel {
         labelPayCustomerExplained.setVisible(false);
 
         String flexibleDiscount = null;
-        try {
-            this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
-                    + "(select ID from customer where name = '" + details + "'))");
+        if (GetRole().equalsIgnoreCase("franchisee")) {
+            try {
+                this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
+                        + "(select ID from customer where name = '" + details + "'))");
 
-            while (rsP.next()) {
-                flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
+                while (rsP.next()) {
+                    flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
+                }
+                if (flexibleDiscount != null) {
+                    buttonConfirmPayment.setVisible(true);
+                    comboBoxPayCustomer.setVisible(true);
+                    labelPayCustomer.setVisible(true);
+                    labelPayCustomerExplained.setVisible(true);
+                }
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+
             }
-            if (flexibleDiscount != null) {
-                buttonConfirmPayment.setVisible(true);
-                comboBoxPayCustomer.setVisible(true);
-                labelPayCustomer.setVisible(true);
-                labelPayCustomerExplained.setVisible(true);
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-
         }
     }
 
@@ -471,7 +499,7 @@ public class CustomerList extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                message= "Amount will be deducted from next invoice";
+                message = "Amount will be deducted from next invoice";
             }
             //set this customer's credit to 0
             try {
