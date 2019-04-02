@@ -1082,40 +1082,34 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
     private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
+
         String message = "Are you sure you want to delete Customer?";
-                            System.out.println(c.getID());
         int reply = JOptionPane.showConfirmDialog(null, message, "Delete Customer", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
+
             try {
-                while (rs.next()) {
-                    try {
-                        String sql = ("update customer set deleted = 1 where ID = " + c.getID());
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    //delete all vehciles with this CustomerID
-                    try {
-                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + c.getID());
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
+                String sql = ("update customer set deleted = 1 where ID = " + c.getID());
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
+            //delete all vehciles with this CustomerID
+            try {
+                String sql = ("update vehicle set deleted = 1 where CustomerID = " + c.getID());
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
@@ -1130,6 +1124,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 new CustomerList(username);
             }
         }
+
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
     private void checkPretickedBoxes() {
         checkAccountHolder();
