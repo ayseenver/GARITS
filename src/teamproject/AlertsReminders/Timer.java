@@ -1,13 +1,13 @@
 package teamproject.AlertsReminders;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MONTHS;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -22,7 +22,8 @@ public class Timer {
     public Timer() {
         DailyReminders();
         CheckBackupFrequency();
-        CalculateFlexibleDiscounts(LocalDate.now());
+        MonthlyReports();
+        CalculateFlexibleDiscounts();
     }
 
     private void CheckBackupFrequency() {
@@ -32,6 +33,9 @@ public class Timer {
         LocalDate date = LocalDate.now();
         try {
             // FileReader reads text files in the default encoding.
+            File backupFrequency = new File(fileName);
+            backupFrequency.createNewFile(); // if file already exists will do nothing 
+
             FileReader fileReader = new FileReader(fileName);
 
             // Always wrap FileReader in BufferedReader.
@@ -135,15 +139,16 @@ public class Timer {
 
     private void MonthlyBackups(LocalDate date) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        LocalDate aDate = LocalDate.now(); // Current date or parsed date;
 
-        long monthsBetween = MONTHS.between(date, aDate);
-        if (monthsBetween > 12) {
-            monthsBetween = monthsBetween % 12;
-        }
+        //schedule a backup to happen at the end of this month, and every 30 days thereafter.
+        scheduler.scheduleAtFixedRate(new AutomaticBackups(), 31 - date.getDayOfMonth(), 30, TimeUnit.DAYS); //every 30 days (1 month)
 
-        scheduler.scheduleAtFixedRate(new AutomaticBackups(), monthsBetween, 30, TimeUnit.DAYS); //every 30 days (1 month)
+    }
 
+    private void MonthlyReports() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        //Every day call the automatic report method
+        scheduler.scheduleAtFixedRate(new AutomaticReport(), 0, 1, TimeUnit.DAYS); //every 30 days (1 month)
     }
 
     private void DailyReminders() {
@@ -166,13 +171,11 @@ public class Timer {
         scheduler.scheduleAtFixedRate(new AutomaticReminders(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
     }
 
-    private void CalculateFlexibleDiscounts(LocalDate date) {
+    private void CalculateFlexibleDiscounts() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         //if it's the 1st, calculate the flexible discounts for the last month
-        if (date.getDayOfMonth() == 1) {
-            scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 30, TimeUnit.DAYS);
-        }
+        scheduler.scheduleAtFixedRate(new CalculateFlexibleDiscount(), 0, 1, TimeUnit.DAYS);
     }
 
 }

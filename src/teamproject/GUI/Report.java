@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -622,12 +623,12 @@ public class Report extends javax.swing.JPanel {
                                 + "Vehicle type: " + rs.getString("vehicleType") + "\n"
                                 + "Price: £" + rs.getString("costPrice") + "\n"
                                 + "Initial stock level: " + initialQuantity + "\n"
-                                + "Initial cost: " + (initialQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Initial cost: " + (initialQuantity * (Double.parseDouble(rs.getString("costPrice")))) + "\n"
                                 + "Used: " + usedQuantity + "\n"
                                 + "Sold: " + soldQuantity + "\n"
                                 + "Delivery: " + orderQuantity + "\n"
                                 + "New stock level: " + newQuantity + "\n"
-                                + "Stock cost: £" + (newQuantity * (Integer.parseInt(rs.getString("costPrice")))) + "\n"
+                                + "Stock cost: £" + (newQuantity * (Double.parseDouble(rs.getString("costPrice")))) + "\n"
                                 + "Low stock threshold: " + rs.getString("threshold") + "\n";
                         textAreaReport.append(result + "\n");
                     }
