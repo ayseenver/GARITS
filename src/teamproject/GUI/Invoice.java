@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import teamproject.Customer_Account.Customer;
+import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -32,6 +34,10 @@ public class Invoice extends javax.swing.JPanel {
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
+    ResultSet rsC;
+    ResultSet rsV;
+    Customer c = new Customer();
+    Vehicle v = new Vehicle();
     private ResultSet rsP;
     String[] invoiceArray;
     String jobNumber;
@@ -88,10 +94,70 @@ public class Invoice extends javax.swing.JPanel {
         }
     }
 
+    private void getJobVehicle() {
+
+        try {
+            String sql = ("select * from Vehicle where registrationNumber = (select vehicleregistrationNumber from job where jobID = " + 50 + ")");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rsV = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            v.setMake(rsV.getString("make"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            v.setModel(rsV.getString("model"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            v.setRegistrationNumber(rsV.getString("registrationNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+    }
+
+    private void GetCustomerDetails() {
+
+        try {
+            String sql = ("select * from Customer where id = (select customerID from vehicle where registrationNumber= '" + v.getRegistrationNumber() + "') ");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            this.rsC = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            c.setName(rsC.getString("name"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     private String GetJobInvoiceDetails() {
         GetJobAndInvoiceNumber();
         String result = "";
-        result += ("Invoice number : " + invoiceNumber + "\n");
+        result += ("Dear " + c.getName() + "\n\n");
+        result += ("Invoice number : " + invoiceNumber + "\n\n");
+        result += ("Vehicle Registration No.: " + v.getRegistrationNumber() + "\n");
+         result += ("Make: " + v.getMake()+ "\n"+"Model: " + v.getModel()+ "\n\n");
         result += ("Job number : " + jobNumber + "\n\n");
         result += ("Description of work: \n");
 
@@ -347,7 +413,7 @@ public class Invoice extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new Invoice(username,"Invoice");
+        new Invoice(username, "Invoice");
     }
 
     private void FixedDiscount(String fixedID) {
@@ -1131,6 +1197,8 @@ public class Invoice extends javax.swing.JPanel {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
             GetJobAndInvoiceNumber();
+            getJobVehicle();
+            GetCustomerDetails();
             if (!jobNumber.isEmpty()) {
                 textAreaInvoiceDetail.append(GetJobInvoiceDetails());
                 ShowPayLaterCustomer();
