@@ -153,7 +153,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
         labelVariableDiscount = new javax.swing.JLabel();
         textFieldManufactureName = new javax.swing.JTextField();
         labelLastServiceDate = new javax.swing.JLabel();
-        buttonEditSparePart = new javax.swing.JButton();
         buttonSavePartChanges = new javax.swing.JButton();
         buttonDeleteSparePart = new javax.swing.JButton();
 
@@ -244,6 +243,11 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
+        listSpareParts.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listSparePartsValueChanged(evt);
+            }
+        });
         jScrollPane5.setViewportView(listSpareParts);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
@@ -256,14 +260,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
         labelLastServiceDate.setText("*Manufacture: ");
         jPanel1.add(labelLastServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 500, -1, -1));
 
-        buttonEditSparePart.setText("Edit");
-        buttonEditSparePart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditSparePartActionPerformed(evt);
-            }
-        });
-        jPanel1.add(buttonEditSparePart, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 290, 100, -1));
-
         buttonSavePartChanges.setText("Save Changes");
         buttonSavePartChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,13 +268,13 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jPanel1.add(buttonSavePartChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 530, 130, -1));
 
-        buttonDeleteSparePart.setText("Delete");
+        buttonDeleteSparePart.setText("Delete Part");
         buttonDeleteSparePart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDeleteSparePartActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteSparePart, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 100, -1));
+        jPanel1.add(buttonDeleteSparePart, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 300, 100, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
@@ -303,87 +299,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
         db.closeConnection(connection);
         new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
-
-    private void buttonEditSparePartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditSparePartActionPerformed
-        if (listSpareParts.getSelectedValue() == null) {
-            String mess = "Please choose a part first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
-            String selected = listSpareParts.getSelectedValue();
-            String name = "";
-            String model = "";
-            String quantity = "";
-            String[] parts = selected.split(", ");
-            if (parts.length == 3) {
-                name = parts[0];
-                model = parts[1];
-                quantity = parts[2];
-            } else if (parts.length == 4) {
-                name = parts[0] + ", " + parts[1];
-                model = parts[2];
-                quantity = parts[3];
-            }
-
-            try {
-                String sql = ("Select * from sparepart where partName = '" + name + "' and vehicleType = '" + model + "' "
-                        + "and quantity = " + quantity + " and deleted = 0");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rs = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                p.setPartName(rs.getString("partName"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                p.setVehicleType(rs.getString("vehicleType"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                p.setQuantity(Integer.parseInt(rs.getString("quantity")));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                p.setCostPrice(Double.parseDouble(rs.getString("costPrice")));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                p.setSellingPrice(Double.parseDouble(rs.getString("costPrice")) * 1.3);
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                p.setThreshold(Integer.parseInt(rs.getString("threshold")));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                p.setManufacturerName(rs.getString("Manufacturername"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            textFieldPartName.setText(p.getPartName());
-            textFieldVehicleType.setText(p.getVehicleType());
-            textFieldQuantity.setText(p.getQuantity() + "");
-            textFieldCost.setText(p.getCostPrice() + "");
-            textFieldThreshold.setText(p.getThreshold() + "");
-            textFieldManufactureName.setText(p.getManufacturerName());
-        }
-    }//GEN-LAST:event_buttonEditSparePartActionPerformed
 
     private void buttonNewSparePartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewSparePartActionPerformed
         if (textFieldPartName.getText().isEmpty() || textFieldVehicleType.getText().isEmpty()
@@ -565,12 +480,87 @@ public class UpdateSparePart extends javax.swing.JPanel {
         ShowParts();
     }//GEN-LAST:event_buttonDeleteSparePartActionPerformed
 
+    private void listSparePartsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listSparePartsValueChanged
+        String selected = listSpareParts.getSelectedValue();
+        String name = "";
+        String model = "";
+        String quantity = "";
+        String[] parts = selected.split(", ");
+        if (parts.length == 3) {
+            name = parts[0];
+            model = parts[1];
+            quantity = parts[2];
+        } else if (parts.length == 4) {
+            name = parts[0] + ", " + parts[1];
+            model = parts[2];
+            quantity = parts[3];
+        }
+
+        try {
+            String sql = ("Select * from sparepart where partName = '" + name + "' and vehicleType = '" + model + "' "
+                    + "and quantity = " + quantity + " and deleted = 0");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            p.setPartName(rs.getString("partName"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            p.setVehicleType(rs.getString("vehicleType"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            p.setQuantity(Integer.parseInt(rs.getString("quantity")));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            p.setCostPrice(Double.parseDouble(rs.getString("costPrice")));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            p.setSellingPrice(Double.parseDouble(rs.getString("costPrice")) * 1.3);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            p.setThreshold(Integer.parseInt(rs.getString("threshold")));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            p.setManufacturerName(rs.getString("Manufacturername"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        textFieldPartName.setText(p.getPartName());
+        textFieldVehicleType.setText(p.getVehicleType());
+        textFieldQuantity.setText(p.getQuantity() + "");
+        textFieldCost.setText(p.getCostPrice() + "");
+        textFieldThreshold.setText(p.getThreshold() + "");
+        textFieldManufactureName.setText(p.getManufacturerName());
+    }//GEN-LAST:event_listSparePartsValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonDeleteSparePart;
     private javax.swing.JButton buttonDone;
-    private javax.swing.JButton buttonEditSparePart;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewSparePart;
     private javax.swing.JButton buttonSavePartChanges;

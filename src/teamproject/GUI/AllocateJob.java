@@ -141,7 +141,6 @@ public class AllocateJob extends javax.swing.JPanel {
         labelNotAllocatedJobs = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         listMechanics = new javax.swing.JList<>();
-        buttonSelectJob = new javax.swing.JButton();
         buttonAllocateToMechanic = new javax.swing.JButton();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
@@ -169,15 +168,6 @@ public class AllocateJob extends javax.swing.JPanel {
         jScrollPane4.setViewportView(listMechanics);
 
         add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 440, 1160, 210));
-
-        buttonSelectJob.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        buttonSelectJob.setText("Select Job");
-        buttonSelectJob.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSelectJobActionPerformed(evt);
-            }
-        });
-        add(buttonSelectJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 390, -1, -1));
 
         buttonAllocateToMechanic.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         buttonAllocateToMechanic.setText("Allocate To Mechanic");
@@ -214,6 +204,11 @@ public class AllocateJob extends javax.swing.JPanel {
         add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
 
         listUnallocatedJobs.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listUnallocatedJobs.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listUnallocatedJobsValueChanged(evt);
+            }
+        });
         jScrollPane7.setViewportView(listUnallocatedJobs);
 
         add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 180, 1160, 210));
@@ -260,7 +255,7 @@ public class AllocateJob extends javax.swing.JPanel {
             });
 
         } else {
-           message = "Select a mechanic";
+            message = "Select a mechanic";
         }
         JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonAllocateToMechanicActionPerformed
@@ -280,26 +275,20 @@ public class AllocateJob extends javax.swing.JPanel {
         new MainMenu(username);
     }//GEN-LAST:event_buttonBackActionPerformed
 
-    private void buttonSelectJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectJobActionPerformed
-        if (listUnallocatedJobs.getSelectedValue() != null) {
-            String job = listUnallocatedJobs.getSelectedValue();
-            String[] jobParts = job.split(", ");
-            String[] idParts = jobParts[0].split(": ");
-            jobID = Integer.parseInt(idParts[1]);
+    private void listUnallocatedJobsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listUnallocatedJobsValueChanged
+        String job = listUnallocatedJobs.getSelectedValue();
+        String[] jobParts = job.split(", ");
+        String[] idParts = jobParts[0].split(": ");
+        jobID = Integer.parseInt(idParts[1]);
 
-            ShowMechanics();
-        } else {
-            String mess = "Select a job";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
-    }//GEN-LAST:event_buttonSelectJobActionPerformed
+        ShowMechanics();
+    }//GEN-LAST:event_listUnallocatedJobsValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAllocateToMechanic;
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonExit;
-    private javax.swing.JButton buttonSelectJob;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JLabel labelJobAllocation;

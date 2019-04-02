@@ -916,74 +916,80 @@ public class Job extends javax.swing.JPanel {
     private void buttonUpdateQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateQuantityActionPerformed
         String selected = listPartsUsed.getSelectedValue();
         String quantity = textFieldQuantity.getText();
-        if (!(selected == null) && !(quantity.equals(""))) {
-            int q = Integer.parseInt(quantity);
-            String[] selectedParts = selected.split(", Quantity: ");
-            String partName = selectedParts[0];
-            int initialQuantity = Integer.parseInt(selectedParts[1]);
+        if (!(selected == null)) {
+            if (!(quantity.equals(""))) {
+                int q = Integer.parseInt(quantity);
+                String[] selectedParts = selected.split(", Quantity: ");
+                String partName = selectedParts[0];
+                int initialQuantity = Integer.parseInt(selectedParts[1]);
 
-            String sql;
-            try {
-                sql = ("UPDATE Job_Part_Record "
-                        + "SET quantity = " + q + " "
-                        + "WHERE JobjobID = " + jobID + " "
-                        + "and partpartID = (select partID from sparepart where partName = '" + partName + "')");
-                PreparedStatement ps = null;
+                String sql;
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    sql = ("UPDATE Job_Part_Record "
+                            + "SET quantity = " + q + " "
+                            + "WHERE JobjobID = " + jobID + " "
+                            + "and partpartID = (select partID from sparepart where partName = '" + partName + "')");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
 
-            textFieldQuantity.setText("");
-            usedParts.set(usedParts.indexOf(selected), partName + ", Quantity: " + q);
+                textFieldQuantity.setText("");
+                usedParts.set(usedParts.indexOf(selected), partName + ", Quantity: " + q);
 
-            //update the quantity of this part in the database
-            try {
-                sql = ("select * from sparepart where partName = '" + partName + "'");
-                PreparedStatement ps = null;
+                //update the quantity of this part in the database
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    sql = ("select * from sparepart where partName = '" + partName + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    rs = ps.executeQuery();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                rs = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
 
-            int newQuantity = 0;
-            try {
-                while (rs.next()) {
-                    int partQuantity = Integer.parseInt(rs.getString("quantity"));
-                    newQuantity = partQuantity - q + initialQuantity;
-                }
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                sql = ("UPDATE sparePart "
-                        + "SET quantity = " + newQuantity + " "
-                        + "where partName = '" + partName + "'");
-                PreparedStatement ps = null;
+                int newQuantity = 0;
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    while (rs.next()) {
+                        int partQuantity = Integer.parseInt(rs.getString("quantity"));
+                        newQuantity = partQuantity - q + initialQuantity;
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+
+                try {
+                    sql = ("UPDATE sparePart "
+                            + "SET quantity = " + newQuantity + " "
+                            + "where partName = '" + partName + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+                UpdateUsedParts();
+            } else {
+                String message = "Input a quantity";
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
+        } else {
+            String message = "Select a part";
+            JOptionPane.showMessageDialog(new JFrame(), message);
         }
-        UpdateUsedParts();
-
-
     }//GEN-LAST:event_buttonUpdateQuantityActionPerformed
 
     private void sendYardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendYardButtonActionPerformed

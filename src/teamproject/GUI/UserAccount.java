@@ -142,7 +142,6 @@ public class UserAccount extends javax.swing.JPanel {
         buttonNewUser = new javax.swing.JButton();
         buttonSearch = new javax.swing.JButton();
         textFieldFirstName = new javax.swing.JTextField();
-        buttonEditUser = new javax.swing.JButton();
         labelUserDetail = new javax.swing.JLabel();
         textFieldSearch = new javax.swing.JTextField();
         labelRole = new javax.swing.JLabel();
@@ -186,6 +185,11 @@ public class UserAccount extends javax.swing.JPanel {
         add(buttonDone, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 650, -1, -1));
 
         listUsers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listUsers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listUsersValueChanged(evt);
+            }
+        });
         jScrollPane9.setViewportView(listUsers);
 
         add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 1140, 240));
@@ -210,14 +214,6 @@ public class UserAccount extends javax.swing.JPanel {
         });
         add(buttonSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, -1, -1));
         add(textFieldFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 510, 130, -1));
-
-        buttonEditUser.setText("Edit User");
-        buttonEditUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditUserActionPerformed(evt);
-            }
-        });
-        add(buttonEditUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 420, 200, -1));
 
         labelUserDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelUserDetail.setText("User Details:");
@@ -248,7 +244,7 @@ public class UserAccount extends javax.swing.JPanel {
                 buttonDeleteUserActionPerformed(evt);
             }
         });
-        add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 420, 130, 30));
+        add(buttonDeleteUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 580, 130, 30));
 
         comboBoxRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "receptionist", "mechanic", "foreperson", "franchisee", "admin" }));
         comboBoxRole.addActionListener(new java.awt.event.ActionListener() {
@@ -398,70 +394,6 @@ public class UserAccount extends javax.swing.JPanel {
         UpdateUserList();
     }//GEN-LAST:event_buttonSearchActionPerformed
 
-    private void buttonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditUserActionPerformed
-        String selected = listUsers.getSelectedValue();
-        if (selected != null) {
-            SelectUser();
-
-            //update the user object with the details selected
-            try {
-                u.setFirstName(rs.getString("firstName"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                u.setLastName(rs.getString("surname"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                u.setPassword(rs.getString("password"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                u.setRoleName(rs.getString("roleName"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                u.setUsername(rs.getString("username"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            //display the user details at the boxes at the botton
-            textFieldUserID.setText(u.getUsername());
-            textFieldFirstName.setText(u.getFirstName());
-            textFieldLastName.setText(u.getLastName());
-            textFieldPassword.setText(u.getPassword());
-            comboBoxRole.setSelectedItem(u.getRoleName());
-
-            //if it's a mechanic or foreperson, get their hourly rate.
-            if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
-                labelHourlyRate.setVisible(true);
-                textFieldHourlyRate.setVisible(true);
-
-                SelectMechanic();
-                try {
-                    textFieldHourlyRate.setText(rs.getString("hourlyRate"));
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
-            } else {
-                labelHourlyRate.setVisible(false);
-                textFieldHourlyRate.setVisible(false);
-            }
-        } else {
-            String mess = "Select a user";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
-    }//GEN-LAST:event_buttonEditUserActionPerformed
-
     private void buttonUpdateDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateDetailsActionPerformed
         try {
             String sql = ("Update user "
@@ -560,12 +492,69 @@ public class UserAccount extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_comboBoxRoleActionPerformed
 
+    private void listUsersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listUsersValueChanged
+        SelectUser();
+
+        //update the user object with the details selected
+        try {
+            u.setFirstName(rs.getString("firstName"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            u.setLastName(rs.getString("surname"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            u.setPassword(rs.getString("password"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            u.setRoleName(rs.getString("roleName"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            u.setUsername(rs.getString("username"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        //display the user details at the boxes at the botton
+        textFieldUserID.setText(u.getUsername());
+        textFieldFirstName.setText(u.getFirstName());
+        textFieldLastName.setText(u.getLastName());
+        textFieldPassword.setText(u.getPassword());
+        comboBoxRole.setSelectedItem(u.getRoleName());
+
+        //if it's a mechanic or foreperson, get their hourly rate.
+        if (u.getRoleName().equals("mechanic") || u.getRoleName().equals("foreperson")) {
+            labelHourlyRate.setVisible(true);
+            textFieldHourlyRate.setVisible(true);
+
+            SelectMechanic();
+            try {
+                textFieldHourlyRate.setText(rs.getString("hourlyRate"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        } else {
+            labelHourlyRate.setVisible(false);
+            textFieldHourlyRate.setVisible(false);
+        }
+    }//GEN-LAST:event_listUsersValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonDeleteUser;
     private javax.swing.JButton buttonDone;
-    private javax.swing.JButton buttonEditUser;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewUser;
     private javax.swing.JButton buttonSearch;

@@ -129,7 +129,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         textFieldNextMoTDate = new javax.swing.JTextField();
         labelLastServiceDate = new javax.swing.JLabel();
         labelServiceDateFormat = new javax.swing.JLabel();
-        buttonEditVehicle = new javax.swing.JButton();
         buttonSaveVehicleChanges = new javax.swing.JButton();
         buttonDeleteVehicle = new javax.swing.JButton();
 
@@ -231,6 +230,11 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
+        listVehicles.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listVehiclesValueChanged(evt);
+            }
+        });
         jScrollPane5.setViewportView(listVehicles);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
@@ -248,14 +252,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         labelServiceDateFormat.setText("(yyyy-mm-dd)");
         jPanel1.add(labelServiceDateFormat, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 540, -1, -1));
 
-        buttonEditVehicle.setText("Edit");
-        buttonEditVehicle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditVehicleActionPerformed(evt);
-            }
-        });
-        jPanel1.add(buttonEditVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 290, 100, -1));
-
         buttonSaveVehicleChanges.setText("Save Changes");
         buttonSaveVehicleChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,13 +260,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jPanel1.add(buttonSaveVehicleChanges, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 600, 130, -1));
 
-        buttonDeleteVehicle.setText("Delete");
+        buttonDeleteVehicle.setText("Delete Vehicle");
         buttonDeleteVehicle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDeleteVehicleActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 100, -1));
+        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 300, 100, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents
@@ -323,83 +319,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         db.closeConnection(connection);
         new LogIn();
     }//GEN-LAST:event_buttonExitActionPerformed
-
-    private void buttonEditVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditVehicleActionPerformed
-        if (listVehicles.getSelectedValue() == null) {
-            String mess = "Please choose vehicle record first!";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
-        } else {
-            String selected = listVehicles.getSelectedValue();
-            String[] parts = selected.split(", ");
-            reg = parts[0];
-
-            try {
-                String sql = ("Select * from vehicle where registrationNumber = '" + reg + "'");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rs = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                ve.setRegistrationNumber(rs.getString("registrationNumber"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                ve.setMake(rs.getString("make"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                ve.setModel(rs.getString("model"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                ve.setEngineSerial(rs.getString("engineSerial"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                ve.setChassisNumber(rs.getString("chassisNumber"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-            try {
-                ve.setColour(rs.getString("colour"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                ve.setNextMoTDate(rs.getString("nextMoTDate"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                ve.setNextServiceDate(rs.getString("nextServiceDate"));
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            textFieldRegistrationNo.setText(ve.getRegistrationNumber());
-            textFieldMake.setText(ve.getMake());
-            textFieldModel.setText(ve.getModel());
-            textFieldEngineSerial.setText(ve.getEngineSerial());
-            textFieldChassisNo.setText(ve.getChassisNumber());
-            textFieldColour.setText(ve.getColour());
-            textFieldNextServiceDate.setText(ve.getNextServiceDate());
-            textFieldNextMoTDate.setText(ve.getNextMoTDate());
-        }
-    }//GEN-LAST:event_buttonEditVehicleActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
@@ -507,12 +426,83 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         ShowVehicles();
     }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
 
+    private void listVehiclesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listVehiclesValueChanged
+        String selected = listVehicles.getSelectedValue();
+        String[] parts = selected.split(", ");
+        reg = parts[0];
+
+        try {
+            String sql = ("Select * from vehicle where registrationNumber = '" + reg + "'");
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            ve.setRegistrationNumber(rs.getString("registrationNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            ve.setMake(rs.getString("make"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            ve.setModel(rs.getString("model"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            ve.setEngineSerial(rs.getString("engineSerial"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            ve.setChassisNumber(rs.getString("chassisNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+            ve.setColour(rs.getString("colour"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            ve.setNextMoTDate(rs.getString("nextMoTDate"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            ve.setNextServiceDate(rs.getString("nextServiceDate"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        textFieldRegistrationNo.setText(ve.getRegistrationNumber());
+        textFieldMake.setText(ve.getMake());
+        textFieldModel.setText(ve.getModel());
+        textFieldEngineSerial.setText(ve.getEngineSerial());
+        textFieldChassisNo.setText(ve.getChassisNumber());
+        textFieldColour.setText(ve.getColour());
+        textFieldNextServiceDate.setText(ve.getNextServiceDate());
+        textFieldNextMoTDate.setText(ve.getNextMoTDate());
+    }//GEN-LAST:event_listVehiclesValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
     private javax.swing.JButton buttonDeleteVehicle;
     private javax.swing.JButton buttonDone;
-    private javax.swing.JButton buttonEditVehicle;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewVehicle;
     private javax.swing.JButton buttonSaveVehicleChanges;
