@@ -332,7 +332,7 @@ public class CreateJobTask extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         jLabel1.setText("*a bay will NOT be allocated");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 570, -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 580, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
