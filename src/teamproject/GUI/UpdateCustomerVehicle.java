@@ -237,7 +237,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jScrollPane5.setViewportView(listVehicles);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 130));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
@@ -266,7 +266,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 buttonDeleteVehicleActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 300, 100, -1));
+        jPanel1.add(buttonDeleteVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 300, 130, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1280, 720));
     }// </editor-fold>//GEN-END:initComponents

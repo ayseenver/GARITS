@@ -77,8 +77,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
 
         //Only frachisee can edit threshold
         if (!(roleName.equals("franchisee"))) {
-            textFieldThreshold.setVisible(false);
-            labelThreshold.setVisible(false);
+            textFieldThreshold.setEnabled(false);
         }
     }
 
@@ -250,7 +249,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jScrollPane5.setViewportView(listSpareParts);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 130));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
@@ -451,33 +450,37 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please choose a part first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-            String selected = listSpareParts.getSelectedValue();
-            String name = "";
-            String model = "";
-            String[] parts = selected.split(", ");
-            if (parts.length == 3) {
-                name = parts[0];
-                model = parts[1];
-            } else if (parts.length == 4) {
-                name = parts[0] + ", " + parts[1];
-                model = parts[2];
-            }
-
-            //delete this part
-            try {
-                String sql = ("update sparepart set deleted = 1 where partName = '" + name + "' and vehicleType = '" + model + "'");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this part?", "Delete Part", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String selected = listSpareParts.getSelectedValue();
+                String name = "";
+                String model = "";
+                String[] parts = selected.split(", ");
+                if (parts.length == 3) {
+                    name = parts[0];
+                    model = parts[1];
+                } else if (parts.length == 4) {
+                    name = parts[0] + ", " + parts[1];
+                    model = parts[2];
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+
+                //delete this part
+                try {
+                    String sql = ("update sparepart set deleted = 1 where partName = '" + name + "' and vehicleType = '" + model + "'");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
             }
         }
         ShowParts();
+
     }//GEN-LAST:event_buttonDeleteSparePartActionPerformed
 
     private void listSparePartsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listSparePartsValueChanged
