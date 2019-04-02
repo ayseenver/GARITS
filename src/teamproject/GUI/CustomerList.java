@@ -173,8 +173,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void GetSelectedCustomer() {
         String selected = listCustomers.getSelectedValue();
-        String[] selectedParts = selected.split("ID: ");
-        id = selectedParts[0];
+        id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
 
         try {
             String sql = ("select * from Customer where id = '" + id + "' "
@@ -489,6 +488,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
         String message = "Customer Paid by Cheque";
+        System.out.println(id);
         String paymentMethod = comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
             if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
@@ -497,7 +497,7 @@ public class CustomerList extends javax.swing.JPanel {
                             + " from where discountID =(select discountID from flexiblediscount where discountID = "
                             + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                             + "(select accountID from customeraccount where customerID = "
-                            + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                            + "(select ID from customer where ID = '" + id + "'))))");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -516,7 +516,7 @@ public class CustomerList extends javax.swing.JPanel {
                         + "(select discountID from flexiblediscount where discountID = "
                         + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                         + "(select accountID from customeraccount where customerID = "
-                        + "(select ID from customer where name = '" + listCustomers.getSelectedValue() + "'))))");
+                        + "(select ID from customer where id = '" + id + "'))))");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -534,10 +534,12 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
 
     private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
-        details = (listCustomers.getSelectedValue());
+        String selected = listCustomers.getSelectedValue();
+        id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
+
         try {
             String sql = ("select * from vehicle where CustomerID = "
-                    + "(select ID from customer where name = '" + details + "') and deleted = 0");
+                    + id + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);

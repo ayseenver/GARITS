@@ -180,9 +180,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "(FixedDiscountdiscountID, CustomerAccountaccountID) "
                         + "VALUES ((select discountID from fixedDiscount where discountID in "
                         + "(select max(discountID) from fixedDiscount)), "
-                        + "((select accountID from customeraccount where CustomerID = "
-                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                        + "and address = '" + textFieldAddress.getText() + "'))))";
+                        + "((select accountID from customeraccount where CustomerID = '"
+                        + c.getID() + "')) ";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -256,8 +255,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                             + "VALUES ((select discountID from VariableDiscount where discountID in "
                             + "(select max(discountID) from VariableDiscount)), "
                             + "(select accountID from customeraccount where CustomerID = "
-                            + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "')))";
+                            + c.getID() + "))";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -291,8 +289,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "VALUES ((select discountID from flexibleDiscount where discountID in "
                         + "(select max(discountID) from flexibleDiscount)), "
                         + "(select accountID from customeraccount where CustomerID = "
-                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                        + "and address = '" + textFieldAddress.getText() + "')))";
+                        + c.getID() + ")))";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -357,8 +354,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             if (checkBoxConfigurePayLater.isSelected()) {
                 try {
                     String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
-                            + "VALUES (1, (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "'))";
+                            + "VALUES (1, " + c.getID() + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -372,8 +368,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } else {
                 try {
                     String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
-                            + "VALUES (0, (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "'))";
+                            + "VALUES (0, " + c.getID() + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -927,8 +922,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
                         + "mobileNumber = '" + textFieldMobile.getText() + "', "
                         + "fax = '" + textFieldFax.getText() + "' " //optional
-                        + "WHERE ID = (select ID from customer where name = '" + originalName + "' "
-                        + "and address = '" + originalAddress + "')");
+                        + "WHERE ID =" + c.getID());
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -942,8 +936,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
             if (checkBoxAccountHolder.isSelected()) {
                 try {
-                    String sql = ("select * from customeraccount where customerID = (select ID from customer where name = '" + originalName + "' "
-                            + "and address = '" + originalAddress + "')");
+                    String sql = ("select * from customeraccount where customerID = " + c.getID());
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -974,8 +967,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "update CustomerAccount "
                                     + "set configuredPayLater = 1 "
-                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "')";
+                                    + "where customerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -990,8 +982,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "update CustomerAccount "
                                     + "set configuredPayLater = 0 "
-                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "')";
+                                    + "where customerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -1009,8 +1000,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "select * from discountplan "
                                     + "where CustomerAccountaccountID = "
-                                    + "(select accountID from customeraccount where CustomerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "'))";
+                                    + "(select accountID from customeraccount where CustomerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -1043,8 +1033,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                                         + "flexibleDiscountdiscountID = null "
                                         + "where CustomerAccountaccountID = "
                                         + "(select accountID from customeraccount where CustomerID = "
-                                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                        + "and address = '" + textFieldAddress.getText() + "'))";
+                                        + c.getID() + ")";
                                 PreparedStatement ps = null;
                                 try {
                                     ps = connection.prepareStatement(sql);
@@ -1094,29 +1083,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
     private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
         String message = "Are you sure you want to delete Customer?";
+                            System.out.println(c.getID());
         int reply = JOptionPane.showConfirmDialog(null, message, "Delete Customer", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             try {
-                String sql = ("select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "'");
-                PreparedStatement ps = null;
-                try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                rs = ps.executeQuery();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-
-            String customerID = "";
-
-            try {
                 while (rs.next()) {
-                    customerID = rs.getString("ID");
                     try {
-                        String sql = ("update customer set deleted = 1 where ID = " + customerID);
+                        String sql = ("update customer set deleted = 1 where ID = " + c.getID());
                         PreparedStatement ps = null;
                         try {
                             ps = connection.prepareStatement(sql);
@@ -1130,7 +1103,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
                     //delete all vehciles with this CustomerID
                     try {
-                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
+                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + c.getID());
                         PreparedStatement ps = null;
                         try {
                             ps = connection.prepareStatement(sql);
@@ -1170,7 +1143,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
         try {
             this.rsA = connection.createStatement().executeQuery("select * from CustomerAccount where customerID = "
-                    + "(select ID from Customer where name = '" + c.getName() + "')");
+                    + c.getID());
 
             try {
                 while (rsA.next()) {
@@ -1204,7 +1177,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         checkBoxConfigurePayLater.setSelected(false);
         try {
             this.rsA = connection.createStatement().executeQuery("select configuredPayLater from CustomerAccount where customerID = "
-                    + "(select ID from Customer where name = '" + c.getName() + "')");
+                    + c.getID());
 
             String configuredPayLater = "";
             try {

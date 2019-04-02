@@ -114,13 +114,13 @@ public class Customer {
     @Override
     public String toString() {
         return "ID: " + ID
-                +"Date: "+dateCreated
-                + "\n Customer name" + name
-                + "\n EmailAddress: " + emailAddress
-                + "\n Address:" + address
-                + "\n PostCode: " + postCode
-                + "\n Tel.:" + telephoneNumber
-                + "\n Mobile: " + mobileNumber
-                + "\n fax: " + fax;
+                +"\nDate: "+dateCreated
+                + "\nName" + name
+                + "\nEmailAddress: " + emailAddress
+                + "\nAddress:" + address
+                + "\nPostCode: " + postCode
+                + "\nTel.:" + telephoneNumber
+                + "\nMobile: " + mobileNumber
+                + "\nfax: " + fax;
     }
 }
