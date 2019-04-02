@@ -232,7 +232,7 @@ public class CreateJobCustomer extends javax.swing.JPanel {
                 buttonSelectVehicleActionPerformed(evt);
             }
         });
-        add(buttonSelectVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 560, 200, -1));
+        add(buttonSelectVehicle, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 560, 200, -1));
 
         buttonSearchCustomer.setText("Search");
         buttonSearchCustomer.addActionListener(new java.awt.event.ActionListener() {
