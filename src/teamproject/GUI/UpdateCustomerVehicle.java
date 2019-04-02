@@ -399,7 +399,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         String warningMessage = "Are you Sure you want to delete a vehicle?";
         if (listVehicles.getSelectedValue() == null) {
             message = "Please choose vehicle record first!";
-            JOptionPane.showMessageDialog(new JFrame(), message);
 
         } else {
             int reply = JOptionPane.showConfirmDialog(null, message, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
@@ -410,7 +409,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
                 //delete this vehicle
                 try {
-                    String sql = ("update vehicle set deleted = 1 where registrationNumber = " + regNo);
+                    String sql = ("update vehicle set deleted = 1 where registrationNumber = '" + regNo + "'");
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -421,11 +420,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                JOptionPane.showMessageDialog(new JFrame(), message);
+
             }
         }
 
         ShowVehicles();
+        JOptionPane.showMessageDialog(new JFrame(), message);
     }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
 
     private void listVehiclesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listVehiclesValueChanged

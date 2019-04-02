@@ -109,6 +109,7 @@ public class Customer {
                 + ",\n address=" + address
                 + ",\n postCode=" + postCode
                 + ",\n telephoneNumber=" + telephoneNumber
+                 + ",\n mobileNumber=" + mobileNumber
                 + ",\n fax=" + fax;
     }
 }

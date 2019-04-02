@@ -70,6 +70,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldAddress.setText(c.getAddress());
         textFieldPostCode.setText(c.getPostCode());
         textFieldTelephone.setText(c.getTelephoneNumber());
+        textFieldMobile.setText(c.getMobileNumber());
         textFieldFax.setText(c.getFax());
     }
 
@@ -78,6 +79,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         c.setEmailAddress(textFieldAddress.getText());
         c.setName(textFieldFullName.getText());
         c.setPostCode(textFieldPostCode.getText());
+        c.setMobileNumber(textFieldMobile.getText());
         c.setTelephoneNumber(textFieldTelephone.getText());
         try {
             c.setFax(textFieldFax.getText());
@@ -849,7 +851,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldEmail.getText() + "', "
                         + "'" + textFieldPostCode.getText() + "', "
                         + "'" + textFieldTelephone.getText() + "', "
-                        + "'" + textFieldMobile.getText() + "', "
+                         + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
                         + "1)");
@@ -921,6 +923,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "emailAddress = '" + textFieldEmail.getText() + "', "
                         + "postCode = '" + textFieldPostCode.getText() + "', "
                         + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
+                        + "mobileNumber = '" + textFieldMobile.getText() + "', "
                         + "fax = '" + textFieldFax.getText() + "' " //optional
                         + "WHERE ID = (select ID from customer where name = '" + originalName + "' "
                         + "and address = '" + originalAddress + "')");
@@ -1151,7 +1154,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } else {
                 new CustomerList(username);
             }
-        } 
+        }
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed

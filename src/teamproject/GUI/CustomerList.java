@@ -185,7 +185,11 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        try {
+            c.setMobileNumber(rsC.getString("mobileNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
         try {
             c.setFax(rsC.getString("fax"));
         } catch (SQLException e) {
