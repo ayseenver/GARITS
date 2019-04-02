@@ -48,6 +48,8 @@ public class Report extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
