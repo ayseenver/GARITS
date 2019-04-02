@@ -17,6 +17,7 @@ public class CustomerList extends javax.swing.JPanel {
     String payment;
     String details;
     String roleName;
+    String id = "0";
     private ResultSet rsC;
     private ResultSet rsD;
     private ResultSet rs;
@@ -73,7 +74,7 @@ public class CustomerList extends javax.swing.JPanel {
 
                 //Code to get Role name from Database
                 if (username.equals(user)) {
-              // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
 
                     roleName = rs.getString("roleName");
                 }
@@ -91,7 +92,7 @@ public class CustomerList extends javax.swing.JPanel {
         try {
             while (rsC.next()) {
                 // read the result set
-                String name = rsC.getString("name");
+                String name = "ID: " + rsC.getString("ID") + ", " + rsC.getString("name");
                 names.add(name);
             }
         } catch (SQLException e) {
@@ -111,9 +112,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void ShowSelectedCustomersOverview() {
         GetSelectedCustomer();
-        textAreaCustomerOverview.setText("Date: " + c.getDateCreated() + '\n' + "Name: " + c.getName() + '\n'
-                + "Address: " + c.getAddress() + '\n' + "Post Code: " + c.getPostCode() + '\n' + "Tel.: " + c.getTelephoneNumber()
-                + '\n' + "Mobile: " + c.getMobileNumber() + '\n' + "Email: " + c.getEmailAddress());
+        textAreaCustomerOverview.setText(c.toString());
     }
 
     private void showCustomerCredit() {
@@ -173,9 +172,13 @@ public class CustomerList extends javax.swing.JPanel {
     }
 
     private void GetSelectedCustomer() {
+        String selected = listCustomers.getSelectedValue();
+        String[] selectedParts = selected.split("ID: ");
+        id = selectedParts[0];
+
         try {
-            String sql = ("select * from Customer where name = '" + listCustomers.getSelectedValue()) + "' "
-                    + "and deleted = 0";
+            String sql = ("select * from Customer where id = '" + id + "' "
+                    + "and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -231,6 +234,12 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        try {
+            c.setID(rsC.getString("ID"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 
     @SuppressWarnings("unchecked")

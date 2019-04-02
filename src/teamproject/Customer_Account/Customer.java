@@ -2,6 +2,7 @@ package teamproject.Customer_Account;
 
 public class Customer {
 
+    private String ID;
     private String name;
     private String emailAddress;
     private String address;
@@ -12,6 +13,14 @@ public class Customer {
     private String dateCreated;
 
     public Customer() {
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getDateCreated() {
@@ -104,12 +113,14 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer:\n" + "name=" + name
-                + ",\n emailAddress=" + emailAddress
-                + ",\n address=" + address
-                + ",\n postCode=" + postCode
-                + ",\n telephoneNumber=" + telephoneNumber
-                 + ",\n mobileNumber=" + mobileNumber
-                + ",\n fax=" + fax;
+        return "ID: " + ID
+                +"Date: "+dateCreated
+                + "\n Customer name" + name
+                + "\n EmailAddress: " + emailAddress
+                + "\n Address:" + address
+                + "\n PostCode: " + postCode
+                + "\n Tel.:" + telephoneNumber
+                + "\n Mobile: " + mobileNumber
+                + "\n fax: " + fax;
     }
 }
