@@ -259,7 +259,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, -1));
 
         labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        labelPayCustomerExplained.setText("*only customer that have flexible discount ");
+        labelPayCustomerExplained.setText("*only customer that have a flexible discount ");
         add(labelPayCustomerExplained, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
 
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -316,7 +316,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 620, 170, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 620, 170, -1));
 
         labelSelectCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectCustomer.setText("Select Customer:");
@@ -341,7 +341,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditVehiclesActionPerformed(evt);
             }
         });
-        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 620, -1, -1));
+        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 620, -1, -1));
 
         textAreaCustomerOverview.setColumns(20);
         textAreaCustomerOverview.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -364,7 +364,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonConfirmPaymentActionPerformed(evt);
             }
         });
-        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 620, 100, -1));
+        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
 
         comboBoxPayCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cheque", "Next Invoice" }));
         add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 620, 100, -1));
@@ -452,8 +452,12 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
         String message = "Customer Paid";
+        String paymentMethod=comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
-
+            if (paymentMethod.equals("Cheque")){
+            }
+            else{
+            }
             //set this customer's credit to 0
             try {
                 String sql = ("update flexiblediscount set credit = 0 where discountID = "
