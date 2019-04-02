@@ -456,7 +456,7 @@ public class CustomerList extends javax.swing.JPanel {
         if (listCustomers.getSelectedValue() != null) {
             if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
                 try {
-                    String sql = ("update flexiblediscount set amountToBeDeducted = amountToBeDecuted+(select credit from flexiblediscount)"
+                    String sql = ("update flexiblediscount set toBeDeducted = amountToBeDecuted+(select credit from flexiblediscount)"
                             + " from where discountID =(select discountID from flexiblediscount where discountID = "
                             + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                             + "(select accountID from customeraccount where customerID = "

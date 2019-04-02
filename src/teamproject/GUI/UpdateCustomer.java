@@ -269,8 +269,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         } else if (type.equals("Flexible")) {
             try {
-                String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit) "
-                        + "values (0,0)";
+                String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit, toBeDeducted) "
+                        + "values (0,0,0)";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -498,8 +498,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 }
             } else if (type.equals("Flexible")) {
                 try {
-                    String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit) "
-                            + "values (0,0)";
+                    String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit, toBeDeducted) "
+                            + "values (0,0,0)";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
