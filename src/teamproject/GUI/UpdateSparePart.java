@@ -414,18 +414,20 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+            double cost = Double.parseDouble(textFieldCost.getText());
+            double sellingPrice = cost * 1.3;
+            String selected = listSpareParts.getSelectedValue();
+            String[] parts = selected.split(", ");
             try {
                 String sql = ("UPDATE SparePart SET "
-                        + "partID = 'partID', "
-                        + "partName = 'partName', "
-                        + "vehicleType = 'vehicleType', "
-                        + "quantity = 'quantity', "
-                        + "costPrice = 'costPrice', "
-                        + "sellingPrice = 'sellingPrice', "
-                        + "threshold = 'threshold', "
-                        + "Manufacturername = 'Manufacturername', "
-                        + "deleted = 'deleted' "
-                        + "WHERE partID = ");
+                        + "partName = '" + textFieldPartName.getText() + "', "
+                        + "vehicleType = '" + textFieldVehicleType.getText() + "', "
+                        + "quantity = '" + textFieldQuantity.getText() + "', "
+                        + "costPrice = " + textFieldCost.getText() + ", "
+                        + "sellingPrice = " + sellingPrice + ", "
+                        + "threshold = '" + textFieldThreshold.getText() + "', "
+                        + "Manufacturername = (select name from manufacturer where name = '" + textFieldManufactureName.getText() + "') "
+                        + "WHERE partID = " + parts[0]);
 
                 PreparedStatement ps = null;
                 try {
@@ -438,6 +440,15 @@ public class UpdateSparePart extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             ShowParts();
+
+            textFieldPartName.setText("");
+            textFieldVehicleType.setText("");
+            textFieldQuantity.setText("");
+            textFieldCost.setText("");
+            textFieldManufactureName.setText("");
+            if(textFieldThreshold.isVisible()){
+                textFieldThreshold.setText("10");
+            }
         }
     }//GEN-LAST:event_buttonSavePartChangesActionPerformed
 
@@ -447,7 +458,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
             String selected = listSpareParts.getSelectedValue();
-            String[] parts = selected.split(", ");            
+            String[] parts = selected.split(", ");
 
             //delete this part
             try {
