@@ -328,13 +328,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonNewVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewVehicleActionPerformed
-        buttonSaveVehicleChanges.setEnabled(false);
+
         if (textFieldRegistrationNo.getText().equals("") || textFieldMake.getText().equals("")
                 || textFieldModel.getText().equals("") || textFieldEngineSerial.getText().equals("")
                 || textFieldChassisNo.getText().equals("") || textFieldColour.getText().equals("")) {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+            buttonSaveVehicleChanges.setEnabled(false);
             try {
                 String sql = ("INSERT INTO Vehicle (registrationNumber, "
                         + "CustomerID, make, "
@@ -377,6 +378,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(new JFrame(), message);
 
         } else {
+            buttonSaveVehicleChanges.setEnabled(false);
             if (!listVehicles.isSelectionEmpty()) {
                 try {
                     String sql = ("UPDATE Vehicle SET registrationNumber = '" + textFieldRegistrationNo.getText() + "', "
@@ -415,15 +417,17 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
     private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
-        String message = "Vehicle Deleted";
+
         String warningMessage = "Are you sure you want to delete a vehicle?";
         if (listVehicles.getSelectedValue() == null) {
-            message = "Please choose vehicle record first!";
+            String message = "Please choose vehicle record first!";
+            JOptionPane.showMessageDialog(new JFrame(), message);
 
         } else {
-            int reply = JOptionPane.showConfirmDialog(null, message, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
+            buttonSaveVehicleChanges.setEnabled(false);
+            int reply = JOptionPane.showConfirmDialog(null, warningMessage, "Delete Vehicle", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-                buttonSaveVehicleChanges.setEnabled(false);
+
                 String selected = listVehicles.getSelectedValue();
                 String[] parts = selected.split(", ");
                 String regNo = parts[0];
@@ -441,12 +445,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-
+                ShowVehicles();
+                String message = "Vehicle Deleted";
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
-        }
 
-        ShowVehicles();
-        JOptionPane.showMessageDialog(new JFrame(), message);
+        }
     }//GEN-LAST:event_buttonDeleteVehicleActionPerformed
 
     private void listVehiclesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listVehiclesValueChanged
