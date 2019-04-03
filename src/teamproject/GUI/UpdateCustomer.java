@@ -930,7 +930,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
-                        + "1)");
+                        + "0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
