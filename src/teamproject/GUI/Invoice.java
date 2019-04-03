@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
 import teamproject.Customer_Account.Vehicle;
 import teamproject.Databases.DB_ImplClass;
+import teamproject.Jobs.InvoiceController;
 
 /**
  *
@@ -140,130 +141,6 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-    }
-
-    private String GetJobInvoiceDetails() {
-        GetJobAndInvoiceNumber();
-        String result = "";
-        result += ("Dear " + c.getName() + "\n\n");
-        result += ("Invoice number : " + invoiceNumber + "\n\n");
-        result += ("Vehicle Registration No.: " + v.getRegistrationNumber() + "\n");
-        result += ("Make: " + v.getMake() + "\n" + "Model: " + v.getModel() + "\n\n");
-        result += ("Job number : " + jobNumber + "\n\n");
-        result += ("Description of work: \n");
-
-        //get all task descriptions for the actual tasks for this job
-        try {
-            String sql = ("select * from task where taskID in (select TasktaskID from actual_task where JobjobID = " + jobNumber + ")");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        int i = 1;
-        try {
-            while (rs.next()) {
-                // read the result set. Get task description.
-                String task = i + ") " + rs.getString("description");
-                result += (task + "\n");
-                ++i;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        //get all actual task hours for this job
-        try {
-            String sql = ("select totalHours from job where jobID = " + jobNumber);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        double totalHours = 0;
-        try {
-            while (rs.next()) {
-                // read the result set. Get task hours
-                totalHours += Double.parseDouble(rs.getString("totalHours"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        result += ("\nParts used: \n");
-
-        //get all parts used for this job
-        try {
-            String sql = ("select * from job_part_record inner join sparepart on sparepart.partID = job_part_record.PartpartID "
-                    + "where jobjobid = " + jobNumber);
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        double totalPartsCost = 0;
-        try {
-            while (rs.next()) {
-                int quantity = Integer.parseInt(rs.getString("quantity"));
-                double sellingPrice = Double.parseDouble(rs.getString("sellingPrice"));
-                // read the result set. Get part name description.
-                String part = rs.getString("partName")
-                        + ", £" + sellingPrice + ", quantity: " + quantity;
-                totalPartsCost += (sellingPrice * quantity);
-                result += (part + "\n");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        result += ("Total parts cost: £" + String.format("%.2f", totalPartsCost) + "\n");
-
-        //get hourly rate for this mechanic
-        try {
-            String sql = ("select hourlyRate from mechanic where ID = (select MechanicID from job where jobID = " + jobNumber + ")");
-            PreparedStatement ps = null;
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.rs = ps.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        double hourlyRate = 0;
-        try {
-            while (rs.next()) {
-                hourlyRate = Double.parseDouble(rs.getString("hourlyRate"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
-        result += ("\nTotal labour cost: £" + String.format("%.2f", (hourlyRate * totalHours)) + "\n");
-        result += ("\nVAT: £" + String.format("%.2f", totalCost * 0.2));
-        result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2));
-        return result;
     }
 
     private String GetPartInvoiceDetails() {
@@ -865,24 +742,25 @@ public class Invoice extends javax.swing.JPanel {
             GetJobAndInvoiceNumber();
             String details;
             if (!jobNumber.isEmpty()) {
-                details = GetJobInvoiceDetails();
+                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber));
+                i.printJobInvoice();
             } else {
                 details = GetPartInvoiceDetails();
-            }
+                String fileName = "Invoice-number-" + invoiceNumber + ".txt";
+                if (listInvoices.getSelectedValue() != null) {
+                    try {
+                        PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+                        writer.println(details);
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-            String fileName = "Invoice-number-" + invoiceNumber + ".txt";
-            if (listInvoices.getSelectedValue() != null) {
-                try {
-                    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-                    writer.println(details);
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    String mess = "Printed successfully";
+                    JOptionPane.showMessageDialog(new JFrame(), mess);
                 }
-
-                String mess = "Printed successfully";
-                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
+
         } else {
             String mess = "Select an invoice";
             JOptionPane.showMessageDialog(new JFrame(), mess);
@@ -1204,7 +1082,8 @@ public class Invoice extends javax.swing.JPanel {
             getJobVehicle();
             GetCustomerDetails();
             if (!jobNumber.isEmpty()) {
-                textAreaInvoiceDetail.append(GetJobInvoiceDetails());
+                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber));
+                textAreaInvoiceDetail.setText(i.GetInvoiceDetails());
                 ShowPayLaterCustomer();
             } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());

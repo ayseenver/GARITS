@@ -31,6 +31,7 @@ public class InvoiceController {
         this.jobID = jobID;
         connection = db.connect();
         statement = db.getStatement();
+        GetJobDetails();
     }
 
     private void GetJobDetails() {
@@ -127,7 +128,7 @@ public class InvoiceController {
         }
     }
 
-    private String GetInvoiceDetails() {
+    public String GetInvoiceDetails() {
         String result = "";
         result += ("Dear " + c.getName() + "\n\n");
         result += ("Invoice number : " + invoiceNumber + "\n\n");
@@ -251,8 +252,6 @@ public class InvoiceController {
     }
 
     public void printJobInvoice() {
-        GetJobDetails();
-
         String fileName = "Invoice-for-job" + jobID + ".txt";
         try {
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
@@ -262,7 +261,7 @@ public class InvoiceController {
             e.printStackTrace();
         }
 
-        String mess = "Printed successfully";
+        String mess = "Invoice printed successfully";
         JOptionPane.showMessageDialog(new JFrame(), mess);
     }
 
