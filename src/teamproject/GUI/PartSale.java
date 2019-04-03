@@ -205,8 +205,6 @@ public class PartSale extends javax.swing.JPanel {
     private void initComponents() {
 
         labelPartSale = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        listStock = new javax.swing.JList<>();
         buttonProduceInvoice = new javax.swing.JButton();
         labelCart = new javax.swing.JLabel();
         buttonRemove = new javax.swing.JButton();
@@ -248,6 +246,8 @@ public class PartSale extends javax.swing.JPanel {
         jScrollPane7 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listStock = new javax.swing.JList<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -255,11 +255,6 @@ public class PartSale extends javax.swing.JPanel {
         labelPartSale.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
         labelPartSale.setText("Part Sale");
         add(labelPartSale, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, -1, -1));
-
-        listStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jScrollPane2.setViewportView(listStock);
-
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, 1150, 140));
 
         buttonProduceInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonProduceInvoice.setText("Produce Invoice");
@@ -357,7 +352,7 @@ public class PartSale extends javax.swing.JPanel {
         listStock1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jScrollPane3.setViewportView(listStock1);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, 1150, 140));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, 1150, 140));
 
         textFieldSearchCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchCustomers.addActionListener(new java.awt.event.ActionListener() {
@@ -495,6 +490,11 @@ public class PartSale extends javax.swing.JPanel {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 140, -1, -1));
 
+        listStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane2.setViewportView(listStock);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 430, 1150, 140));
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -591,8 +591,8 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCartActionPerformed
-       // String temp = (listCustomers.getSelectedValue());
-       // if (temp != null) {
+        String temp = (listCustomers.getSelectedValue());
+        if (temp != null) {
             String selected = listStock.getSelectedValue();
             if (selected != null) {
                 boolean x = IsPartInOrder(selected);
@@ -603,10 +603,10 @@ public class PartSale extends javax.swing.JPanel {
                 String mess = "Select a part";
                 JOptionPane.showMessageDialog(new JFrame(), mess);
             }
-       /* } else {
+        } else {
              String mess = "Please select a customer first";
             JOptionPane.showMessageDialog(new JFrame(), mess);
-        }*/
+        }
     }//GEN-LAST:event_buttonAddToCartActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
