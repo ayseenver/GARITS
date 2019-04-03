@@ -29,6 +29,7 @@ public class LogIn extends javax.swing.JPanel {
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
+    Timer t;
 
     /**
      * Creates new form NewJPanel
@@ -162,7 +163,7 @@ public class LogIn extends javax.swing.JPanel {
                     JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                     f.dispose();
                     db.closeConnection(connection);
-                    Timer t = new Timer();
+                    t = new Timer();
                     new MainMenu(username);
                 }
             }

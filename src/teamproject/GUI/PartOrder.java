@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -138,7 +139,8 @@ public class PartOrder extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
-        String fileName = "order-by-" + username + ".txt";
+        LocalDate date = LocalDate.now();
+        String fileName = "order-by-" + username + date + ".txt";
         try {
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
             writer.println(textAreaPartsOrder.getText());
