@@ -294,6 +294,8 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             db.closeConnection(connection);
             if (previousPage.equalsIgnoreCase("createJobCustomer")) {
                 new CreateJobCustomer(username);
+            } else if (previousPage.equalsIgnoreCase("PartSale")) {
+                new PartSale(username);
             } else {
                 new CustomerList(username);
             }
@@ -313,7 +315,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } else if (previousPage.equalsIgnoreCase("UpdateCustomer")) {
             new UpdateCustomer(username, c, "UpdateCustomerVehicle", "vehicle");
         } else {
-
             new CustomerList(username);
         }
 
