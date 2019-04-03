@@ -611,7 +611,12 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }
 
     public void receptionist_menu() {
-        checkBoxAccountHolder.setVisible(false);
+        checkBoxAccountHolder.setEnabled(false);
+        checkBoxConfigurePayLater.setEnabled(false);
+        checkBoxDiscountPlan.setEnabled(false);
+        buttonSetDiscountPlan.setEnabled(false);
+        textFieldPercentage.setEnabled(false);
+        comboBoxDiscountPlan.setEnabled(false);
     }
 
     private void checkPretickedBoxes() {
