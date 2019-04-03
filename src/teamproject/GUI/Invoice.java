@@ -157,7 +157,7 @@ public class Invoice extends javax.swing.JPanel {
         result += ("Dear " + c.getName() + "\n\n");
         result += ("Invoice number : " + invoiceNumber + "\n\n");
         result += ("Vehicle Registration No.: " + v.getRegistrationNumber() + "\n");
-         result += ("Make: " + v.getMake()+ "\n"+"Model: " + v.getModel()+ "\n\n");
+        result += ("Make: " + v.getMake() + "\n" + "Model: " + v.getModel() + "\n\n");
         result += ("Job number : " + jobNumber + "\n\n");
         result += ("Description of work: \n");
 
@@ -864,34 +864,6 @@ public class Invoice extends javax.swing.JPanel {
         }
     }
 
-    private void showFlexibleDiscount() {
-        checkBoxPayWithCredit.setVisible(false);
-        labelFlexibleDiscountBrief.setVisible(false);
-        labelPayWithCredit.setVisible(false);
-        CheckAccountHolder();
-        String flexibleDiscount = null;
-        try {
-            while (rs.next()) {
-                flexibleDiscount = rs.getString("FlexibleDiscountdiscountID");
-            }
-            if (flexibleDiscount != null) {
-                checkBoxPayWithCredit.setVisible(true);
-                labelFlexibleDiscountBrief.setVisible(true);
-                labelPayWithCredit.setVisible(true);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-    }
-
-    private void hideFlexibleDiscount() {
-        checkBoxPayWithCredit.setVisible(false);
-        labelFlexibleDiscountBrief.setVisible(false);
-        labelPayWithCredit.setVisible(false);
-    }
-
     private void PrintInvoice() {
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
@@ -1121,13 +1093,13 @@ public class Invoice extends javax.swing.JPanel {
                         VariableDiscount(variableID);
                     }
 
-                //check for flexible discount
-                if (flexibleID == null) {
-                    //no flexible discount
-                } else {
-                    //flexible discount
-                    FlexibleDiscount(flexibleID, accountID);
-
+                    //check for flexible discount
+                    if (flexibleID == null) {
+                        //no flexible discount
+                    } else {
+                        //flexible discount
+                        FlexibleDiscount(flexibleID, accountID);
+                    }
                 }
             } else {//is a part sale, not a job
                 StandardPayment();

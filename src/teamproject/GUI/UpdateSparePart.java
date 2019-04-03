@@ -459,18 +459,9 @@ public class UpdateSparePart extends javax.swing.JPanel {
                 String sql = ("update sparepart set deleted = 1 "
                         + "where partID = " + parts[0]);
                 PreparedStatement ps = null;
-                try {
-                    String sql = ("update sparepart set deleted = 1 where partName = '" + name + "' and vehicleType = '" + model + "'");
-                    PreparedStatement ps = null;
-                    try {
-                        ps = connection.prepareStatement(sql);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    System.err.println(e.getMessage());
-                }
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
         }
         ShowParts();
