@@ -117,19 +117,21 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void showCustomerCredit() {
         String credit = "-1";
+        String totalSpent = "0";
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
         try {
-            this.rsCr = statement.executeQuery("Select credit from flexiblediscount where discountID = "
+            this.rsCr = statement.executeQuery("Select * from flexiblediscount where discountID = "
                     + "(select discountID from flexiblediscount where discountID = "
                     + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                     + "(select accountID from customeraccount where customerID = "
                     + "(select ID from customer where ID = " + id + "))))");
             while (rsCr.next()) {
                 credit = rsCr.getString("credit");
+                totalSpent = rsCr.getString("orderValueThisMonth");
             }
             if (!credit.equals("-1")) {
-                textAreaCustomerOverview.append("\nCredit: £" + credit);
+                textAreaCustomerOverview.append("\nSpent this Month: £" + totalSpent + "\nCredit: £" + credit);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -487,7 +489,7 @@ public class CustomerList extends javax.swing.JPanel {
         String message = "Customer Paid by Cheque";
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
-        
+
         String paymentMethod = comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
             if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
