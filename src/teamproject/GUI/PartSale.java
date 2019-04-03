@@ -591,16 +591,22 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonRemoveActionPerformed
 
     private void buttonAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCartActionPerformed
-        String selected = listStock.getSelectedValue();
-        if (selected != null) {
-            boolean x = IsPartInOrder(selected);
-            if (x == false) {
-                AddPart();
+       // String temp = (listCustomers.getSelectedValue());
+       // if (temp != null) {
+            String selected = listStock.getSelectedValue();
+            if (selected != null) {
+                boolean x = IsPartInOrder(selected);
+                if (x == false) {
+                    AddPart();
+                }
+            } else {
+                String mess = "Select a part";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
-        } else {
-            String mess = "Select a part";
+       /* } else {
+             String mess = "Please select a customer first";
             JOptionPane.showMessageDialog(new JFrame(), mess);
-        }
+        }*/
     }//GEN-LAST:event_buttonAddToCartActionPerformed
 
     private void buttonChangeQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantityActionPerformed
@@ -713,7 +719,7 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonBack1ActionPerformed
 
     private void buttonSearchCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomersActionPerformed
-     try {
+        try {
             String sql = ("select * from Customer where name LIKE '%"
                     + textFieldSearchCustomers.getText() + "%' and deleted = 0");
             PreparedStatement ps = null;
@@ -735,7 +741,7 @@ public class PartSale extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchCustomersActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
         new UpdateCustomer(username, "PartSale");
