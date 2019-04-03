@@ -255,7 +255,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         jPanel1.add(textFieldManufactureName, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 500, 250, 30));
 
         labelLastServiceDate.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelLastServiceDate.setText("*Manufacture: ");
+        labelLastServiceDate.setText("*Manufacturer: ");
         jPanel1.add(labelLastServiceDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 500, -1, -1));
 
         buttonSavePartChanges.setText("Save Changes");
@@ -322,13 +322,13 @@ public class UpdateSparePart extends javax.swing.JPanel {
             }
 
             Boolean pError = false;
-            //check if price is an integer
-            chars = textFieldCost.getText().toCharArray();
-            for (char c : chars) {
-                if (!(Character.isDigit(c))) {
-                    error = true;
-                    pError = true;
-                }
+            //check if price is an double
+
+            try {
+                double cost = Double.parseDouble(textFieldCost.getText());
+            } catch (Exception e) {
+                pError = true;
+                error = true;
             }
 
             if (pError == true) {
@@ -452,7 +452,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             textFieldQuantity.setText("");
             textFieldCost.setText("");
             textFieldManufactureName.setText("");
-            if(textFieldThreshold.isVisible()){
+            if (textFieldThreshold.isVisible()) {
                 textFieldThreshold.setText("10");
             }
         }
@@ -478,7 +478,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
-                           String mess = "Spare Part Deleted";
+                String mess = "Spare Part Deleted";
                 JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
@@ -488,65 +488,67 @@ public class UpdateSparePart extends javax.swing.JPanel {
 
     private void listSparePartsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listSparePartsValueChanged
         String selected = listSpareParts.getSelectedValue();
-        String[] parts = selected.split(", ");
+        if (selected != null) {
+            String[] parts = selected.split(", ");
 
-        try {
-            String sql = ("Select * from sparepart where partID = " + parts[0]);
-            PreparedStatement ps = null;
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("Select * from sparepart where partID = " + parts[0]);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            p.setPartName(rs.getString("partName"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                p.setPartName(rs.getString("partName"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        try {
-            p.setVehicleType(rs.getString("vehicleType"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            p.setQuantity(Integer.parseInt(rs.getString("quantity")));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            p.setCostPrice(Double.parseDouble(rs.getString("costPrice")));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            p.setSellingPrice(Double.parseDouble(rs.getString("costPrice")) * 1.3);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            p.setThreshold(Integer.parseInt(rs.getString("threshold")));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                p.setVehicleType(rs.getString("vehicleType"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                p.setQuantity(Integer.parseInt(rs.getString("quantity")));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                p.setCostPrice(Double.parseDouble(rs.getString("costPrice")));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                p.setSellingPrice(Double.parseDouble(rs.getString("costPrice")) * 1.3);
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                p.setThreshold(Integer.parseInt(rs.getString("threshold")));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        try {
-            p.setManufacturerName(rs.getString("Manufacturername"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                p.setManufacturerName(rs.getString("Manufacturername"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        textFieldPartName.setText(p.getPartName());
-        textFieldVehicleType.setText(p.getVehicleType());
-        textFieldQuantity.setText(p.getQuantity() + "");
-        textFieldCost.setText(p.getCostPrice() + "");
-        textFieldThreshold.setText(p.getThreshold() + "");
-        textFieldManufactureName.setText(p.getManufacturerName());
+            textFieldPartName.setText(p.getPartName());
+            textFieldVehicleType.setText(p.getVehicleType());
+            textFieldQuantity.setText(p.getQuantity() + "");
+            textFieldCost.setText(p.getCostPrice() + "");
+            textFieldThreshold.setText(p.getThreshold() + "");
+            textFieldManufactureName.setText(p.getManufacturerName());
+        }
     }//GEN-LAST:event_listSparePartsValueChanged
 
 
