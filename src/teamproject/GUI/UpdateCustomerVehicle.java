@@ -295,7 +295,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             if (previousPage.equalsIgnoreCase("createJobCustomer")) {
                 new CreateJobCustomer(username);
             } else {
-                new MainMenu(username);
+                new CustomerList(username);
             }
         } else {
             String mess = "Customer needs at least one vehicle";
