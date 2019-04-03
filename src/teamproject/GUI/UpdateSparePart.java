@@ -496,7 +496,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             buttonSavePartChanges.setEnabled(true);
 
             try {
-                String sql = ("Select * from sparepart where partID = " + parts[0]);
+                String sql = ("Select * from sparepart where partID = " + parts[0] +" and deleted = 0");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
