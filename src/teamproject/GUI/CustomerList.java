@@ -299,7 +299,7 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
         add(buttonSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
-        add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, -1));
+        add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, 30));
 
         labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelPayCustomerExplained.setText("*only customer that have a flexible discount ");

@@ -22,11 +22,13 @@ import teamproject.Databases.DB_ImplClass;
 public class PartSale extends javax.swing.JPanel {
 
     private String username;
+    String id;
     Statement statement;
     Connection connection = null;
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rs;
     ResultSet rsC;
+    private ResultSet rsD;
     String[] partArray;
     String[] partOrder;
     String[] nameArray;
@@ -68,7 +70,8 @@ public class PartSale extends javax.swing.JPanel {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-private void ShowCustomers() {
+
+    private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
@@ -93,6 +96,7 @@ private void ShowCustomers() {
             }
         });
     }
+
     private void ShowAllParts() {
 
         ArrayList<String> parts = new ArrayList<>();
@@ -203,8 +207,6 @@ private void ShowCustomers() {
         labelPartSale = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listStock = new javax.swing.JList<>();
-        labelAllStock = new javax.swing.JLabel();
-        textFieldSearchAllStock = new javax.swing.JTextField();
         buttonProduceInvoice = new javax.swing.JButton();
         labelCart = new javax.swing.JLabel();
         buttonRemove = new javax.swing.JButton();
@@ -217,10 +219,34 @@ private void ShowCustomers() {
         buttonBack = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         listCart = new javax.swing.JList<>();
+        labelAllStock1 = new javax.swing.JLabel();
+        textFieldSelectedCustomer = new javax.swing.JTextField();
+        labelVehicleSelected = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        labelPartSale1 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listStock1 = new javax.swing.JList<>();
+        textFieldSearchCustomers = new javax.swing.JTextField();
+        buttonProduceInvoice1 = new javax.swing.JButton();
+        labelCart1 = new javax.swing.JLabel();
+        buttonRemove1 = new javax.swing.JButton();
+        buttonAddToCart1 = new javax.swing.JButton();
+        textFieldQuantity1 = new javax.swing.JTextField();
+        buttonChangeQuantity1 = new javax.swing.JButton();
+        textFieldUserDetails1 = new javax.swing.JTextField();
+        labelLoggedIn1 = new javax.swing.JLabel();
+        buttonExit1 = new javax.swing.JButton();
+        buttonBack1 = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        listCart1 = new javax.swing.JList<>();
+        buttonSearchCustomers = new javax.swing.JButton();
+        textFieldSelectedCustomer1 = new javax.swing.JTextField();
+        labelVehicleSelected1 = new javax.swing.JLabel();
+        textFieldSearchAllStock = new javax.swing.JTextField();
         buttonSearchAllStock = new javax.swing.JButton();
+        labelAllStock = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
-        labelAllStock1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -233,18 +259,6 @@ private void ShowCustomers() {
         jScrollPane2.setViewportView(listStock);
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, 1150, 140));
-
-        labelAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelAllStock.setText("Customers:");
-        add(labelAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, -1, -1));
-
-        textFieldSearchAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        textFieldSearchAllStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchAllStockActionPerformed(evt);
-            }
-        });
-        add(textFieldSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 227, 30));
 
         buttonProduceInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonProduceInvoice.setText("Produce Invoice");
@@ -321,22 +335,158 @@ private void ShowCustomers() {
 
         add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 540, 970, 140));
 
+        labelAllStock1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelAllStock1.setText("Stock:");
+        add(labelAllStock1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
+
+        textFieldSelectedCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        add(textFieldSelectedCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 310, 180, -1));
+
+        labelVehicleSelected.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelVehicleSelected.setText("Selected Customer:");
+        add(labelVehicleSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, -1, -1));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(1280, 720));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelPartSale1.setFont(new java.awt.Font("Lucida Grande", 1, 72)); // NOI18N
+        labelPartSale1.setText("Part Sale");
+        jPanel1.add(labelPartSale1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, -1, -1));
+
+        listStock1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane3.setViewportView(listStock1);
+
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, 1150, 140));
+
+        textFieldSearchCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        textFieldSearchCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldSearchCustomersActionPerformed(evt);
+            }
+        });
+        jPanel1.add(textFieldSearchCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 200, 30));
+
+        buttonProduceInvoice1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonProduceInvoice1.setText("Produce Invoice");
+        buttonProduceInvoice1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonProduceInvoice1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonProduceInvoice1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 650, -1, -1));
+
+        labelCart1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelCart1.setText("Cart:");
+        jPanel1.add(labelCart1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 510, -1, -1));
+
+        buttonRemove1.setText("Remove");
+        buttonRemove1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRemove1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonRemove1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 620, 150, -1));
+
+        buttonAddToCart1.setText("Add to Cart");
+        buttonAddToCart1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddToCart1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonAddToCart1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 510, -1, -1));
+
+        textFieldQuantity1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        textFieldQuantity1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldQuantity1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(textFieldQuantity1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 590, 30, 30));
+
+        buttonChangeQuantity1.setText("Change Quantity");
+        buttonChangeQuantity1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonChangeQuantity1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonChangeQuantity1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 590, -1, -1));
+
+        textFieldUserDetails1.setEditable(false);
+        textFieldUserDetails1.setFocusable(false);
+        jPanel1.add(textFieldUserDetails1, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, 220, 30));
+
+        labelLoggedIn1.setText("Logged In as:");
+        jPanel1.add(labelLoggedIn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 10, -1, -1));
+
+        buttonExit1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonExit1.setText("Logout");
+        buttonExit1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExit1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonExit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1160, 0, -1, -1));
+
+        buttonBack1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        buttonBack1.setText("Back");
+        buttonBack1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBack1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonBack1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
+
+        listCart1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jScrollPane8.setViewportView(listCart1);
+
+        jPanel1.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 540, 970, 140));
+
+        buttonSearchCustomers.setText("Search");
+        buttonSearchCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchCustomersActionPerformed(evt);
+            }
+        });
+        jPanel1.add(buttonSearchCustomers, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 80, -1));
+
+        textFieldSelectedCustomer1.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        jPanel1.add(textFieldSelectedCustomer1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 310, 180, -1));
+
+        labelVehicleSelected1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelVehicleSelected1.setText("Selected Customer:");
+        jPanel1.add(labelVehicleSelected1, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, -1, -1));
+
+        textFieldSearchAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        textFieldSearchAllStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldSearchAllStockActionPerformed(evt);
+            }
+        });
+        jPanel1.add(textFieldSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 340, 200, 30));
+
         buttonSearchAllStock.setText("Search");
         buttonSearchAllStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSearchAllStockActionPerformed(evt);
             }
         });
-        add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 340, -1, -1));
+        jPanel1.add(buttonSearchAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 340, 80, -1));
+
+        labelAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        labelAllStock.setText("Customers:");
+        jPanel1.add(labelAllStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
 
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listCustomers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listCustomersValueChanged(evt);
+            }
+        });
         jScrollPane7.setViewportView(listCustomers);
 
-        add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 1150, 140));
+        jPanel1.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 1150, 140));
 
-        labelAllStock1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        labelAllStock1.setText("All Stock:");
-        add(labelAllStock1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void textFieldSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchAllStockActionPerformed
@@ -516,28 +666,109 @@ private void ShowCustomers() {
         // TODO add your handling code here:
     }//GEN-LAST:event_textFieldQuantityActionPerformed
 
+    private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
+        String selected = listCustomers.getSelectedValue();
+        textFieldSelectedCustomer.setText(selected);
+    }//GEN-LAST:event_listCustomersValueChanged
+
+    private void textFieldSearchCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchCustomersActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldSearchCustomersActionPerformed
+
+    private void buttonProduceInvoice1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProduceInvoice1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonProduceInvoice1ActionPerformed
+
+    private void buttonRemove1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRemove1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonRemove1ActionPerformed
+
+    private void buttonAddToCart1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddToCart1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonAddToCart1ActionPerformed
+
+    private void textFieldQuantity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldQuantity1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldQuantity1ActionPerformed
+
+    private void buttonChangeQuantity1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeQuantity1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonChangeQuantity1ActionPerformed
+
+    private void buttonExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExit1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonExit1ActionPerformed
+
+    private void buttonBack1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBack1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonBack1ActionPerformed
+
+    private void buttonSearchCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomersActionPerformed
+     try {
+            String sql = ("select * from Customer where name LIKE '%"
+                    + textFieldSearchCustomers.getText() + "%' and deleted = 0");
+            PreparedStatement ps = null;
+
+            try {
+                ps = connection.prepareStatement(sql);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            this.rsC = ps.executeQuery();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+
+        }
+        ShowCustomers();
+    }//GEN-LAST:event_buttonSearchCustomersActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddToCart;
+    private javax.swing.JButton buttonAddToCart1;
     private javax.swing.JButton buttonBack;
+    private javax.swing.JButton buttonBack1;
     private javax.swing.JButton buttonChangeQuantity;
+    private javax.swing.JButton buttonChangeQuantity1;
     private javax.swing.JButton buttonExit;
+    private javax.swing.JButton buttonExit1;
     private javax.swing.JButton buttonProduceInvoice;
+    private javax.swing.JButton buttonProduceInvoice1;
     private javax.swing.JButton buttonRemove;
+    private javax.swing.JButton buttonRemove1;
     private javax.swing.JButton buttonSearchAllStock;
+    private javax.swing.JButton buttonSearchCustomers;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel labelAllStock;
     private javax.swing.JLabel labelAllStock1;
     private javax.swing.JLabel labelCart;
+    private javax.swing.JLabel labelCart1;
     private javax.swing.JLabel labelLoggedIn;
+    private javax.swing.JLabel labelLoggedIn1;
     private javax.swing.JLabel labelPartSale;
+    private javax.swing.JLabel labelPartSale1;
+    private javax.swing.JLabel labelVehicleSelected;
+    private javax.swing.JLabel labelVehicleSelected1;
     private javax.swing.JList<String> listCart;
+    private javax.swing.JList<String> listCart1;
     private javax.swing.JList<String> listCustomers;
     private javax.swing.JList<String> listStock;
+    private javax.swing.JList<String> listStock1;
     private javax.swing.JTextField textFieldQuantity;
+    private javax.swing.JTextField textFieldQuantity1;
     private javax.swing.JTextField textFieldSearchAllStock;
+    private javax.swing.JTextField textFieldSearchCustomers;
+    private javax.swing.JTextField textFieldSelectedCustomer;
+    private javax.swing.JTextField textFieldSelectedCustomer1;
     private javax.swing.JTextField textFieldUserDetails;
+    private javax.swing.JTextField textFieldUserDetails1;
     // End of variables declaration//GEN-END:variables
 }
