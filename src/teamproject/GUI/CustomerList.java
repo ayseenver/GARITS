@@ -177,6 +177,7 @@ public class CustomerList extends javax.swing.JPanel {
     private void GetSelectedCustomer() {
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
+        System.out.println(id);
 
         try {
             String sql = ("select * from Customer where id = '" + id + "' "

@@ -310,9 +310,14 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("createJobCustomer")) {
             new CreateJobCustomer(username);
+        } else if (previousPage.equalsIgnoreCase("UpdateCustomer"))
+         {
+             new UpdateCustomer(username, c, "UpdateCustomerVehicle", "vehicle");
         } else {
+
             new CustomerList(username);
         }
+    
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed

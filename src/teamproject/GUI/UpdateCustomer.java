@@ -66,6 +66,17 @@ public class UpdateCustomer extends javax.swing.JPanel {
         checkPretickedBoxes();
     }
 
+    public UpdateCustomer(String username, Customer c, String previousPage, String vehicle) { //vehicle page
+        this(username, previousPage);
+        this.c = c;
+        buttonUpdateCustomer.setVisible(false); 
+        buttonDeleteCustomer.setVisible(false);
+        buttonNewCustomer.setVisible(true);
+        accountHolderPane.setVisible(false);
+
+        ShowCustomerDetails();
+    }
+
     private void ShowCustomerDetails() {
         textFieldFullName.setText(c.getName());
         textFieldEmail.setText(c.getEmailAddress());
