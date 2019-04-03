@@ -1075,8 +1075,8 @@ public class Invoice extends javax.swing.JPanel {
 
     private void listInvoicesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listInvoicesValueChanged
         textAreaInvoiceDetail.setText("");
-
         String selected = listInvoices.getSelectedValue();
+        
         if (selected != null) {
             GetJobAndInvoiceNumber();
             getJobVehicle();
@@ -1088,9 +1088,6 @@ public class Invoice extends javax.swing.JPanel {
             } else {
                 textAreaInvoiceDetail.append(GetPartInvoiceDetails());
             }
-        } else {
-            String mess = "Select an invoice";
-            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_listInvoicesValueChanged
 
