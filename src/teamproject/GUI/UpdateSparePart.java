@@ -493,6 +493,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         String selected = listSpareParts.getSelectedValue();
         if (selected != null) {
             String[] parts = selected.split(", ");
+            buttonSavePartChanges.setEnabled(true);
 
             try {
                 String sql = ("Select * from sparepart where partID = " + parts[0]);
