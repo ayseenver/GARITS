@@ -53,6 +53,8 @@ public class Job extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
@@ -553,6 +555,11 @@ public class Job extends javax.swing.JPanel {
         panelPart.add(buttonSearchParts, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, -1, -1));
 
         listPartsUsed.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        listPartsUsed.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listPartsUsedValueChanged(evt);
+            }
+        });
         jScrollPane8.setViewportView(listPartsUsed);
 
         panelPart.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 70, 230, 200));
@@ -602,6 +609,11 @@ public class Job extends javax.swing.JPanel {
         listTasksCarriedOut.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listTasksCarriedOutMouseClicked(evt);
+            }
+        });
+        listTasksCarriedOut.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listTasksCarriedOutValueChanged(evt);
             }
         });
         jScrollPane5.setViewportView(listTasksCarriedOut);
@@ -1468,8 +1480,12 @@ public class Job extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
 
+
     private void listTasksCarriedOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTasksCarriedOutMouseClicked
 
+    }//GEN-LAST:event_listTasksCarriedOutMouseClicked
+
+    private void listTasksCarriedOutValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listTasksCarriedOutValueChanged
         String sql = "";
 
         try {
@@ -1504,7 +1520,14 @@ public class Job extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
 
-    }//GEN-LAST:event_listTasksCarriedOutMouseClicked
+    }//GEN-LAST:event_listTasksCarriedOutValueChanged
+
+    private void listPartsUsedValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listPartsUsedValueChanged
+       String selected = listPartsUsed.getSelectedValue();
+        String[] selectedParts = selected.split(", Quantity: ");
+        int initialQuantity = Integer.parseInt(selectedParts[1]);
+        textFieldQuantity.setText("" + initialQuantity);
+    }//GEN-LAST:event_listPartsUsedValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

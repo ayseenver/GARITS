@@ -6,6 +6,7 @@
 package teamproject.GUI;
 
 //import teamproject.GUI.MainMenu;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -37,6 +38,8 @@ public class LogIn extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -153,7 +156,7 @@ public class LogIn extends javax.swing.JPanel {
                     if (rs.getString("roleName").equals("franchisee")) {
                         StockAlertTimer at = new StockAlertTimer();
                         PaymentAlertTimer pt = new PaymentAlertTimer();
-                    }else if (rs.getString("roleName").equals("receptionist")) {
+                    } else if (rs.getString("roleName").equals("receptionist")||rs.getString("roleName").equals("foreperson")) {
                         StockAlertTimer at = new StockAlertTimer();
                     }
                     JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();

@@ -31,6 +31,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -74,8 +76,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
 
         //Only frachisee can edit threshold
         if (!(roleName.equals("franchisee"))) {
-            textFieldThreshold.setVisible(false);
-            labelThreshold.setVisible(false);
+            textFieldThreshold.setEnabled(false);
         }
     }
 
@@ -247,7 +248,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jScrollPane5.setViewportView(listSpareParts);
 
-        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 120));
+        jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 170, 700, 130));
 
         labelVariableDiscount.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(labelVariableDiscount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 540, -1, -1));
@@ -280,7 +281,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
         f.dispose();
         db.closeConnection(connection);
-        new MainMenu(username);
+        new StockControl(username);
     }//GEN-LAST:event_buttonDoneActionPerformed
 
     private void buttonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBackActionPerformed
@@ -403,6 +404,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
                     System.err.println(e.getMessage());
                 }
                 ShowParts();
+                String mess = "New Spare Part Added";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
     }//GEN-LAST:event_buttonNewSparePartActionPerformed
@@ -430,6 +433,8 @@ public class UpdateSparePart extends javax.swing.JPanel {
                         + "WHERE partID = " + parts[0]);
 
                 PreparedStatement ps = null;
+                String mess = "Spare Part Updated";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
@@ -439,6 +444,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
             ShowParts();
 
             textFieldPartName.setText("");
@@ -457,25 +463,27 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please choose a part first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-            String selected = listSpareParts.getSelectedValue();
-            String[] parts = selected.split(", ");
+            String message = "Are you sure you want to delete the part?";
+            int reply = JOptionPane.showConfirmDialog(null, message, "Delete Spare Part", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String selected = listSpareParts.getSelectedValue();
+                String[] parts = selected.split(", ");
 
-            //delete this part
-            try {
-                String sql = ("update sparepart set deleted = 1 "
-                        + "where partID = " + parts[0]);
-                PreparedStatement ps = null;
+                //delete this part
                 try {
-                    ps = connection.prepareStatement(sql);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    String sql = ("update sparepart set deleted = 1 "
+                            + "where partID = " + parts[0]);
+                    PreparedStatement ps = null;
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                           String mess = "Spare Part Deleted";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
         ShowParts();
+
     }//GEN-LAST:event_buttonDeleteSparePartActionPerformed
 
     private void listSparePartsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listSparePartsValueChanged

@@ -22,6 +22,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     DB_ImplClass db = new DB_ImplClass();
     ResultSet rc;
     ResultSet rs;
+    ResultSet rsA;
     Customer c = new Customer();
     String roleName;
     String discount;
@@ -37,6 +38,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         buttonUpdateCustomer.setVisible(false); //no customer has been passed in, new customer
@@ -60,6 +63,18 @@ public class UpdateCustomer extends javax.swing.JPanel {
         buttonNewCustomer.setVisible(false);
 
         ShowCustomerDetails();
+        checkPretickedBoxes();
+    }
+
+    public UpdateCustomer(String username, Customer c, String previousPage, String vehicle) { //vehicle page
+        this(username, previousPage);
+        this.c = c;
+        buttonUpdateCustomer.setVisible(false);
+        buttonDeleteCustomer.setVisible(false);
+        buttonNewCustomer.setVisible(true);
+        accountHolderPane.setVisible(false);
+
+        ShowCustomerDetails();
     }
 
     private void ShowCustomerDetails() {
@@ -68,6 +83,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         textFieldAddress.setText(c.getAddress());
         textFieldPostCode.setText(c.getPostCode());
         textFieldTelephone.setText(c.getTelephoneNumber());
+        textFieldMobile.setText(c.getMobileNumber());
         textFieldFax.setText(c.getFax());
     }
 
@@ -76,6 +92,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         c.setEmailAddress(textFieldAddress.getText());
         c.setName(textFieldFullName.getText());
         c.setPostCode(textFieldPostCode.getText());
+        c.setMobileNumber(textFieldMobile.getText());
         c.setTelephoneNumber(textFieldTelephone.getText());
         try {
             c.setFax(textFieldFax.getText());
@@ -174,9 +191,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "(FixedDiscountdiscountID, CustomerAccountaccountID) "
                         + "VALUES ((select discountID from fixedDiscount where discountID in "
                         + "(select max(discountID) from fixedDiscount)), "
-                        + "((select accountID from customeraccount where CustomerID = "
-                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                        + "and address = '" + textFieldAddress.getText() + "'))))";
+                        + "((select accountID from customeraccount where CustomerID = '"
+                        + c.getID() + "')) ";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -250,8 +266,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                             + "VALUES ((select discountID from VariableDiscount where discountID in "
                             + "(select max(discountID) from VariableDiscount)), "
                             + "(select accountID from customeraccount where CustomerID = "
-                            + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "')))";
+                            + c.getID() + "))";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -265,8 +280,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         } else if (type.equals("Flexible")) {
             try {
-                String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit) "
-                        + "values (0,0)";
+                String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit, toBeDeducted) "
+                        + "values (0,0,0)";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -285,8 +300,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "VALUES ((select discountID from flexibleDiscount where discountID in "
                         + "(select max(discountID) from flexibleDiscount)), "
                         + "(select accountID from customeraccount where CustomerID = "
-                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                        + "and address = '" + textFieldAddress.getText() + "')))";
+                        + c.getID() + ")))";
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -351,8 +365,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             if (checkBoxConfigurePayLater.isSelected()) {
                 try {
                     String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
-                            + "VALUES (1, (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "'))";
+                            + "VALUES (1, " + c.getID() + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -366,8 +379,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } else {
                 try {
                     String sql = "INSERT INTO CustomerAccount (configuredPayLater, CustomerID) "
-                            + "VALUES (0, (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                            + "and address = '" + textFieldAddress.getText() + "'))";
+                            + "VALUES (0, " + c.getID() + ")";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -494,8 +506,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 }
             } else if (type.equals("Flexible")) {
                 try {
-                    String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit) "
-                            + "values (0,0)";
+                    String sql = "INSERT INTO flexiblediscount (orderValueThisMonth, credit, toBeDeducted) "
+                            + "values (0,0,0)";
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -593,13 +605,82 @@ public class UpdateCustomer extends javax.swing.JPanel {
         }
 
         //Code To check Which roleName is selected 
-        if (roleName.equals("receptionist")) {
+        if (!roleName.equalsIgnoreCase("franchisee")) {
             receptionist_menu();
         }
     }
 
     public void receptionist_menu() {
-        checkBoxAccountHolder.setVisible(false);
+        checkBoxAccountHolder.setEnabled(false);
+        checkBoxConfigurePayLater.setEnabled(false);
+        checkBoxDiscountPlan.setEnabled(false);
+        buttonSetDiscountPlan.setEnabled(false);
+        textFieldPercentage.setEnabled(false);
+        comboBoxDiscountPlan.setEnabled(false);
+    }
+
+    private void checkPretickedBoxes() {
+        checkAccountHolder();
+        checkPayLater();
+        checkDiscount();
+    }
+
+    private void checkAccountHolder() {
+        checkBoxAccountHolder.setSelected(false);
+        String accountHolder = "";
+
+        try {
+            this.rsA = connection.createStatement().executeQuery("select * from CustomerAccount where customerID = "
+                    + c.getID());
+
+            try {
+                while (rsA.next()) {
+
+                    checkBoxAccountHolder.setSelected(true);
+                    accountHolderPane.setVisible(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+        }
+    }
+
+    private void checkDiscount() {
+        //need to get from discountPlan table, they might be an easier way
+        String flexibleID;
+        String fixedID;
+        String variableID;
+        try {
+            while (rsA.next()) {
+                flexibleID = rsA.getString("FlexibleDiscountDiscountID");
+                System.out.println(flexibleID);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkPayLater() {
+        checkBoxConfigurePayLater.setSelected(false);
+        try {
+            this.rsA = connection.createStatement().executeQuery("select configuredPayLater from CustomerAccount where customerID = "
+                    + c.getID());
+
+            String configuredPayLater = "";
+            try {
+                while (rsA.next()) {
+                    configuredPayLater = rsA.getString("ConfiguredPayLater");
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (configuredPayLater.equals("1")) {
+                checkBoxConfigurePayLater.setSelected(true);
+            }
+        } catch (SQLException e) {
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -725,13 +806,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 450, -1, -1));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonNewCustomer.setText("New customer");
+        buttonNewCustomer.setText("Create Customer");
         buttonNewCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 480, -1, -1));
+        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 640, -1, -1));
         jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 240, 260, -1));
 
         buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -741,7 +822,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonUpdateCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 650, -1, -1));
+        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 640, -1, -1));
 
         buttonDeleteCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDeleteCustomer.setText("Delete Customer");
@@ -750,22 +831,22 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonDeleteCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
 
         checkBoxConfigurePayLater.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         checkBoxConfigurePayLater.setText("Pay Later Option");
         accountHolderPane.add(checkBoxConfigurePayLater);
-        checkBoxConfigurePayLater.setBounds(10, 0, 133, 27);
+        checkBoxConfigurePayLater.setBounds(10, 0, 144, 23);
 
         checkBoxDiscountPlan.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         checkBoxDiscountPlan.setText("Discount plan");
         accountHolderPane.add(checkBoxDiscountPlan);
-        checkBoxDiscountPlan.setBounds(10, 30, 115, 29);
+        checkBoxDiscountPlan.setBounds(10, 30, 131, 24);
 
         labelDiscountDetail.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelDiscountDetail.setText("Details:");
         accountHolderPane.add(labelDiscountDetail);
-        labelDiscountDetail.setBounds(30, 70, 47, 20);
+        labelDiscountDetail.setBounds(30, 70, 50, 20);
 
         comboBoxDiscountPlan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Fixed", "Variable", "Flexible" }));
         comboBoxDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -774,14 +855,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         accountHolderPane.add(comboBoxDiscountPlan);
-        comboBoxDiscountPlan.setBounds(140, 30, 63, 20);
+        comboBoxDiscountPlan.setBounds(140, 30, 140, 27);
 
         jScrollPane7.setViewportView(listBusinessType);
 
         accountHolderPane.add(jScrollPane7);
         jScrollPane7.setBounds(80, 70, 200, 120);
         accountHolderPane.add(textFieldPercentage);
-        textFieldPercentage.setBounds(280, 160, 40, 20);
+        textFieldPercentage.setBounds(280, 160, 40, 26);
 
         buttonSetDiscountPlan.setText("Set");
         buttonSetDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -795,7 +876,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelPercentage.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelPercentage.setText("%");
         accountHolderPane.add(labelPercentage);
-        labelPercentage.setBounds(320, 160, 12, 20);
+        labelPercentage.setBounds(320, 160, 9, 20);
 
         jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, 420, 230));
 
@@ -826,18 +907,19 @@ public class UpdateCustomer extends javax.swing.JPanel {
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("createJobCustomer")) {
             new CreateJobCustomer(username);
+        } else if (previousPage.equalsIgnoreCase("PartSale")) {
+            new PartSale(username);
         } else {
             new CustomerList(username);
         }
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewCustomerActionPerformed
-        String message = "New Customer Added";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
                 || textFieldTelephone.getText().equals("")) {
-            message = "Please fill in all the boxes";
-
+            String message = "Please fill in all the boxes";
+            JOptionPane.showMessageDialog(new JFrame(), message);
         } else {
             try {
                 String sql = ("INSERT INTO Customer (name, address, emailAddress, "
@@ -850,7 +932,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
-                        + "1)");
+                        + "0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -863,11 +945,49 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
             UpdateCustomer();
             CreateAccountHolder();
-            JOptionPane.showMessageDialog(new JFrame(), message);
-            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-            f.dispose();
-            db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c, "UpdateCustomer");
+
+            //get the customer id
+            try {
+                String sql = ("select ID from customer where id in (select max(id) from customer)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            String id = "";
+            try {
+                while (rs.next()) {
+                    id = rs.getString("ID");
+                }
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+
+            c.setID(id);
+
+            String message = "Do you want to add a vehicle?";
+            int reply = JOptionPane.showConfirmDialog(null, message, "Add Vehicle", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                db.closeConnection(connection);
+                new UpdateCustomerVehicle(username, c, "UpdateCustomer");
+            } else {
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                db.closeConnection(connection);
+                if (previousPage.equalsIgnoreCase("PartSale")) {
+                    new PartSale(username);
+                } else {
+                    new CustomerList(username);
+                }
+            }
         }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 
@@ -902,8 +1022,6 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_comboBoxDiscountPlanActionPerformed
 
     private void buttonUpdateCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateCustomerActionPerformed
-        String originalName = c.getName();
-        String originalAddress = c.getAddress();
         String message = "Customer Details Updated";
         if (textFieldFullName.getText().equals("") || textFieldAddress.getText().equals("")
                 || textFieldEmail.getText().equals("") || textFieldPostCode.getText().equals("")
@@ -919,9 +1037,9 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "emailAddress = '" + textFieldEmail.getText() + "', "
                         + "postCode = '" + textFieldPostCode.getText() + "', "
                         + "telephoneNumber = '" + textFieldTelephone.getText() + "', "
+                        + "mobileNumber = '" + textFieldMobile.getText() + "', "
                         + "fax = '" + textFieldFax.getText() + "' " //optional
-                        + "WHERE ID = (select ID from customer where name = '" + originalName + "' "
-                        + "and address = '" + originalAddress + "')");
+                        + "WHERE ID = " + c.getID());
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -935,8 +1053,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
 
             if (checkBoxAccountHolder.isSelected()) {
                 try {
-                    String sql = ("select * from customeraccount where customerID = (select ID from customer where name = '" + originalName + "' "
-                            + "and address = '" + originalAddress + "')");
+                    String sql = ("select * from customeraccount where customerID = " + c.getID());
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -967,8 +1084,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "update CustomerAccount "
                                     + "set configuredPayLater = 1 "
-                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "')";
+                                    + "where customerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -983,8 +1099,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "update CustomerAccount "
                                     + "set configuredPayLater = 0 "
-                                    + "where customerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "')";
+                                    + "where customerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -1002,8 +1117,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         try {
                             String sql = "select * from discountplan "
                                     + "where CustomerAccountaccountID = "
-                                    + "(select accountID from customeraccount where CustomerID = (select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                    + "and address = '" + textFieldAddress.getText() + "'))";
+                                    + "(select accountID from customeraccount where CustomerID = " + c.getID() + ")";
                             PreparedStatement ps = null;
                             try {
                                 ps = connection.prepareStatement(sql);
@@ -1036,8 +1150,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                                         + "flexibleDiscountdiscountID = null "
                                         + "where CustomerAccountaccountID = "
                                         + "(select accountID from customeraccount where CustomerID = "
-                                        + "(select ID from customer where name = '" + textFieldFullName.getText() + "' "
-                                        + "and address = '" + textFieldAddress.getText() + "'))";
+                                        + c.getID() + ")";
                                 PreparedStatement ps = null;
                                 try {
                                     ps = connection.prepareStatement(sql);
@@ -1086,56 +1199,34 @@ public class UpdateCustomer extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpdateCustomerActionPerformed
 
     private void buttonDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteCustomerActionPerformed
+
         String message = "Are you sure you want to delete Customer?";
         int reply = JOptionPane.showConfirmDialog(null, message, "Delete Customer", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
+
             try {
-                String sql = ("select ID from customer where name = '" + c.getName() + "' "
-                        + "and address = '" + c.getAddress() + "'");
+                String sql = ("update customer set deleted = 1 where ID = " + c.getID());
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                rs = ps.executeQuery();
+                ps.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
 
-            String customerID = "";
-
+            //delete all vehciles with this CustomerID
             try {
-                while (rs.next()) {
-                    customerID = rs.getString("ID");
-                    try {
-                        String sql = ("update customer set deleted = 1 where ID = " + customerID);
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    //delete all vehciles with this CustomerID
-                    try {
-                        String sql = ("update vehicle set deleted = 1 where CustomerID = " + customerID);
-                        PreparedStatement ps = null;
-                        try {
-                            ps = connection.prepareStatement(sql);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
+                String sql = ("update vehicle set deleted = 1 where CustomerID = " + c.getID());
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
+                ps.executeUpdate();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
@@ -1149,7 +1240,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } else {
                 new CustomerList(username);
             }
-        } 
+        }
+
     }//GEN-LAST:event_buttonDeleteCustomerActionPerformed
 
     private void checkBoxAccountHolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAccountHolderActionPerformed
