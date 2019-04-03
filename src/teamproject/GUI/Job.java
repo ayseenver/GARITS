@@ -833,8 +833,7 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchPartsActionPerformed
 
     private void updateJobButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobButtonActionPerformed
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
+
         String message = "Job Updated";
         //insert the new bayID
         bayID = listAvailableBays.getSelectedValue();
@@ -868,8 +867,16 @@ public class Job extends javax.swing.JPanel {
             System.err.println(e.getMessage());
         }
         JOptionPane.showMessageDialog(new JFrame(), message);
-        db.closeConnection(connection);
-        new MainMenu(username);
+
+        String mess = "Do you want to go to the Main Menu?";
+        int reply = JOptionPane.showConfirmDialog(null, mess, "Main Menu", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+            f.dispose();
+            db.closeConnection(connection);
+            new MainMenu(username);
+        }
+
     }//GEN-LAST:event_updateJobButtonActionPerformed
 
     private void buttonUpdateTaskTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpdateTaskTimeActionPerformed
@@ -1523,7 +1530,7 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_listTasksCarriedOutValueChanged
 
     private void listPartsUsedValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listPartsUsedValueChanged
-       String selected = listPartsUsed.getSelectedValue();
+        String selected = listPartsUsed.getSelectedValue();
         String[] selectedParts = selected.split(", Quantity: ");
         int initialQuantity = Integer.parseInt(selectedParts[1]);
         textFieldQuantity.setText("" + initialQuantity);
