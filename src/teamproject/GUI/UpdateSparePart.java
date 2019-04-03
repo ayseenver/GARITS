@@ -35,7 +35,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        buttonSavePartChanges.setEnabled(false);
         this.textFieldUsername.setText(username);
         connection = db.connect();
         statement = db.getStatement();
@@ -305,6 +305,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+            buttonSavePartChanges.setEnabled(false);
             Boolean error = false;
             Boolean qError = false;
             //check if quantity is an integer
@@ -417,6 +418,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+            buttonSavePartChanges.setEnabled(false);
             double cost = Double.parseDouble(textFieldCost.getText());
             double sellingPrice = cost * 1.3;
             String selected = listSpareParts.getSelectedValue();
@@ -463,9 +465,11 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please choose a part first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+            buttonSavePartChanges.setEnabled(false);
             String message = "Are you sure you want to delete the part?";
             int reply = JOptionPane.showConfirmDialog(null, message, "Delete Spare Part", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
+
                 String selected = listSpareParts.getSelectedValue();
                 String[] parts = selected.split(", ");
 
@@ -482,7 +486,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
-        ShowParts();
 
     }//GEN-LAST:event_buttonDeleteSparePartActionPerformed
 
