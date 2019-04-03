@@ -51,7 +51,7 @@ public class PartSale extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rs = statement.executeQuery("select * from sparepart where deleted = 0");
+            this.rs = statement.executeQuery("select * from sparepart where quantity > 0 and deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
