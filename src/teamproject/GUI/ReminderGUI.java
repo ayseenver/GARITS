@@ -106,13 +106,6 @@ public class ReminderGUI extends javax.swing.JPanel {
 
         //get all payment reminders
         try {
-            System.out.println("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
-                    + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
-                    + "from paymentreminder inner join invoice on "
-                    + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
-                    + "inner join job on job.jobID = invoice.JobjobID "
-                    + "where deleted = 0 "
-                    + "order by reminderNumber asc");
             this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
                     + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
                     + "from paymentreminder inner join invoice on "
