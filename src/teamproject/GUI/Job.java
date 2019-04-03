@@ -1441,9 +1441,8 @@ public class Job extends javax.swing.JPanel {
                 }
             }
 
-            InvoiceController i = new InvoiceController(jobID);
+            InvoiceController i = new InvoiceController(jobID, connection);
             i.printJobInvoice();
-
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();

@@ -16,21 +16,18 @@ import teamproject.Databases.DB_ImplClass;
 
 public class InvoiceController {
 
-    private double VAT;
     private String invoiceNumber;
-    private Date dateCreated;
     private int jobID;
     ResultSet rs;
-    DB_ImplClass db = new DB_ImplClass();
     Connection connection;
     Statement statement;
     Vehicle v = new Vehicle();
     Customer c = new Customer();
+    double totalCost;
 
-    public InvoiceController(int jobID) {
+    public InvoiceController(int jobID, Connection connection) {
         this.jobID = jobID;
-        connection = db.connect();
-        statement = db.getStatement();
+        this.connection = connection;
         GetJobDetails();
     }
 
@@ -129,6 +126,7 @@ public class InvoiceController {
     }
 
     public String GetInvoiceDetails() {
+
         String result = "";
         result += ("Dear " + c.getName() + "\n\n");
         result += ("Invoice number : " + invoiceNumber + "\n\n");
@@ -244,18 +242,42 @@ public class InvoiceController {
             e.printStackTrace();
         }
 
-        double totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
+        totalCost = ((hourlyRate * totalHours) + totalPartsCost); //excluding VAT
         result += ("\nTotal labour cost: £" + String.format("%.2f", (hourlyRate * totalHours)) + "\n");
         result += ("\nVAT: £" + String.format("%.2f", totalCost * 0.2));
         result += ("\nGrand total: £" + String.format("%.2f", totalCost * 1.2));
+
         return result;
     }
 
+    public void updateJobPrice() {
+
+        //update the job cost to this new total cost
+        try {
+            String sql = ("update job set totalcost = "
+                    + Double.parseDouble(String.format("%.2f", totalCost * 1.2)) + " where jobID = " + jobID);
+            PreparedStatement ps = null;
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void printJobInvoice() {
+        
+        String result = GetInvoiceDetails();
+        
+        updateJobPrice();
+
         String fileName = "Invoice-for-job" + jobID + ".txt";
         try {
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-            writer.println(GetInvoiceDetails());
+            writer.println(result);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -264,5 +286,4 @@ public class InvoiceController {
         String mess = "Invoice printed successfully";
         JOptionPane.showMessageDialog(new JFrame(), mess);
     }
-
 }

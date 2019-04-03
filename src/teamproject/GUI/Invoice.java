@@ -742,7 +742,7 @@ public class Invoice extends javax.swing.JPanel {
             GetJobAndInvoiceNumber();
             String details;
             if (!jobNumber.isEmpty()) {
-                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber));
+                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber), connection);
                 i.printJobInvoice();
             } else {
                 details = GetPartInvoiceDetails();
@@ -1082,7 +1082,7 @@ public class Invoice extends javax.swing.JPanel {
             getJobVehicle();
             GetCustomerDetails();
             if (!jobNumber.isEmpty()) {
-                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber));
+                InvoiceController i = new InvoiceController(Integer.parseInt(jobNumber), connection);
                 textAreaInvoiceDetail.setText(i.GetInvoiceDetails());
                 ShowPayLaterCustomer();
             } else {
