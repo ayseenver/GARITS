@@ -16,6 +16,8 @@ public class CustomerList extends javax.swing.JPanel {
     private String username;
     String payment;
     String details;
+    String roleName;
+    String id = "0";
     private ResultSet rsC;
     private ResultSet rsD;
     private ResultSet rs;
@@ -35,10 +37,13 @@ public class CustomerList extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
         statement = db.getStatement();
+        comboBoxPayCustomer.setVisible(false);
         buttonConfirmPayment.setVisible(false);
         labelPayCustomer.setVisible(false);
         labelPayCustomerExplained.setVisible(false);
@@ -55,6 +60,31 @@ public class CustomerList extends javax.swing.JPanel {
 
     }
 
+    private String GetRole() {
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Database
+                if (username.equals(user)) {
+                    // this.rs = statement.executeQuery("select roleName from User where username = '" + username + "'");
+
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return roleName;
+    }
+
     private void ShowCustomers() {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
@@ -62,7 +92,7 @@ public class CustomerList extends javax.swing.JPanel {
         try {
             while (rsC.next()) {
                 // read the result set
-                String name = rsC.getString("ID") + ", " + rsC.getString("name");
+                String name = "ID: " + rsC.getString("ID") + ", " + rsC.getString("name");
                 names.add(name);
             }
         } catch (SQLException e) {
@@ -83,9 +113,7 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void ShowSelectedCustomersOverview() {
         GetSelectedCustomer();
-        textAreaCustomerOverview.setText("Date: " + c.getDateCreated() + '\n' + "Name: " + c.getName() + '\n'
-                + "Address: " + c.getAddress() + '\n' + "Post Code: " + c.getPostCode() + '\n' + "Tel.: " + c.getTelephoneNumber()
-                + '\n' + "Mobile: " + c.getMobileNumber() + '\n' + "Email: " + c.getEmailAddress());
+        textAreaCustomerOverview.setText(c.toString());
     }
 
     private void showCustomerCredit() {
@@ -112,27 +140,31 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void ShowPayCustomer() {
         buttonConfirmPayment.setVisible(false);
+        comboBoxPayCustomer.setVisible(false);
         labelPayCustomer.setVisible(false);
         labelPayCustomerExplained.setVisible(false);
         String[] parts = listCustomers.getSelectedValue().split(", ");
 
         String flexibleDiscount = null;
-        try {
-            this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
-                    + "(select ID from customer where ID = " + parts[0] + "))");
+        if (GetRole().equalsIgnoreCase("franchisee")) {
+            try {
+                this.rsP = statement.executeQuery("select * from DiscountPlan where CustomerAccountaccountID = (select accountID from CustomerAccount where customerID ="
+                        + "(select ID from customer where name = '" + details + "'))");
 
-            while (rsP.next()) {
-                flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
+                while (rsP.next()) {
+                    flexibleDiscount = rsP.getString("FlexibleDiscountdiscountID");
+                }
+                if (flexibleDiscount != null) {
+                    buttonConfirmPayment.setVisible(true);
+                    comboBoxPayCustomer.setVisible(true);
+                    labelPayCustomer.setVisible(true);
+                    labelPayCustomerExplained.setVisible(true);
+                }
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+
             }
-            if (flexibleDiscount != null) {
-                buttonConfirmPayment.setVisible(true);
-                labelPayCustomer.setVisible(true);
-                labelPayCustomerExplained.setVisible(true);
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-
         }
     }
 
@@ -144,9 +176,11 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void GetSelectedCustomer() {
         String selected = listCustomers.getSelectedValue();
-        String[] parts = selected.split(", ");
+        id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
+
         try {
-            String sql = ("select * from Customer where ID = " + parts[0] + " and deleted = 0");
+            String sql = ("select * from Customer where id = '" + id + "' "
+                    + "and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -187,7 +221,11 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+        try {
+            c.setMobileNumber(rsC.getString("mobileNumber"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
         try {
             c.setFax(rsC.getString("fax"));
         } catch (SQLException e) {
@@ -198,6 +236,12 @@ public class CustomerList extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        try {
+            c.setID(rsC.getString("ID"));
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -209,17 +253,15 @@ public class CustomerList extends javax.swing.JPanel {
         labelCustomerDetail = new javax.swing.JLabel();
         buttonSearchCustomer = new javax.swing.JButton();
         textFieldSearchCustomer = new javax.swing.JTextField();
+        labelPayCustomerExplained = new javax.swing.JLabel();
         jScrollPane10 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
         buttonNewCustomer = new javax.swing.JButton();
-        labelPayCustomerExplained = new javax.swing.JLabel();
         textFieldUserDetails = new javax.swing.JTextField();
         labelLoggedIn = new javax.swing.JLabel();
         buttonExit = new javax.swing.JButton();
         buttonBack = new javax.swing.JButton();
         buttonEditCustomer = new javax.swing.JButton();
-        buttonConfirmPayment = new javax.swing.JButton();
-        labelPayCustomer = new javax.swing.JLabel();
         labelSelectCustomer = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
         listVehicleDetails = new javax.swing.JList<>();
@@ -228,6 +270,9 @@ public class CustomerList extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaCustomerOverview = new javax.swing.JTextArea();
         labelCustomerDetail1 = new javax.swing.JLabel();
+        labelPayCustomer = new javax.swing.JLabel();
+        buttonConfirmPayment = new javax.swing.JButton();
+        comboBoxPayCustomer = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -252,6 +297,10 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
         add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, -1));
 
+        labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        labelPayCustomerExplained.setText("*only customer that have a flexible discount ");
+        add(labelPayCustomerExplained, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
+
         listCustomers.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         listCustomers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -269,10 +318,6 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
         add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 190, -1, -1));
-
-        labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        labelPayCustomerExplained.setText("*only customer that have flexible discount ");
-        add(labelPayCustomerExplained, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
 
         textFieldUserDetails.setEditable(false);
         textFieldUserDetails.setFocusable(false);
@@ -305,19 +350,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditCustomerActionPerformed(evt);
             }
         });
-        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 620, 170, -1));
-
-        buttonConfirmPayment.setText("Confirm");
-        buttonConfirmPayment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmPaymentActionPerformed(evt);
-            }
-        });
-        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 620, 100, -1));
-
-        labelPayCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelPayCustomer.setText("Pay Customer:");
-        add(labelPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 620, -1, -1));
+        add(buttonEditCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 620, 170, -1));
 
         labelSelectCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelSelectCustomer.setText("Select Customer:");
@@ -342,7 +375,7 @@ public class CustomerList extends javax.swing.JPanel {
                 buttonEditVehiclesActionPerformed(evt);
             }
         });
-        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 620, -1, -1));
+        add(buttonEditVehicles, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 620, -1, -1));
 
         textAreaCustomerOverview.setColumns(20);
         textAreaCustomerOverview.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -354,6 +387,21 @@ public class CustomerList extends javax.swing.JPanel {
         labelCustomerDetail1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         labelCustomerDetail1.setText("Vehicle Details: ");
         add(labelCustomerDetail1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, -1, -1));
+
+        labelPayCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelPayCustomer.setText("Pay Customer:");
+        add(labelPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 620, -1, -1));
+
+        buttonConfirmPayment.setText("Confirm");
+        buttonConfirmPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonConfirmPaymentActionPerformed(evt);
+            }
+        });
+        add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
+
+        comboBoxPayCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cheque", "Next Invoice" }));
+        add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 620, 100, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -433,17 +481,36 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEditVehiclesActionPerformed
 
     private void buttonConfirmPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmPaymentActionPerformed
-        String message = "Customer Paid";
+        String message = "Customer Paid by Cheque";
+        System.out.println(id);
+        String paymentMethod = comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
-            String[] parts = listCustomers.getSelectedValue().split(", ");
-
+            if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
+                try {
+                    String sql = ("update flexiblediscount set toBeDeducted = amountToBeDecuted+(select credit from flexiblediscount)"
+                            + " from where discountID =(select discountID from flexiblediscount where discountID = "
+                            + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
+                            + "(select accountID from customeraccount where customerID = "
+                            + "(select ID from customer where ID = '" + id + "'))))");
+                    PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+                message = "Amount will be deducted from next invoice";
+            }
             //set this customer's credit to 0
             try {
                 String sql = ("update flexiblediscount set credit = 0 where discountID = "
                         + "(select discountID from flexiblediscount where discountID = "
                         + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                         + "(select accountID from customeraccount where customerID = "
-                        + "(select ID from customer where ID = " + parts[0] + "))))");
+                        + "(select ID from customer where id = '" + id + "'))))");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -461,11 +528,12 @@ public class CustomerList extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonConfirmPaymentActionPerformed
 
     private void listCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listCustomersValueChanged
-        details = (listCustomers.getSelectedValue());
-        String[] parts = details.split(", ");
+        String selected = listCustomers.getSelectedValue();
+        id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
+
         try {
             String sql = ("select * from vehicle where CustomerID = "
-                    + "(select ID from customer where ID = " + parts[0] + ") and deleted = 0");
+                    + id + " and deleted = 0");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -519,6 +587,7 @@ public class CustomerList extends javax.swing.JPanel {
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonNewCustomer;
     private javax.swing.JButton buttonSearchCustomer;
+    private javax.swing.JComboBox<String> comboBoxPayCustomer;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;

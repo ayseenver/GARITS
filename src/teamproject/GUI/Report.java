@@ -49,6 +49,8 @@ public class Report extends javax.swing.JPanel {
         JFrame frame = new JFrame();
         frame.add(this);
         frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         this.textFieldUserDetails.setText(username);
         connection = db.connect();
@@ -104,7 +106,7 @@ public class Report extends javax.swing.JPanel {
 
             String roleName = rsU.getString("roleName");
             comboBoxReportType.setSelectedItem("Stock control");
-            if (!roleName.equals("receptionist")) {
+            if (roleName.equals("franchisee")) {
                 comboBoxReportType.setEnabled(true);
 
             } else {
