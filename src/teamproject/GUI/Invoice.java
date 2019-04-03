@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import teamproject.Customer_Account.Customer;
@@ -73,7 +75,6 @@ public class Invoice extends javax.swing.JPanel {
             String[] parts = selected.split(", ");
             String[] idParts = parts[0].split(": ");
             invoiceNumber = idParts[1];
-
             try {
                 String[] jobParts = parts[1].split(": ");
                 jobNumber = jobParts[1];
@@ -100,25 +101,29 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
         try {
-            v.setMake(rsV.getString("make"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            while (rsV.next()) {
+                try {
+                    v.setMake(rsV.getString("make"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
 
-        try {
-            v.setModel(rsV.getString("model"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+                try {
+                    v.setModel(rsV.getString("model"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
 
-        try {
-            v.setRegistrationNumber(rsV.getString("registrationNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+                try {
+                    v.setRegistrationNumber(rsV.getString("registrationNumber"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void GetCustomerDetails() {
@@ -137,16 +142,23 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         try {
-            c.setName(rsC.getString("name"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            while (rsC.next()) {
+                try {
+                    c.setName(rsC.getString("name"));
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Invoice.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     private String GetPartInvoiceDetails() {
         GetJobAndInvoiceNumber();
         String result = "";
-        result += ("Invoice number : " + invoiceNumber + "\n\n");
+        result += ("Invoice number: " + invoiceNumber + "\n\n");
         result += ("Parts sold: \n");
 
         //get all part IDs on this invoice
@@ -214,7 +226,7 @@ public class Invoice extends javax.swing.JPanel {
     private void ShowAllInvoices() {
         //get all unpaid invoices for jobs
         try {
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
+            this.rs = statement.executeQuery("select * from Invoice where invoiceNumber not in (select invoiceNumber from payment) "
                     + "and JobjobID is not null and payLater = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
@@ -274,9 +286,9 @@ public class Invoice extends javax.swing.JPanel {
     private void StandardPayment() {
         //create a payment record in the database.
         try {
-            String sql = ("insert into Payment(paymentType, JobjobID)"
+            String sql = ("insert into Payment(paymentType, invoiceNumber)"
                     + " values ( '" + comboxBoxPaymentType.getSelectedItem().toString() + "', "
-                    + "(select jobID from job where jobID = " + jobNumber + "))");
+                    + invoiceNumber + ")");
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -689,7 +701,7 @@ public class Invoice extends javax.swing.JPanel {
 
     private void CheckAccountHolder() {
         String sql;
-        //see if customer is account holder for a normal job (not a part sale)
+        //see if customer is account holder for a normal job 
         try {
             sql = ("select job.jobID, job.VehicleregistrationNumber, invoice.invoiceNumber, vehicle.CustomerID, "
                     + "customer.name, customeraccount.accountID, customerAccount.configuredPayLater, "
@@ -927,6 +939,7 @@ public class Invoice extends javax.swing.JPanel {
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
         if (selected != null) {
+
             GetJobAndInvoiceNumber();
             CheckAccountHolder();
             if (!jobNumber.isEmpty()) { //is a job, not a part sale
@@ -1076,7 +1089,7 @@ public class Invoice extends javax.swing.JPanel {
     private void listInvoicesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listInvoicesValueChanged
         textAreaInvoiceDetail.setText("");
         String selected = listInvoices.getSelectedValue();
-        
+
         if (selected != null) {
             GetJobAndInvoiceNumber();
             getJobVehicle();

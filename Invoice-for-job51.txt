@@ -1,6 +1,6 @@
 Dear Mr Jean-Claude Laprie
 
-Invoice number : null
+Invoice number : 53
 
 Vehicle Registration No.: BB64 TRU
 Make: Fjord
@@ -17,7 +17,7 @@ Description of work:
 6) Replace distributor cap
 
 Parts used: 
-Exhaust mount, set, £19.5, quantity: 2
+Engine mount, set, £19.5, quantity: 2
 Exhaust, complete box, £260.0, quantity: 1
 Spark plug, each, £1.95, quantity: 4
 Spark lead, set, £16.25, quantity: 1
