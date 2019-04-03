@@ -469,19 +469,24 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String message = "Are you sure you want to delete the part?";
             int reply = JOptionPane.showConfirmDialog(null, message, "Delete Spare Part", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-
                 String selected = listSpareParts.getSelectedValue();
                 String[] parts = selected.split(", ");
-
+                System.out.println(parts[0]);
                 //delete this part
                 try {
                     String sql = ("update sparepart set deleted = 1 "
                             + "where partID = " + parts[0]);
                     PreparedStatement ps = null;
+                    try {
+                        ps = connection.prepareStatement(sql);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                 }
+                ShowParts();
                 String mess = "Spare Part Deleted";
                 JOptionPane.showMessageDialog(new JFrame(), mess);
             }
