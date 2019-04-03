@@ -249,7 +249,7 @@ public class Invoice extends javax.swing.JPanel {
         //get all invoices for part sales
         try {
             this.rs = statement.executeQuery("select * from Invoice where invoicenumber in (select invoiceinvoicenumber from "
-                    + "invoice_sparepart)");
+                    + "invoice_sparepart) and invoiceNumber not in (select invoiceNumber from payment)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -285,6 +285,7 @@ public class Invoice extends javax.swing.JPanel {
 
     private void StandardPayment() {
         //create a payment record in the database.
+              System.out.println(invoiceNumber+" 1 ");
         try {
             String sql = ("insert into Payment(paymentType, invoiceNumber)"
                     + " values ( '" + comboxBoxPaymentType.getSelectedItem().toString() + "', "
@@ -899,11 +900,11 @@ public class Invoice extends javax.swing.JPanel {
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
+   
         if (selected != null) {
-
             GetJobAndInvoiceNumber();
-            CheckAccountHolder();
             if (!jobNumber.isEmpty()) { //is a job, not a part sale
+                 CheckAccountHolder();
                 String accountID = "";
                 String fixedID = "";
                 String flexibleID = "";
