@@ -60,15 +60,6 @@ public class Invoice extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-        //get all unpaid invoices for jobs
-        try {
-            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
-                    + "and JobjobID is not null and payLater = 0");
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            e.printStackTrace();
-        }
         ShowAllInvoices();
         buttonPayLater.setVisible(false);
         frame.setVisible(true);
@@ -344,6 +335,16 @@ public class Invoice extends javax.swing.JPanel {
     }
 
     private void ShowAllInvoices() {
+        //get all unpaid invoices for jobs
+        try {
+            this.rs = statement.executeQuery("select * from Invoice where JobjobID not in (select JobjobID from payment) "
+                    + "and JobjobID is not null and payLater = 0");
+        } catch (SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            e.printStackTrace();
+        }
+
         ArrayList<String> invoices = new ArrayList<>();
 
         try {
@@ -413,10 +414,7 @@ public class Invoice extends javax.swing.JPanel {
         //print the invoice
         PrintInvoice();
 
-        JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-        f.dispose();
-        db.closeConnection(connection);
-        new Invoice(username, "Invoice");
+        ShowAllInvoices();
     }
 
     private void FixedDiscount(String fixedID) {

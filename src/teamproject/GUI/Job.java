@@ -1523,10 +1523,12 @@ public class Job extends javax.swing.JPanel {
     }//GEN-LAST:event_listTasksCarriedOutValueChanged
 
     private void listPartsUsedValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listPartsUsedValueChanged
-       String selected = listPartsUsed.getSelectedValue();
-        String[] selectedParts = selected.split(", Quantity: ");
-        int initialQuantity = Integer.parseInt(selectedParts[1]);
-        textFieldQuantity.setText("" + initialQuantity);
+        String selected = listPartsUsed.getSelectedValue();
+        if (selected != null) {
+            String[] selectedParts = selected.split(", Quantity: ");
+            int initialQuantity = Integer.parseInt(selectedParts[1]);
+            textFieldQuantity.setText("" + initialQuantity);
+        }
     }//GEN-LAST:event_listPartsUsedValueChanged
 
 
