@@ -274,7 +274,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
-        if (vehicleArray.length > 0) {
+        if (vehicleArray.length >= 0) {
             try {
                 String sql = ("update customer set deleted = 0 where ID = " + c.getID());
                 PreparedStatement ps = null;
