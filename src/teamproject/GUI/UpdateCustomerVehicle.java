@@ -404,12 +404,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 }
                 String message = "Vehicle Details Updated";
                 JOptionPane.showMessageDialog(new JFrame(), message);
+            } else {
+                String message = "Please Select a Vehicle First";
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
             ShowVehicles();
         }
-        String message = "Please Select a Vehicle First";
-        JOptionPane.showMessageDialog(new JFrame(), message);
-
 
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 
