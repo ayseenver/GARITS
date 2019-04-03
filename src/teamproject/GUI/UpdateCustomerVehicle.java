@@ -276,7 +276,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
         if (vehicleArray.length > 0) {
             try {
-                String sql = ("update customer set deleted = 0 where ID in (select max(id) from customer)");
+                String sql = ("update customer set deleted = 0 where ID = " + c.getID());
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -417,7 +417,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private void buttonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteVehicleActionPerformed
         String message = "Vehicle Deleted";
-        String warningMessage = "Are you Sure you want to delete a vehicle?";
+        String warningMessage = "Are you sure you want to delete a vehicle?";
         if (listVehicles.getSelectedValue() == null) {
             message = "Please choose vehicle record first!";
 
