@@ -907,6 +907,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("createJobCustomer")) {
             new CreateJobCustomer(username);
+        } else if (previousPage.equalsIgnoreCase("PartSale")) {
+            new PartSale(username);
         } else {
             new CustomerList(username);
         }
@@ -980,7 +982,11 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
                 f.dispose();
                 db.closeConnection(connection);
-                new CustomerList(username);
+                if (previousPage.equalsIgnoreCase("PartSale")) {
+                    new PartSale(username);
+                } else {
+                    new CustomerList(username);
+                }
             }
         }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed

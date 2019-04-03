@@ -247,6 +247,7 @@ public class PartSale extends javax.swing.JPanel {
         labelAllStock = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         listCustomers = new javax.swing.JList<>();
+        jButton1 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -485,6 +486,14 @@ public class PartSale extends javax.swing.JPanel {
         jScrollPane7.setViewportView(listCustomers);
 
         jPanel1.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 1150, 140));
+
+        jButton1.setText("Add New Customer");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 140, -1, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -725,6 +734,13 @@ public class PartSale extends javax.swing.JPanel {
         ShowCustomers();
     }//GEN-LAST:event_buttonSearchCustomersActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+        f.dispose();
+        db.closeConnection(connection);
+        new UpdateCustomer(username, "PartSale");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddToCart;
@@ -741,6 +757,7 @@ public class PartSale extends javax.swing.JPanel {
     private javax.swing.JButton buttonRemove1;
     private javax.swing.JButton buttonSearchAllStock;
     private javax.swing.JButton buttonSearchCustomers;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
