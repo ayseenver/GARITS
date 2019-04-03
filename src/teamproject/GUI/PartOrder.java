@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
 
 /**
@@ -86,6 +87,7 @@ public class PartOrder extends javax.swing.JPanel {
         add(labelPartsOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 40, -1, -1));
 
         textAreaPartsOrder.setColumns(20);
+        textAreaPartsOrder.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textAreaPartsOrder.setRows(5);
         jScrollPane1.setViewportView(textAreaPartsOrder);
 
@@ -141,6 +143,8 @@ public class PartOrder extends javax.swing.JPanel {
             PrintWriter writer = new PrintWriter(fileName, "UTF-8");
             writer.println(textAreaPartsOrder.getText());
             writer.close();
+            String mess = "Printed sucessfully";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -225,7 +229,7 @@ public class PartOrder extends javax.swing.JPanel {
         }
 
         db.closeConnection(connection);
-        new MainMenu(username);
+        new StockControl(username);
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
