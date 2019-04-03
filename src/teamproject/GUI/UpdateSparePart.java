@@ -417,6 +417,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
+
             try {
                 String sql = ("UPDATE SparePart SET "
                         + "partID = 'partID', "
@@ -442,6 +443,7 @@ public class UpdateSparePart extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
+
             ShowParts();
         }
     }//GEN-LAST:event_buttonSavePartChangesActionPerformed
@@ -451,17 +453,23 @@ public class UpdateSparePart extends javax.swing.JPanel {
             String mess = "Please choose a part first!";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-            String selected = listSpareParts.getSelectedValue();
-            String[] parts = selected.split(", ");
+            String message = "Are you sure you want to delete the part?";
+            int reply = JOptionPane.showConfirmDialog(null, message, "Delete Spare Part", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String selected = listSpareParts.getSelectedValue();
+                String[] parts = selected.split(", ");
 
-            //delete this part
-            try {
-                String sql = ("update sparepart set deleted = 1 "
-                        + "where partID = " + parts[0]);
-                PreparedStatement ps = null;
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                //delete this part
+                try {
+                    String sql = ("update sparepart set deleted = 1 "
+                            + "where partID = " + parts[0]);
+                    PreparedStatement ps = null;
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+                           String mess = "Spare Part Deleted";
+                JOptionPane.showMessageDialog(new JFrame(), mess);
             }
         }
         ShowParts();

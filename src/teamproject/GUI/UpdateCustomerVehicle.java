@@ -274,7 +274,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDoneActionPerformed
-        if (vehicleArray.length > 0) {
+        if (vehicleArray.length >= 0) {
             try {
                 String sql = ("update customer set deleted = 0 where ID = " + c.getID());
                 PreparedStatement ps = null;
@@ -294,6 +294,8 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             db.closeConnection(connection);
             if (previousPage.equalsIgnoreCase("createJobCustomer")) {
                 new CreateJobCustomer(username);
+            } else if (previousPage.equalsIgnoreCase("PartSale")) {
+                new PartSale(username);
             } else {
                 new CustomerList(username);
             }
@@ -313,7 +315,6 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         } else if (previousPage.equalsIgnoreCase("UpdateCustomer")) {
             new UpdateCustomer(username, c, "UpdateCustomerVehicle", "vehicle");
         } else {
-
             new CustomerList(username);
         }
 
@@ -404,12 +405,12 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                 }
                 String message = "Vehicle Details Updated";
                 JOptionPane.showMessageDialog(new JFrame(), message);
+            } else {
+                String message = "Please Select a Vehicle First";
+                JOptionPane.showMessageDialog(new JFrame(), message);
             }
             ShowVehicles();
         }
-        String message = "Please Select a Vehicle First";
-        JOptionPane.showMessageDialog(new JFrame(), message);
-
 
     }//GEN-LAST:event_buttonSaveVehicleChangesActionPerformed
 

@@ -69,7 +69,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
     public UpdateCustomer(String username, Customer c, String previousPage, String vehicle) { //vehicle page
         this(username, previousPage);
         this.c = c;
-        buttonUpdateCustomer.setVisible(false); 
+        buttonUpdateCustomer.setVisible(false);
         buttonDeleteCustomer.setVisible(false);
         buttonNewCustomer.setVisible(true);
         accountHolderPane.setVisible(false);
@@ -806,13 +806,13 @@ public class UpdateCustomer extends javax.swing.JPanel {
         jPanel1.add(labelFax1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 450, -1, -1));
 
         buttonNewCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        buttonNewCustomer.setText("Add Vehicles");
+        buttonNewCustomer.setText("Create Customer");
         buttonNewCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonNewCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 480, -1, -1));
+        jPanel1.add(buttonNewCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 640, -1, -1));
         jPanel1.add(textFieldEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 240, 260, -1));
 
         buttonUpdateCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
@@ -822,7 +822,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonUpdateCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 650, -1, -1));
+        jPanel1.add(buttonUpdateCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 640, -1, -1));
 
         buttonDeleteCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonDeleteCustomer.setText("Delete Customer");
@@ -831,22 +831,22 @@ public class UpdateCustomer extends javax.swing.JPanel {
                 buttonDeleteCustomerActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 650, -1, -1));
+        jPanel1.add(buttonDeleteCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 640, -1, -1));
 
         checkBoxConfigurePayLater.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         checkBoxConfigurePayLater.setText("Pay Later Option");
         accountHolderPane.add(checkBoxConfigurePayLater);
-        checkBoxConfigurePayLater.setBounds(10, 0, 133, 27);
+        checkBoxConfigurePayLater.setBounds(10, 0, 144, 23);
 
         checkBoxDiscountPlan.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         checkBoxDiscountPlan.setText("Discount plan");
         accountHolderPane.add(checkBoxDiscountPlan);
-        checkBoxDiscountPlan.setBounds(10, 30, 115, 29);
+        checkBoxDiscountPlan.setBounds(10, 30, 131, 24);
 
         labelDiscountDetail.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelDiscountDetail.setText("Details:");
         accountHolderPane.add(labelDiscountDetail);
-        labelDiscountDetail.setBounds(30, 70, 47, 20);
+        labelDiscountDetail.setBounds(30, 70, 50, 20);
 
         comboBoxDiscountPlan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Fixed", "Variable", "Flexible" }));
         comboBoxDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -855,14 +855,14 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
         });
         accountHolderPane.add(comboBoxDiscountPlan);
-        comboBoxDiscountPlan.setBounds(140, 30, 140, 20);
+        comboBoxDiscountPlan.setBounds(140, 30, 140, 27);
 
         jScrollPane7.setViewportView(listBusinessType);
 
         accountHolderPane.add(jScrollPane7);
         jScrollPane7.setBounds(80, 70, 200, 120);
         accountHolderPane.add(textFieldPercentage);
-        textFieldPercentage.setBounds(280, 160, 40, 20);
+        textFieldPercentage.setBounds(280, 160, 40, 26);
 
         buttonSetDiscountPlan.setText("Set");
         buttonSetDiscountPlan.addActionListener(new java.awt.event.ActionListener() {
@@ -876,7 +876,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
         labelPercentage.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         labelPercentage.setText("%");
         accountHolderPane.add(labelPercentage);
-        labelPercentage.setBounds(320, 160, 12, 20);
+        labelPercentage.setBounds(320, 160, 9, 20);
 
         jPanel1.add(accountHolderPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 240, 420, 230));
 
@@ -907,6 +907,8 @@ public class UpdateCustomer extends javax.swing.JPanel {
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("createJobCustomer")) {
             new CreateJobCustomer(username);
+        } else if (previousPage.equalsIgnoreCase("PartSale")) {
+            new PartSale(username);
         } else {
             new CustomerList(username);
         }
@@ -930,7 +932,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
                         + "'" + textFieldMobile.getText() + "', "
                         + "'" + textFieldFax.getText() + "', "
                         + "date('now'), "
-                        + "1)");
+                        + "0)");
                 PreparedStatement ps = null;
                 try {
                     ps = connection.prepareStatement(sql);
@@ -943,7 +945,7 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
             UpdateCustomer();
             CreateAccountHolder();
-            
+
             //get the customer id
             try {
                 String sql = ("select ID from customer where id in (select max(id) from customer)");
@@ -957,22 +959,35 @@ public class UpdateCustomer extends javax.swing.JPanel {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             String id = "";
-            try{
-                while(rs.next()){
+            try {
+                while (rs.next()) {
                     id = rs.getString("ID");
                 }
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-            
+
             c.setID(id);
 
-            JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
-            f.dispose();
-            db.closeConnection(connection);
-            new UpdateCustomerVehicle(username, c, "UpdateCustomer");
+            String message = "Do you want to add a vehicle?";
+            int reply = JOptionPane.showConfirmDialog(null, message, "Add Vehicle", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                db.closeConnection(connection);
+                new UpdateCustomerVehicle(username, c, "UpdateCustomer");
+            } else {
+                JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
+                f.dispose();
+                db.closeConnection(connection);
+                if (previousPage.equalsIgnoreCase("PartSale")) {
+                    new PartSale(username);
+                } else {
+                    new CustomerList(username);
+                }
+            }
         }
     }//GEN-LAST:event_buttonNewCustomerActionPerformed
 

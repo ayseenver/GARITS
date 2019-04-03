@@ -117,19 +117,21 @@ public class CustomerList extends javax.swing.JPanel {
 
     private void showCustomerCredit() {
         String credit = "-1";
+        String totalSpent = "0";
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
         try {
-            this.rsCr = statement.executeQuery("Select credit from flexiblediscount where discountID = "
+            this.rsCr = statement.executeQuery("Select * from flexiblediscount where discountID = "
                     + "(select discountID from flexiblediscount where discountID = "
                     + "(select flexibleDiscountdiscountID from discountplan where customeraccountaccountID = "
                     + "(select accountID from customeraccount where customerID = "
                     + "(select ID from customer where ID = " + id + "))))");
             while (rsCr.next()) {
                 credit = rsCr.getString("credit");
+                totalSpent = rsCr.getString("orderValueThisMonth");
             }
             if (!credit.equals("-1")) {
-                textAreaCustomerOverview.append("\nCredit: £" + credit);
+                textAreaCustomerOverview.append("\nSpent this Month: £" + totalSpent + "\nCredit: £" + credit);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -179,7 +181,6 @@ public class CustomerList extends javax.swing.JPanel {
     private void GetSelectedCustomer() {
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
-        System.out.println(id);
 
         try {
             String sql = ("select * from Customer where id = '" + id + "' "
@@ -298,7 +299,7 @@ public class CustomerList extends javax.swing.JPanel {
             }
         });
         add(buttonSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, -1, -1));
-        add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, -1));
+        add(textFieldSearchCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 130, 30));
 
         labelPayCustomerExplained.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         labelPayCustomerExplained.setText("*only customer that have a flexible discount ");
@@ -404,7 +405,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
 
         comboBoxPayCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cheque", "Next Invoice" }));
-        add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 620, 100, -1));
+        add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 620, 110, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed
@@ -487,7 +488,7 @@ public class CustomerList extends javax.swing.JPanel {
         String message = "Customer Paid by Cheque";
         String selected = listCustomers.getSelectedValue();
         id = selected.substring(selected.indexOf(": ") + 2, selected.indexOf(","));
-        
+
         String paymentMethod = comboBoxPayCustomer.getSelectedItem().toString();
         if (listCustomers.getSelectedValue() != null) {
             if (paymentMethod.equalsIgnoreCase("Next Invoice")) {
