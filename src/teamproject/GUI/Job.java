@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import teamproject.Databases.DB_ImplClass;
+import teamproject.Jobs.InvoiceController;
 
 /**
  *
@@ -606,11 +607,6 @@ public class Job extends javax.swing.JPanel {
         panelTask.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         listTasksCarriedOut.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        listTasksCarriedOut.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listTasksCarriedOutMouseClicked(evt);
-            }
-        });
         listTasksCarriedOut.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listTasksCarriedOutValueChanged(evt);
@@ -1437,6 +1433,11 @@ public class Job extends javax.swing.JPanel {
                     System.err.println(a.getMessage());
                 }
             }
+            
+            InvoiceController i = new InvoiceController(jobID);
+            i.printJobInvoice();
+            
+            
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();
             db.closeConnection(connection);
@@ -1480,10 +1481,6 @@ public class Job extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonUpdateTaskCostActionPerformed
 
-
-    private void listTasksCarriedOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listTasksCarriedOutMouseClicked
-
-    }//GEN-LAST:event_listTasksCarriedOutMouseClicked
 
     private void listTasksCarriedOutValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listTasksCarriedOutValueChanged
         String sql = "";

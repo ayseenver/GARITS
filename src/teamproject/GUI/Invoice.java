@@ -411,9 +411,6 @@ public class Invoice extends javax.swing.JPanel {
             e.printStackTrace();
         }
 
-        //print the invoice
-        PrintInvoice();
-
         ShowAllInvoices();
     }
 
