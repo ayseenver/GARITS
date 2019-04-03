@@ -943,6 +943,31 @@ public class UpdateCustomer extends javax.swing.JPanel {
             }
             UpdateCustomer();
             CreateAccountHolder();
+            
+            //get the customer id
+            try {
+                String sql = ("select ID from customer where id in (select max(id) from customer)");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            
+            String id = "";
+            try{
+                while(rs.next()){
+                    id = rs.getString("ID");
+                }
+            }catch(SQLException e){
+                System.err.println(e.getMessage());
+            }
+            
+            c.setID(id);
 
             JFrame f = (JFrame) this.getParent().getParent().getParent().getParent();
             f.dispose();

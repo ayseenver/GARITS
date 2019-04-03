@@ -310,14 +310,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         db.closeConnection(connection);
         if (previousPage.equalsIgnoreCase("createJobCustomer")) {
             new CreateJobCustomer(username);
-        } else if (previousPage.equalsIgnoreCase("UpdateCustomer"))
-         {
-             new UpdateCustomer(username, c, "UpdateCustomerVehicle", "vehicle");
+        } else if (previousPage.equalsIgnoreCase("UpdateCustomer")) {
+            new UpdateCustomer(username, c, "UpdateCustomerVehicle", "vehicle");
         } else {
 
             new CustomerList(username);
         }
-    
+
     }//GEN-LAST:event_buttonBackActionPerformed
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
@@ -335,14 +334,13 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
             String mess = "Please fill in all the boxes";
             JOptionPane.showMessageDialog(new JFrame(), mess);
         } else {
-
             try {
                 String sql = ("INSERT INTO Vehicle (registrationNumber, "
                         + "CustomerID, make, "
                         + "model, engineSerial, chassisNumber, colour, "
                         + "nextServiceDate, nextMOTDate, deleted) "
                         + "VALUES ('" + textFieldRegistrationNo.getText() + "', "
-                        + c.getID()+", "
+                        + c.getID() + ", "
                         + "'" + textFieldMake.getText() + "', "
                         + "'" + textFieldModel.getText() + "', "
                         + "'" + textFieldEngineSerial.getText() + "', "
@@ -389,7 +387,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
                             + "nextServiceDate = '" + textFieldNextServiceDate.getText() + "', "
                             + "nextMOTDate = '" + textFieldNextMoTDate.getText() + "' "
                             + "WHERE registrationNumber = '" + reg + "' "
-                            + "AND CustomerID = "+c.getID());
+                            + "AND CustomerID = " + c.getID());
                     PreparedStatement ps = null;
                     try {
                         ps = connection.prepareStatement(sql);
@@ -452,75 +450,78 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
 
     private void listVehiclesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listVehiclesValueChanged
         String selected = listVehicles.getSelectedValue();
-        String[] parts = selected.split(", ");
-        reg = parts[0];
 
-        try {
-            String sql = ("Select * from vehicle where registrationNumber = '" + reg + "'");
-            PreparedStatement ps = null;
+        if (selected != null) {
+            String[] parts = selected.split(", ");
+            reg = parts[0];
+
             try {
-                ps = connection.prepareStatement(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
+                String sql = ("Select * from vehicle where registrationNumber = '" + reg + "'");
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rs = ps.executeQuery();
+                buttonSaveVehicleChanges.setEnabled(true);
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
-            rs = ps.executeQuery();
-            buttonSaveVehicleChanges.setEnabled(true);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
 
-        try {
-            ve.setRegistrationNumber(rs.getString("registrationNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                ve.setRegistrationNumber(rs.getString("registrationNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        try {
-            ve.setMake(rs.getString("make"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            ve.setModel(rs.getString("model"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            ve.setEngineSerial(rs.getString("engineSerial"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            ve.setChassisNumber(rs.getString("chassisNumber"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            ve.setColour(rs.getString("colour"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                ve.setMake(rs.getString("make"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setModel(rs.getString("model"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setEngineSerial(rs.getString("engineSerial"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setChassisNumber(rs.getString("chassisNumber"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+            try {
+                ve.setColour(rs.getString("colour"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        try {
-            ve.setNextMoTDate(rs.getString("nextMoTDate"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                ve.setNextMoTDate(rs.getString("nextMoTDate"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        try {
-            ve.setNextServiceDate(rs.getString("nextServiceDate"));
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+            try {
+                ve.setNextServiceDate(rs.getString("nextServiceDate"));
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
 
-        textFieldRegistrationNo.setText(ve.getRegistrationNumber());
-        textFieldMake.setText(ve.getMake());
-        textFieldModel.setText(ve.getModel());
-        textFieldEngineSerial.setText(ve.getEngineSerial());
-        textFieldChassisNo.setText(ve.getChassisNumber());
-        textFieldColour.setText(ve.getColour());
-        textFieldNextServiceDate.setText(ve.getNextServiceDate());
-        textFieldNextMoTDate.setText(ve.getNextMoTDate());
+            textFieldRegistrationNo.setText(ve.getRegistrationNumber());
+            textFieldMake.setText(ve.getMake());
+            textFieldModel.setText(ve.getModel());
+            textFieldEngineSerial.setText(ve.getEngineSerial());
+            textFieldChassisNo.setText(ve.getChassisNumber());
+            textFieldColour.setText(ve.getColour());
+            textFieldNextServiceDate.setText(ve.getNextServiceDate());
+            textFieldNextMoTDate.setText(ve.getNextMoTDate());
+        }
     }//GEN-LAST:event_listVehiclesValueChanged
 
 
