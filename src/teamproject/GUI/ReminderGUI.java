@@ -498,31 +498,9 @@ public class ReminderGUI extends javax.swing.JPanel {
                             + "vehicleregistrationNumber = '" + vehicle + "' and "
                             + "dueDate = '" + date + "'");
                 } else {
-                    /*
-                    try {
-                        this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
-                                + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
-                                + "from paymentreminder inner join invoice on "
-                                + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
-                                + "inner join job on job.jobID = invoice.JobjobID "
-                                + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    String invoiceNo = "";
-                    try {
-                        while (rs.next()) {
-                            invoiceNo = rs.getString("invoiceinvoicenumber");
-                        }
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-*/
-
                     sql = ("update paymentReminder "
-                            + "set deleted = 1 where "
-                            + "reminderNumber = " + reminderNo + " and "
+                            + "set deleted = 1 "
+                            + "where reminderNumber = " + reminderNo + " and "
                             + "Invoiceinvoicenumber = " + invoiceNo);
                 }
 
@@ -566,6 +544,8 @@ public class ReminderGUI extends javax.swing.JPanel {
                     textAreaDescription.setText(CreatePaymentReminder());
                 }
             }
+        }else{
+            textAreaDescription.setText("");
         }
     }//GEN-LAST:event_listRemindersValueChanged
 
