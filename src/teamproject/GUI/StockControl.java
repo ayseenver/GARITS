@@ -49,7 +49,7 @@ public class StockControl extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rs = statement.executeQuery("select * from sparepart");
+            this.rs = statement.executeQuery("select * from sparepart where deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -127,7 +127,7 @@ public class StockControl extends javax.swing.JPanel {
 
     private void ShowLowParts() {
         try {
-            this.rs = statement.executeQuery("select * from sparepart where quantity < threshold");
+            this.rs = statement.executeQuery("select * from sparepart where quantity < threshold and deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -503,9 +503,9 @@ public class StockControl extends javax.swing.JPanel {
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
         try {
-            String sql = ("select * from sparepart where partName LIKE '%"
+            String sql = ("select * from sparepart where (partName LIKE '%"
                     + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
-                    + textFieldSearchAllStock.getText() + "%'");
+                    + textFieldSearchAllStock.getText() + "%') and deleted = 0");
             PreparedStatement ps = null;
 
             try {

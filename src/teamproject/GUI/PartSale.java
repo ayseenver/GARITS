@@ -51,7 +51,7 @@ public class PartSale extends javax.swing.JPanel {
         statement = db.getStatement();
 
         try {
-            this.rs = statement.executeQuery("select * from sparepart");
+            this.rs = statement.executeQuery("select * from sparepart where quantity > 0 and deleted = 0");
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -384,7 +384,7 @@ public class PartSale extends javax.swing.JPanel {
                 buttonChangeQuantityActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonChangeQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 600, -1, -1));
+        jPanel1.add(buttonChangeQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 590, -1, -1));
 
         textFieldQuantity.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldQuantity.addActionListener(new java.awt.event.ActionListener() {
@@ -392,7 +392,7 @@ public class PartSale extends javax.swing.JPanel {
                 textFieldQuantityActionPerformed(evt);
             }
         });
-        jPanel1.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 600, 30, 30));
+        jPanel1.add(textFieldQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 590, 30, 30));
 
         buttonRemove.setText("Remove");
         buttonRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -400,7 +400,7 @@ public class PartSale extends javax.swing.JPanel {
                 buttonRemoveActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 630, 150, -1));
+        jPanel1.add(buttonRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 620, 150, 30));
 
         buttonProduceInvoice.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonProduceInvoice.setText("Produce Invoice");
@@ -579,9 +579,9 @@ public class PartSale extends javax.swing.JPanel {
 
     private void buttonSearchAllStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchAllStockActionPerformed
         try {
-            String sql = ("select * from sparepart where partName LIKE '%"
+            String sql = ("select * from sparepart where (partName LIKE '%"
                     + textFieldSearchAllStock.getText() + "%' or vehicleType LIKE '%"
-                    + textFieldSearchAllStock.getText() + "%'");
+                    + textFieldSearchAllStock.getText() + "%') and deleted = 0");
             PreparedStatement ps = null;
 
             try {

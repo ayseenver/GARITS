@@ -1,0 +1,21 @@
+Dear Mr Jean-Claude Laprie
+
+Invoice number : 58
+
+Vehicle Registration No.: BB64 TRU
+Make: Fjord
+Model: Estate
+
+Job number : 61
+
+Description of work: 
+1) Perform car MoT
+2) Perform van MoT
+
+Parts used: 
+Total parts cost: £0.00
+
+Total labour cost: £0.00
+
+VAT: £0.00
+Grand total: £0.00
