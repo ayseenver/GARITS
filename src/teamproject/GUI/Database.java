@@ -101,7 +101,7 @@ public class Database extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Automatic Backup Frequency:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 500, -1, 40));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 440, -1, 40));
 
         comboBoxBackup.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         comboBoxBackup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "daily", "weekly", "monthly" }));
@@ -110,7 +110,7 @@ public class Database extends javax.swing.JPanel {
                 comboBoxBackupActionPerformed(evt);
             }
         });
-        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 510, -1, 30));
+        jPanel1.add(comboBoxBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 450, -1, 30));
 
         buttonBackup.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonBackup.setText("Backup Now");
@@ -119,7 +119,7 @@ public class Database extends javax.swing.JPanel {
                 buttonBackupActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, 200, -1));
+        jPanel1.add(buttonBackup, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 310, 200, -1));
 
         buttonRestore.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         buttonRestore.setText("Restore");
@@ -128,7 +128,7 @@ public class Database extends javax.swing.JPanel {
                 buttonRestoreActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 430, 200, -1));
+        jPanel1.add(buttonRestore, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, 200, -1));
 
         buttonExit.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         buttonExit.setText("Logout");

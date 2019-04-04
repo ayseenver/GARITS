@@ -393,7 +393,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(labelCustomerDetail1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 400, -1, -1));
 
         labelPayCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelPayCustomer.setText("Pay Customer:");
+        labelPayCustomer.setText("Pay Back By:");
         add(labelPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 620, -1, -1));
 
         buttonConfirmPayment.setText("Confirm");
@@ -405,7 +405,7 @@ public class CustomerList extends javax.swing.JPanel {
         add(buttonConfirmPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 620, 100, -1));
 
         comboBoxPayCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cheque", "Next Invoice" }));
-        add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 620, 110, -1));
+        add(comboBoxPayCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 620, 130, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonSearchCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchCustomerActionPerformed

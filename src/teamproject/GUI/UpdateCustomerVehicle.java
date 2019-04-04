@@ -232,6 +232,7 @@ public class UpdateCustomerVehicle extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
+        listVehicles.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         listVehicles.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listVehiclesValueChanged(evt);

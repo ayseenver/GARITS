@@ -304,7 +304,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Lucida Grande" size="18" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Pay Customer:"/>
+        <Property name="text" type="java.lang.String" value="Pay Back By:"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -339,7 +339,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="780" y="620" width="110" height="-1"/>
+          <AbsoluteConstraints x="760" y="620" width="130" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
