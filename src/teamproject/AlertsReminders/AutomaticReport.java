@@ -40,7 +40,7 @@ public class AutomaticReport implements Runnable {
     @Override
     public void run() {
         connect();
-        GetLastReport();
+        GetTodaysDate();
         closeConnection();
     }
 
@@ -57,73 +57,14 @@ public class AutomaticReport implements Runnable {
         }
     }
 
-    private void GetLastReport() {
-        String line = null;
-        String fileName = "reportFrequency.txt";
+    private void GetTodaysDate() {
         LocalDate date = LocalDate.now();
-        try {
-            // FileReader reads text files in the default encoding.
-            File backupFrequency = new File(fileName);
-            backupFrequency.createNewFile(); // if file already exists will do nothing 
-
-            FileReader fileReader = new FileReader(fileName);
-
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] parts = line.split(", ");
-                String sDate = parts[1]; //2019-03-21
-                String[] dateParts = sDate.split("-");
-                int year = Integer.parseInt(dateParts[0]);
-                int day = Integer.parseInt(dateParts[2]);
-                int month = Integer.parseInt(dateParts[1]);
-                Month thisMonth = Month.JANUARY;
-                if (month == 1) {
-                    thisMonth = Month.JANUARY;
-                } else if (month == 2) {
-                    thisMonth = Month.FEBRUARY;
-                } else if (month == 3) {
-                    thisMonth = Month.MARCH;
-                } else if (month == 4) {
-                    thisMonth = Month.APRIL;
-                } else if (month == 5) {
-                    thisMonth = Month.MAY;
-                } else if (month == 6) {
-                    thisMonth = Month.JUNE;
-                } else if (month == 7) {
-                    thisMonth = Month.JULY;
-                } else if (month == 8) {
-                    thisMonth = Month.AUGUST;
-                } else if (month == 9) {
-                    thisMonth = Month.SEPTEMBER;
-                } else if (month == 10) {
-                    thisMonth = Month.OCTOBER;
-                } else if (month == 11) {
-                    thisMonth = Month.NOVEMBER;
-                } else if (month == 12) {
-                    thisMonth = Month.DECEMBER;
-                }
-
-                try {
-                    date = LocalDate.of(year, thisMonth, day); // the date that was inputted
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-            // Always close files.
-            bufferedReader.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");
-        } catch (IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");
-        }
+        
         if (date.getDayOfMonth() == 1) {
             //do this on the 1st of every month
             generateMonthlyVehicleReport();
             generateAverageReport();
             generateStockReport();
-            UpdateTxt();
         }
     }
 
@@ -386,19 +327,6 @@ public class AutomaticReport implements Runnable {
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void UpdateTxt() {
-        LocalDate today = LocalDate.now();
-        //update the txt with today's date
-        String reportFrequency = "reportFrequency.txt";
-        try {
-            PrintWriter writer = new PrintWriter(reportFrequency, "UTF-8");
-            writer.println("Monthly, " + today);
-            writer.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
