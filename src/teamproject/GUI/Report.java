@@ -58,9 +58,39 @@ public class Report extends javax.swing.JPanel {
 
         SetPanel();
         ShowReportOption();
+        GetRole();
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void GetRole() {
+        String roleName = "";
+        try {
+            this.rs = statement.executeQuery("select * from User where deleted = 0");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            while (rs.next()) {
+                // read the result set
+                String user = rs.getString("username");
+
+                //Code to get Role name from Databse
+                if (username.equals(user)) {
+                    roleName = rs.getString("roleName");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Code To check Which roleName is selected 
+        if (!(roleName.equals("franchisee"))) {
+            reportLabel.setVisible(false);
+            comboBoxReport.setVisible(false);
+        }
     }
 
     private void ShowMechanics() {
@@ -175,6 +205,8 @@ public class Report extends javax.swing.JPanel {
         comboBoxCustomerType = new javax.swing.JComboBox<>();
         labelJobType2 = new javax.swing.JLabel();
         comboBoxJobTypeVehicle = new javax.swing.JComboBox<>();
+        reportLabel = new javax.swing.JLabel();
+        comboBoxReport = new javax.swing.JComboBox<>();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -298,6 +330,19 @@ public class Report extends javax.swing.JPanel {
         monthlyVehiclePanel.setBounds(80, 90, 370, 80);
 
         add(jLayeredPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 50, 520, 170));
+
+        reportLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        reportLabel.setText("Automatic Report Frequency:");
+        add(reportLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, -1, 40));
+
+        comboBoxReport.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        comboBoxReport.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "daily", "weekly", "monthly" }));
+        comboBoxReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxReportActionPerformed(evt);
+            }
+        });
+        add(comboBoxReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 130, -1, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
@@ -666,6 +711,20 @@ public class Report extends javax.swing.JPanel {
         SetPanel();
     }//GEN-LAST:event_comboBoxReportTypeActionPerformed
 
+    private void comboBoxReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReportActionPerformed
+        LocalDate today = LocalDate.now();
+        String fileName = "reportFrequency.txt";
+        try {
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.println(comboBoxReport.getSelectedItem().toString() + ", " + today);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        JOptionPane.showMessageDialog(new JFrame(), "Frequency Updated!");
+    }//GEN-LAST:event_comboBoxReportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBack;
@@ -676,6 +735,7 @@ public class Report extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> comboBoxJobTypeJob;
     private javax.swing.JComboBox<String> comboBoxJobTypeVehicle;
     private javax.swing.JComboBox<String> comboBoxMechanic;
+    private javax.swing.JComboBox<String> comboBoxReport;
     private javax.swing.JComboBox<String> comboBoxReportType;
     private javax.swing.JLayeredPane jLayeredPane;
     private javax.swing.JScrollPane jScrollPane1;
@@ -691,6 +751,7 @@ public class Report extends javax.swing.JPanel {
     private javax.swing.JLabel labelSelectType;
     private javax.swing.JLabel labelTill;
     private javax.swing.JPanel monthlyVehiclePanel;
+    private javax.swing.JLabel reportLabel;
     private javax.swing.JTextArea textAreaReport;
     private javax.swing.JTextField textFieldFrom;
     private javax.swing.JTextField textFieldTill;
