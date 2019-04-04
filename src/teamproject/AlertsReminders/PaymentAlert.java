@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package teamproject.Databases;
+package teamproject.AlertsReminders;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +36,7 @@ public class PaymentAlert implements Runnable {
                     + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
                     + "inner join job on job.jobID = invoice.JobjobID "
                     + "where deleted = 0 "
-                    + "order by reminderNumber asc");
+                    + "group by invoiceinvoicenumber");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
