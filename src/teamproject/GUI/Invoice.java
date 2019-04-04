@@ -285,7 +285,6 @@ public class Invoice extends javax.swing.JPanel {
 
     private void StandardPayment() {
         //create a payment record in the database.
-              System.out.println(invoiceNumber+" 1 ");
         try {
             String sql = ("insert into Payment(paymentType, invoiceNumber)"
                     + " values ( '" + comboxBoxPaymentType.getSelectedItem().toString() + "', "
@@ -354,6 +353,9 @@ public class Invoice extends javax.swing.JPanel {
         //calculate the new cost
         double newCost = totalCost * (1 - (percentage * 0.01));
 
+        System.out.println("Total cost: " + totalCost);
+        System.out.println("Discount: " + (1 - (percentage * 0.01)) + "%");
+        System.out.println("Cost after discount: " + newCost);
         //update the cost in the job table
         try {
             String sql = ("update job set totalCost = " + newCost + " where jobID = " + jobNumber);
@@ -528,6 +530,7 @@ public class Invoice extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }
+        System.out.println("Total Part Cost: " + totalPartCost);
 
         //now has: total part cost, tasks and their percentages
         //get the total cost for this job
@@ -557,9 +560,11 @@ public class Invoice extends javax.swing.JPanel {
         totalCost -= totalPartCost;
         totalPartCost = totalPartCost * (1 - (partPercentage / 100));
 
+        //System.out.println("Total Part cost after discount: " + totalPartCost);
+
         //this is the total cost after discounting parts
         totalCost += totalPartCost;
-
+        //System.out.println("Total cost after part discount: " + totalCost);
         //now discount the tasks
         //first take away the price of all the tasks
         totalCost -= totalTaskPrice;
@@ -597,6 +602,7 @@ public class Invoice extends javax.swing.JPanel {
         }
 
         totalCost += newTaskPrice;
+        System.out.println("Total cost after discount: " + totalCost);
 
         //update the total cost of the job, taking into account the discounted price
         try {
@@ -638,7 +644,7 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        System.out.println("Total cost: " + totalCost);
         //get the amount to be deducted for orders for this customer
         try {
             String sql = ("select toBeDeducted from flexibleDiscount where discountID = " + flexibleID);
@@ -661,6 +667,7 @@ public class Invoice extends javax.swing.JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("Amount to be decuducted: " + credit);
         if (credit <= totalCost) {
             totalCost -= credit;
             credit = 0.0;
@@ -668,7 +675,7 @@ public class Invoice extends javax.swing.JPanel {
             credit = credit - totalCost;
             totalCost = 0.0;
         }
-
+        System.out.println("Total after discount: " + totalCost);
         //set the customer's credit to 0
         try {
             String sql = ("update flexibleDiscount set toBeDeducted = " + credit + " where discountID = " + flexibleID);
@@ -900,11 +907,11 @@ public class Invoice extends javax.swing.JPanel {
 
     private void buttonPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayActionPerformed
         String selected = listInvoices.getSelectedValue();
-   
+
         if (selected != null) {
             GetJobAndInvoiceNumber();
             if (!jobNumber.isEmpty()) { //is a job, not a part sale
-                 CheckAccountHolder();
+                CheckAccountHolder();
                 String accountID = "";
                 String fixedID = "";
                 String flexibleID = "";
