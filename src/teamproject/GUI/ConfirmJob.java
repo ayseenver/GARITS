@@ -57,7 +57,6 @@ public class ConfirmJob extends javax.swing.JPanel {
         connection = db.connect();
         statement = db.getStatement();
 
-
         ShowTaskDetails();
         showJobDetails();
 
@@ -70,7 +69,8 @@ public class ConfirmJob extends javax.swing.JPanel {
         newArray = tasks.toArray(newArray);
         return newArray;
     }
- private void showJobDetails() {
+
+    private void showJobDetails() {
         String details = "Vehicle Registraion No: " + v.getRegistrationNumber() + '\n'
                 + "Make: " + v.getMake() + "\n" + "Model: " + v.getModel() + '\n'
                 + "Customer Name: " + c.getName() + '\n' + "Tel.: " + c.getTelephoneNumber();
@@ -104,6 +104,16 @@ public class ConfirmJob extends javax.swing.JPanel {
                         + jobType + "')");
             } else {
                 int bayIDInt = Integer.parseInt(bayID);
+                //book the bay
+                sql = ("update bay set booked = 1 where bayID = " + bayIDInt);
+                PreparedStatement ps = null;
+                try {
+                    ps = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ps.executeUpdate();
+
                 sql = ("insert into Job(VehicleregistrationNumber, BaybayID, dateBookedIn, status, type)"
                         + " values ((select registrationNumber from Vehicle where registrationNumber = '" + v.getRegistrationNumber() + "'), "
                         + "(select bayID from Bay where bayID = " + bayIDInt + "), "
@@ -140,7 +150,7 @@ public class ConfirmJob extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
         }
-        
+
         //insert the estimated tasks into the actual task list
         AddEstimatedTasks();
     }

@@ -57,16 +57,15 @@ public class PartSale extends javax.swing.JPanel {
             // it probably means no database file is found
             System.err.println(e.getMessage());
         }
-                try {
+        ShowAllParts();
+        try {
             this.rsC = statement.executeQuery("select * from Customer where deleted = 0");
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
-       
-        ShowAllParts();
- ShowCustomers();
+        ShowCustomers();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -75,7 +74,7 @@ public class PartSale extends javax.swing.JPanel {
         listCustomers.removeAll();
         ArrayList<String> names = new ArrayList<>();
 
-                            try {
+        try {
             while (rsC.next()) {
                 // read the result set
                 String name = "ID: " + rsC.getString("ID") + ", " + rsC.getString("name");

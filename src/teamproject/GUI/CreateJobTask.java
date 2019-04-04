@@ -46,7 +46,6 @@ public class CreateJobTask extends javax.swing.JPanel {
      */
     public CreateJobTask(String username, Vehicle v, Customer c) {
         this.username = username;
-        this.bayType = "MoT inspection";
         this.defaultJobType = "defaultServiceJob";
         this.v = v;
         this.c = c;
@@ -72,6 +71,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         GetJobType();
         ShowRequiredTaskList();
         ShowTaskList();
+        bayType = bayTypeCombo.getSelectedItem().toString();
         UpdateBayList();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,8 +87,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         jobType = jobTypeCombo.getSelectedItem().toString();
         if (jobType.equalsIgnoreCase("Service")) {
             defaultJobType = "defaultServiceJob";
-        }
-        else if (jobType.equalsIgnoreCase("MoT")) {
+        } else if (jobType.equalsIgnoreCase("MoT")) {
             defaultJobType = "defaultMoTJob";
         } else {
             defaultJobType = "Repair";
@@ -98,9 +97,14 @@ public class CreateJobTask extends javax.swing.JPanel {
     private void UpdateBayList() {
         listAvailableBays.removeAll();
         ArrayList<String> bays = new ArrayList<>();
+        String sql;
         //get all bays
         try {
-            String sql = ("select * from Bay where type = '" + bayType) + "'" + ("and booked = 0");
+            if (bayType.equals("MoT")) {
+                sql = ("select * from Bay where type = 'MoT' and booked = 0");
+            } else {
+                sql = ("select * from Bay where type = 'Repair' and booked = 0");
+            }
             PreparedStatement ps = null;
             try {
                 ps = connection.prepareStatement(sql);
@@ -299,7 +303,7 @@ public class CreateJobTask extends javax.swing.JPanel {
         labelCreateJob.setText("Create Job");
         add(labelCreateJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, -1, -1));
 
-        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Repair", "Service" }));
+        bayTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MoT", "Repair" }));
         bayTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bayTypeComboActionPerformed(evt);

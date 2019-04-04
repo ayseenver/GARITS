@@ -1,0 +1,21 @@
+Dear Mr William Gates
+
+Invoice number : 52
+
+Vehicle Registration No.: BB16 OLE
+Make: Rolls Royce
+Model: Silver Shadow
+
+Job number : 60
+
+Description of work: 
+1) Respray
+
+Parts used: 
+Paint, Arrogant Red, £78.0, quantity: 2
+Total parts cost: £156.00
+
+Total labour cost: £210.00
+
+VAT: £73.20
+Grand total: £439.20

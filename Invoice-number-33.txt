@@ -1,0 +1,30 @@
+Dear null
+
+Invoice number : 33
+
+Vehicle Registration No.: null
+Make: null
+Model: null
+
+Job number : 51
+
+Description of work: 
+1) Perform car MoT
+2) Replace exhaust system
+3) Replace engine mount
+4) Replace spark plug
+5) Replace spark plug lead
+6) Replace distributor cap
+
+Parts used: 
+Exhaust mount, set, £19.5, quantity: 2
+Exhaust, complete box, £260.0, quantity: 1
+Spark plug, each, £1.95, quantity: 4
+Spark lead, set, £16.25, quantity: 1
+Distributor cap, £45.5, quantity: 1
+Total parts cost: £368.55
+
+Total labour cost: £210.00
+
+VAT: £115.71
+Grand total: £694.26

@@ -34,6 +34,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     String vehicle;
     String date;
     String reminderNo;
+    String invoiceNo;
 
     /**
      * Creates new form NewJPanel
@@ -112,7 +113,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                     + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
                     + "inner join job on job.jobID = invoice.JobjobID "
                     + "where deleted = 0 "
-                    + "order by reminderNumber asc");
+                    + "group by invoiceinvoicenumber");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -121,7 +122,7 @@ public class ReminderGUI extends javax.swing.JPanel {
             while (rs.next()) {
                 // read the result set
                 String reminder = "Type: Payment, Vehicle: " + rs.getString("VehicleregistrationNumber")
-                        + ", Invoice date: " + rs.getString("dateProduced")
+                        + ", Invoice no.: " + rs.getString("invoiceinvoicenumber")
                         + ", Reminder number: " + rs.getString("reminderNumber");
                 reminders.add(reminder);
             }
@@ -163,6 +164,9 @@ public class ReminderGUI extends javax.swing.JPanel {
             date = dateParts[1];
 
             if (type.equals("Payment")) {
+                String[] invoiceParts = parts[2].split(": ");
+                invoiceNo = dateParts[1];
+
                 String[] reminderParts = parts[3].split(": ");
                 reminderNo = reminderParts[1];
             }
@@ -494,30 +498,9 @@ public class ReminderGUI extends javax.swing.JPanel {
                             + "vehicleregistrationNumber = '" + vehicle + "' and "
                             + "dueDate = '" + date + "'");
                 } else {
-
-                    try {
-                        this.rs = statement.executeQuery("select paymentReminder.reminderNumber, paymentReminder.InvoiceinvoiceNumber, "
-                                + "invoice.dateProduced, job.jobID, job.totalCost, job.VehicleregistrationNumber "
-                                + "from paymentreminder inner join invoice on "
-                                + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
-                                + "inner join job on job.jobID = invoice.JobjobID "
-                                + "where VehicleregistrationNumber = '" + vehicle + "' and reminderNumber = " + reminderNo);
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
-                    String invoiceNo = "";
-                    try {
-                        while (rs.next()) {
-                            invoiceNo = rs.getString("invoiceinvoicenumber");
-                        }
-                    } catch (SQLException e) {
-                        System.err.println(e.getMessage());
-                    }
-
                     sql = ("update paymentReminder "
-                            + "set deleted = 1 where "
-                            + "reminderNumber = " + reminderNo + " and "
+                            + "set deleted = 1 "
+                            + "where reminderNumber = " + reminderNo + " and "
                             + "Invoiceinvoicenumber = " + invoiceNo);
                 }
 
@@ -550,15 +533,19 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void listRemindersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRemindersValueChanged
-        SplitSelected();
         if (listReminders.getSelectedValue() != null) {
-            if (type.equals("MoT")) {
-                textAreaDescription.setText(CreateMoTReminder());
-            } else if (type.equals("Service")) {
-                textAreaDescription.setText(CreateServiceReminder());
-            } else if (type.equals("Payment")) {
-                textAreaDescription.setText(CreatePaymentReminder());
+            SplitSelected();
+            if (listReminders.getSelectedValue() != null) {
+                if (type.equals("MoT")) {
+                    textAreaDescription.setText(CreateMoTReminder());
+                } else if (type.equals("Service")) {
+                    textAreaDescription.setText(CreateServiceReminder());
+                } else if (type.equals("Payment")) {
+                    textAreaDescription.setText(CreatePaymentReminder());
+                }
             }
+        }else{
+            textAreaDescription.setText("");
         }
     }//GEN-LAST:event_listRemindersValueChanged
 

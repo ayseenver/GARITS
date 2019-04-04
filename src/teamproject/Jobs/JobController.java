@@ -8,7 +8,7 @@ import teamproject.Customer_Account.Vehicle;
 public class JobController {
 
 	Collection<Payment> makesPayment;
-	Collection<Invoice> creates;
+	Collection<InvoiceController> creates;
 
 	/**
 	 * 
@@ -82,7 +82,7 @@ public class JobController {
 	 * @param dateCreated
 	 * @param JobID
 	 */
-	public Invoice createJobInvoice(double VAT, int invoiceNumber, Date dateCreated, int JobID) {
+	public InvoiceController createJobInvoice(double VAT, int invoiceNumber, Date dateCreated, int JobID) {
 		// TODO - implement JobController.createJobInvoice
 		throw new UnsupportedOperationException();
 	}
@@ -94,7 +94,7 @@ public class JobController {
 	 * @param dateCreated
 	 * @param sparePartSold
 	 */
-	public Invoice createPartInvoice(double VAT, int invoiceNumber, Date dateCreated, SparePartSold[] sparePartSold) {
+	public InvoiceController createPartInvoice(double VAT, int invoiceNumber, Date dateCreated, SparePartSold[] sparePartSold) {
 		// TODO - implement JobController.createPartInvoice
 		throw new UnsupportedOperationException();
 	}
