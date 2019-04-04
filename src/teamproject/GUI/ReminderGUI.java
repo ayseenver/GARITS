@@ -489,6 +489,7 @@ public class ReminderGUI extends javax.swing.JPanel {
     private void buttonDismissActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDismissActionPerformed
         SplitSelected();
         if (listReminders.getSelectedValue() != null) {
+
             String sql;
             try {
                 if (type.equals("MoT") || type.equals("Service")) {
@@ -502,6 +503,7 @@ public class ReminderGUI extends javax.swing.JPanel {
                             + "set deleted = 1 "
                             + "where reminderNumber = " + reminderNo + " and "
                             + "Invoiceinvoicenumber = " + invoiceNo);
+                    System.out.println(sql);
                 }
 
                 PreparedStatement ps = null;
@@ -515,6 +517,9 @@ public class ReminderGUI extends javax.swing.JPanel {
                 System.err.println(e.getMessage());
             }
             ShowAllReminders();
+        } else {
+            String mess = "Select a reminder";
+            JOptionPane.showMessageDialog(new JFrame(), mess);
         }
     }//GEN-LAST:event_buttonDismissActionPerformed
 
@@ -533,16 +538,15 @@ public class ReminderGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void listRemindersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRemindersValueChanged
+
         if (listReminders.getSelectedValue() != null) {
             SplitSelected();
-            if (listReminders.getSelectedValue() != null) {
-                if (type.equals("MoT")) {
-                    textAreaDescription.setText(CreateMoTReminder());
-                } else if (type.equals("Service")) {
-                    textAreaDescription.setText(CreateServiceReminder());
-                } else if (type.equals("Payment")) {
-                    textAreaDescription.setText(CreatePaymentReminder());
-                }
+            if (type.equals("MoT")) {
+                textAreaDescription.setText(CreateMoTReminder());
+            } else if (type.equals("Service")) {
+                textAreaDescription.setText(CreateServiceReminder());
+            } else if (type.equals("Payment")) {
+                textAreaDescription.setText(CreatePaymentReminder());
             }
         }else{
             textAreaDescription.setText("");
