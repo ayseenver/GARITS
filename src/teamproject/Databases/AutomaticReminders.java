@@ -127,6 +127,7 @@ public class AutomaticReminders implements Runnable {
                     }
                     ps.executeUpdate();
                 } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
             }
         } catch (SQLException e) {
@@ -156,6 +157,7 @@ public class AutomaticReminders implements Runnable {
                     }
                     ps.executeUpdate();
                 } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
             }
         } catch (SQLException e) {
@@ -185,11 +187,13 @@ public class AutomaticReminders implements Runnable {
                     }
                     ps.executeUpdate();
                 } catch (SQLException e) {
+                    System.err.println(e.getMessage());
                 }
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        System.out.println("done");
     }
 
     private void closeConnection() {

@@ -36,7 +36,7 @@ public class PaymentAlert implements Runnable {
                     + "Invoice.invoiceNumber = paymentReminder.InvoiceinvoiceNumber "
                     + "inner join job on job.jobID = invoice.JobjobID "
                     + "where deleted = 0 "
-                    + "group by invoiceinvoicenumber");
+                    + "order by reminderNumber asc");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
