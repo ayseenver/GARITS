@@ -27,7 +27,7 @@ public class Timer {
         int Minutes = with.get(Calendar.MINUTE);
 
         int MinutesPassed12AM = hour * 60 + Minutes;
-        int MinutesAt8AM = (8 * 60);
+        int MinutesAt8AM = (11 * 60) + 27;
         int OneDayMinutes = 24 * 60;
         long DelayInMinutes;
 
@@ -49,7 +49,7 @@ public class Timer {
         int Minutes = with.get(Calendar.MINUTE);
 
         int MinutesPassed12AM = hour * 60 + Minutes;
-        int MinutesAt8AM = (8 * 60);
+        int MinutesAt8AM = (11 * 60) + 27;
         int OneDayMinutes = 24 * 60;
         long DelayInMinutes;
 
@@ -80,7 +80,7 @@ public class Timer {
         } else {
             DelayInMinutes = OneDayMinutes - (MinutesPassed12AM - MinutesAt8AM);
         }
-        scheduler.scheduleAtFixedRate(new AutomaticReminders(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new AutomaticReminders(), 0, OneDayMinutes, TimeUnit.MINUTES);
     }
 
     private void CalculateFlexibleDiscounts() {

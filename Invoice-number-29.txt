@@ -1,9 +1,0 @@
-Invoice number : 29
-
-Parts sold: 
-Tyre, heavy tread, Quantity: 0
-
-Total cost: £0.00
-
-Grand total: £0.00
-

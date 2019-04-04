@@ -46,9 +46,8 @@ public class DB_ImplClass implements DBConnectivity {
     public void Backup(Connection c) {
         Date aDate = new Date();
         String[] dateParts = aDate.toString().split(" ");
-        String date = dateParts[0] + dateParts[1] + dateParts[2];
 
-        String fileName = date + "database.db";
+        String fileName = "database.db";
         try {
             c.createStatement().executeUpdate("backup to " + fileName);
         } catch (SQLException e) {

@@ -157,7 +157,7 @@ public class AutomaticReport implements Runnable {
         generateDailyVehicleReport();
         generateDailyAverageReport();
         generateDailyStockReport();
-        scheduler.scheduleAtFixedRate(new AutomaticBackups(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new AutomaticReport(), DelayInMinutes, OneDayMinutes, TimeUnit.MINUTES);
     }
 
     private void WeeklyReport(LocalDate date) {
@@ -167,7 +167,7 @@ public class AutomaticReport implements Runnable {
             generateWeeklyVehicleReport();
             generateWeeklyAverageReport();
             generateWeeklyStockReport();
-            scheduler.scheduleAtFixedRate(new AutomaticBackups(), 0, 7, TimeUnit.DAYS); //every 7 days
+            scheduler.scheduleAtFixedRate(new AutomaticReport(), 0, 7, TimeUnit.DAYS); //every 7 days
         }
 
     }
@@ -180,7 +180,7 @@ public class AutomaticReport implements Runnable {
             generateMonthlyVehicleReport();
             generateMonthlyAverageReport();
             generateMonthlyStockReport();
-            scheduler.scheduleAtFixedRate(new AutomaticBackups(), 0, 1, TimeUnit.DAYS); //check every day
+            scheduler.scheduleAtFixedRate(new AutomaticReport(), 0, 1, TimeUnit.DAYS); //check every day
         }
     }
 

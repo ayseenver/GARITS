@@ -38,7 +38,7 @@ public class AutomaticReminders implements Runnable {
     private void checkDueMoT() {
         //get all vehicles with MoTs due in 7 days (5 working days)
         try {
-            this.rs = connection.createStatement().executeQuery("select * from vehicle where nextMOTDate = date('now', '+7 day')");
+            this.rs = connection.createStatement().executeQuery("select * from vehicle where nextMOTDate < date('now', '+7 day')");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
