@@ -211,6 +211,7 @@ public class PartSale extends javax.swing.JPanel {
         buttonExit = new javax.swing.JButton();
         labelAllStock1 = new javax.swing.JLabel();
         textFieldSelectedCustomer = new javax.swing.JTextField();
+        labelVehicleSelected = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         labelPartSale1 = new javax.swing.JLabel();
         textFieldSearchCustomers = new javax.swing.JTextField();
@@ -220,6 +221,7 @@ public class PartSale extends javax.swing.JPanel {
         buttonExit1 = new javax.swing.JButton();
         buttonSearchCustomers = new javax.swing.JButton();
         textFieldSelectedCustomer1 = new javax.swing.JTextField();
+        labelVehicleSelected1 = new javax.swing.JLabel();
         textFieldSearchAllStock = new javax.swing.JTextField();
         buttonSearchAllStock = new javax.swing.JButton();
         labelAllStock = new javax.swing.JLabel();
@@ -236,7 +238,6 @@ public class PartSale extends javax.swing.JPanel {
         jScrollPane6 = new javax.swing.JScrollPane();
         listCart = new javax.swing.JList<>();
         buttonBack = new javax.swing.JButton();
-        labelVehicleSelected = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -269,8 +270,12 @@ public class PartSale extends javax.swing.JPanel {
         labelAllStock1.setText("Stock:");
         add(labelAllStock1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
 
-        textFieldSelectedCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        add(textFieldSelectedCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 310, 190, -1));
+        textFieldSelectedCustomer.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        add(textFieldSelectedCustomer, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 310, 180, -1));
+
+        labelVehicleSelected.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelVehicleSelected.setText("Selected Customer:");
+        add(labelVehicleSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, -1, -1));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(1280, 720));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -317,6 +322,10 @@ public class PartSale extends javax.swing.JPanel {
 
         textFieldSelectedCustomer1.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         jPanel1.add(textFieldSelectedCustomer1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 310, 180, -1));
+
+        labelVehicleSelected1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        labelVehicleSelected1.setText("Selected Customer:");
+        jPanel1.add(labelVehicleSelected1, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 310, -1, -1));
 
         textFieldSearchAllStock.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         textFieldSearchAllStock.addActionListener(new java.awt.event.ActionListener() {
@@ -415,10 +424,6 @@ public class PartSale extends javax.swing.JPanel {
             }
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
-
-        labelVehicleSelected.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        labelVehicleSelected.setText("Selected Customer:");
-        jPanel1.add(labelVehicleSelected, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 310, -1, -1));
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -673,6 +678,7 @@ public class PartSale extends javax.swing.JPanel {
     private javax.swing.JLabel labelPartSale;
     private javax.swing.JLabel labelPartSale1;
     private javax.swing.JLabel labelVehicleSelected;
+    private javax.swing.JLabel labelVehicleSelected1;
     private javax.swing.JList<String> listCart;
     private javax.swing.JList<String> listCustomers;
     private javax.swing.JList<String> listStock;

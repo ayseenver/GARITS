@@ -241,7 +241,6 @@ public class UpdateSparePart extends javax.swing.JPanel {
         });
         jPanel1.add(buttonBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, -1, -1));
 
-        listSpareParts.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         listSpareParts.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listSparePartsValueChanged(evt);
