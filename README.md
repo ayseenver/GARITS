@@ -18,10 +18,10 @@ Latest JDBC driver linked with the NetBeans Project.
 
 ## Acknowledgments
 
-* fluffedprotato
-* FarzanAkhtar1
-* lxnamel
-* NRassal7
-* ZESSE123
+* [fluffedprotato](https://github.com/fluffedprotato)
+* [FarzanAkhtar1](https://github.com/FarzanAkhtar1)
+* [lxnamel](https://github.com/lxnamel)
+* [NRassal7](https://github.com/NRassal7)
+* [ZESSE123](https://github.com/ZESSE123)
 
 
