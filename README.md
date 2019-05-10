@@ -18,6 +18,10 @@ Latest JDBC driver linked with the NetBeans Project.
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* fluffedprotato
+* FarzanAkhtar1
+* lxnamel
+* NRassal7
+* ZESSE123
+
+
